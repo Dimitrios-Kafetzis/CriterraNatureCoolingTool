@@ -5,7 +5,7 @@
 # or reporting path: the transparency and determinism commitments require that
 # identical inputs always produce identical text (decision D-011 / OQ-12).
 
-version: "2026.08.01"
+version: "2026.08.02"
 
 opening:
   by_heat_priority:

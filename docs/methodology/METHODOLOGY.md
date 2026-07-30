@@ -1,9 +1,9 @@
 # Nature for Cooling Rapid Assessment Tool — Methodology Report
 
-**Version:** 2026.08.01 (methodology configuration version `2026.08.01`)
+**Version:** 2026.08.02 (methodology configuration version `2026.08.02`)
 **Status:** Version 1 methodology, released for expert review; calculation engine implemented (Phase 2)
 
-Version `2026.08.01` discharges the specification gaps disclosed at `2026.07.30`: the sub-indicator derivation rules (§5.10), the cost-feasibility brackets and combination rule (§5.8), the confidence field-to-block mapping (§6.2), and the published sensitivity analysis (§7). No typology value, envelope, or aggregation weight changed.
+Version `2026.08.01` discharged the specification gaps disclosed at `2026.07.30`: the sub-indicator derivation rules (§5.10), the cost-feasibility brackets and combination rule (§5.8), the confidence field-to-block mapping (§6.2), and the published sensitivity analysis (§7). Version `2026.08.02` corrects an incentive defect in the soil–water condition found during engine implementation (§5.4, D-026): reliable irrigation now maps to *excellent*, and a condition pair containing an unknown is capped at the neutral factor — so complete favourable data strictly dominates leaving the question blank. No typology value, envelope, or aggregation weight has changed since `2026.07.30`.
 **Prepared by:** Criterra
 **Licence:** Apache-2.0. Source code, configuration, and this document are public.
 
@@ -224,7 +224,7 @@ All four conditions are **derived from inputs the user has already given** — n
 | Condition | Derivation |
 |---|---|
 | Canopy | (existing canopy + new canopy at maturity) ÷ site area → poor <10%, moderate 10–25%, good 25–40%, excellent >40% |
-| Soil–water | the lower of soil availability and irrigation availability |
+| Soil–water | the lower of soil availability and irrigation availability, on the mapping none → poor; limited, occasional → moderate; moderate → good; reliable, high → excellent. When exactly one of the two is known, the condition is capped at good (D-026): a pair containing an unknown may never exceed the neutral factor, so declaring reliable irrigation is never worse — and with high soil strictly better — than skipping the question |
 | Scale | assessment scale: city/district → large, neighbourhood → medium, site/building → small |
 | Climate | typology × climate-zone suitability lookup |
 
@@ -381,14 +381,14 @@ Required inputs must be present; the assessment does not proceed without them. O
 
 The tool's published sensitivity analysis varies each aggregation weight by **±25%** (renormalising the remainder) across the golden-scenario set and reports rank stability, score displacement, category migration, and an influence ranking. It is implemented in [`tools/sensitivity_analysis.py`](../../tools/sensitivity_analysis.py), its full output is committed at [SENSITIVITY-ANALYSIS.md](SENSITIVITY-ANALYSIS.md), and it must be regenerated whenever any aggregation weight changes.
 
-### 7.1 Results at version 2026.08.01
+### 7.1 Results at version 2026.08.02
 
 The analysis was executed against the 20 hand-verified golden scenarios (190 scenario pairs), re-scoring the full set under each of the 12 perturbations (6 weights × ±25%).
 
 1. **Rank stability.** Worst case **0.9737** (under the −25% Heat Priority Index perturbation: 5 of 190 pairs reorder); 9 of 12 perturbations preserve at least 98.4% of pair orderings. Reordering occurs only between scenarios whose baseline scores differ by less than about 2 points — pairs that the methodology itself would describe as materially equivalent.
 2. **Score displacement.** Pooled across all 240 scenario-perturbation combinations: mean **0.42** points, median 0.32, 75th percentile 0.59, maximum **2.01** points (on a 0–100 scale).
 3. **Category migration.** **3 of 240** combinations cross a band boundary, and each involves a baseline score within ~1.3 points of the boundary (59.58 → 60.3/60.39 across the Moderate–Strong line; 80.92 → 79.63 across the Strong–High-priority line). No scenario moves by more than one band, and no scenario far from a boundary migrates.
-4. **Influence ranking.** Cooling Potential (mean displacement 0.59) and the Heat Priority Index (0.53) are the most influential weights, followed by Vulnerability (0.50), Suitability (0.45), Co-benefits (0.31), and Cost Feasibility (0.16). Cost feasibility ranks last partly by construction: it is excluded and redistributed in the 15 of 20 scenarios that supply no cost data, so its weight only binds where economic evidence exists.
+4. **Influence ranking.** Cooling Potential (mean displacement 0.58) and the Heat Priority Index (0.53) are the most influential weights, followed by Vulnerability (0.49), Suitability (0.45), Co-benefits (0.31), and Cost Feasibility (0.17). Cost feasibility ranks last partly by construction: it is excluded and redistributed in the 15 of 20 scenarios that supply no cost data, so its weight only binds where economic evidence exists.
 
 ### 7.2 Interpretation
 
@@ -420,7 +420,7 @@ Two honest qualifications. First, the analysis perturbs one weight at a time; si
 
 ## 9. Methodology governance
 
-**Versioning.** The methodology version (`2026.08.01`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
+**Versioning.** The methodology version (`2026.08.02`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
 
 **Change process.** Methodology changes are proposed as public pull requests with their evidence. Existing assessments are never silently recomputed: results retain the version that produced them, and the interface indicates when a newer methodology version is available.
 

@@ -72,12 +72,17 @@ def _canopy(
 def _soil_water(
     inp: AssessmentInput, config: MethodologyConfig
 ) -> tuple[AdjustmentCondition, list[str]]:
-    mapping: dict[str, str] = config.adjustment_factors["derivation"]["soil_water_condition"][
-        "mapping"
-    ]
+    rules = config.adjustment_factors["derivation"]["soil_water_condition"]
+    mapping: dict[str, str] = rules["mapping"]
     levels: list[ConditionLevel] = []
-    for value in (inp.soil_availability, inp.irrigation_availability):
-        if value not in (None, "unknown"):
+    missing: list[str] = []
+    for field, value in (
+        ("soil_availability", inp.soil_availability),
+        ("irrigation_availability", inp.irrigation_availability),
+    ):
+        if value in (None, "unknown"):
+            missing.append(field)
+        else:
             levels.append(cast(ConditionLevel, mapping[cast(str, value)]))
     if not levels:
         note = (
@@ -86,6 +91,16 @@ def _soil_water(
         )
         return _condition(config, "unknown"), [note]
     limiting = min(levels, key=lambda level: _CONDITION_ORDER[level])
+    if missing:
+        # A condition pair containing an unknown may never exceed the neutral
+        # factor (D-026): the known half alone cannot certify 'excellent'.
+        cap = cast(ConditionLevel, rules["unknown_partner_cap"])
+        if _CONDITION_ORDER[limiting] > _CONDITION_ORDER[cap]:
+            note = (
+                f"soil-water condition capped at '{cap}': {missing[0]} not provided, and a "
+                "condition pair containing an unknown cannot exceed the neutral factor"
+            )
+            return _condition(config, cap), [note]
     return _condition(config, limiting), []
 
 

@@ -186,8 +186,12 @@ Soil availability and irrigation availability are each mapped to a condition
 level, and the \emph{more limiting} of the two is taken. The mapping is
 \emph{none}\,$\rightarrow$\,poor;
 \emph{limited}, \emph{occasional}\,$\rightarrow$\,moderate;
-\emph{moderate}, \emph{reliable}\,$\rightarrow$\,good;
-\emph{high}\,$\rightarrow$\,excellent. \\
+\emph{moderate}\,$\rightarrow$\,good;
+\emph{reliable}, \emph{high}\,$\rightarrow$\,excellent.
+When exactly one of the two is known, the condition is capped at \emph{good}:
+a pair containing an unknown may never exceed the neutral factor, so declaring
+reliable irrigation is never worse --- and with high soil strictly better ---
+than skipping the question (D-026, version \methver{}). \\
 \addlinespace
 Scale &
 From the declared assessment scale:

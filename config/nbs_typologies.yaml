@@ -15,7 +15,7 @@
 # Derivations: docs/methodology/EVIDENCE-TABLES.md
 # Source keys: docs/methodology/BIBLIOGRAPHY.md
 
-version: "2026.08.01"
+version: "2026.08.02"
 
 typologies:
   - nbs_id: "01"

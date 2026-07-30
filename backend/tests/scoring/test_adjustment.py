@@ -65,11 +65,40 @@ def test_soil_water_takes_the_more_limiting(config, build_input):
     assert block.soil_water.level == "poor"
 
 
-def test_soil_water_single_known_input_is_used_alone(config, build_input):
-    inp = build_input(soil_availability="high")
+def test_soil_water_reliable_irrigation_reaches_excellent(config, build_input):
+    """D-026: the best honest answers yield excellent; reliable no longer caps."""
+    inp = build_input(soil_availability="high", irrigation_availability="reliable")
     block, assumptions = adjustment.compute(inp, _typology(config), config)
     assert block.soil_water.level == "excellent"
     assert not any("soil-water" in note for note in assumptions)
+
+
+def test_soil_water_unknown_partner_caps_at_neutral(config, build_input):
+    """D-026: a pair containing an unknown never exceeds the neutral factor,
+    so silence can never beat the best honest answer."""
+    soil_only, assumptions = adjustment.compute(
+        build_input(soil_availability="high"), _typology(config), config
+    )
+    assert soil_only.soil_water.level == "good"
+    assert soil_only.soil_water.factor == 1.0
+    assert any(
+        "soil-water condition capped at 'good': irrigation_availability not provided" in note
+        for note in assumptions
+    )
+
+    irrigation_only, _ = adjustment.compute(
+        build_input(irrigation_availability="reliable"), _typology(config), config
+    )
+    assert irrigation_only.soil_water.level == "good"
+
+
+def test_soil_water_cap_not_noted_when_not_binding(config, build_input):
+    """A known level at or below the cap passes through without a cap note."""
+    block, assumptions = adjustment.compute(
+        build_input(soil_availability="limited"), _typology(config), config
+    )
+    assert block.soil_water.level == "moderate"
+    assert not any("capped" in note for note in assumptions)
 
 
 def test_soil_water_unknown_when_both_missing(config, build_input):
@@ -132,6 +161,7 @@ def test_factor_bounds_all_poor_and_all_excellent(config, build_input):
         existing_tree_canopy_percent=45,
         new_canopy_area_at_maturity_m2=0,
         soil_availability="high",
+        irrigation_availability="reliable",
         assessment_scale="city",
         climate_zone="tropical_dry",
         nbs_type="riparian_restoration",

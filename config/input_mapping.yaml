@@ -5,7 +5,7 @@
 # deliberate, disclosed choice: it avoids optimistic and pessimistic bias alike
 # while the confidence mechanism records that the information was absent.
 
-version: "2026.08.01"
+version: "2026.08.02"
 
 standard_levels:
   low: 25

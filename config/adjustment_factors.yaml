@@ -7,7 +7,7 @@
 # Adjustment scales the 0-100 Cooling Potential Score. It may reduce the reported
 # temperature range below the typology envelope but never above it (D-008).
 
-version: "2026.08.01"
+version: "2026.08.02"
 
 condition_factors:
   poor: 0.5
@@ -40,8 +40,18 @@ derivation:
       limited: moderate
       occasional: moderate
       moderate: good
-      reliable: good
+      reliable: excellent # 2026.08.02 (D-026): was good, which made the best
+      # honest irrigation answer score worse than leaving the question blank
       high: excellent
+    # When exactly one of the two inputs is known, the condition is capped at
+    # the level below (factor 1.0): a condition pair containing an unknown may
+    # never exceed the neutral factor. This is the unknown-neutral principle of
+    # the Methodology Report section 3.2 applied to a derived pair - an
+    # unknown must not participate in an above-neutral boost. Together with
+    # the reliable -> excellent mapping, complete favourable data strictly
+    # dominates silence: high soil with reliable irrigation yields excellent
+    # (1.2), with the question skipped at most good (1.0). (D-026)
+    unknown_partner_cap: good
 
   scale_condition:
     source_inputs: [assessment_scale]

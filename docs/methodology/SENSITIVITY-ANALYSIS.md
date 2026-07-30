@@ -1,6 +1,6 @@
 # Sensitivity analysis of the aggregation weights
 
-Methodology version: `2026.08.01`. Scenario set: 20 golden scenarios
+Methodology version: `2026.08.02`. Scenario set: 20 golden scenarios
 (190 scenario pairs). Each of the six final-aggregation weights was
 varied by +/-25% with the remainder renormalised to a unit sum, and the
 full scenario set re-scored under each of the 12 perturbations.
@@ -14,14 +14,14 @@ aggregation weight changes.
 |---|---|---:|---:|---:|---:|
 | heat_priority_index | -25% (0.75x) | 0.9737 | 0.56 | 2.00 | 1 |
 | heat_priority_index | +25% (1.25x) | 0.9895 | 0.49 | 1.77 | 0 |
-| cooling_potential | -25% (0.75x) | 0.9895 | 0.63 | 2.01 | 1 |
-| cooling_potential | +25% (1.25x) | 0.9842 | 0.55 | 1.77 | 1 |
+| cooling_potential | -25% (0.75x) | 0.9895 | 0.62 | 2.01 | 1 |
+| cooling_potential | +25% (1.25x) | 0.9842 | 0.54 | 1.77 | 1 |
 | nbs_suitability | -25% (0.75x) | 0.9895 | 0.47 | 1.49 | 0 |
-| nbs_suitability | +25% (1.25x) | 0.9842 | 0.44 | 1.38 | 0 |
+| nbs_suitability | +25% (1.25x) | 0.9842 | 0.43 | 1.38 | 0 |
 | vulnerability | -25% (0.75x) | 0.9895 | 0.52 | 1.75 | 0 |
 | vulnerability | +25% (1.25x) | 0.9895 | 0.47 | 1.62 | 0 |
-| co_benefits | -25% (0.75x) | 0.9947 | 0.32 | 0.76 | 0 |
-| co_benefits | +25% (1.25x) | 0.9895 | 0.30 | 0.72 | 0 |
+| co_benefits | -25% (0.75x) | 0.9947 | 0.32 | 0.77 | 0 |
+| co_benefits | +25% (1.25x) | 0.9895 | 0.30 | 0.74 | 0 |
 | cost_feasibility | -25% (0.75x) | 0.9895 | 0.17 | 1.12 | 0 |
 | cost_feasibility | +25% (1.25x) | 0.9842 | 0.16 | 1.06 | 0 |
 
@@ -42,12 +42,12 @@ aggregation weight changes.
 
 | Rank | Weight | Mean displacement | Max displacement |
 |---:|---|---:|---:|
-| 1 | cooling_potential | 0.59 | 2.01 |
+| 1 | cooling_potential | 0.58 | 2.01 |
 | 2 | heat_priority_index | 0.53 | 2.00 |
-| 3 | vulnerability | 0.50 | 1.75 |
+| 3 | vulnerability | 0.49 | 1.75 |
 | 4 | nbs_suitability | 0.45 | 1.49 |
-| 5 | co_benefits | 0.31 | 0.76 |
-| 6 | cost_feasibility | 0.16 | 1.12 |
+| 5 | co_benefits | 0.31 | 0.77 |
+| 6 | cost_feasibility | 0.17 | 1.12 |
 
 ## Headline figures
 
