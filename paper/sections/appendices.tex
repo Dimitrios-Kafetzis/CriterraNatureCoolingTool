@@ -404,9 +404,27 @@ Urban context & 0.10 & Urban quality    & 0.15 &                         &      
 \end{tabular}
 \end{center}
 
-\noindent As disclosed in \Cref{sec:composite-subscores}, the rules mapping
-user inputs to these individual sub-indicator scores are not specified at
-version \methver{}, and the Equity Score does not enter the final aggregation.
+\noindent The rules mapping user inputs to these individual sub-indicator
+scores are fixed at version \methver{} in
+\texttt{config/derived\_scores.yaml} and reproduced in
+\Cref{tab:suitability-rules}. The Equity Score does not enter the final
+aggregation (\Cref{sec:composite-subscores}). The derived cost feasibility
+score combines the payback bracket with two delivery-risk modifiers
+(\Cref{eq:cost-feasibility-rule}):
+
+\begin{center}\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Cost feasibility component} & \textbf{Weight} \\
+\midrule
+Payback bracket score            & 0.50 \\
+Implementation complexity (inverted) & 0.25 \\
+Maintenance intensity (inverted)     & 0.25 \\
+\midrule
+\textbf{Total} & \textbf{1.00} \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \subsection{Final aggregation and effective weights}
 
@@ -443,14 +461,12 @@ perturbation parameter is $\pm\,\SI{25}{\percent}$
 \label{app:fields}
 
 \begin{keynote}
-\noindent The definitive enumeration of which fields are required and which are
-optional is fixed by the input schema, which is implemented alongside the
-engine in Phase 2. The \emph{Status} column below records what the methodology
-documents at version \methver{}: fields marked \emph{Required} are those
-without which a documented formula cannot be evaluated at all; fields marked
-\emph{Optional} are those whose absence the methodology explicitly handles
-through a default or a \emph{not calculated} status. Fields marked
-\emph{Not enumerated} await the schema.
+\noindent The definitive enumeration is fixed by the implemented input schema
+(\texttt{nature\_cooling.engine.models.AssessmentInput}). Fields marked
+\emph{Required} are exactly those without which a documented formula cannot be
+evaluated at all; every other field is \emph{Optional}, and its absence is
+handled through a disclosed default or an explicit \emph{not calculated}
+status, itemised in the result.
 \end{keynote}
 
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{46mm}
@@ -482,9 +498,10 @@ Denominator of the canopy condition and of shade potential
 Canopy condition derivation (\Cref{tab:derivation}). \\
 \fieldname{existing_green_cover_percent} & Optional &
 Vegetation deficit, $\clamp{100-g}$ (\Cref{eq:vegdef}). \\
-\texttt{imperviousness}\textsuperscript{a} & Optional &
+\fieldname{impervious_surface_percent} & Optional &
 Percentage used directly as a \numrange{0}{100} score in
-\Cref{eq:heat-exposure-rich}. \\
+\Cref{eq:heat-exposure-rich}; declared in configuration at version
+\methver{}. \\
 \fieldname{soil_availability} & Optional &
 none 25 / limited 50 / moderate 75 / high 100; unknown 50. Also feeds the
 soil--water condition. \\
@@ -492,13 +509,20 @@ soil--water condition. \\
 none 25 / occasional 50 / reliable 100; unknown 50. Also feeds the soil--water
 condition. \\
 \fieldname{current_shade_level} & Optional &
-very low 25 / low 50 / medium 75 / high 100; unknown 50. \\
+very low 25 / low 50 / medium 75 / high 100; unknown 50. Counts toward
+cooling-block completeness; enters no formula at version \methver{}. \\
+\fieldname{land_use} & Optional &
+Urban-context suitability sub-indicator: in the typology's typical-use
+contexts 100, outside 25, unknown 50 (\Cref{tab:suitability-rules}). \\
 \addlinespace
 
 \multicolumn{3}{@{}l}{\textit{Project information}}\\
 \fieldname{assessment_scale} & Required &
 Scale condition: city, district $\rightarrow$ excellent; neighbourhood
 $\rightarrow$ good; site, building $\rightarrow$ moderate. \\
+\fieldname{country} & Optional &
+Grid emission factor lookup in \texttt{country\_defaults.yaml}
+(\Cref{sec:ghg}). \\
 \addlinespace
 
 \multicolumn{3}{@{}l}{\textit{Climate and heat exposure}}\\
@@ -521,7 +545,13 @@ path. \\
 \fieldname{access_to_cooled_indoor_space} & Optional &
 \textbf{Inverted} levels: high 25 / medium 50 / low 100; unknown 50
 (\Cref{sec:inverted}). \\
-\fieldname{safety_concern} & Optional & Standard levels. \\
+\fieldname{safety_concern} & Optional &
+Standard levels; equity safety-and-comfort sub-indicator (deficit reading). \\
+\fieldname{public_accessibility} & Optional &
+Standard levels; equity sub-indicator. New at version \methver{}. \\
+\fieldname{community_participation} & Optional &
+Standard levels; equity participation-relevance sub-indicator. New at version
+\methver{}. \\
 \addlinespace
 
 \multicolumn{3}{@{}l}{\textit{NbS intervention}}\\
@@ -529,13 +559,17 @@ path. \\
 Selects the typology and its climate-family row. \\
 \fieldname{new_canopy_area_at_maturity_m2} & Optional &
 Canopy condition and shade potential. \\
-\fieldname{expected_maturity_period} & Optional &
-Time-to-benefit output. No maturity discount is applied to cooling values at
-version \methver{}. \\
-implementation complexity & Not enumerated &
-Input to cost feasibility (\Cref{eq:cost-feasibility}). \\
-maintenance intensity & Not enumerated &
-Input to cost feasibility. \\
+\fieldname{expected_maturity_period_years} & Optional &
+Time-to-benefit class (immediate / short / medium / long term). No maturity
+discount is applied to cooling values. \\
+\fieldname{intervention_area_m2} & Optional &
+Validation warning when exceeding the site area (OQ-04); enters no score. \\
+\fieldname{implementation_complexity} & Optional &
+Inverted levels; cost feasibility (\Cref{eq:cost-feasibility-rule}) and
+investment readiness. \\
+\fieldname{maintenance_intensity} & Optional &
+Inverted levels; cost feasibility and the suitability maintenance
+sub-indicator. \\
 \addlinespace
 
 \multicolumn{3}{@{}l}{\textit{Cost and energy (all optional)}}\\
@@ -543,18 +577,17 @@ Input to cost feasibility. \\
 Precondition for the energy derivation (\Cref{sec:energy}). \\
 \fieldname{annual_cooling_energy_demand_kwh} & Optional &
 $D$ in \Cref{eq:energy}. Absent: \texttt{missing\_energy\_demand}. \\
-energy price & Optional &
+\fieldname{energy_price_per_kwh} & Optional &
 $p$ in \Cref{eq:annual-savings}. Absent: cost savings not calculated. \\
-capital cost & Optional &
-$C_{\mathrm{capital}}$ in \Cref{eq:payback}. Absent: capital cost, payback, and
-cost feasibility all \emph{not estimated}. \\
+\fieldname{capital_cost} & Optional &
+$C_{\mathrm{capital}}$ in \Cref{eq:payback}. Absent: capital cost, payback,
+cost feasibility, and investment readiness all \emph{not estimated}. \\
+\fieldname{currency} & Optional &
+ISO 4217 code, echoed with cost outputs; never used in scoring. \\
+\fieldname{grid_emission_factor_kgco2e_per_kwh} & Optional &
+$\phi$ in \Cref{eq:ghg}; a user-supplied factor takes precedence over the
+country table and is itemised as an applied assumption. \\
 \end{longtable}
-
-\noindent\footnotesize\textsuperscript{a}\,The imperviousness field is used by
-\Cref{eq:heat-exposure-rich} but is not declared in
-\texttt{config/input\_mapping.yaml} at version \methver{}; its direct
-percentage-as-score treatment is inferred from the formula and should be made
-explicit in configuration.\normalsize
 
 \clearpage
 \section{Glossary}

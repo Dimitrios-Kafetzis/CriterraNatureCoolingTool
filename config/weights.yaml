@@ -9,7 +9,7 @@
 # Methodology Report section 5.9 documents the effective weights, including the
 # deliberate equity-forward double contribution of vulnerability.
 
-version: "2026.07.30"
+version: "2026.08.01"
 
 heat_exposure:
   # Data-rich path only (used when a land surface temperature anomaly is given).
@@ -69,6 +69,21 @@ equity:
   public_accessibility: 0.25
   safety_comfort: 0.20
   participation_relevance: 0.20
+
+cost_feasibility:
+  # Combination rule for the derived cost feasibility score (D-010, D-023):
+  # payback bracket score, implementation complexity, and maintenance
+  # intensity (the latter two through the inverted qualitative scale, so low
+  # complexity and low maintenance raise feasibility). Bracket boundaries are
+  # in derived_scores.yaml.
+  payback: 0.50
+  implementation_complexity: 0.25
+  maintenance_intensity: 0.25
+  rationale: >
+    Payback carries half the weight because it is the only quantitative
+    economic signal in the assessment; complexity and maintenance are
+    qualitative delivery-risk modifiers and are weighted equally because no
+    evidence ranks one above the other.
 
 final_opportunity_score:
   heat_priority_index: 0.25

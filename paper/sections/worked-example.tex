@@ -6,18 +6,16 @@
 result is not a finding about any real place.}
 
 The calculation was performed \textbf{by hand} from the formulas and
-configuration values specified in this paper. At methodology version
-\methver{} the calculation engine is not yet implemented, so this is not
-engine output and has not been verified against an implementation. Its purpose
+configuration values specified in this paper, and every number below is also
+asserted, digit for digit, by the engine's golden-scenario suite --- the hand
+derivation is the expected value, never the engine's own output. Its purpose
 is to make the specification concrete enough to check: a reader who disagrees
 with any number below can locate the equation that produced it and recompute
 it.
 
-Where a quantity depends on a rule that version \methver{} does not specify ---
-the NbS Suitability sub-indicators of \Cref{sec:composite-subscores} and the
-grid emission factor of \Cref{sec:ghg} --- the value used is labelled as an
-assumption, and \Cref{sec:we-assumptions} states how much the conclusion
-depends on it.
+One quantity still rests on an assumption: the grid emission factor of
+\Cref{sec:ghg}, which no shipped configuration supplies.
+\Cref{sec:we-assumptions} states how much the conclusion depends on it.
 \end{keynote}
 
 \subsection{The illustrative site and intervention}
@@ -215,11 +213,23 @@ S_{\mathrm{cobenefit}}
 &= 12.50 + 12.50 + 15.00 + 7.50 + 11.25 = \mathbf{58.75}.
 \end{align*}
 
-\paragraph{NbS Suitability.} The sub-indicator derivation rules are not
-specified at version \methver{}. A value of $S_{\mathrm{suit}} = 78$ is
-\textbf{assumed} for this illustration --- a well-suited typology on an
-adequate site, constrained by limited soil and only occasional irrigation.
-\Cref{sec:we-assumptions} quantifies how much the conclusion depends on it.
+\paragraph{NbS Suitability.} Applying the rules of
+\Cref{tab:suitability-rules}: the site offers sixty times the
+\qty{100}{\metre\squared} minimum ($S_{\mathrm{space}} = 100$); soil
+availability \emph{limited} exactly meets the typology's \emph{limited}
+requirement ($S_{\mathrm{soil}} = 75$); irrigation \emph{occasional} exactly
+meets the \emph{occasional} requirement ($S_{\mathrm{water}} = 75$);
+maintenance intensity and land use were not supplied, so both take the neutral
+50, itemised. Then
+
+\[
+S_{\mathrm{suit}} = 0.30(100) + 0.25(75) + 0.20(75) + 0.15(50) + 0.10(50)
+                   = \mathbf{76.25},
+\]
+
+close to --- and slightly below --- the 78 assumed in the previous version of
+this example, because the neutral defaults for maintenance and land use hold
+the score down where full inputs would not.
 
 \subsection{Aggregation}
 
@@ -241,34 +251,31 @@ redistributed proportionally across the remaining five components.}
 \midrule
 Heat Priority Index  & 71.75 & 0.25 & 0.2778 & 19.93 \\
 Cooling Potential    & 71.25 & 0.25 & 0.2778 & 19.79 \\
-NbS Suitability\textsuperscript{a} & 78.00 & 0.15 & 0.1667 & 13.00 \\
+NbS Suitability      & 76.25 & 0.15 & 0.1667 & 12.71 \\
 Vulnerability        & 80.00 & 0.15 & 0.1667 & 13.33 \\
 Co-benefits          & 58.75 & 0.10 & 0.1111 &  6.53 \\
 Cost Feasibility     & \multicolumn{3}{l}{\emph{not estimated --- excluded}} & --- \\
 \midrule
-\textbf{NbS Cooling Opportunity Score} & & & & \textbf{72.58} \\
+\textbf{NbS Cooling Opportunity Score} & & & & \textbf{72.29} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent\footnotesize\textsuperscript{a}\,Assumed value; the derivation rule
-is not specified at version \methver{}.\normalsize
-
-\medskip
-
-The NbS Cooling Opportunity Score is \textbf{72.6}, which falls in the
+The NbS Cooling Opportunity Score is \textbf{72.3}, which falls in the
 \emph{Strong opportunity} band (61--80) of \Cref{tab:hpi-bands}.
 
 \subsection{Confidence and reported result}
 
-Applying the branched confidence model of \Cref{sec:confidence}: the cooling
-block is well populated and street tree planting carries \emph{high} evidence
-confidence, so no cap applies and cooling confidence is \emph{high}. The energy
-block has the demand and the relevance confirmation but no energy price, giving
-\emph{medium}. The economic block has no inputs at all, giving \emph{low}. The
-equity block has the three vulnerability fields but not all equity
-sub-indicators, giving \emph{medium}. These ratings are themselves illustrative,
-since the field-to-block mapping is not enumerated at version \methver{}.
+Applying the branched confidence model of \Cref{sec:confidence} with the
+field-to-block mapping enumerated at version \methver{}: the cooling block has
+eight of its ten slots supplied (\SI{80}{\percent} $\rightarrow$
+\emph{high}; street tree planting carries \emph{high} evidence confidence, so
+no cap applies). The energy block has the relevance confirmation and the demand
+but no energy price (two of three, \SI{66.7}{\percent} $\rightarrow$
+\emph{medium}). The economic block has none of its four fields
+(\emph{low}). The equity block has three of its six fields
+(\SI{50}{\percent} $\rightarrow$ \emph{medium}). The overall rating is the
+lower median of \{high, medium, low, medium\}: \emph{medium}.
 
 \begin{table}[htbp]
 \centering
@@ -292,7 +299,7 @@ Capital cost               & \emph{Not estimated --- no cost data supplied} & Lo
 Simple payback             & \emph{Not estimated} & Low \\
 Cost feasibility           & \emph{Not estimated --- excluded from aggregation} & Low \\
 Co-benefit Score           & 58.8 & Medium \\
-\textbf{Opportunity Score} & \textbf{72.6 --- \emph{Strong opportunity}} & Medium \\
+\textbf{Opportunity Score} & \textbf{72.3 --- \emph{Strong opportunity}} & Medium \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -303,45 +310,29 @@ configuration would report this as \emph{not calculated}.\normalsize
 
 \medskip
 
-\noindent\textbf{Assumptions the engine would itemise:} social inclusion
-co-benefit defaulted to \emph{unknown} (50); cost feasibility excluded and
-weights redistributed; energy price absent, so cost savings not computed;
-grid emission factor supplied locally rather than from configuration.
+\noindent\textbf{Assumptions the engine itemises for this run:} maintenance
+intensity and land use defaulted to the neutral 50 (suitability); the grid
+emission factor supplied by the user rather than from configuration; energy
+price absent, so cost savings not computed; the four cited co-benefit library
+defaults applied; social inclusion defaulted to the neutral 50 (no library
+default); public accessibility, safety concern, and community participation
+defaulted to the neutral 50 (equity); cost feasibility not estimated, excluded
+from the aggregation with its weight redistributed.
 
 \subsection{How much the result depends on the assumed values}
 \label{sec:we-assumptions}
 
-One input to the headline score was assumed rather than derived, and its
-influence should be quantified rather than hoped to be small.
+At the previous methodology version the NbS Suitability Score was assumed
+rather than derived, and this subsection quantified the assumption's reach:
+across the full 0--100 range of the sub-score the Opportunity Score spans
+\numrange{67.9}{76.3} and never leaves the \emph{Strong opportunity} band. The
+sub-score is now derived (\Cref{tab:suitability-rules}), and its derived value
+of 76.25 lands within two points of the earlier assumption --- the conclusion
+is unchanged. Category-migration behaviour across the whole scenario set is
+quantified in \Cref{sec:sensitivity-results}.
 
-The NbS Suitability Score enters at renormalised weight $0.1\overline{6}$. Over
-the entire plausible range of that sub-score, the Opportunity Score moves as
-follows:
-
-\begin{center}
-\small
-\begin{tabular}{@{}lrl@{}}
-\toprule
-\textbf{Assumed $S_{\mathrm{suit}}$} & \textbf{Opportunity Score} &
-\textbf{Band} \\
-\midrule
-50 (poorly suited)     & 67.9 & Strong opportunity \\
-78 (value used)        & 72.6 & Strong opportunity \\
-100 (ideally suited)   & 76.3 & Strong opportunity \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-Across the full range the score moves by \num{8.3} points and the reported
-category does not change. The qualitative conclusion --- that this is a strong
-opportunity --- is therefore robust to the unspecified sub-indicator, and the
-gap in the specification does not invalidate this illustration. That will not
-be true of every case: a site scoring near a band boundary would migrate, and
-this is precisely the category-migration effect the sensitivity analysis of
-\Cref{sec:sensitivity} is designed to quantify across the whole scenario set.
-
-The assumed grid emission factor affects only the greenhouse-gas output, which
-scales linearly with it and enters no score.
+The one remaining assumed input, the grid emission factor, affects only the
+greenhouse-gas output, which scales linearly with it and enters no score.
 
 \subsection{What this example demonstrates}
 

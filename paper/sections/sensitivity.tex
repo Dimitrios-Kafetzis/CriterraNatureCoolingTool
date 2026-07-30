@@ -2,19 +2,16 @@
 \label{sec:sensitivity}
 
 \begin{keynote}
-\noindent\textbf{This section specifies planned methodology. It does not report
-results.}
+\noindent\textbf{This section specifies the design and reports its results.}
 
-The analysis described here is executed and published as part of Phase 2 of the
-project, when the calculation engine and the golden-scenario set exist. At
-methodology version \methver{} it has \emph{not} been run, and no numbers from
-it appear anywhere in this paper or in the tool. Readers evaluating this
-version should treat the tool's weights as declared but not yet empirically
-stress-tested.
-
-The design is stated in full here so that it can be criticised before it is
-executed, and so that the eventual results cannot be shaped after the fact to
-suit the outcome.
+The design below was published at methodology version 2026.07.30, before the
+calculation engine existed, precisely so that it could be criticised before
+execution and so that the results could not be shaped after the fact to suit
+the outcome. The analysis was executed in Phase 2 against the twenty
+hand-verified golden scenarios; \Cref{sec:sensitivity-results} reports the
+results at version \methver{}, produced by
+\texttt{tools/sensitivity\_analysis.py} and regenerated whenever any
+aggregation weight changes.
 \end{keynote}
 
 \subsection{Why sensitivity analysis is obligatory here}
@@ -61,12 +58,13 @@ w_k' = \frac{\lambda w_k}{\lambda w_k + \sum_{i \neq k} w_i},
 w_j' = \frac{w_j}{\lambda w_k + \sum_{i \neq k} w_i}\ \ \text{for } j \neq k .
 \end{equation}
 
-The golden-scenario set will be the same collection of hand-verified
-input/output cases specified as the engine's regression suite
-(\Cref{sec:testing}), so that the scenarios exercised by the sensitivity
+The golden-scenario set is the same collection of hand-verified
+input/output cases that serves as the engine's regression suite
+(\Cref{sec:testing}), so the scenarios exercised by the sensitivity
 analysis are the same ones whose correctness is independently asserted.
 
-\subsection{What will be reported}
+\subsection{What is reported}
+\label{sec:sa-reported}
 
 Four quantities are reported for each perturbation, chosen because they
 correspond to four distinct ways the tool could mislead a user.
@@ -96,10 +94,100 @@ correspond to four distinct ways the tool could mislead a user.
   value judgments are actually load-bearing.
 \end{enumerate}
 
+\subsection{Results at version \methver{}}
+\label{sec:sensitivity-results}
+
+The full scenario set (twenty scenarios, 190 scenario pairs) was re-scored
+under each of the twelve perturbations --- six weights, each at
+$\lambda \in \{0.75, 1.25\}$ of \Cref{eq:perturbation}.
+
+\begin{table}[H]
+\centering
+\caption[Sensitivity analysis results]{Sensitivity of the NbS Cooling
+Opportunity Score to \SI{\pm 25}{\percent} perturbation of each aggregation
+weight, across the twenty golden scenarios. Rank stability is the proportion of
+the 190 scenario pairs whose ordering is preserved; displacement is the
+absolute change in the Opportunity Score (0--100 scale); migrations counts
+scenarios whose interpretation band changed.}
+\label{tab:sensitivity-results}
+\small
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+\textbf{Weight} & \textbf{Shift} & \textbf{Rank stab.} &
+\textbf{Mean disp.} & \textbf{Max disp.} & \textbf{Migrations} \\
+\midrule
+Heat Priority Index & $-25\%$ & 0.9737 & 0.56 & 2.00 & 1 \\
+                    & $+25\%$ & 0.9895 & 0.49 & 1.77 & 0 \\
+Cooling Potential   & $-25\%$ & 0.9895 & 0.63 & 2.01 & 1 \\
+                    & $+25\%$ & 0.9842 & 0.55 & 1.77 & 1 \\
+NbS Suitability     & $-25\%$ & 0.9895 & 0.47 & 1.49 & 0 \\
+                    & $+25\%$ & 0.9842 & 0.44 & 1.38 & 0 \\
+Vulnerability       & $-25\%$ & 0.9895 & 0.52 & 1.75 & 0 \\
+                    & $+25\%$ & 0.9895 & 0.47 & 1.62 & 0 \\
+Co-benefits         & $-25\%$ & 0.9947 & 0.32 & 0.76 & 0 \\
+                    & $+25\%$ & 0.9895 & 0.30 & 0.72 & 0 \\
+Cost Feasibility    & $-25\%$ & 0.9895 & 0.17 & 1.12 & 0 \\
+                    & $+25\%$ & 0.9842 & 0.16 & 1.06 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The four committed quantities, in the order of \Cref{sec:sa-reported}:
+
+\begin{enumerate}
+  \item \textbf{Rank stability.} Worst case \num{0.9737}, under the $-25\%$
+  Heat Priority Index perturbation: five of 190 pairs reorder. Nine of the
+  twelve perturbations preserve at least \SI{98.4}{\percent} of pair
+  orderings. Every reordering involves a pair whose baseline scores differ by
+  less than about two points --- pairs the methodology itself would describe as
+  materially equivalent.
+
+  \item \textbf{Score displacement.} Pooled over all 240
+  scenario-perturbation combinations: mean \num{0.42} points, median
+  \num{0.32}, 75th percentile \num{0.59}, maximum \num{2.01} on the 0--100
+  scale.
+
+  \item \textbf{Category migration.} Three of 240 combinations cross a band
+  boundary, each from a baseline score within about \num{1.3} points of the
+  boundary (59.58 $\rightarrow$ 60.3 and 60.39 across the Moderate--Strong
+  line; 80.92 $\rightarrow$ 79.63 across the Strong--High-priority line). No
+  scenario moves by more than one band, and no scenario distant from a boundary
+  migrates.
+
+  \item \textbf{Influence ranking.} By mean absolute displacement: Cooling
+  Potential (0.59), Heat Priority Index (0.53), Vulnerability (0.50), NbS
+  Suitability (0.45), Co-benefits (0.31), Cost Feasibility (0.16). Cost
+  feasibility ranks last partly by construction: it is excluded and its weight
+  redistributed in the fifteen of twenty scenarios that supply no cost data, so
+  the weight binds only where economic evidence exists.
+\end{enumerate}
+
+\paragraph{Interpretation.} Under \SI{\pm 25}{\percent} perturbation of any
+single aggregation weight, the tool's priority ordering is substantially
+stable: at least \SI{97.4}{\percent} of pairwise orderings survive every
+perturbation, scores move by well under half a point on average, and category
+changes occur only for sites already sitting on a band boundary. The disclosed
+equity-forward stance of \Cref{sec:effective-weights} therefore changes fewer
+decisions than its prominence suggests: a deployment that rebalances the
+weights within this range should expect a materially similar priority list
+unless two options were near-tied to begin with --- and near-ties are exactly
+the cases the methodology already tells users not to resolve on the headline
+score alone.
+
+Two qualifications are owed. The analysis perturbs one weight at a time, so
+these figures are not bounds for simultaneous re-weightings. And the golden
+scenarios are designed to span the methodology's behaviour --- climates,
+typologies, data completeness, cost availability --- not to be a probability
+sample of real assessments; the stability figures are properties of this set.
+Both qualifications argue for reading near-boundary results as ranges rather
+than verdicts, which the confidence mechanism already enforces at the point of
+use.
+
 \subsection{Publication and maintenance}
 
-The results will be appended to this document and to the Methodology Report in
-the repository, and must be regenerated whenever any weight changes. Because a
+The results above are also committed to the repository in machine-generated
+form (\texttt{docs/methodology/SENSITIVITY-ANALYSIS.md}) and in the
+Methodology Report, and must be regenerated whenever any weight changes. Because a
 weight change requires a methodology version bump
 (\Cref{sec:governance}), and because the version stamp is enforced across all
 configuration files by continuous integration, a weight change that does not

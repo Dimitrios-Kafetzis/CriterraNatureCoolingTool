@@ -1,0 +1,41 @@
+{
+  "name": "Cover percentages exceeding 105% and intervention larger than the site",
+  "description": "OQ-04: both conditions warn, never block; scores still computed.",
+  "derivation": [
+    "Green cover 60 + impervious 50 = 110 > 105 -> warning. Intervention 7000 > site 6000 -> warning.",
+    "Heat exposure: 0.4*42+0.25*50+0.2*75+0.15*(100-60) = 16.8+12.5+15+6 = 50.3.",
+    "HPI = 0.6*50.3+0.4*80 = 62.18 (High).",
+    "Layer 2 as s01 (A=0.95, cooling 71.25).",
+    "Opportunity: (15.545+17.8125+11.4375+12+5.875)/0.9 = 69.63 (Strong)."
+  ],
+  "input": {
+    "assessment_scale": "neighbourhood",
+    "site_area_m2": 6000,
+    "existing_tree_canopy_percent": 8,
+    "existing_green_cover_percent": 60,
+    "impervious_surface_percent": 50,
+    "soil_availability": "limited",
+    "irrigation_availability": "occasional",
+    "climate_zone": "temperate",
+    "lst_anomaly_c": 4.2,
+    "solar_exposure": "high",
+    "population_density": "high",
+    "vulnerable_population_presence": "high",
+    "access_to_cooled_indoor_space": "low",
+    "nbs_type": "street_tree_planting",
+    "new_canopy_area_at_maturity_m2": 1200,
+    "nearby_building_cooling_demand_relevant": "yes",
+    "annual_cooling_energy_demand_kwh": 450000,
+    "intervention_area_m2": 7000
+  },
+  "expected": {
+    "heat_exposure.score": 50.3,
+    "heat_priority.score": 62.18,
+    "heat_priority.category": "high",
+    "cooling.potential_score": 71.25,
+    "opportunity.score": 69.63,
+    "opportunity.category": "strong",
+    "warnings.0": "existing green cover plus impervious surface totals 110.0%, which exceeds 105% of the site",
+    "warnings.1": "intervention area (7000 m2) exceeds site area (6000 m2)"
+  }
+}

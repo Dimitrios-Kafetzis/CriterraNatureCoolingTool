@@ -1,0 +1,62 @@
+{
+  "name": "Blue-green corridor in a tropical-wet city: humidity caveat and climate downgrade",
+  "description": "The gunawardena2017 humidity caveat: blue typologies are downgraded (moderate climate condition) and the caveat text fires.",
+  "derivation": [
+    "Heat exposure: 0.4*30 + 0.25*60 + 0.2*75 + 0.15*75 = 53.25. Vulnerability: 30+40+10 = 80. HPI = 31.95+32 = 63.95 (High).",
+    "Adjustment: canopy 10% + 1000/5000*100 = 30% good 1.0; soil-water moderate/occasional -> moderate 0.8; scale district excellent 1.2; climate blue_green/tropical_wet MODERATE 0.8: 0.4+0.2+0.24+0.12 = 0.96.",
+    "Cooling: 85*0.96 = 81.6; dT 1.00 (floor) - 2.88; midpoint 1.94 high; shade 20%.",
+    "Suitability: space 5x 100; soil moderate=required 75; water (requires none) 100; maintenance medium 50; public_space in context 100 = 86.25.",
+    "Energy: not building-energy applicable -> typology_not_applicable.",
+    "Co-benefits 71.25. Equity: 35+25+10+10 = 80.",
+    "Opportunity (cost excluded): (15.9875+20.4+12.9375+12+7.125)/0.9 = 76.06 (Strong).",
+    "Confidence: cooling 9/10 high; energy 0 low; economic 1/4 low; equity 6/6 high; lower median -> low."
+  ],
+  "input": {
+    "assessment_scale": "district",
+    "site_area_m2": 5000,
+    "existing_tree_canopy_percent": 10,
+    "existing_green_cover_percent": 25,
+    "impervious_surface_percent": 60,
+    "soil_availability": "moderate",
+    "irrigation_availability": "occasional",
+    "land_use": "public_space",
+    "climate_zone": "tropical_wet",
+    "lst_anomaly_c": 3.0,
+    "solar_exposure": "high",
+    "population_density": "high",
+    "vulnerable_population_presence": "very_high",
+    "access_to_cooled_indoor_space": "medium",
+    "safety_concern": "medium",
+    "public_accessibility": "very_high",
+    "community_participation": "medium",
+    "nbs_type": "blue_green_corridor",
+    "new_canopy_area_at_maturity_m2": 1000,
+    "expected_maturity_period_years": 6,
+    "maintenance_intensity": "medium"
+  },
+  "expected": {
+    "heat_exposure.score": 53.25,
+    "vulnerability.score": 80.0,
+    "heat_priority.score": 63.95,
+    "heat_priority.category": "high",
+    "adjustment.factor": 0.96,
+    "adjustment.climate.level": "moderate",
+    "cooling.potential_score": 81.6,
+    "cooling.delta_t_min_c": 1.0,
+    "cooling.delta_t_max_c": 2.88,
+    "cooling.heat_index_improvement": "high",
+    "suitability.score": 86.25,
+    "energy.status": "typology_not_applicable",
+    "co_benefits.score": 71.25,
+    "equity.score": 80.0,
+    "opportunity.score": 76.06,
+    "opportunity.category": "strong",
+    "confidence.cooling": "high",
+    "confidence.equity": "high",
+    "confidence.overall": "low"
+  },
+  "recommendation_contains": [
+    "add humidity without improving perceived thermal comfort",
+    "Cooling-energy savings were not calculated"
+  ]
+}

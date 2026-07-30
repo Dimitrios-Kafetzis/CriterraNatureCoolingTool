@@ -1,0 +1,41 @@
+{
+  "name": "Worked-example site, user states building cooling demand is not relevant",
+  "description": "Energy must report not_applicable, never zero; scores identical to S01 otherwise.",
+  "derivation": [
+    "Identical to s01 except nearby_building_cooling_demand_relevant = 'no' and no emission factor.",
+    "Energy status not_applicable (relevance denied); GHG energy_not_calculated.",
+    "All scores unchanged from s01: opportunity 72.29.",
+    "Energy confidence unchanged (the 'no' answer is still a supplied field): 2/3 medium."
+  ],
+  "input": {
+    "assessment_scale": "neighbourhood",
+    "site_area_m2": 6000,
+    "existing_tree_canopy_percent": 8,
+    "existing_green_cover_percent": 12,
+    "impervious_surface_percent": 85,
+    "soil_availability": "limited",
+    "irrigation_availability": "occasional",
+    "climate_zone": "temperate",
+    "lst_anomaly_c": 4.2,
+    "solar_exposure": "high",
+    "population_density": "high",
+    "vulnerable_population_presence": "high",
+    "access_to_cooled_indoor_space": "low",
+    "nbs_type": "street_tree_planting",
+    "new_canopy_area_at_maturity_m2": 1200,
+    "nearby_building_cooling_demand_relevant": "no",
+    "annual_cooling_energy_demand_kwh": 450000
+  },
+  "expected": {
+    "energy.status": "not_applicable",
+    "energy.savings_min_kwh_per_year": null,
+    "ghg.status": "energy_not_calculated",
+    "costs.annual_savings_status": "energy_not_calculated",
+    "opportunity.score": 72.29,
+    "confidence.energy": "medium"
+  },
+  "recommendation_contains": [
+    "Cooling-energy savings were not calculated",
+    "not relevant to this intervention"
+  ]
+}

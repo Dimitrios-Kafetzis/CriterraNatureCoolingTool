@@ -1,0 +1,51 @@
+{
+  "name": "Worked-example site with full cost data: medium payback bracket",
+  "description": "Cost feasibility enters the aggregation with its nominal weight; no redistribution.",
+  "derivation": [
+    "As s01 plus price 0.20, capital 40000, complexity medium, maintenance low, land use street_corridor.",
+    "Suitability changes: maintenance low -> 100, street_corridor in context -> 100: 30+18.75+15+15+10 = 88.75.",
+    "Costs: annual 900 - 10260; payback 3.90 - 44.44; central 40000/5580 = 7.17 -> medium (75). Feasibility 0.5*75+0.25*50+0.25*100 = 75. Readiness medium.",
+    "Opportunity (all six): 17.9375+17.8125+13.3125+12+5.875+7.5 = 74.44 (Strong).",
+    "Confidence: economic 4/4 high; energy 3/3 high; cooling 80% high; equity 50% medium; overall high."
+  ],
+  "input": {
+    "assessment_scale": "neighbourhood",
+    "site_area_m2": 6000,
+    "existing_tree_canopy_percent": 8,
+    "existing_green_cover_percent": 12,
+    "impervious_surface_percent": 85,
+    "soil_availability": "limited",
+    "irrigation_availability": "occasional",
+    "climate_zone": "temperate",
+    "lst_anomaly_c": 4.2,
+    "solar_exposure": "high",
+    "population_density": "high",
+    "vulnerable_population_presence": "high",
+    "access_to_cooled_indoor_space": "low",
+    "nbs_type": "street_tree_planting",
+    "new_canopy_area_at_maturity_m2": 1200,
+    "nearby_building_cooling_demand_relevant": "yes",
+    "annual_cooling_energy_demand_kwh": 450000,
+    "energy_price_per_kwh": 0.2,
+    "capital_cost": 40000,
+    "implementation_complexity": "medium",
+    "maintenance_intensity": "low",
+    "land_use": "street_corridor"
+  },
+  "expected": {
+    "suitability.score": 88.75,
+    "costs.annual_savings_min": 900.0,
+    "costs.annual_savings_max": 10260.0,
+    "costs.payback_years_min": 3.9,
+    "costs.payback_years_max": 44.44,
+    "costs.payback_years_central": 7.17,
+    "costs.payback_bracket": "medium",
+    "costs.cost_feasibility_score": 75.0,
+    "costs.investment_readiness": "medium",
+    "opportunity.score": 74.44,
+    "opportunity.category": "strong",
+    "opportunity.excluded_components": [],
+    "confidence.economic": "high",
+    "confidence.overall": "high"
+  }
+}

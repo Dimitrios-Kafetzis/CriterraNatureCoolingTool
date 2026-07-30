@@ -1,0 +1,58 @@
+{
+  "name": "Green roof on a city-scale programme: street-level caveat always fires",
+  "description": "Green-roof benefits are principally building-level; the output must say so (typology output_caveats).",
+  "derivation": [
+    "Heat exposure (data-poor): medium 50. Vulnerability: 0.4*50+0.4*50+0.2*25 (high access) = 45. HPI = 30+18 = 48 (Medium).",
+    "Adjustment: canopy 0% poor 0.5; soil-water limited/occasional moderate 0.8; scale city excellent 1.2; climate building/temperate good 1.0: 0.2+0.2+0.24+0.15 = 0.79.",
+    "Cooling: 45*0.79 = 35.55; dT_min = clip(0.1*0.79=0.079, 0.1, 1.0) = 0.10; dT_max = 0.79; midpoint 0.445 low.",
+    "Suitability: space 16x 100; soil (requires none) 100; water occasional=required 75; maintenance medium 50; land use unknown 50 = 82.5.",
+    "Energy: 200000*0.1*0.02 = 400; 200000*0.79*0.04 = 6320. GHG (user 0.4): 160 - 2528.",
+    "Co-benefits: 12.5+18.75+5+7.5+7.5 = 51.25. Equity: vulnben 50, rest neutral = 50.",
+    "Opportunity (cost excluded): (12+8.8875+12.375+6.75+5.125)/0.9 = 50.15 (Moderate)."
+  ],
+  "input": {
+    "assessment_scale": "city",
+    "site_area_m2": 800,
+    "existing_tree_canopy_percent": 0,
+    "existing_green_cover_percent": 5,
+    "soil_availability": "limited",
+    "irrigation_availability": "occasional",
+    "climate_zone": "temperate",
+    "heat_exposure_level": "medium",
+    "population_density": "medium",
+    "vulnerable_population_presence": "medium",
+    "access_to_cooled_indoor_space": "high",
+    "nbs_type": "green_roof",
+    "new_canopy_area_at_maturity_m2": 0,
+    "maintenance_intensity": "medium",
+    "nearby_building_cooling_demand_relevant": "yes",
+    "annual_cooling_energy_demand_kwh": 200000,
+    "grid_emission_factor_kgco2e_per_kwh": 0.4
+  },
+  "expected": {
+    "heat_exposure.score": 50.0,
+    "vulnerability.score": 45.0,
+    "heat_priority.score": 48.0,
+    "heat_priority.category": "medium",
+    "adjustment.factor": 0.79,
+    "cooling.potential_score": 35.55,
+    "cooling.delta_t_min_c": 0.1,
+    "cooling.delta_t_max_c": 0.79,
+    "cooling.delta_t_midpoint_c": 0.445,
+    "cooling.heat_index_improvement": "low",
+    "suitability.score": 82.5,
+    "energy.savings_min_kwh_per_year": 400.0,
+    "energy.savings_max_kwh_per_year": 6320.0,
+    "ghg.avoided_min_kgco2e_per_year": 160.0,
+    "ghg.avoided_max_kgco2e_per_year": 2528.0,
+    "co_benefits.score": 51.25,
+    "equity.score": 50.0,
+    "opportunity.score": 50.15,
+    "opportunity.category": "moderate",
+    "confidence.cooling": "medium",
+    "confidence.overall": "medium"
+  },
+  "recommendation_contains": [
+    "concentrated at roof level"
+  ]
+}

@@ -110,8 +110,8 @@ neutral default of \Cref{sec:unknown}.
 
 The index is interpreted by the bands in \Cref{tab:hpi-bands}. Band boundaries
 drive recommendation text, which is why their stability under weight
-perturbation is one of the four quantities the sensitivity analysis will report
-(\Cref{sec:sensitivity}).
+perturbation is one of the four quantities the sensitivity analysis reports
+(\Cref{sec:sensitivity-results}).
 
 \begin{table}[H]
 \centering
@@ -326,7 +326,15 @@ the adjusted temperature range,
 $\overline{\dT} = (\dT_{\min} + \dT_{\max})/2$, is assigned a heat-index
 improvement bucket: \emph{low} below \qty{0.5}{\degreeCelsius}, \emph{medium}
 from \qty{0.5}{\degreeCelsius} to \qty{1.5}{\degreeCelsius}, and \emph{high}
-above \qty{1.5}{\degreeCelsius}.
+from \qty{1.5}{\degreeCelsius} upward.
+
+\paragraph{Time to benefit.} No maturity discount is applied to cooling values.
+Instead the expected maturity period is reported as a time-to-benefit class, so
+that a slow-maturing intervention is never presented as delivering its cooling
+immediately: under one year \emph{immediate}, one to three years
+\emph{short-term}, three to ten years \emph{medium-term}, ten years and beyond
+\emph{long-term} (half-open brackets). Absent a maturity period the output is
+\emph{not estimated}.
 
 \subsection{NbS Suitability, co-benefit, and equity scores}
 \label{sec:composite-subscores}
@@ -352,36 +360,74 @@ S_{\mathrm{equity}} &= \clampop\bigl(
 The co-benefit sub-indicators take per-typology default levels, each cited in
 the typology library (\Cref{app:typologies}), which the user may override.
 
-\begin{keynote}
-\noindent\textbf{Specification gaps at version \methver{}, disclosed.} Three
-things about this subsection are incomplete at the current methodology version,
-and a reviewer should know which parts of the tool are fully specified and
-which are not.
+\paragraph{The sub-indicator rules, fixed at version \methver{}.} An earlier
+version of this document disclosed that the rules mapping user inputs to the
+individual sub-indicator scores were unspecified and would be fixed alongside
+the engine implementation. They are now fixed, live in
+\texttt{config/derived\_scores.yaml}, and --- like the aggregation weights ---
+are declared expert judgment, versioned and adjustable rather than derived from
+literature. All suitability sub-indicators derive from inputs the user has
+already supplied; no new questions are asked.
 
-\begin{enumerate}
-  \item The weights in \Cref{eq:suitability,eq:cobenefit,eq:equity} are
-  declared in \texttt{config/weights.yaml}, but the rules mapping user inputs
-  to the individual sub-indicator scores $S_{\mathrm{space}}$,
-  $S_{\mathrm{soil}}$, $S_{\mathrm{water}}$, $S_{\mathrm{maint}}$,
-  $S_{\mathrm{context}}$ and to the four equity sub-indicators are
-  \emph{not} specified in version \methver{}. They are to be specified
-  alongside the engine implementation and will require a version bump and an
-  update to this document.
+\begin{table}[H]
+\centering
+\caption[Suitability sub-indicator rules]{Derivation of the NbS Suitability
+sub-indicators (decision D-022). A score of 25 on space, soil, or water
+coincides with the hard ``not suitable'' flag of \Cref{sec:suitability};
+an unknown availability never raises a flag, because a disqualification is
+never asserted from absent information.}
+\label{tab:suitability-rules}
+\small
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Sub-indicator} & \textbf{Rule} \\
+\midrule
+Space &
+$r = \text{site area} / \text{typology minimum viable area}$:
+$r < 1$ $\rightarrow$ 25 \emph{and the flag}; $1 \le r < 2$ $\rightarrow$ 50;
+$2 \le r < 5$ $\rightarrow$ 75; $r \ge 5$ $\rightarrow$ 100. \\
+\addlinespace
+Soil &
+Availability against the typology requirement on the ordinal scale
+\emph{none} $<$ \emph{limited} $<$ \emph{moderate} $<$ \emph{high}:
+requirement \emph{none} $\rightarrow$ 100; availability unknown $\rightarrow$
+50; below requirement $\rightarrow$ 25 \emph{and the flag}; meets exactly
+$\rightarrow$ 75; exceeds $\rightarrow$ 100. \\
+\addlinespace
+Water &
+The same rule on \emph{none} $<$ \emph{occasional} $<$ \emph{reliable} against
+the irrigation requirement. \\
+\addlinespace
+Maintenance &
+Declared maintenance intensity through the inverted scale: low $\rightarrow$
+100, medium $\rightarrow$ 50, high $\rightarrow$ 25, unknown $\rightarrow$ 50. \\
+\addlinespace
+Urban context &
+Site land use inside the typology's typical-use contexts $\rightarrow$ 100;
+outside them $\rightarrow$ 25 (a caution, not a disqualification); unknown
+$\rightarrow$ 50. \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
-  \item The co-benefit weights include a \emph{social inclusion} term, but the
-  typology library supplies default levels for only four of the five
-  sub-indicators (biodiversity, stormwater, public health, urban quality).
-  Absent a user override, social inclusion falls to the neutral default of
-  \Cref{sec:unknown} and is itemised as an applied assumption.
+The four equity sub-indicators read how much equity benefit the intervention
+can deliver at this site, so a \emph{deficit} raises the score, paralleling the
+risk framing of the Vulnerability Score: vulnerable-user benefit reuses the
+vulnerable-population input already collected; public accessibility and
+community participation are the two new optional inputs introduced at this
+version; and safety concern deliberately uses the standard (non-inverted)
+scale, because a site with greater safety and comfort problems stands to gain
+more from a well-designed intervention.
 
-  \item The Equity Score of \Cref{eq:equity} is computed and reported as an
-  output block with its own confidence rating, but it does \emph{not} enter the
-  final aggregation of \Cref{sec:aggregation}. Equity influences the headline
-  score through the Vulnerability Score instead. Whether this is the right
-  design is a legitimate question for reviewers; it is recorded here so that
-  the omission is visible rather than inferred.
-\end{enumerate}
-\end{keynote}
+Two disclosures carry over unchanged from the previous version. The co-benefit
+weights include a \emph{social inclusion} term for which the typology library
+supplies no default; absent a user override it falls to the neutral default of
+\Cref{sec:unknown} and is itemised as an applied assumption. And the Equity
+Score of \Cref{eq:equity} is computed and reported as an output block with its
+own confidence rating but does \emph{not} enter the final aggregation of
+\Cref{sec:aggregation}: equity influences the headline score through the
+Vulnerability Score instead. Whether that is the right design remains a
+legitimate question for reviewers.
 
 \subsection{Energy savings --- derived, not assumed}
 \label{sec:energy}
@@ -424,9 +470,13 @@ separate parameter to maintain.
 the following hold: the user confirms that nearby building cooling demand is
 relevant to the intervention; an annual cooling energy demand is supplied; and
 the selected typology is flagged as capable of affecting adjacent building
-loads. Otherwise the result carries an explicit status ---
-\texttt{not\_applicable}, \texttt{missing\_energy\_demand}, or
-\texttt{typology\_not\_applicable} --- and \textbf{never a zero}, which would
+loads. Otherwise the result carries an explicit status, checked in a fixed order ---
+\texttt{typology\_not\_applicable} (the intervention cannot affect building
+loads, whatever the user supplied), \texttt{not\_applicable} (the user states
+demand is not relevant), \texttt{relevance\_not\_confirmed} (the relevance
+question was skipped or answered \emph{unknown}; a supplied demand figure
+cannot substitute for the unanswered confirmation), or
+\texttt{missing\_energy\_demand} --- and \textbf{never a zero}, which would
 understate the result while appearing to be a finding.
 
 \paragraph{An acknowledged weakness.} The sensitivity is drawn from
@@ -522,9 +572,30 @@ S_{\mathrm{cost}} \;=\; f\bigl(\text{payback bracket},\;
 \end{equation}
 
 with short payback, low complexity, and low maintenance yielding high
-feasibility. As with the sub-scores of \Cref{sec:composite-subscores}, the
-bracket boundaries and the combination rule realising $f$ are not specified in
-version \methver{} and are to be fixed alongside the engine implementation.
+feasibility. The bracket boundaries and combination rule, fixed at version
+\methver{} (decision D-023), are as follows. Because the energy saving is an
+interval spanning an order of magnitude, the payback bracket is applied to the
+payback computed from the \emph{central} energy estimate --- the midpoint of
+the savings range --- while the reported payback interval still carries both
+ends. The brackets are half-open and follow common public-investment screening
+horizons: under 5 years scores 100 (\emph{short}); 5--10 years 75
+(\emph{medium}); 10--20 years 50 (\emph{long}); 20 years and beyond 25
+(\emph{very long}). The combination is
+
+\begin{equation}
+\label{eq:cost-feasibility-rule}
+S_{\mathrm{cost}} = 0.50\,S_{\mathrm{bracket}}
+ + 0.25\,S_{\mathrm{complexity}} + 0.25\,S_{\mathrm{maintenance}},
+\end{equation}
+
+with complexity and maintenance normalised through the inverted scale so that
+low complexity and low maintenance raise feasibility, and unknowns taking the
+neutral 50, itemised. Payback carries half the weight as the only quantitative
+economic signal. An \emph{investment readiness} level is reported alongside:
+the bracket sets the base (\emph{short} $\rightarrow$ high, \emph{medium}
+$\rightarrow$ medium, otherwise low), downgraded one level for high
+implementation complexity and one level for low energy-block confidence, with a
+floor at low; it is \emph{not estimated} whenever cost feasibility is.
 
 \paragraph{Exclusion rather than substitution.} When payback cannot be
 computed, cost feasibility is reported as unavailable and is \emph{excluded}

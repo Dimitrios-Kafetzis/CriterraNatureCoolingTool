@@ -1,0 +1,36 @@
+{
+  "name": "LST anomaly of +12 C: the normalisation clamps at 100",
+  "description": "OQ-05 boundary: anomalies beyond +10 C cannot push the LST score above 100.",
+  "derivation": [
+    "S_LST = clamp(10*12) = 100. Heat exposure: 40+21.25+15+13.2 = 89.45.",
+    "HPI = 0.6*89.45+0.4*80 = 85.67 (Critical).",
+    "All Layer-2/3 values as s01. Opportunity: (21.4175+17.8125+11.4375+12+5.875)/0.9 = 76.16 (Strong)."
+  ],
+  "input": {
+    "assessment_scale": "neighbourhood",
+    "site_area_m2": 6000,
+    "existing_tree_canopy_percent": 8,
+    "existing_green_cover_percent": 12,
+    "impervious_surface_percent": 85,
+    "soil_availability": "limited",
+    "irrigation_availability": "occasional",
+    "climate_zone": "temperate",
+    "lst_anomaly_c": 12.0,
+    "solar_exposure": "high",
+    "population_density": "high",
+    "vulnerable_population_presence": "high",
+    "access_to_cooled_indoor_space": "low",
+    "nbs_type": "street_tree_planting",
+    "new_canopy_area_at_maturity_m2": 1200,
+    "nearby_building_cooling_demand_relevant": "yes",
+    "annual_cooling_energy_demand_kwh": 450000
+  },
+  "expected": {
+    "heat_exposure.score": 89.45,
+    "heat_priority.score": 85.67,
+    "heat_priority.category": "critical",
+    "cooling.potential_score": 71.25,
+    "opportunity.score": 76.16,
+    "opportunity.category": "strong"
+  }
+}

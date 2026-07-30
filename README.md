@@ -7,7 +7,7 @@ Developed by [Criterra](https://criterra.eu).
 [![CI](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-> **Status: Phase 1 complete — methodology evidence base published.** The [Methodology Report](docs/methodology/METHODOLOGY.md) is open for expert review; the calculation engine is next. See [Roadmap](#roadmap).
+> **Status: Phase 2 complete — calculation engine implemented.** The pure, deterministic engine realises the [Methodology Report](docs/methodology/METHODOLOGY.md) with 100% test coverage, 20 hand-verified golden scenarios, and a published [sensitivity analysis](docs/methodology/SENSITIVITY-ANALYSIS.md). The FastAPI service is next. See [Roadmap](#roadmap).
 
 ---
 
@@ -86,15 +86,39 @@ The methodology also states plainly where it is weak: green façade and bioswale
 |---|---|---|
 | 0 | Repository scaffold, governance docs, CI | ✅ |
 | 1 | Methodology evidence base + expert Methodology Report + cited configuration | ✅ |
-| 2 | Calculation engine (pure Python, 100% test coverage, golden scenarios, sensitivity analysis) | 🔄 next |
-| 3 | FastAPI service | ⏳ |
+| 2 | Calculation engine (pure Python, 100% test coverage, golden scenarios, sensitivity analysis) | ✅ |
+| 3 | FastAPI service | 🔄 next |
 | 4 | React/TypeScript web app (questionnaire wizard, dashboard, A/B/C comparison) | ⏳ |
 | 5 | Report export (PDF / XLSX) | ⏳ |
 | 6 | Documentation site, packaging, hosting | ⏳ |
 
 ## Running locally
 
-> Coming with Phase 3/4. The target is a single command for the full stack; the engine will also be usable standalone (`pip install`, Python API + CLI).
+The engine is usable standalone today:
+
+```bash
+cd backend
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"
+pytest   # 100% engine coverage gate
+```
+
+```python
+from nature_cooling.engine import AssessmentInput, load_config, run_assessment
+
+result = run_assessment(
+    AssessmentInput(
+        assessment_scale="neighbourhood",
+        site_area_m2=6000,
+        climate_zone="temperate",
+        nbs_type="street_tree_planting",
+    ),
+    load_config(),
+)
+print(result.opportunity.score, result.opportunity.category)
+```
+
+The single-command full stack (API + web app) arrives with Phases 3/4.
 
 ## License
 

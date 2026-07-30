@@ -8,7 +8,7 @@
 #
 # Methodology Report section 5.6.
 
-version: "2026.07.30"
+version: "2026.08.01"
 
 derivation:
   formula: "energy_savings = annual_cooling_energy_demand * delta_t_c * sensitivity_per_c"
@@ -34,6 +34,7 @@ statuses:
   not_applicable: "Nearby building cooling demand is not relevant to this intervention."
   missing_energy_demand: "Annual cooling energy demand was not provided."
   typology_not_applicable: "This typology's benefit is principally amenity-level; building cooling-energy savings are not estimated."
+  relevance_not_confirmed: "It was not confirmed that nearby building cooling demand is relevant to this intervention."
 
 limitations:
   - >

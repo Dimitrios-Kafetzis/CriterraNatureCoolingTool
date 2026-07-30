@@ -5,7 +5,7 @@ standalone, publication-quality scientific paper for expert review — the
 document to send to UNEP, independent scientific reviewers, and public
 authorities.
 
-**Methodology version:** `2026.07.30` · **Licence:** Apache-2.0 · **Author:** Criterra
+**Methodology version:** `2026.08.01` · **Licence:** Apache-2.0 · **Author:** Criterra
 
 This paper is the expanded, citable form of
 [`docs/methodology/METHODOLOGY.md`](../docs/methodology/METHODOLOGY.md). It is
@@ -20,7 +20,7 @@ version stamp.
 
 > Criterra (2026). *The Nature for Cooling Rapid Assessment Tool: a transparent,
 > evidence-grounded screening methodology for prioritising nature-based solutions
-> for urban cooling.* Methodology Report, version 2026.07.30.
+> for urban cooling.* Methodology Report, version 2026.08.01.
 > https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool
 
 ```bibtex

@@ -1,0 +1,36 @@
+{
+  "name": "Negative LST anomaly (cooler than the city mean): LST score floors at 0",
+  "description": "OQ-05 boundary: a site cooler than the city mean contributes zero LST signal, not a negative one.",
+  "derivation": [
+    "S_LST = clamp(10*-2) = 0. Heat exposure: 0+21.25+15+13.2 = 49.45.",
+    "HPI = 0.6*49.45+0.4*80 = 61.67 (High).",
+    "Opportunity: (15.4175+17.8125+11.4375+12+5.875)/0.9 = 69.49 (Strong)."
+  ],
+  "input": {
+    "assessment_scale": "neighbourhood",
+    "site_area_m2": 6000,
+    "existing_tree_canopy_percent": 8,
+    "existing_green_cover_percent": 12,
+    "impervious_surface_percent": 85,
+    "soil_availability": "limited",
+    "irrigation_availability": "occasional",
+    "climate_zone": "temperate",
+    "lst_anomaly_c": -2.0,
+    "solar_exposure": "high",
+    "population_density": "high",
+    "vulnerable_population_presence": "high",
+    "access_to_cooled_indoor_space": "low",
+    "nbs_type": "street_tree_planting",
+    "new_canopy_area_at_maturity_m2": 1200,
+    "nearby_building_cooling_demand_relevant": "yes",
+    "annual_cooling_energy_demand_kwh": 450000
+  },
+  "expected": {
+    "heat_exposure.score": 49.45,
+    "heat_exposure.path": "data_rich",
+    "heat_priority.score": 61.67,
+    "heat_priority.category": "high",
+    "opportunity.score": 69.49,
+    "opportunity.category": "strong"
+  }
+}

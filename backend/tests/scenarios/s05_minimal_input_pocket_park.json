@@ -1,0 +1,43 @@
+{
+  "name": "Minimal input: only the four required fields, unknown climate",
+  "description": "The engine's floor: everything optional absent, climate zone 'other'. Low confidence throughout; no silent zeros.",
+  "derivation": [
+    "Heat exposure (data-poor, defaulted): 50. Vulnerability 50. HPI 50 (Medium).",
+    "Adjustment: canopy unknown 1.0; soil-water unknown 1.0; scale site 0.8; climate other -> unknown 1.0: 0.40+0.25+0.16+0.15 = 0.96.",
+    "Cooling: 65*0.96 = 62.4; dT_min = clip(0.3*0.96=0.288, 0.3, 1.5) = 0.30; dT_max = 1.44; midpoint 0.87 medium.",
+    "Suitability: space 500/200=2.5x -> 75; soil unknown 50; water unknown 50; maintenance unknown 50; land use unknown 50: 22.5+12.5+10+7.5+5 = 57.5.",
+    "Energy: pocket park not building-energy applicable -> typology_not_applicable.",
+    "Co-benefits 58.75; equity 50.",
+    "Opportunity (cost excluded): (12.5+15.6+8.625+7.5+5.875)/0.9 = 55.67 (Moderate)."
+  ],
+  "input": {
+    "assessment_scale": "site",
+    "site_area_m2": 500,
+    "climate_zone": "other",
+    "nbs_type": "pocket_park"
+  },
+  "expected": {
+    "heat_priority.score": 50.0,
+    "adjustment.factor": 0.96,
+    "adjustment.climate.level": "unknown",
+    "cooling.potential_score": 62.4,
+    "cooling.delta_t_min_c": 0.3,
+    "cooling.delta_t_max_c": 1.44,
+    "cooling.heat_index_improvement": "medium",
+    "cooling.shade_potential_status": "not_estimated",
+    "cooling.time_to_benefit_status": "not_estimated",
+    "suitability.score": 57.5,
+    "energy.status": "typology_not_applicable",
+    "costs.cost_feasibility_status": "not_estimated",
+    "opportunity.score": 55.67,
+    "opportunity.category": "moderate",
+    "confidence.cooling": "low",
+    "confidence.energy": "low",
+    "confidence.economic": "low",
+    "confidence.equity": "low",
+    "confidence.overall": "low"
+  },
+  "recommendation_contains": [
+    "treat the result as a screening signal"
+  ]
+}

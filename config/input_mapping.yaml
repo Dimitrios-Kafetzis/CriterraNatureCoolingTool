@@ -5,7 +5,7 @@
 # deliberate, disclosed choice: it avoids optimistic and pessimistic bias alike
 # while the confidence mechanism records that the information was absent.
 
-version: "2026.07.30"
+version: "2026.08.01"
 
 standard_levels:
   low: 25
@@ -28,6 +28,14 @@ fields:
   population_density: standard_levels
   vulnerable_population_presence: standard_levels
   safety_concern: standard_levels
+  public_accessibility: standard_levels
+  community_participation: standard_levels
+
+  # Inverted: LOW implementation complexity and LOW maintenance intensity are
+  # favourable, raising the derived cost feasibility score (D-010, D-023) and,
+  # for maintenance, the suitability maintenance sub-indicator (D-022).
+  implementation_complexity: inverted_levels
+  maintenance_intensity: inverted_levels
 
   access_to_cooled_indoor_space:
     scale: inverted_levels
@@ -56,6 +64,13 @@ fields:
     medium: 75
     high: 100
     unknown: 50
+
+impervious_surface_percent:
+  # Used directly as a 0-100 score in the data-rich Heat Exposure path
+  # (Methodology Report 5.1). Declared explicitly here because the paper at
+  # version 2026.07.30 noted this treatment was inferred from the formula but
+  # absent from configuration.
+  method: direct_percent
 
 lst_normalisation:
   # Land surface temperature anomaly (degrees C above city mean) to 0-100 score.

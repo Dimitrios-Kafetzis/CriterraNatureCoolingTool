@@ -1,0 +1,47 @@
+{
+  "name": "Long payback with high implementation complexity: readiness downgraded to low",
+  "description": "The long bracket (10-20 years) combined with high complexity floors investment readiness.",
+  "derivation": [
+    "As s01 plus price 0.10, capital 40000, complexity high, maintenance medium, land use street_corridor.",
+    "Suitability: maintenance medium -> 50, context 100: 30+18.75+15+7.5+10 = 81.25.",
+    "Costs: annual 450 - 5130; payback 7.80 - 88.89; central 40000/2790 = 14.34 -> long (50). Feasibility 0.5*50+0.25*25+0.25*50 = 43.75. Readiness long -> low (already at floor; high complexity cannot lower it further).",
+    "Opportunity: 17.9375+17.8125+12.1875+12+5.875+4.375 = 70.19 (Strong)."
+  ],
+  "input": {
+    "assessment_scale": "neighbourhood",
+    "site_area_m2": 6000,
+    "existing_tree_canopy_percent": 8,
+    "existing_green_cover_percent": 12,
+    "impervious_surface_percent": 85,
+    "soil_availability": "limited",
+    "irrigation_availability": "occasional",
+    "climate_zone": "temperate",
+    "lst_anomaly_c": 4.2,
+    "solar_exposure": "high",
+    "population_density": "high",
+    "vulnerable_population_presence": "high",
+    "access_to_cooled_indoor_space": "low",
+    "nbs_type": "street_tree_planting",
+    "new_canopy_area_at_maturity_m2": 1200,
+    "nearby_building_cooling_demand_relevant": "yes",
+    "annual_cooling_energy_demand_kwh": 450000,
+    "energy_price_per_kwh": 0.1,
+    "capital_cost": 40000,
+    "implementation_complexity": "high",
+    "maintenance_intensity": "medium",
+    "land_use": "street_corridor"
+  },
+  "expected": {
+    "suitability.score": 81.25,
+    "costs.annual_savings_min": 450.0,
+    "costs.annual_savings_max": 5130.0,
+    "costs.payback_years_min": 7.8,
+    "costs.payback_years_max": 88.89,
+    "costs.payback_years_central": 14.34,
+    "costs.payback_bracket": "long",
+    "costs.cost_feasibility_score": 43.75,
+    "costs.investment_readiness": "low",
+    "opportunity.score": 70.19,
+    "opportunity.category": "strong"
+  }
+}

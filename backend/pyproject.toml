@@ -54,7 +54,7 @@ packages = ["nature_cooling"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=nature_cooling --cov-report=term-missing"
+addopts = "--cov=nature_cooling --cov-report=term-missing --cov-fail-under=100"
 
 [tool.coverage.run]
 source = ["src/nature_cooling"]

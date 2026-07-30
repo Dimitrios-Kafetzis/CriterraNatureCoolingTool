@@ -1,0 +1,230 @@
+# Derivation rules for composite sub-scores and derived outputs
+#
+# The methodology paper at version 2026.07.30 disclosed that the rules mapping
+# user inputs to the NbS Suitability and Equity sub-indicators, the cost
+# feasibility brackets and combination rule, the confidence field-to-block
+# mapping, and the time-to-benefit buckets were NOT yet specified, and that
+# they would be "specified alongside the engine implementation" with a version
+# bump. This file discharges that commitment (decisions D-022, D-023, D-024).
+#
+# These rules are expert judgment in the sense of nardo2008 (as the aggregation
+# weights are): no literature supplies them, so each carries its rationale and
+# all are versioned, adjustable, and exercised by the published sensitivity
+# analysis where they feed the final aggregation.
+#
+# Bracket convention in this file: a value falls in a bracket when
+# value >= min and value < max (half-open intervals; min absent means no lower
+# bound, max absent means no upper bound). The one exception is score_bands,
+# which uses (min, max] so that the documented integer band edges (30, 60, 80)
+# belong to the lower band, matching the Methodology Report's "0-30 / 31-60"
+# reading.
+
+version: "2026.08.01"
+
+suitability_sub_indicators:
+  # NbS Suitability Score = 0.30 space + 0.25 soil + 0.20 water
+  #                       + 0.15 maintenance + 0.10 urban_context
+  # (weights in weights.yaml). All sub-indicators are derived from inputs the
+  # user has already supplied (OQ-16/17): no new user-facing questions.
+  space:
+    # ratio = site_area_m2 / typology minimum_site_area_m2
+    brackets:
+      - {max_ratio: 1.0, score: 25, flag: below_minimum_area}
+      - {min_ratio: 1.0, max_ratio: 2.0, score: 50}
+      - {min_ratio: 2.0, max_ratio: 5.0, score: 75}
+      - {min_ratio: 5.0, score: 100}
+    rationale: >
+      A site below the typology's minimum viable area scores 25 and raises the
+      hard "not suitable" flag of D-009 (the assessment still computes
+      transparently). At exactly the minimum the intervention fits with no
+      margin (50); a twofold margin allows layout flexibility (75); a fivefold
+      margin removes space as a constraint entirely (100).
+  requirement_match:
+    # Applied to soil (soil_availability vs requires_soil) and water
+    # (irrigation_availability vs requires_irrigation). Availability and
+    # requirement are compared on the ordinal ranks below.
+    no_requirement: 100
+    unknown_availability: 50
+    below_requirement: 25 # also raises the corresponding suitability flag
+    meets_requirement: 75
+    exceeds_requirement: 100
+    soil_ranks: {none: 0, limited: 1, moderate: 2, high: 3}
+    irrigation_ranks: {none: 0, occasional: 1, reliable: 2}
+    rationale: >
+      A typology that requires nothing is fully suitable on that axis whatever
+      the site offers. Where a requirement exists, failing to meet it is
+      disqualifying (25, plus the D-009 flag); meeting it exactly leaves no
+      margin for drought years or maintenance lapses (75); headroom above the
+      requirement removes the constraint (100). Unknown availability takes the
+      neutral 50 of the unknown-input policy, and no flag is raised because a
+      disqualification is never asserted from absent information.
+  maintenance:
+    # From the user's declared maintenance intensity for the intervention,
+    # via the inverted scale of input_mapping.yaml: low intensity -> 100,
+    # medium -> 50, high -> 25, unknown -> 50.
+    field: maintenance_intensity
+    scale: inverted_levels
+    rationale: >
+      Lower ongoing maintenance demand makes an intervention more likely to
+      survive municipal budget cycles; high demand is a known failure mode for
+      urban greening, so it reduces suitability without disqualifying.
+  urban_context:
+    # Compares the site's declared land use against the typology's
+    # typical_use_context list.
+    in_context: 100
+    out_of_context: 25
+    unknown: 50
+    rationale: >
+      Deployment inside the typology's documented use contexts is fully
+      suitable; deployment outside them is a strong caution rather than a
+      disqualification, because the context list is typical rather than
+      exhaustive. At weight 0.10 the maximum penalty is 7.5 points.
+
+equity_sub_indicators:
+  # Equity Score = 0.35 vulnerable_user_benefit + 0.25 public_accessibility
+  #              + 0.20 safety_comfort + 0.20 participation_relevance
+  # (weights in weights.yaml). The block is reported with its own confidence
+  # and does NOT enter the final aggregation (disclosed in the methodology).
+  #
+  # Reading: each sub-indicator measures how much equity benefit the
+  # intervention can deliver here, so a *deficit* raises the score - a site
+  # with more vulnerable users present, or greater safety and comfort concern,
+  # has more equity value to gain from the intervention. This parallels the
+  # risk framing of the Vulnerability Score.
+  vulnerable_user_benefit:
+    field: vulnerable_population_presence
+    scale: standard_levels
+  public_accessibility:
+    field: public_accessibility
+    scale: standard_levels
+  safety_comfort:
+    field: safety_concern
+    scale: standard_levels
+  participation_relevance:
+    field: community_participation
+    scale: standard_levels
+  rationale: >
+    Vulnerable-user benefit reuses the vulnerable-population input already
+    collected (no duplicate question). Public accessibility and community
+    participation are the two genuinely new optional inputs introduced at this
+    version; both were anticipated by the questionnaire design. Safety concern
+    uses the standard (non-inverted) scale deliberately: a site with greater
+    safety and comfort problems stands to gain more equity benefit from a
+    well-designed intervention, exactly as higher vulnerable presence does.
+
+cost_feasibility:
+  # Cost feasibility is DERIVED (D-010), never user-asserted, and only where a
+  # payback could be computed (user-supplied capital cost and energy price,
+  # plus a calculated energy saving). Otherwise it is not_estimated and is
+  # excluded from the final aggregation with its weight redistributed.
+  #
+  # The bracket is applied to the payback computed from the CENTRAL energy
+  # estimate (the midpoint of the energy savings range): bracketing either
+  # extreme of a range that spans an order of magnitude would let the least
+  # certain end of the interval drive the score.
+  payback_brackets:
+    - {max_years: 5, score: 100, label: short}
+    - {min_years: 5, max_years: 10, score: 75, label: medium}
+    - {min_years: 10, max_years: 20, score: 50, label: long}
+    - {min_years: 20, score: 25, label: very_long}
+  rationale: >
+    Bracket boundaries follow common public-investment screening practice:
+    under five years is short enough to fit a single budget mandate; five to
+    ten years matches typical municipal capital planning horizons; ten to
+    twenty years requires dedicated adaptation finance; beyond twenty years the
+    energy-cost case alone cannot carry the investment and the decision rests
+    on the non-monetised benefits. Combination weights (payback 0.50,
+    implementation complexity 0.25, maintenance intensity 0.25) are in
+    weights.yaml; complexity and maintenance normalise through the inverted
+    scale so that low complexity and low maintenance raise feasibility.
+
+investment_readiness:
+  # Resolves OQ-11 (D-011): payback bracket x implementation complexity x
+  # energy-block confidence. Reported qualitatively; not_estimated whenever
+  # cost feasibility is not_estimated.
+  base_by_payback_bracket: {short: high, medium: medium, long: low, very_long: low}
+  downgrade_if_complexity_high: true
+  downgrade_if_energy_confidence_low: true
+  levels_order: [low, medium, high]
+  rationale: >
+    Readiness starts from the payback bracket, then is downgraded one level if
+    implementation complexity is high (delivery risk) and one level if the
+    energy-block confidence is low (the payback itself rests on weak inputs),
+    with a floor at low.
+
+time_to_benefit:
+  # Resolves OQ-06 (D-011): no maturity discount is applied to cooling values;
+  # instead the expected maturity period is reported as a time-to-benefit
+  # class so that a slow-maturing intervention is never presented as
+  # delivering its cooling immediately.
+  buckets:
+    - {max_years: 1, label: immediate}
+    - {min_years: 1, max_years: 3, label: short_term}
+    - {min_years: 3, max_years: 10, label: medium_term}
+    - {min_years: 10, label: long_term}
+  rationale: >
+    Within one year covers installed systems (shade structures with climbers,
+    container trees); one to three years covers fast-establishing planting;
+    three to ten years covers most tree planting reaching functional canopy;
+    beyond ten years covers slow-maturing forest and riparian systems.
+
+confidence:
+  # The field-to-block mapping for branched confidence (D-011/OQ-09, D-024).
+  # Completeness of a block = supplied groups / total groups, as a percentage.
+  # A group (inner list) counts as supplied when ANY of its fields is present:
+  # lst_anomaly_c and heat_exposure_level are alternative signals for the same
+  # quantity, so supplying either completes that slot. A field answered
+  # "unknown" counts as not supplied: an explicit unknown carries no more
+  # information than a skipped question.
+  thresholds:
+    low_below_percent: 40
+    high_above_percent: 70
+  blocks:
+    cooling:
+      - [existing_tree_canopy_percent]
+      - [existing_green_cover_percent]
+      - [impervious_surface_percent]
+      - [soil_availability]
+      - [irrigation_availability]
+      - [current_shade_level]
+      - [lst_anomaly_c, heat_exposure_level]
+      - [solar_exposure]
+      - [new_canopy_area_at_maturity_m2]
+      - [expected_maturity_period_years]
+    energy:
+      - [nearby_building_cooling_demand_relevant]
+      - [annual_cooling_energy_demand_kwh]
+      - [energy_price_per_kwh]
+    economic:
+      - [capital_cost]
+      - [energy_price_per_kwh]
+      - [implementation_complexity]
+      - [maintenance_intensity]
+    equity:
+      - [population_density]
+      - [vulnerable_population_presence]
+      - [access_to_cooled_indoor_space]
+      - [safety_concern]
+      - [public_accessibility]
+      - [community_participation]
+  # Overall confidence is the lower median of the four block ratings (ranks
+  # low < medium < high; sort the four ranks and take the second-lowest).
+  # A mean would need a rounding rule at half-steps; the lower median is
+  # exact, slightly conservative, and never reports an overall confidence
+  # higher than three of the four blocks.
+  overall_rule: lower_median
+
+score_bands:
+  # Interpretation bands (Methodology Report 5.3 and 5.9). A score falls in
+  # the first band whose max it does not exceed: (min, max] intervals, so a
+  # score of exactly 30 is low and 30.01 is medium/moderate.
+  heat_priority_index:
+    - {max: 30, label: low}
+    - {min: 30, max: 60, label: medium}
+    - {min: 60, max: 80, label: high}
+    - {min: 80, label: critical}
+  opportunity:
+    - {max: 30, label: low}
+    - {min: 30, max: 60, label: moderate}
+    - {min: 60, max: 80, label: strong}
+    - {min: 80, label: high_priority}

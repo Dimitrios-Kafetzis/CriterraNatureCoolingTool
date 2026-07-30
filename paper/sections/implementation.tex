@@ -53,7 +53,14 @@ Grid emission factor source, licence, and per-country schema; energy price
 policy. Deliberately contains no cost values. \\
 \addlinespace
 \texttt{recommendation\_templates.yaml} &
-The deterministic text fragments from which recommendations are composed. \\
+The deterministic text fragments from which recommendations are composed, and
+the conditions under which climate-dependent caveats fire. \\
+\addlinespace
+\texttt{derived\_scores.yaml} &
+The derivation rules fixed at version \methver{}: suitability and equity
+sub-indicator rules, cost-feasibility payback brackets, investment-readiness
+rules, time-to-benefit buckets, the confidence field-to-block mapping, and the
+score interpretation bands. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -80,18 +87,23 @@ described planned software in the present tense would forfeit precisely the
 credibility this section exists to establish.
 
 \textbf{Implemented and running in continuous integration:} the configuration
-layer --- schema-validated loading of all seven methodology files, version
+layer --- schema-validated loading of all eight methodology files, version
 lock-step enforcement, and the citation cross-check against the bibliography ---
-together with the six evidence rules of \Cref{sec:evidence-rules} and the tests
-that enforce them.
+the six evidence rules of \Cref{sec:evidence-rules}; and, as of version
+\methver{}, the calculation engine itself: the input and result schemas, one
+scoring module per formula family, branched confidence, the deterministic
+recommendation composer, and the orchestrating entry point, under a
+\SI{100}{\percent} line-coverage gate with twenty hand-verified golden
+scenarios, a byte-identical determinism test, and the executed sensitivity
+analysis of \Cref{sec:sensitivity-results}.
 
-\textbf{Specified but not yet implemented:} the scoring engine itself, the
-per-module scoring tests, the golden-scenario set, the API layer, and the
-sensitivity analysis of \Cref{sec:sensitivity}. These are Phase 2 work.
+\textbf{Specified but not yet implemented:} the API layer and the web
+interface. These are Phases 3 and 4.
 
-Consequently no assessment result exists yet, and every score in this paper ---
-including the worked example of \Cref{sec:worked-example} --- was computed by
-hand from the specification.
+Every number in the worked example of \Cref{sec:worked-example} was first
+computed by hand from the specification and is now also asserted, digit for
+digit, by the engine's golden-scenario suite --- the hand derivation is the
+expected value, never the engine's own output.
 \end{keynote}
 
 \subsection{The engine contract}
@@ -173,8 +185,8 @@ produce a subtly wrong tool; they produce a red build.
 \subsection{Testing and continuous integration}
 \label{sec:testing}
 
-\paragraph{Running today.} The test suite at version \methver{} covers the
-configuration layer: it asserts that all fourteen typologies load and validate,
+\paragraph{The configuration layer.} The test suite asserts that all
+fourteen typologies load and validate,
 that every configuration file shares one version stamp, that every typology
 carries at least one citation with a stated finding, that every source key
 resolves against the bibliography, that temperature envelopes are ordered and
@@ -184,18 +196,20 @@ emission value ships. Negative cases are tested explicitly: an invented
 citation key, a version mismatch, an uncited typology, and an inverted envelope
 must each fail the load.
 
-These are the six evidence rules of \Cref{sec:evidence-rules}, and they are the
-substance of what continuous integration currently guarantees. Continuous
+These are the six evidence rules of \Cref{sec:evidence-rules}. Continuous
 integration runs linting, format checking, strict static type checking, and the
-test suite with a coverage gate on every push and pull request, across
-supported Python versions.
+full test suite --- configuration, scoring, confidence, recommendation,
+scenarios, determinism --- with the \SI{100}{\percent} engine coverage gate on
+every push and pull request, across supported Python versions.
 
-\paragraph{Specified for Phase 2.} Unit tests for each scoring module against a
-\SI{100}{\percent} engine coverage target; the golden-scenario set, each case a
-stored input with a hand-verified expected output, serving as regression armour
-against unintended methodology drift and as the basis of the sensitivity
-analysis; API contract tests; and a determinism test asserting byte-identical
-results across repeated runs.
+\paragraph{Delivered in Phase 2.} Unit tests for every scoring module, with
+the \SI{100}{\percent} engine line-coverage target enforced as a build gate;
+twenty golden scenarios, each a stored input with a hand-verified expected
+output and its derivation, serving as regression armour against unintended
+methodology drift and as the basis of the sensitivity analysis of
+\Cref{sec:sensitivity-results}; and a determinism test asserting
+byte-identical results across repeated runs and freshly loaded configurations.
+API contract tests follow with Phase 3.
 
 The ordering is deliberate rather than incidental. The evidence rules were
 implemented before the scoring code they protect, so that no scoring value can
@@ -206,9 +220,9 @@ temporarily, during development.
 
 The methodology version --- \methver{} at the time of writing --- stamps this
 document, the Methodology Report in the repository, and every configuration
-file, and is to be recorded in every assessment result the engine produces.
-Lock-step across those files is enforced today; the stamping of results follows
-with the engine.
+file, and is recorded, together with the engine version, in every assessment
+result the engine produces. Lock-step across the configuration files is
+enforced by the build.
 
 This has a consequence that matters for how the tool behaves over time.
 Existing assessments are \emph{never} to be silently recomputed. A result

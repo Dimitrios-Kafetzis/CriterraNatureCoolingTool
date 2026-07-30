@@ -1,0 +1,50 @@
+{
+  "name": "Riparian restoration on a small commercial site with limited soil: not suitable",
+  "description": "Two disqualifying conditions (area, soil). The assessment still computes transparently (D-009) and the flags surface in the recommendation.",
+  "derivation": [
+    "Heat exposure (data-poor): medium -> 50. Vulnerability all unknown -> 50. HPI = 50 (Medium).",
+    "Adjustment: canopy unknown 1.0; soil-water limited -> moderate 0.8; scale site moderate 0.8; climate blue_green/temperate good 1.0: 0.40+0.20+0.16+0.15 = 0.91.",
+    "Cooling: 85*0.91 = 77.35; dT 1.00 (floor) - 2.73; midpoint 1.865 high.",
+    "Suitability: space 400/1000 = 0.4x -> 25 + flag; soil limited < moderate -> 25 + flag; water (requires none) 100; maintenance unknown 50; commercial not in context 25: 7.5+6.25+20+7.5+2.5 = 43.75.",
+    "Energy: riparian restoration is not building-energy applicable -> typology_not_applicable.",
+    "Co-benefits: 0.25*75+0.25*75+0.2*50+0.15*50+0.15*75 = 66.25. Equity all neutral 50.",
+    "Opportunity (cost excluded): (12.5+19.3375+6.5625+7.5+6.625)/0.9 = 58.36 (Moderate).",
+    "Confidence: cooling 2/10 low; energy 0 low; economic 0 low; equity 0 low; overall low."
+  ],
+  "input": {
+    "assessment_scale": "site",
+    "site_area_m2": 400,
+    "soil_availability": "limited",
+    "land_use": "commercial",
+    "climate_zone": "temperate",
+    "heat_exposure_level": "medium",
+    "nbs_type": "riparian_restoration"
+  },
+  "expected": {
+    "heat_exposure.score": 50.0,
+    "vulnerability.score": 50.0,
+    "heat_priority.score": 50.0,
+    "heat_priority.category": "medium",
+    "adjustment.factor": 0.91,
+    "cooling.potential_score": 77.35,
+    "cooling.delta_t_min_c": 1.0,
+    "cooling.delta_t_max_c": 2.73,
+    "suitability.score": 43.75,
+    "suitability.suitable": false,
+    "suitability.flags.0.code": "below_minimum_area",
+    "suitability.flags.1.code": "insufficient_soil",
+    "energy.status": "typology_not_applicable",
+    "ghg.status": "energy_not_calculated",
+    "co_benefits.score": 66.25,
+    "equity.score": 50.0,
+    "opportunity.score": 58.36,
+    "opportunity.category": "moderate",
+    "confidence.overall": "low"
+  },
+  "recommendation_contains": [
+    "IMPORTANT: this typology is not suitable for this site",
+    "site area 400 m2 is below the minimum viable area of 1000 m2 for Riparian restoration",
+    "soil availability 'limited' is below the typology requirement 'moderate'",
+    "treat the result as a screening signal"
+  ]
+}

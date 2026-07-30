@@ -43,14 +43,18 @@ base is skewed toward temperate and subtropical Northern Hemisphere cities, and
 the confidence model does not yet measure that skew. The aggregation weights are
 expert judgment, including a disclosed equity-forward stance that gives
 vulnerability an effective weight of \num{0.25} against heat exposure at
-\num{0.15}. The sensitivity analysis specified in \Cref{sec:sensitivity} is a
-commitment whose results do not yet exist, and several sub-indicator derivation
-rules remain unspecified at this version.
+\num{0.15}. The sensitivity analysis of \Cref{sec:sensitivity-results} finds the ranking
+substantially stable under \SI{\pm 25}{\percent} single-weight perturbation ---
+worst-case pairwise stability \num{0.9737}, with three near-boundary category
+changes in 240 scenario-perturbation combinations --- which bounds how much the
+contestable weights actually move decisions.
 
-The methodology is offered for review in that condition rather than after its
-gaps have been closed, because the values most in need of scrutiny are settled
-most cheaply before an engine, a user base, and a set of published assessments
-have accumulated around them. The tool, its complete configuration, and this
+The methodology was first offered for review with its gaps disclosed rather
+than closed, because the values most in need of scrutiny are settled most
+cheaply before an engine, a user base, and a set of published assessments have
+accumulated around them. Version \methver{} closes the disclosed specification
+gaps --- the sub-indicator rules, the cost-feasibility derivation, and the
+confidence field mapping --- without altering any evidence-derived value. The tool, its complete configuration, and this
 document are public under the Apache License 2.0. Every value it applies names
 its source; \Cref{app:verification} states what was actually verified about
 each of those sources, including where publisher restrictions meant a finding

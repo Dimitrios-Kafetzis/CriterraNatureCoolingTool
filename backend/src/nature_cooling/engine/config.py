@@ -72,6 +72,7 @@ class Typology(BaseModel):
     typical_use_context: list[str]
     suitability: Suitability
     co_benefit_defaults: dict[str, str]
+    output_caveats: list[str] = Field(default_factory=list)
     sources: list[Source] = Field(min_length=1)
     notes: str | None = None
 
@@ -132,6 +133,7 @@ class MethodologyConfig(BaseModel):
     energy_model: dict[str, Any]
     country_defaults: dict[str, Any]
     recommendation_templates: dict[str, Any]
+    derived_scores: dict[str, Any]
 
 
 _CONFIG_FILES = {
@@ -141,6 +143,7 @@ _CONFIG_FILES = {
     "energy_model": "energy_model.yaml",
     "country_defaults": "country_defaults.yaml",
     "recommendation_templates": "recommendation_templates.yaml",
+    "derived_scores": "derived_scores.yaml",
 }
 
 

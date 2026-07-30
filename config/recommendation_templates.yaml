@@ -5,7 +5,7 @@
 # or reporting path: the transparency and determinism commitments require that
 # identical inputs always produce identical text (decision D-011 / OQ-12).
 
-version: "2026.07.30"
+version: "2026.08.01"
 
 opening:
   by_heat_priority:
@@ -45,9 +45,20 @@ flags:
   cost_not_estimated: >
     Capital cost, payback and cost feasibility were not estimated because no cost
     input was supplied. This tool ships no default cost values.
+  payback_not_estimated: >
+    A capital cost was supplied, but payback and cost feasibility could not be
+    derived because {reason}.
   low_confidence: >
     Data completeness for this assessment is low; treat the result as a screening
     signal for further investigation rather than a conclusion.
+
+caveat_rules:
+  # Conditions under which climate-dependent caveat flags fire. Typology-bound
+  # caveats (the green-roof street-level caveat) are declared per typology via
+  # output_caveats in nbs_typologies.yaml instead.
+  blue_humidity:
+    categories: [blue_green]
+    climate_zones: [tropical_wet]
 
 closing:
   standard: >

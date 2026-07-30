@@ -13,9 +13,9 @@ Every input is either \emph{required}, in which case the assessment cannot
 proceed without it, or \emph{optional}, in which case its absence reduces
 confidence but never blocks the assessment. The interaction design anticipates
 roughly forty-five inputs, of which it expects about twenty to be mandatory;
-\Cref{app:fields} marks as required only the four that a documented formula
-cannot be evaluated without, since the definitive split is fixed by the input
-schema and that schema does not yet exist. Reducing the total count
+the implemented input schema requires exactly the four fields that a
+documented formula cannot be evaluated without, and \Cref{app:fields} records
+the status and normalisation of every field at version \methver{}. Reducing the total count
 would not reduce uncertainty; it would move uncertainty from visible --- a
 stated confidence level --- to invisible --- a silent default. The interface
 consequently asks everything, makes skipping free, and shows the user what

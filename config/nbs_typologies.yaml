@@ -15,7 +15,7 @@
 # Derivations: docs/methodology/EVIDENCE-TABLES.md
 # Source keys: docs/methodology/BIBLIOGRAPHY.md
 
-version: "2026.07.30"
+version: "2026.08.01"
 
 typologies:
   - nbs_id: "01"
@@ -227,6 +227,7 @@ typologies:
       stormwater: high
       public_health: low
       urban_quality: medium
+    output_caveats: [green_roof_street_level]
     sources:
       - key: keravec2026
         finding: "Green roofs 1.1 C pedestrian-level daytime air temperature reduction, lowest-performing green measure in the synthesis."

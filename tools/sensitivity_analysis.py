@@ -1,0 +1,169 @@
+"""Sensitivity analysis of the final aggregation weights (Methodology Report 7).
+
+Varies each of the six NbS Cooling Opportunity Score weights by +/-25%
+(renormalising the remainder to a unit sum, eq. as specified in the paper) and
+re-scores the full golden-scenario set under every perturbation. Reports the
+four quantities the methodology commits to:
+
+1. Rank stability   - proportion of scenario pairs whose ordering survives
+2. Score displacement - distribution of |delta| in the Opportunity Score
+3. Category migration - how often a scenario crosses a band boundary
+4. Influence ranking  - which weights the output is most sensitive to
+
+Usage (from the repository root, with the backend environment active):
+
+    python tools/sensitivity_analysis.py > docs/methodology/SENSITIVITY-ANALYSIS.md
+
+Deterministic: same engine + same configuration + same scenarios -> identical
+output. Must be regenerated whenever any aggregation weight changes.
+"""
+
+from __future__ import annotations
+
+import json
+import statistics
+import sys
+from copy import deepcopy
+from itertools import combinations
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO_ROOT / "backend" / "src"))
+
+from nature_cooling.engine import AssessmentInput, load_config, run_assessment  # noqa: E402
+from nature_cooling.engine.config import MethodologyConfig  # noqa: E402
+
+SCENARIO_DIR = REPO_ROOT / "backend" / "tests" / "scenarios"
+PERTURBATION_FACTORS = (0.75, 1.25)
+
+
+def perturbed_config(config: MethodologyConfig, key: str, factor: float) -> MethodologyConfig:
+    """Scale weight ``key`` by ``factor`` and renormalise the set to sum to 1."""
+    weights = deepcopy(config.weights)
+    final = {
+        name: float(value)
+        for name, value in weights["final_opportunity_score"].items()
+        if isinstance(value, int | float)
+    }
+    scaled = {name: (value * factor if name == key else value) for name, value in final.items()}
+    total = sum(scaled.values())
+    weights["final_opportunity_score"] = {name: value / total for name, value in scaled.items()}
+    return config.model_copy(update={"weights": weights})
+
+
+def score_all(config: MethodologyConfig, inputs: dict[str, AssessmentInput]) -> dict[str, tuple[float, str]]:
+    return {
+        name: (result.opportunity.score, result.opportunity.category)
+        for name, result in (
+            (name, run_assessment(inp, config)) for name, inp in sorted(inputs.items())
+        )
+    }
+
+
+def rank_stability(baseline: dict[str, tuple[float, str]], varied: dict[str, tuple[float, str]]) -> float:
+    pairs = list(combinations(sorted(baseline), 2))
+    preserved = 0
+    for a, b in pairs:
+        before = baseline[a][0] - baseline[b][0]
+        after = varied[a][0] - varied[b][0]
+        if (before > 0 and after > 0) or (before < 0 and after < 0) or (before == 0 and after == 0):
+            preserved += 1
+    return preserved / len(pairs)
+
+
+def main() -> None:
+    config = load_config()
+    inputs = {
+        path.stem: AssessmentInput(**json.loads(path.read_text(encoding="utf-8"))["input"])
+        for path in sorted(SCENARIO_DIR.glob("*.json"))
+    }
+    baseline = score_all(config, inputs)
+    weight_names = [
+        name
+        for name, value in config.weights["final_opportunity_score"].items()
+        if isinstance(value, int | float)
+    ]
+
+    rows = []
+    displacement_by_weight: dict[str, list[float]] = {name: [] for name in weight_names}
+    all_displacements: list[float] = []
+    migrations_detail: list[str] = []
+
+    for name in weight_names:
+        for factor in PERTURBATION_FACTORS:
+            varied = score_all(perturbed_config(config, name, factor), inputs)
+            deltas = [abs(varied[s][0] - baseline[s][0]) for s in sorted(baseline)]
+            migrations = [
+                s for s in sorted(baseline) if varied[s][1] != baseline[s][1]
+            ]
+            for s in migrations:
+                migrations_detail.append(
+                    f"| {name} | {factor - 1:+.0%} | {s} | "
+                    f"{baseline[s][0]} ({baseline[s][1]}) -> {varied[s][0]} ({varied[s][1]}) |"
+                )
+            stability = rank_stability(baseline, varied)
+            rows.append(
+                (name, factor, stability, statistics.mean(deltas), max(deltas), len(migrations))
+            )
+            displacement_by_weight[name].extend(deltas)
+            all_displacements.extend(deltas)
+
+    n = len(baseline)
+    n_pairs = n * (n - 1) // 2
+    print("# Sensitivity analysis of the aggregation weights")
+    print()
+    print(f"Methodology version: `{config.version}`. Scenario set: {n} golden scenarios")
+    print(f"({n_pairs} scenario pairs). Each of the six final-aggregation weights was")
+    print("varied by +/-25% with the remainder renormalised to a unit sum, and the")
+    print("full scenario set re-scored under each of the 12 perturbations.")
+    print()
+    print("Generated by `tools/sensitivity_analysis.py`; regenerate whenever any")
+    print("aggregation weight changes.")
+    print()
+    print("## Per-perturbation results")
+    print()
+    print("| Weight | Perturbation | Rank stability | Mean displacement | Max displacement | Category migrations |")
+    print("|---|---|---:|---:|---:|---:|")
+    for name, factor, stability, mean_d, max_d, migrations in rows:
+        print(
+            f"| {name} | {factor - 1:+.0%} ({factor}x) | {stability:.4f} | "
+            f"{mean_d:.2f} | {max_d:.2f} | {migrations} |"
+        )
+    print()
+    print("## Score displacement distribution (all 12 perturbations pooled)")
+    print()
+    quantiles = statistics.quantiles(all_displacements, n=4)
+    print(f"- observations: {len(all_displacements)}")
+    print(f"- mean {statistics.mean(all_displacements):.2f} points; median {statistics.median(all_displacements):.2f}; "
+          f"p75 {quantiles[2]:.2f}; max {max(all_displacements):.2f}")
+    print()
+    print("## Category migrations")
+    print()
+    if migrations_detail:
+        print("| Weight | Perturbation | Scenario | Score (category) change |")
+        print("|---|---|---|---|")
+        for line in migrations_detail:
+            print(line)
+    else:
+        print("No scenario crossed a category boundary under any perturbation.")
+    print()
+    print("## Influence ranking (mean absolute displacement per weight, both directions)")
+    print()
+    print("| Rank | Weight | Mean displacement | Max displacement |")
+    print("|---:|---|---:|---:|")
+    ranking = sorted(
+        displacement_by_weight.items(), key=lambda item: statistics.mean(item[1]), reverse=True
+    )
+    for position, (name, deltas) in enumerate(ranking, start=1):
+        print(f"| {position} | {name} | {statistics.mean(deltas):.2f} | {max(deltas):.2f} |")
+    print()
+    overall_min = min(row[2] for row in rows)
+    print("## Headline figures")
+    print()
+    print(f"- Worst-case rank stability across all perturbations: **{overall_min:.4f}**")
+    print(f"- Pooled mean score displacement: **{statistics.mean(all_displacements):.2f} points**")
+    print(f"- Total category migrations: **{len(migrations_detail)}** of {12 * n} scenario-perturbation combinations")
+
+
+if __name__ == "__main__":
+    main()

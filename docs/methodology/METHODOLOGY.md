@@ -1,7 +1,9 @@
 # Nature for Cooling Rapid Assessment Tool — Methodology Report
 
-**Version:** 2026.07.30 (methodology configuration version `2026.07.30`)
-**Status:** Version 1 methodology, released for expert review
+**Version:** 2026.08.01 (methodology configuration version `2026.08.01`)
+**Status:** Version 1 methodology, released for expert review; calculation engine implemented (Phase 2)
+
+Version `2026.08.01` discharges the specification gaps disclosed at `2026.07.30`: the sub-indicator derivation rules (§5.10), the cost-feasibility brackets and combination rule (§5.8), the confidence field-to-block mapping (§6.2), and the published sensitivity analysis (§7). No typology value, envelope, or aggregation weight changed.
 **Prepared by:** Criterra
 **Licence:** Apache-2.0. Source code, configuration, and this document are public.
 
@@ -184,6 +186,8 @@ where `Vegetation_deficit_score = clamp(100 − existing_green_cover_percent)`.
 
 **Data-poor** (no LST supplied): `Heat Exposure = qualitative heat exposure level score`.
 
+On the data-rich path, a missing imperviousness or green-cover value enters as the neutral 50 with an itemised assumption — these are score components, not physical claims, and propagating *not calculated* into a composite score would block the score that a missing sub-input was only meant to weaken. On the data-poor path a missing heat exposure level likewise defaults to the neutral 50, itemised.
+
 The component selection reflects established surface-energy-balance drivers of urban heat: surface temperature, sealed surfaces, solar loading, and vegetation deficit. `ziter2019` provides direct empirical support for two of them — impervious cover raises air temperature approximately linearly, and canopy cover reduces it nonlinearly. The weights are expert judgment (§5.9).
 
 ### 5.2 Vulnerability Score
@@ -239,6 +243,8 @@ Cooling Potential Score = clamp( Base_cooling_score × Adjustment )
 
 Shade potential is reported separately and directly: `shade_potential_percent = clamp(new_canopy_area_at_maturity ÷ site_area × 100)`.
 
+**Time-to-benefit (OQ-06).** No maturity discount is applied to cooling values. Instead, the expected maturity period is reported as a time-to-benefit class so that a slow-maturing intervention is never presented as delivering its cooling immediately: under 1 year *immediate*, 1–3 years *short-term*, 3–10 years *medium-term*, beyond 10 years *long-term* (half-open brackets: a value falls in a bracket when ≥ its minimum and < its maximum; buckets in `derived_scores.yaml`). Absent a maturity period, the output is *not estimated*.
+
 ### 5.6 Energy savings — derived, not assumed
 
 The draft methodology stored per-typology "energy reduction factors" (2–15%) for which no source could be found. These have been **removed and replaced by a derivation** from the estimated cooling effect:
@@ -251,6 +257,8 @@ Energy_savings = Annual_cooling_energy_demand × ΔT × sensitivity
 `akbari2001` reports that urban electricity demand increases by **2–4% for each 1 °C** of temperature increase, and estimates that 5–10% of urban electricity demand serves to compensate for the 0.5–3.0 °C urban temperature elevation. Applying that sensitivity in reverse to an estimated temperature reduction yields an energy saving that is (a) sourced, (b) internally consistent with the tool's own cooling estimate, and (c) automatically responsive to site conditions.
 
 Two constraints apply. Energy savings are calculated **only** where the user confirms that nearby building cooling demand is relevant *and* supplies an annual cooling energy demand; otherwise the result is reported as `not_applicable` or `missing_energy_demand`, never as zero. And the derivation applies to typologies capable of affecting adjacent building loads; for typologies whose benefit is principally amenity-level, the tool reports the limitation rather than a number.
+
+The engine checks the preconditions in a fixed order and reports the first that fails: `typology_not_applicable` (the intervention cannot affect building loads, whatever the user supplied), then `not_applicable` (the user states demand is not relevant), then `relevance_not_confirmed` (the relevance question was skipped or answered *unknown* — a supplied demand figure cannot substitute for the unanswered confirmation), then `missing_energy_demand`. The range combines the clipped ΔT interval with the sensitivity interval: `E_min = demand × ΔT_min × 0.02`, `E_max = demand × ΔT_max × 0.04`.
 
 This derivation is an area where reviewer input is particularly welcome: the sensitivity is drawn from predominantly North American evidence and its transferability to other building stocks and climates is untested.
 
@@ -277,6 +285,18 @@ Cost_feasibility    = f(payback bracket, implementation complexity, maintenance 
 ```
 
 `Cost_feasibility` is derived rather than user-asserted: short payback, low complexity, and low maintenance yield high feasibility. When payback cannot be computed, cost feasibility is reported as unavailable and is excluded from aggregation with the weight redistributed proportionally — the alternative, substituting a neutral 50, would silently reward projects with no economic evidence.
+
+**The derivation, fixed at version 2026.08.01 (D-023).** Because the energy saving is an interval spanning an order of magnitude, the payback bracket is applied to the payback computed from the **central** energy estimate (the midpoint of the savings range); the reported payback interval still carries both ends. Brackets (half-open, in `derived_scores.yaml`): under 5 years → 100 (*short*), 5–10 → 75 (*medium*), 10–20 → 50 (*long*), 20 and beyond → 25 (*very long*). The boundaries follow common public-investment screening horizons: a single budget mandate, a municipal capital plan, dedicated adaptation finance, and beyond-energy-case territory respectively.
+
+```
+Cost_feasibility = 0.50 × payback_bracket_score
+                 + 0.25 × complexity_score      (inverted: low complexity → 100)
+                 + 0.25 × maintenance_score     (inverted: low maintenance → 100)
+```
+
+Payback dominates as the only quantitative economic signal; complexity and maintenance are qualitative delivery-risk modifiers weighted equally because no evidence ranks one above the other. Unknown complexity or maintenance takes the neutral 50, itemised.
+
+**Investment readiness (OQ-11).** Reported qualitatively alongside feasibility: the payback bracket sets the base level (*short* → high, *medium* → medium, *long* and *very long* → low), downgraded one level if implementation complexity is high and one level if the energy-block confidence is low, with a floor at low. Whenever cost feasibility is *not estimated*, so is investment readiness. (With the shipped confidence field mapping, a calculated energy saving implies at least medium energy confidence, so the energy-confidence downgrade binds only in deployments that alter the confidence field lists.)
 
 ### 5.9 Aggregation and the weighting question
 
@@ -307,6 +327,24 @@ Interpretation: 0–30 Low priority · 31–60 Moderate opportunity · 61–80 S
 
 The tool therefore weights *who is affected* (0.25) above *how hot the site is physically* (0.15). This is a deliberate equity-forward stance: among two equally hot sites, the one serving a more vulnerable population ranks higher. It is disclosed here because an undisclosed double contribution would be a defect; disclosed and quantified, it is a defensible position that reviewers may legitimately dispute. Any deployment may rebalance it in configuration.
 
+### 5.10 Composite sub-score derivation rules (fixed at 2026.08.01, D-022)
+
+Version 2026.07.30 declared the weights of the NbS Suitability, Co-benefit, and Equity scores but not the rules mapping inputs to their sub-indicators. Those rules are now fixed, live in `derived_scores.yaml`, and — like the aggregation weights — are expert judgment, declared and versioned rather than derived from literature.
+
+**NbS Suitability** (`0.30 space + 0.25 soil + 0.20 water + 0.15 maintenance + 0.10 urban context`). All sub-indicators derive from inputs already supplied (OQ-16/17); no new questions are asked:
+
+| Sub-indicator | Rule |
+|---|---|
+| Space | ratio = site area ÷ typology minimum viable area: <1× → 25 **and the D-009 flag**; 1–2× → 50; 2–5× → 75; ≥5× → 100 |
+| Soil | availability vs. the typology requirement on the ordinal scale none < limited < moderate < high: requirement *none* → 100; availability unknown → 50 (no flag — a disqualification is never asserted from absent information); below requirement → 25 **and the D-009 flag**; meets exactly → 75; exceeds → 100 |
+| Water | same rule on none < occasional < reliable against the irrigation requirement |
+| Maintenance | declared maintenance intensity through the inverted scale: low → 100, medium → 50, high → 25, unknown → 50 |
+| Urban context | site land use in the typology's `typical_use_context` → 100; outside it → 25 (a caution, not a disqualification); unknown → 50 |
+
+**Equity** (`0.35 vulnerable-user benefit + 0.25 public accessibility + 0.20 safety & comfort + 0.20 participation relevance`). Each sub-indicator reads how much equity benefit the intervention can deliver here, so a *deficit* raises the score, paralleling the risk framing of the Vulnerability Score. Vulnerable-user benefit reuses the vulnerable-population input (no duplicate question); public accessibility and community participation are the two new optional inputs introduced at this version; safety concern deliberately uses the standard (non-inverted) scale — a site with greater safety and comfort problems stands to gain more from a well-designed intervention. The Equity Score is reported as its own block with its own confidence and **does not enter the final aggregation**; equity reaches the headline score through the Vulnerability Score, as §5.9 discloses.
+
+**Co-benefits** take the cited per-typology default levels with user override (OQ-18). The library ships no default for *social inclusion*; absent an override it falls to the neutral 50 and is itemised. Every applied library default is likewise itemised, so a reader can see which co-benefit levels came from the user and which from the configuration.
+
 ---
 
 ## 6. Uncertainty, confidence, and missing data
@@ -327,6 +365,10 @@ A single confidence rating would obscure the common case where a site has good p
 
 Two additional constraints apply. Evidence confidence propagates: a typology rated low-confidence in the library (green façade, rain garden/bioswale, courtyard greening) caps the cooling-block confidence at medium regardless of input completeness, because complete inputs cannot compensate for thin underlying evidence. And a high score with low confidence is presented as a flag for further investigation, never as a verdict.
 
+**The field-to-block mapping, fixed at 2026.08.01 (D-024).** The fields counted for each block are enumerated in `derived_scores.yaml`: ten slots for cooling (canopy, green cover, imperviousness, soil, irrigation, shade level, one heat-signal slot filled by *either* the LST anomaly *or* the qualitative heat exposure level, solar exposure, new canopy at maturity, maturity period); three for energy (relevance confirmation, demand, energy price); four for economic (capital cost, energy price, implementation complexity, maintenance intensity); six for equity (population density, vulnerable presence, cooling access, safety concern, public accessibility, community participation). A field answered *unknown* counts as **not supplied** — an explicit unknown carries no more information than a skipped question. Completeness is the share of supplied slots; the thresholds of the table above apply with exact boundaries: below 40% low, 40–70% (inclusive) medium, above 70% high.
+
+**Overall confidence** is the lower median of the four block ratings (rank the four, take the second-lowest). A mean would need a rounding rule at half-steps; the lower median is exact, slightly conservative, and never reports an overall rating higher than three of the four blocks.
+
 ### 6.3 Missing data
 
 Required inputs must be present; the assessment does not proceed without them. Optional inputs, when absent, follow explicit rules: qualitative inputs default to `unknown` (neutral 50) and quantitative inputs propagate as *not calculated* — never as zero, which would understate results while appearing to be a finding. Every default the engine applies is itemised in the result and reproduced in the report, so a reader can see exactly which numbers came from the user and which from the tool.
@@ -337,14 +379,22 @@ Required inputs must be present; the assessment does not proceed without them. O
 
 `nardo2008` treats uncertainty and sensitivity analysis as integral to credible composite indicators, not optional. Because the aggregation weights (§5.9) are the tool's most consequential unsourced choice, their influence must be quantified and published rather than asserted to be small.
 
-The tool's published sensitivity analysis varies each aggregation weight by **±25%** (renormalising the remainder) across the golden-scenario set and reports:
+The tool's published sensitivity analysis varies each aggregation weight by **±25%** (renormalising the remainder) across the golden-scenario set and reports rank stability, score displacement, category migration, and an influence ranking. It is implemented in [`tools/sensitivity_analysis.py`](../../tools/sensitivity_analysis.py), its full output is committed at [SENSITIVITY-ANALYSIS.md](SENSITIVITY-ANALYSIS.md), and it must be regenerated whenever any aggregation weight changes.
 
-1. **Rank stability** — the proportion of scenario pairs whose relative ordering is preserved under weight perturbation. Prioritisation is the tool's actual function, so ordering matters more than absolute values.
-2. **Score displacement** — the distribution of absolute change in the Opportunity Score.
-3. **Category migration** — how often a scenario crosses a category boundary (e.g. Strong → Moderate), since categories drive recommendations.
-4. **Influence ranking** — which weights the output is most sensitive to.
+### 7.1 Results at version 2026.08.01
 
-This analysis is executed and published as part of Phase 2, when the engine and the golden-scenario set exist. Its results will be appended here and must be regenerated whenever weights change. **This section is a commitment, not yet a result** — reviewers reading version 2026.07.30 should note that the analysis has not yet been run.
+The analysis was executed against the 20 hand-verified golden scenarios (190 scenario pairs), re-scoring the full set under each of the 12 perturbations (6 weights × ±25%).
+
+1. **Rank stability.** Worst case **0.9737** (under the −25% Heat Priority Index perturbation: 5 of 190 pairs reorder); 9 of 12 perturbations preserve at least 98.4% of pair orderings. Reordering occurs only between scenarios whose baseline scores differ by less than about 2 points — pairs that the methodology itself would describe as materially equivalent.
+2. **Score displacement.** Pooled across all 240 scenario-perturbation combinations: mean **0.42** points, median 0.32, 75th percentile 0.59, maximum **2.01** points (on a 0–100 scale).
+3. **Category migration.** **3 of 240** combinations cross a band boundary, and each involves a baseline score within ~1.3 points of the boundary (59.58 → 60.3/60.39 across the Moderate–Strong line; 80.92 → 79.63 across the Strong–High-priority line). No scenario moves by more than one band, and no scenario far from a boundary migrates.
+4. **Influence ranking.** Cooling Potential (mean displacement 0.59) and the Heat Priority Index (0.53) are the most influential weights, followed by Vulnerability (0.50), Suitability (0.45), Co-benefits (0.31), and Cost Feasibility (0.16). Cost feasibility ranks last partly by construction: it is excluded and redistributed in the 15 of 20 scenarios that supply no cost data, so its weight only binds where economic evidence exists.
+
+### 7.2 Interpretation
+
+Under ±25% perturbation of any single aggregation weight, the tool's priority ordering is substantially stable: at least 97.4% of pairwise orderings survive every perturbation, absolute scores move by well under half a point on average, and category changes occur only for sites already sitting on a band boundary. The disclosed equity-forward stance (§5.9) therefore changes fewer decisions than its prominence might suggest — a deployment that disagrees with the weights can expect a materially similar priority list unless two options were near-tied to begin with.
+
+Two honest qualifications. First, the analysis perturbs one weight at a time; simultaneous perturbation of several weights would produce larger displacements, and the published figures should not be quoted as bounds for arbitrary re-weightings. Second, the golden-scenario set is designed to span the methodology's behaviour (climates, typologies, data completeness, cost availability), not to be a probability sample of real assessments; stability figures are properties of this set. Both caveats argue for the standing rule that near-boundary results be read as ranges, not verdicts — which the confidence mechanism already enforces at the point of use.
 
 ---
 
@@ -370,7 +420,7 @@ This analysis is executed and published as part of Phase 2, when the engine and 
 
 ## 9. Methodology governance
 
-**Versioning.** The methodology version (`2026.07.30`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
+**Versioning.** The methodology version (`2026.08.01`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
 
 **Change process.** Methodology changes are proposed as public pull requests with their evidence. Existing assessments are never silently recomputed: results retain the version that produced them, and the interface indicates when a newer methodology version is available.
 

@@ -1,0 +1,41 @@
+{
+  "name": "Demand supplied but relevance question skipped: relevance_not_confirmed",
+  "description": "A supplied demand cannot substitute for the unanswered relevance confirmation; energy confidence drops to low and overall confidence to low.",
+  "derivation": [
+    "Identical to s01 except the relevance question is unanswered (demand still supplied).",
+    "Energy status relevance_not_confirmed.",
+    "Energy completeness 1/3 = 33.3% -> low. Blocks [high, low, low, medium]; lower median -> low overall -> low-confidence flag in the recommendation.",
+    "Opportunity unchanged: 72.29."
+  ],
+  "input": {
+    "assessment_scale": "neighbourhood",
+    "site_area_m2": 6000,
+    "existing_tree_canopy_percent": 8,
+    "existing_green_cover_percent": 12,
+    "impervious_surface_percent": 85,
+    "soil_availability": "limited",
+    "irrigation_availability": "occasional",
+    "climate_zone": "temperate",
+    "lst_anomaly_c": 4.2,
+    "solar_exposure": "high",
+    "population_density": "high",
+    "vulnerable_population_presence": "high",
+    "access_to_cooled_indoor_space": "low",
+    "nbs_type": "street_tree_planting",
+    "new_canopy_area_at_maturity_m2": 1200,
+    "annual_cooling_energy_demand_kwh": 450000
+  },
+  "expected": {
+    "energy.status": "relevance_not_confirmed",
+    "energy.savings_min_kwh_per_year": null,
+    "ghg.status": "energy_not_calculated",
+    "opportunity.score": 72.29,
+    "confidence.energy": "low",
+    "confidence.completeness_percent.energy": 33.3,
+    "confidence.overall": "low"
+  },
+  "recommendation_contains": [
+    "it was not confirmed that nearby building cooling demand is relevant",
+    "treat the result as a screening signal"
+  ]
+}

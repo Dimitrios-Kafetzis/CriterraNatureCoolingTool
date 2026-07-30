@@ -82,6 +82,19 @@ Above \SI{70}{\percent}   & High   & As reliable as a screening instrument gets 
 \end{tabular}
 \end{table}
 
+The fields counted for each block are enumerated in
+\texttt{config/derived\_scores.yaml} (fixed at version \methver{}, decision
+D-024): ten slots for cooling --- with the LST anomaly and the qualitative heat
+exposure level sharing a single either-of slot, since they are alternative
+signals for the same quantity --- three for energy, four for economic, and six
+for equity. A field answered \emph{unknown} counts as \textbf{not supplied}:
+an explicit unknown carries no more information than a skipped question. The
+thresholds apply with exact boundaries (below \SI{40}{\percent} low,
+\SIrange{40}{70}{\percent} inclusive medium, above \SI{70}{\percent} high),
+and the overall rating attached to the headline score is the \emph{lower
+median} of the four block ratings --- exact, slightly conservative, and never
+higher than three of the four blocks.
+
 Two additional constraints apply.
 
 \subsubsection{Evidence confidence propagates}

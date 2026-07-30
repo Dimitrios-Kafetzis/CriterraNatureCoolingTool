@@ -146,6 +146,60 @@ def test_version_mismatch_is_rejected(tmp_path: Path) -> None:
         load_config(config_dir=tmp_path)
 
 
+def test_non_dated_version_is_rejected() -> None:
+    with pytest.raises(ValueError, match="date-stamped"):
+        TypologyLibrary.model_validate({"version": "v1.2", "typologies": [_typology_payload()]})
+
+
+def test_duplicate_identifiers_are_rejected() -> None:
+    payload = _typology_payload()
+    with pytest.raises(ValueError, match="duplicate"):
+        TypologyLibrary.model_validate({"version": "2026.08.01", "typologies": [payload, payload]})
+
+
+def test_non_mapping_yaml_is_rejected(tmp_path: Path) -> None:
+    for path in default_config_dir().glob("*.yaml"):
+        (tmp_path / path.name).write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+    (tmp_path / "weights.yaml").write_text("- just\n- a\n- list\n", encoding="utf-8")
+    with pytest.raises(ConfigError, match="YAML mapping"):
+        load_config(config_dir=tmp_path)
+
+
+def test_missing_bibliography_is_an_error(tmp_path: Path) -> None:
+    with pytest.raises(ConfigError, match="missing bibliography"):
+        bibliography_keys(path=tmp_path / "nowhere.md")
+
+
+def test_get_config_is_cached() -> None:
+    from nature_cooling.engine.config import get_config
+
+    assert get_config() is get_config()
+
+
+def _typology_payload() -> dict:
+    return {
+        "nbs_id": "97",
+        "nbs_type": "payload",
+        "display_name": "Payload",
+        "category": "green",
+        "base_cooling_score": 50,
+        "temp_reduction_min_c": 0.1,
+        "temp_reduction_max_c": 1.0,
+        "evidence_confidence": "low",
+        "primary_cooling_mechanism": "none",
+        "building_energy_applicable": False,
+        "typical_use_context": [],
+        "suitability": {
+            "minimum_site_area_m2": 10,
+            "requires_soil": "none",
+            "requires_irrigation": "none",
+            "unsuitable_climate_zones": [],
+        },
+        "co_benefit_defaults": {},
+        "sources": [{"key": "bowler2010", "finding": "x"}],
+    }
+
+
 def test_uncited_typology_is_rejected() -> None:
     with pytest.raises(ValueError):
         TypologyLibrary.model_validate(
