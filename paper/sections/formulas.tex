@@ -110,7 +110,7 @@ neutral default of \Cref{sec:unknown}.
 
 The index is interpreted by the bands in \Cref{tab:hpi-bands}. Band boundaries
 drive recommendation text, which is why their stability under weight
-perturbation is one of the four quantities the sensitivity analysis reports
+perturbation is one of the four quantities the sensitivity analysis will report
 (\Cref{sec:sensitivity}).
 
 \begin{table}[H]
@@ -568,8 +568,8 @@ The result is interpreted through the bands of \Cref{tab:hpi-bands}.
 value choice rather than a technical derivation, and no literature can supply
 the relative importance of cooling performance against equity against cost. The
 weights are declared here, versioned in configuration, adjustable by any
-deployment, and defended empirically through the sensitivity analysis of
-\Cref{sec:sensitivity} rather than by appeal to authority.
+deployment, and are to be defended empirically through the sensitivity analysis
+specified in \Cref{sec:sensitivity} rather than by appeal to authority.
 
 \subsection{The equity-forward weighting, stated openly}
 \label{sec:effective-weights}
@@ -597,7 +597,10 @@ The effective weights are set out in \Cref{tab:effective-weights}.
 \caption[Effective weights in the final score]{Effective weights in the NbS
 Cooling Opportunity Score, after decomposing the Heat Priority Index. The
 nominal weights are those of \Cref{eq:aggregation}; the effective weights are
-those of \Cref{eq:effective}. Both columns sum to unity.}
+those of \Cref{eq:effective}. Both columns sum to unity, as the total row
+records. The two rows below that total are not additional weights: they
+restate, for emphasis, the totals that vulnerability and heat exposure reach
+once the Heat Priority Index is decomposed.}
 \label{tab:effective-weights}
 \small
 \begin{tabular}{@{}lrr@{}}
@@ -613,6 +616,9 @@ Vulnerability (direct) & 0.15 & 0.15 \\
 Co-benefits         & 0.10 & 0.10 \\
 Cost Feasibility    & 0.10 & 0.10 \\
 \midrule
+\textbf{Total}      & \textbf{1.00} & \textbf{1.00} \\
+\midrule
+\multicolumn{3}{@{}l}{\itshape Restated from the rows above, not added to them:}\\
 \textbf{Vulnerability, total} & & \textbf{0.25} \\
 \textbf{Heat exposure, total} & & \textbf{0.15} \\
 \bottomrule
@@ -636,7 +642,7 @@ error, and a reviewer discovering it unaided would be entitled to distrust
 everything else in the methodology. Disclosed and quantified, it is a
 defensible position that reviewers may legitimately dispute. Any deployment may
 rebalance it in \texttt{config/weights.yaml} without touching code, and every
-result records the methodology version under which it was produced.
+result is to record the methodology version under which it was produced.
 \end{keynote}
 
 The double contribution is also not an accident of construction that happened

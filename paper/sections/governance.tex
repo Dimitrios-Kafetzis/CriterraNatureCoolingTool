@@ -4,8 +4,8 @@
 \subsection{Versioning}
 
 The methodology version --- \methver{} --- stamps this document, the
-Methodology Report in the repository, and every configuration file, and is
-recorded in every assessment result the engine produces. The version is a
+Methodology Report in the repository, and every configuration file, and is to
+be recorded in every assessment result the engine produces. The version is a
 date stamp rather than a semantic version, because a methodology does not have
 a meaningful notion of a backward-compatible change: any alteration to a value
 may alter a ranking.
@@ -17,10 +17,13 @@ and citations for every performance value (\Cref{sec:evidence-rules}) --- while
 the substantive half, that the documentation actually describes the new value,
 is enforced in review.
 
-Existing assessments are never silently recomputed. A result retains the
-version that produced it, and the interface indicates when a newer methodology
-version is available, leaving the decision to re-run with the user. Comparisons
-between results produced under differing versions raise a warning.
+Existing assessments are never to be silently recomputed: a result retains the
+version that produced it, the interface indicates when a newer methodology
+version is available, leaving the decision to re-run with the user, and
+comparisons between results produced under differing versions raise a warning.
+None of this is yet exercised, since no assessment result exists at version
+\methver{} (\Cref{sec:implementation-status}); it is the behaviour the engine
+is specified to have.
 
 \subsection{The public change process}
 

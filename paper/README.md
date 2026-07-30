@@ -16,6 +16,37 @@ and with the configuration in [`config/`](../config/). A change to any
 methodology value requires updating all of them together and bumping the
 version stamp.
 
+## How to cite
+
+> Criterra (2026). *The Nature for Cooling Rapid Assessment Tool: a transparent,
+> evidence-grounded screening methodology for prioritising nature-based solutions
+> for urban cooling.* Methodology Report, version 2026.07.30.
+> https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool
+
+```bibtex
+@techreport{criterra2026naturecooling,
+  author      = {{Criterra}},
+  title       = {The Nature for Cooling Rapid Assessment Tool: a transparent,
+                 evidence-grounded screening methodology for prioritising
+                 nature-based solutions for urban cooling},
+  type        = {Methodology Report},
+  institution = {Criterra},
+  year        = {2026},
+  version     = {2026.07.30},
+  url         = {https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool},
+}
+```
+
+Quote the methodology version with any score taken from the tool: the same site
+may score differently under a later version.
+
+## Contact
+
+Questions, corrections, and methodology challenges are handled openly as issues
+at [the repository issue tracker](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/issues),
+so that critique and its resolution stay part of the public record. Section 13
+of the paper describes what a well-formed challenge looks like.
+
 ## Building
 
 Requires a TeX distribution with `latexmk` and `biber` (TeX Live 2023 or later;

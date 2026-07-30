@@ -42,6 +42,12 @@ The condition-level to factor table, the four derivation rules of
 Qualitative to numeric normalisation, the inverted scale, the LST
 normalisation, and the heat-index improvement buckets. \\
 \addlinespace
+\texttt{energy\_model.yaml} &
+The cooling-energy derivation of \Cref{sec:energy}: the formula, the
+sensitivity interval of \numrange{0.02}{0.04} per \si{\degreeCelsius} with its
+citation, the three preconditions, the reported statuses, and the recorded
+limitation on transferability. \\
+\addlinespace
 \texttt{country\_defaults.yaml} &
 Grid emission factor source, licence, and per-country schema; energy price
 policy. Deliberately contains no cost values. \\
@@ -57,13 +63,40 @@ Changing the methodology never requires changing code, which has three
 consequences. A deployment can rebalance the weights it disagrees with ---
 including the equity-forward stance of \Cref{sec:effective-weights} --- without
 forking the software. A reviewer can read the complete parameterisation of the
-tool in six short files rather than by tracing constants through source code.
+tool in seven short files rather than by tracing constants through source
+code.
 And the diff of a methodology change is legible: it shows values moving, not
 logic moving.
 
-\subsection{A pure, deterministic engine}
+\subsection{What is implemented at version \methver{}}
+\label{sec:implementation-status}
 
-The calculation engine is a pure function
+\begin{keynote}
+\noindent This section distinguishes throughout between what the repository
+\emph{contains} at methodology version \methver{} and what it \emph{specifies}
+for the next development phase. The distinction is stated because a reviewer
+can and should check it by cloning the repository, and because a paper that
+described planned software in the present tense would forfeit precisely the
+credibility this section exists to establish.
+
+\textbf{Implemented and running in continuous integration:} the configuration
+layer --- schema-validated loading of all seven methodology files, version
+lock-step enforcement, and the citation cross-check against the bibliography ---
+together with the six evidence rules of \Cref{sec:evidence-rules} and the tests
+that enforce them.
+
+\textbf{Specified but not yet implemented:} the scoring engine itself, the
+per-module scoring tests, the golden-scenario set, the API layer, and the
+sensitivity analysis of \Cref{sec:sensitivity}. These are Phase 2 work.
+
+Consequently no assessment result exists yet, and every score in this paper ---
+including the worked example of \Cref{sec:worked-example} --- was computed by
+hand from the specification.
+\end{keynote}
+
+\subsection{The engine contract}
+
+The calculation engine is specified as a pure function
 
 \[
 \texttt{run\_assessment}(\textit{AssessmentInput},\ \textit{MethodologyConfig})
@@ -71,15 +104,21 @@ The calculation engine is a pure function
 \]
 
 with no input or output, no network access, no global mutable state, and no
-stochastic component. Determinism is therefore a structural property of the
-design rather than a behaviour that testing hopes to confirm; there is no
+stochastic component. Determinism will therefore be a structural property of
+the design rather than a behaviour that testing hopes to confirm: there is no
 source of variation for a test to detect. A determinism test is nonetheless
-part of the suite, on the principle that a structural guarantee worth relying
-on is worth verifying.
+specified, on the principle that a structural guarantee worth relying on is
+worth verifying.
 
-Every result records both the engine version and the methodology version that
-produced it. Comparisons between results computed under differing methodology
-versions raise a warning rather than being silently rendered side by side.
+Each result is to record both the engine version and the methodology version
+that produced it, and comparisons between results computed under differing
+methodology versions are to raise a warning rather than being silently rendered
+side by side.
+
+This contract is a design commitment published in advance of its
+implementation, which is the point at which it can still be criticised
+cheaply. A reviewer who believes the contract is too strong, too weak, or
+unenforceable is invited to say so now.
 
 \subsection{Machine-enforced evidence rules}
 \label{sec:evidence-rules}
@@ -134,27 +173,48 @@ produce a subtly wrong tool; they produce a red build.
 \subsection{Testing and continuous integration}
 \label{sec:testing}
 
-The test suite comprises unit tests for each scoring module against a
-\SI{100}{\percent} engine coverage target; configuration schema and evidence
-tests implementing the rules above; a set of golden scenarios, each a stored
-input with a hand-verified expected output, serving as regression armour
-against unintended methodology drift; API contract tests; and a determinism
-test asserting byte-identical results across repeated runs.
+\paragraph{Running today.} The test suite at version \methver{} covers the
+configuration layer: it asserts that all fourteen typologies load and validate,
+that every configuration file shares one version stamp, that every typology
+carries at least one citation with a stated finding, that every source key
+resolves against the bibliography, that temperature envelopes are ordered and
+below the \qty{3.5}{\degreeCelsius} guard, that the three low-confidence
+typologies remain declared as such, and that no default cost or unverified
+emission value ships. Negative cases are tested explicitly: an invented
+citation key, a version mismatch, an uncited typology, and an inverted envelope
+must each fail the load.
 
-Continuous integration runs linting, strict static type checking of the engine,
-the full test suite, and a coverage gate on every push and pull request, across
+These are the six evidence rules of \Cref{sec:evidence-rules}, and they are the
+substance of what continuous integration currently guarantees. Continuous
+integration runs linting, format checking, strict static type checking, and the
+test suite with a coverage gate on every push and pull request, across
 supported Python versions.
+
+\paragraph{Specified for Phase 2.} Unit tests for each scoring module against a
+\SI{100}{\percent} engine coverage target; the golden-scenario set, each case a
+stored input with a hand-verified expected output, serving as regression armour
+against unintended methodology drift and as the basis of the sensitivity
+analysis; API contract tests; and a determinism test asserting byte-identical
+results across repeated runs.
+
+The ordering is deliberate rather than incidental. The evidence rules were
+implemented before the scoring code they protect, so that no scoring value can
+enter the repository uncited at any point in the project's history --- not even
+temporarily, during development.
 
 \subsection{Methodology versioning stamped into every result}
 
 The methodology version --- \methver{} at the time of writing --- stamps this
 document, the Methodology Report in the repository, and every configuration
-file, and is recorded in every assessment result the engine produces.
+file, and is to be recorded in every assessment result the engine produces.
+Lock-step across those files is enforced today; the stamping of results follows
+with the engine.
 
 This has a consequence that matters for how the tool behaves over time.
-Existing assessments are \emph{never} silently recomputed. A result retains the
-version that produced it, and the interface indicates when a newer methodology
-version is available, leaving the decision to re-run with the user. A city
+Existing assessments are \emph{never} to be silently recomputed. A result
+retains the version that produced it, and the interface indicates when a newer
+methodology version is available, leaving the decision to re-run with the user.
+A city
 whose priority list was produced under version \methver{} can therefore explain,
 years later, exactly which rules generated it --- because those rules are a
 tagged, public, immutable artefact rather than the current state of a codebase.
@@ -164,10 +224,13 @@ tagged, public, immutable artefact rather than the current state of a codebase.
 It is worth being precise about the limits of these guarantees, since this
 section makes the strongest reproducibility claims in the paper.
 
-The arrangement guarantees that the tool applies exactly the methodology
-described in this document, that every value it applies carries a citation to a
-recorded source, and that any change to either is versioned and visible. These
-are properties of internal consistency and traceability.
+The arrangement guarantees, today, that every methodology value in the
+repository carries a citation to a recorded source, that no citation names a
+source the bibliography does not hold, and that a change to any value is
+versioned and visible across every file at once. Once the engine exists, it
+extends to the guarantee that the tool applies exactly the methodology
+described in this document. These are properties of internal consistency and
+traceability, not of correctness.
 
 It does \emph{not} guarantee that the methodology is correct, that the adopted
 envelopes are the right ones, or that the cited sources support the weight
