@@ -186,6 +186,17 @@ Recorded during the Phase 4 implementation of D-030/D-031; none alters a methodo
 - **Toolchain pinned for Node 18.** The development machine runs Node 18 LTS, so the D-030 toolchain resolves to Vite 6 and Vitest 3 (the last majors supporting Node ≥18; Vite 7 requires Node 20+), React 19, and `react-router` 7 (the package D-030 names; its DOM bindings live in the core package from v7). CI runs Node 22.
 - **Contract tests run against recorded responses.** Every fixture under `frontend/src/test/fixtures/` is captured verbatim from the live service (same capture flow as the golden scenarios' spirit); the fetch-boundary mock rejects any request without a recorded route, so a contract drift fails loudly instead of passing against an invented shape.
 
+## D-033 — Phase 5 report-export design decisions (2026-07-30)
+
+Approved ahead of implementation so Phase 5 implements rather than re-designs (the D-028/D-030 pattern). Scope is fixed by OQ-13/D-011 (the 2-page PDF) and the ARCHITECTURE §2 report builder; these decisions fix the implementation shape. Recorded in [PHASE-5-BRIEF.md](PHASE-5-BRIEF.md).
+
+- **Toolchain: `fpdf2` (PDF) + `openpyxl` (XLSX), as core dependencies.** Both are pure Python and pip-installable with no system libraries, preserving the one-command local-first install. WeasyPrint's finer typography was considered and rejected for its Pango/Cairo system dependence; ReportLab for its heavier API. The report is a core deliverable (OQ-13), so neither ships as an optional extra.
+- **XLSX ships in Phase 5 alongside the PDF**, as the roadmap has always stated: one workbook (Inputs, Results, Assumptions & Warnings) for users who post-process results.
+- **Endpoints render stored results only:** `GET /api/projects/{id}/assessments/{aid}/report.pdf` / `…/report.xlsx`. A stored result is rendered verbatim and never recomputed (OQ-15); rendering a draft is refused with 409, consistent with the D-029 evaluation-state rules. No stateless report endpoint in v1 — API users who need one can evaluate statelessly and render client-side; adding it later is additive.
+- **Byte-determinism is a contract:** same stored assessment → byte-identical bytes in both formats. Document metadata timestamps derive from the assessment's `created_at`, never the clock, keeping clocks confined to the storage layer.
+- **The PDF embeds TTF builds of the three brand families** (self-contained on any machine, OFL notice alongside); report strings live in one module-level English catalog mirroring the frontend's externalisation contract.
+- **PDF tests assert extracted text and structure, never pixels**, via a dev-only extraction dependency, plus determinism tests; the 100% backend coverage gate extends over the report package.
+
 ## D-013 — Weights are expert-calibrated and defended by sensitivity analysis (2026-07-30)
 
 Aggregation weights cannot be "derived" from literature and we do not pretend otherwise. They are declared as expert judgment following composite-indicator practice (OECD/JRC Handbook), and defended empirically via the published sensitivity analysis (see D-011/OQ-29).
