@@ -1,0 +1,42 @@
+# Cooling-energy savings model
+#
+# The draft methodology stored per-typology "energy reduction factors" (2-15%)
+# for which no source could be found. Those have been removed and replaced by a
+# derivation from the tool's own estimated cooling effect, so that energy savings
+# are sourced, internally consistent with the cooling estimate, and automatically
+# responsive to site conditions.
+#
+# Methodology Report section 5.6.
+
+version: "2026.07.30"
+
+derivation:
+  formula: "energy_savings = annual_cooling_energy_demand * delta_t_c * sensitivity_per_c"
+  sensitivity_per_c:
+    min: 0.02
+    max: 0.04
+  sources:
+    - key: akbari2001
+      finding: "Urban electricity demand increases by 2-4% for each 1 C of temperature increase; an estimated 5-10% of urban electricity demand compensates for the 0.5-3.0 C urban temperature elevation."
+  rationale: >
+    Applying the reported temperature-electricity demand sensitivity in reverse
+    to an estimated temperature reduction yields a sourced energy saving.
+
+preconditions:
+  # Energy savings are calculated ONLY when all of these hold. Otherwise the
+  # result is reported with an explicit status, never as zero.
+  - nearby_building_cooling_demand_relevant == "yes"
+  - annual_cooling_energy_demand_kwh is provided
+  - typology has building_energy_applicable == true
+
+statuses:
+  calculated: "Energy savings derived from estimated cooling effect."
+  not_applicable: "Nearby building cooling demand is not relevant to this intervention."
+  missing_energy_demand: "Annual cooling energy demand was not provided."
+  typology_not_applicable: "This typology's benefit is principally amenity-level; building cooling-energy savings are not estimated."
+
+limitations:
+  - >
+    The sensitivity derives from predominantly North American evidence; its
+    transferability to other building stocks and climates is untested. Flagged in
+    the Methodology Report as an area where reviewer input is sought.

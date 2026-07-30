@@ -1,0 +1,93 @@
+# Aggregation weights
+#
+# Every weighted sum applied by the engine. Weights are EXPERT JUDGMENT, not
+# derived from literature: nardo2008 is explicit that weighting in composite
+# indicators is a value choice rather than a technical derivation. They are
+# declared here, versioned, adjustable, and defended through the published
+# sensitivity analysis rather than by appeal to authority.
+#
+# Methodology Report section 5.9 documents the effective weights, including the
+# deliberate equity-forward double contribution of vulnerability.
+
+version: "2026.07.30"
+
+heat_exposure:
+  # Data-rich path only (used when a land surface temperature anomaly is given).
+  lst: 0.40
+  imperviousness: 0.25
+  solar_exposure: 0.20
+  vegetation_deficit: 0.15
+  rationale: >
+    Component selection reflects established surface-energy-balance drivers of
+    urban heat. ziter2019 gives direct empirical support for two components:
+    impervious cover raises air temperature approximately linearly and canopy
+    cover reduces it nonlinearly. The relative weights are expert judgment.
+
+vulnerability:
+  population_density: 0.40
+  vulnerable_groups: 0.40
+  cooling_access_deficit: 0.20
+  rationale: >
+    Indicator selection follows reid2009, whose factor analysis of ten heat
+    vulnerability variables found four factors explaining over 75% of variance,
+    with air-conditioning prevalence emerging as an independent dimension.
+    Density and vulnerable-group presence are weighted equally because that
+    analysis gives no basis for ranking one above the other; cooling access
+    carries less weight as a single, frequently unknown indicator.
+
+heat_priority_index:
+  heat_exposure: 0.60
+  vulnerability: 0.40
+
+site_adjustment:
+  canopy: 0.40
+  soil_water: 0.25
+  scale: 0.20
+  climate: 0.15
+  rationale: >
+    Canopy carries the largest weight as the condition with the strongest direct
+    empirical support (ziter2019). The climate component is justified by
+    keravec2026: adding climate subzone raises variance explained in cooling
+    effectiveness from 12% to 78%.
+
+nbs_suitability:
+  space: 0.30
+  soil: 0.25
+  water: 0.20
+  maintenance: 0.15
+  urban_context: 0.10
+
+co_benefits:
+  biodiversity: 0.25
+  stormwater: 0.25
+  public_health: 0.20
+  social_inclusion: 0.15
+  urban_quality: 0.15
+
+equity:
+  vulnerable_user_benefit: 0.35
+  public_accessibility: 0.25
+  safety_comfort: 0.20
+  participation_relevance: 0.20
+
+final_opportunity_score:
+  heat_priority_index: 0.25
+  cooling_potential: 0.25
+  nbs_suitability: 0.15
+  vulnerability: 0.15
+  co_benefits: 0.10
+  cost_feasibility: 0.10
+  # Effective weights after the Heat Priority Index is decomposed:
+  #   vulnerability 0.25 | cooling potential 0.25 | heat exposure 0.15
+  #   suitability 0.15   | co-benefits 0.10       | cost feasibility 0.10
+  # The tool therefore weights who is affected (0.25) above how physically hot
+  # the site is (0.15). Deliberate and disclosed; see Methodology Report 5.9.
+
+sensitivity_analysis:
+  weight_perturbation: 0.25
+  rationale: >
+    Each aggregation weight is varied by +/-25% (renormalising the remainder)
+    across the golden-scenario set, reporting rank stability, score displacement,
+    category migration and influence ranking. Required by nardo2008, which treats
+    uncertainty and sensitivity analysis as integral to credible composite
+    indicators. Executed in Phase 2 when the engine and scenario set exist.

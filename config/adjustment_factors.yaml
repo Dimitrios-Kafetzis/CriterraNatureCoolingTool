@@ -1,0 +1,104 @@
+# Site adjustment factors and their derivation rules
+#
+# Four site conditions modulate typology performance. All four are DERIVED from
+# inputs the user has already supplied - no additional questions are asked
+# (resolves OQ-16/OQ-17).
+#
+# Adjustment scales the 0-100 Cooling Potential Score. It may reduce the reported
+# temperature range below the typology envelope but never above it (D-008).
+
+version: "2026.07.30"
+
+condition_factors:
+  poor: 0.5
+  moderate: 0.8
+  good: 1.0
+  excellent: 1.2
+  unknown: 1.0
+
+derivation:
+  canopy_condition:
+    # (existing tree canopy + new canopy at maturity) / site area, as a percentage
+    source_inputs: [existing_tree_canopy_percent, new_canopy_area_at_maturity_m2, site_area_m2]
+    thresholds:
+      poor: {max_percent: 10}
+      moderate: {min_percent: 10, max_percent: 25}
+      good: {min_percent: 25, max_percent: 40}
+      excellent: {min_percent: 40}
+    sources:
+      - key: ziter2019
+        finding: "Air temperature decreases nonlinearly with canopy cover, with the greatest cooling when canopy cover exceeds 40%."
+    rationale: >
+      The excellent boundary is placed at the empirically identified 40%
+      inflection point rather than chosen arbitrarily.
+
+  soil_water_condition:
+    # The lower (more limiting) of soil availability and irrigation availability.
+    source_inputs: [soil_availability, irrigation_availability]
+    mapping:
+      none: poor
+      limited: moderate
+      occasional: moderate
+      moderate: good
+      reliable: good
+      high: excellent
+
+  scale_condition:
+    source_inputs: [assessment_scale]
+    mapping:
+      city: excellent
+      district: excellent
+      neighbourhood: good
+      site: moderate
+      building: moderate
+    sources:
+      - key: ziter2019
+        finding: "Magnitude of daytime cooling increased with spatial scale, greatest at 60-90 m radii (typical city block)."
+
+  climate_condition:
+    # Typology x climate zone suitability. Values are condition levels, resolved
+    # through condition_factors above.
+    source_inputs: [climate_zone, nbs_type]
+    sources:
+      - key: keravec2026
+        finding: "Solution type alone explains 12% of variance in cooling effectiveness; adding Koppen-Geiger subzone raises this to 78%. Street trees deliver 4.0 +/- 1.6 C in tropical (A) versus 1.7 +/- 1.4 C in arid (B) climates."
+      - key: gunawardena2017
+        finding: "Poorly designed bluespace may exacerbate heat stress under oppressive humid conditions."
+    rationale: >
+      Climate is treated as a first-order adjustment because it explains the
+      majority of variance in observed effectiveness. Vegetation-based typologies
+      are downgraded in arid zones where water limitation constrains
+      evapotranspiration; blue typologies are downgraded in tropical-wet zones
+      where added humidity can offset thermal benefit.
+    matrix:
+      # Rows: climate zone. Values: condition level per typology family.
+      tropical_wet:
+        green: good
+        building: good
+        blue_green: moderate   # humidity caveat (gunawardena2017)
+        hybrid: good
+      tropical_dry:
+        green: good
+        building: good
+        blue_green: excellent
+        hybrid: good
+      arid:
+        green: moderate        # water limitation constrains evapotranspiration
+        building: moderate
+        blue_green: moderate   # water availability constraint
+        hybrid: good
+      semi_arid:
+        green: moderate
+        building: good
+        blue_green: good
+        hybrid: good
+      temperate:
+        green: good
+        building: good
+        blue_green: good
+        hybrid: good
+      other:
+        green: unknown
+        building: unknown
+        blue_green: unknown
+        hybrid: unknown

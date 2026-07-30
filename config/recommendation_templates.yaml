@@ -1,0 +1,60 @@
+# Recommendation text templates
+#
+# Recommendation text is composed deterministically from templates selected by
+# score category and result flags. No language model is involved in the scoring
+# or reporting path: the transparency and determinism commitments require that
+# identical inputs always produce identical text (decision D-011 / OQ-12).
+
+version: "2026.07.30"
+
+opening:
+  by_heat_priority:
+    low: "This site shows a low heat priority."
+    medium: "This site shows a moderate heat priority."
+    high: "This site shows a high heat priority."
+    critical: "This site shows a critical heat priority."
+
+opportunity:
+  low: "The assessed intervention represents a low NbS cooling opportunity here."
+  moderate: "The assessed intervention represents a moderate NbS cooling opportunity."
+  strong: "The assessed intervention represents a strong NbS cooling opportunity."
+  high_priority: "The assessed intervention represents a high-priority NbS cooling opportunity."
+
+cooling_clause:
+  template: >
+    {display_name} is expected to deliver an indicative daytime air temperature
+    reduction of {temp_min}-{temp_max} C at pedestrian level, principally through
+    {primary_cooling_mechanism}.
+
+flags:
+  not_suitable: >
+    IMPORTANT: this typology is not suitable for this site ({reasons}). The scores
+    below are reported for transparency but the intervention as specified is
+    unlikely to be viable without addressing these conditions first.
+  low_evidence_confidence: >
+    The published evidence for this typology is limited or inconsistent, so its
+    cooling estimate carries greater uncertainty than the score alone suggests.
+  green_roof_street_level: >
+    Green roof benefits are concentrated at roof level and within the building
+    beneath; street-level cooling for pedestrians is minimal.
+  blue_humidity: >
+    In humid conditions, poorly designed water features can add humidity without
+    improving perceived thermal comfort; design detailing matters here.
+  energy_not_calculated: >
+    Cooling-energy savings were not calculated ({reason}).
+  cost_not_estimated: >
+    Capital cost, payback and cost feasibility were not estimated because no cost
+    input was supplied. This tool ships no default cost values.
+  low_confidence: >
+    Data completeness for this assessment is low; treat the result as a screening
+    signal for further investigation rather than a conclusion.
+
+closing:
+  standard: >
+    Results are screening-level estimates based on simplified typology factors and
+    user-provided assumptions. They are not microclimate simulation outputs.
+    Detailed design, local climate analysis and maintenance planning are required
+    before implementation.
+  daytime_only: >
+    All cooling estimates are daytime values; nighttime effects are substantially
+    smaller and are not estimated by this tool.

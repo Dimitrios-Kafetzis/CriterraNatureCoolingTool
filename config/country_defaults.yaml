@@ -1,0 +1,48 @@
+# Country defaults: grid emission factors, energy prices, currency
+#
+# COST POLICY: this file deliberately contains NO default capital or maintenance
+# cost values. worldbank2021 documents that NbS costs vary significantly, are
+# highly site- and project-specific, and differ by an order of magnitude between
+# contexts (dredging: US$2/m3 in Bangladesh versus US$59/m3 in the UK). No source
+# was found offering globally applicable unit costs for these typologies.
+# Fabricating a default per-square-metre cost would generate the most
+# decision-relevant output in the assessment - payback - from an invented input.
+# Where the user supplies no cost, the tool reports cost outputs as NOT ESTIMATED.
+# See Methodology Report section 5.8.
+#
+# Grid emission factors are populated from Ember's Yearly Electricity Data
+# (CC-BY-4.0, https://ember-energy.org/data/yearly-electricity-data/), which
+# permits redistribution with attribution. Values are added per country as they
+# are retrieved and verified; a country with no verified factor reports GHG as
+# not calculated rather than substituting a global average.
+
+version: "2026.07.30"
+
+emission_factor_source:
+  key: ember
+  name: Ember Yearly Electricity Data
+  url: https://ember-energy.org/data/yearly-electricity-data/
+  licence: CC-BY-4.0
+  attribution: "Electricity carbon intensity data from Ember (CC-BY-4.0)."
+  unit: kg_co2e_per_kwh
+
+energy_price_source:
+  status: user_supplied
+  rationale: >
+    No single openly licensed global source of retail electricity prices was
+    verified for this release. Energy price is therefore a user input; where it
+    is absent, energy cost savings and payback are reported as not estimated.
+
+countries:
+  # Populated per country as verified values are retrieved from the source above.
+  # Schema per entry:
+  #   currency: ISO 4217 code
+  #   electricity_emission_factor_kgco2e_per_kwh: {value, reference_year, source_key}
+  #   default_climate_zone: one of the supported climate zones
+  # No entries are shipped with unverified values.
+  {}
+
+fallback_behaviour:
+  missing_emission_factor: report_not_calculated
+  missing_energy_price: report_not_calculated
+  missing_cost: report_not_estimated

@@ -7,7 +7,7 @@ Developed by [Criterra](https://criterra.eu).
 [![CI](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-> **Status: Phase 0 — repository scaffold.** The methodology evidence base and calculation engine are under active development. See [Roadmap](#roadmap).
+> **Status: Phase 1 complete — methodology evidence base published.** The [Methodology Report](docs/methodology/METHODOLOGY.md) is open for expert review; the calculation engine is next. See [Roadmap](#roadmap).
 
 ---
 
@@ -60,18 +60,30 @@ The tool is explicitly **not** a microclimate simulation (ENVI-met-class), a bui
 
 Key documents:
 
+- **[docs/methodology/METHODOLOGY.md](docs/methodology/METHODOLOGY.md)** — the Methodology Report: the complete scientific basis, written for expert review
+- [docs/methodology/EVIDENCE-TABLES.md](docs/methodology/EVIDENCE-TABLES.md) — per-typology derivations from the literature
+- [docs/methodology/BIBLIOGRAPHY.md](docs/methodology/BIBLIOGRAPHY.md) — sources with verification status
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — system design
 - [docs/DECISIONS.md](docs/DECISIONS.md) — decision log with rationale
-- [docs/methodology/](docs/methodology/) — the methodology report and evidence tables (expert/UNEP-facing)
 - [docs/V2-VISION.md](docs/V2-VISION.md) — deferred features and product vision
+
+## Methodology at a glance
+
+Cooling values are **daytime, pedestrian-level air temperature reductions**, each traced to published evidence — never mixed with surface temperature or comfort indices. Three calibration choices are worth knowing before reading any output:
+
+- **Site conditions can lower an estimate below the literature envelope, never raise it above.** A well-suited site scores higher, but the tool will not claim more cooling than published evidence supports.
+- **Energy savings are derived, not asserted** — from the estimated temperature reduction via a published temperature–electricity-demand sensitivity, rather than from unsourced per-typology factors.
+- **No default costs ship with the tool.** NbS unit costs vary by an order of magnitude between contexts, so cost outputs are reported as *not estimated* unless the user supplies figures.
+
+The methodology also states plainly where it is weak: green façade and bioswale evidence is thin or conflicting, all values are daytime-only, and the aggregation weights are expert judgment. Critique is welcome — see [how to challenge the methodology](docs/methodology/METHODOLOGY.md#9-methodology-governance).
 
 ## Roadmap
 
 | Phase | Deliverable | Status |
 |---|---|---|
 | 0 | Repository scaffold, governance docs, CI | ✅ |
-| 1 | Methodology evidence base + expert Methodology Report + cited configuration | 🔄 next |
-| 2 | Calculation engine (pure Python, 100% test coverage, golden scenarios) | ⏳ |
+| 1 | Methodology evidence base + expert Methodology Report + cited configuration | ✅ |
+| 2 | Calculation engine (pure Python, 100% test coverage, golden scenarios, sensitivity analysis) | 🔄 next |
 | 3 | FastAPI service | ⏳ |
 | 4 | React/TypeScript web app (questionnaire wizard, dashboard, A/B/C comparison) | ⏳ |
 | 5 | Report export (PDF / XLSX) | ⏳ |

@@ -2,11 +2,19 @@
 
 This directory holds the scientific backbone of the tool, produced and maintained in Phase 1 and kept in lock-step with `config/` (matching version stamps).
 
-## The Methodology Report (`METHODOLOGY.md` — Phase 1 deliverable)
+## Contents
+
+| Document | Purpose |
+|---|---|
+| **[METHODOLOGY.md](METHODOLOGY.md)** | The expert-facing Methodology Report — the document to send to external reviewers |
+| **[EVIDENCE-TABLES.md](EVIDENCE-TABLES.md)** | Per-typology derivations: evidence consulted → value adopted → reasoning |
+| **[BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)** | Every source with its verification status |
+
+## The Methodology Report (`METHODOLOGY.md`) — delivered 2026-07-30
 
 A standalone, expert-facing document — required by UNEP — that describes the complete methodology and how the calculation engine works, written so it can be sent to external reviewers as-is. **Every quantitative claim carries a citation to peer-reviewed literature or an authoritative institutional source.** No value in the tool exists that this report does not derive and defend.
 
-Planned structure:
+Structure:
 
 1. **Purpose, scope, and positioning** — screening-level instrument; what it is and is not; intended use and users.
 2. **Conceptual framework** — three-layer structure (baseline → NbS performance → impact & feasibility); relation to published prioritisation frameworks (e.g., Norton et al. 2015) and composite-indicator practice (OECD/JRC Handbook).
@@ -17,12 +25,15 @@ Planned structure:
 7. **Limitations and responsible use** — explicit boundary with microclimate simulation and detailed design; misuse cases.
 8. **References** — full bibliography with DOIs.
 
-## Evidence tables (`evidence/` — Phase 1 deliverable)
+## Evidence tables (`EVIDENCE-TABLES.md`) — delivered 2026-07-30
 
-One file per typology (14 total): adopted value → supporting studies with their quantitative findings and DOIs → applicability caveats (climate zone, scale, maturity). Where studies conflict, the conservative range is adopted and the conflict is documented. These tables are the direct source for the `sources:` arrays in `config/nbs_typologies.yaml`.
+For each of the 14 typologies: evidence consulted (with the metric each source measures) → adopted value → the reasoning connecting them → applicability caveats. Where studies conflict, the conservative range is adopted and the conflict is documented rather than smoothed over. These tables are the direct source for the `sources:` arrays in [`config/nbs_typologies.yaml`](../../config/nbs_typologies.yaml).
+
+Delivered as a single consolidated document rather than 14 separate files: the tables are short, they are read comparatively, and the per-value citations live in configuration anyway.
 
 ## Working rules
 
-- Citations must be verified against the actual publications before inclusion — never cited from memory or second-hand.
-- Anchor candidates identified at project kickoff (to be verified in Phase 1): meta-analyses and reviews of urban green/blue space cooling (Bowler et al. 2010; Knight et al. 2021; Gunawardena et al. 2017; Santamouris 2014; Rahman et al. 2020; Zölch et al. 2016), NbS–energy linkages (Akbari et al. 2001; Ko 2018; Besir & Cuce 2018), heat vulnerability indices (Reid et al. 2009; Cutter et al. 2003), IPCC AR6 WGII (urban risk framing), and NbS costing catalogues (World Bank 2021).
-- The report is versioned with the methodology: config `version:` and report version move together (D-012).
+- Citations are verified against the publisher record, an institutional repository, or an indexing service before inclusion — never cited from memory or second-hand. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md) records the verification level of each entry, and configuration confidence reflects it.
+- Where evidence for a value could not be found, the tool either omits the value (costs) or ships it with an explicit low-confidence flag (green façade, bioswale, courtyard greening). Gaps are stated, not filled.
+- The report is versioned with the methodology: config `version:` and report version move together, enforced by `tests/test_config.py` (D-012).
+- Citation integrity is machine-checked: every `sources[].key` in configuration must exist in the bibliography, or the configuration fails to load and CI fails.

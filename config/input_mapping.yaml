@@ -1,0 +1,81 @@
+# Qualitative to numeric normalisation
+#
+# Most inputs accept a qualitative level because most users do not have measured
+# data. Levels map to a 0-100 scale. Assigning `unknown` a neutral 50 is a
+# deliberate, disclosed choice: it avoids optimistic and pessimistic bias alike
+# while the confidence mechanism records that the information was absent.
+
+version: "2026.07.30"
+
+standard_levels:
+  low: 25
+  medium: 50
+  high: 75
+  very_high: 100
+  unknown: 50
+
+inverted_levels:
+  # Used where a HIGH level indicates LOWER risk.
+  high: 25
+  medium: 50
+  low: 100
+  unknown: 50
+
+fields:
+  heat_exposure_level: standard_levels
+  heat_index_concern: standard_levels
+  solar_exposure: standard_levels
+  population_density: standard_levels
+  vulnerable_population_presence: standard_levels
+  safety_concern: standard_levels
+
+  access_to_cooled_indoor_space:
+    scale: inverted_levels
+    sources:
+      - key: reid2009
+        finding: "Air-conditioning prevalence emerged as one of four factors explaining over 75% of variance across ten heat-vulnerability variables, supporting treatment of cooling access as an independent protective dimension."
+    rationale: >
+      Inverted: low access to cooled indoor space indicates HIGHER vulnerability.
+
+  soil_availability:
+    none: 25
+    limited: 50
+    moderate: 75
+    high: 100
+    unknown: 50
+
+  irrigation_availability:
+    none: 25
+    occasional: 50
+    reliable: 100
+    unknown: 50
+
+  current_shade_level:
+    very_low: 25
+    low: 50
+    medium: 75
+    high: 100
+    unknown: 50
+
+lst_normalisation:
+  # Land surface temperature anomaly (degrees C above city mean) to 0-100 score.
+  method: linear
+  anomaly_c_at_zero: 0
+  anomaly_c_at_hundred: 10
+  clamp: true
+  sources:
+    - key: venter2021
+      finding: "Satellite-derived surface UHI substantially exceeds air-temperature (canopy-layer) UHI: mean SUHI 1.45 C versus CUHI 0.26 C, an approximately sixfold overestimate."
+    - key: oke1976
+      finding: "Foundational distinction between canopy-layer, boundary-layer and surface urban heat islands."
+  rationale: >
+    LST is used ONLY as a relative indicator of which parts of a city are hotter,
+    never as an air-temperature prediction and never converted into a degrees C
+    outcome. The 10 C ceiling is consistent with observed intra-urban surface
+    anomaly ranges while keeping the normalisation interpretable.
+
+heat_index_improvement_buckets:
+  # Applied to the midpoint of the adjusted temperature reduction range.
+  low: {max_c: 0.5}
+  medium: {min_c: 0.5, max_c: 1.5}
+  high: {min_c: 1.5}
