@@ -1,0 +1,142 @@
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Urban heat as a decision problem}
+
+Urban populations are exposed to temperatures systematically higher than those
+of their rural surroundings, and the excess is not uniform across a city. The
+distinction between the surface, canopy-layer, and boundary-layer urban heat
+island, established by \textcite{oke1976}, remains the necessary starting point
+for any serious treatment of the subject, because the three are different
+physical quantities measured in different ways and they do not agree in
+magnitude. Within a single city, daytime near-surface air temperature can vary
+by several degrees over short distances: \textcite{ziter2019} measured a mean
+daytime intra-urban air temperature range of \SI{3.5}{\degreeCelsius} (spanning
+\SIrange{1.1}{5.7}{\degreeCelsius}) and a mean nighttime range of
+\SI{2.1}{\degreeCelsius} (\SIrange{1.2}{3.0}{\degreeCelsius}) across a single
+urban area. Variation of this magnitude, over distances a person walks in
+minutes, is what makes urban heat a spatial planning problem rather than only a
+meteorological one.
+
+The consequences of that variation are distributed unevenly across the
+population. \textcite{reid2009} reduced ten candidate vulnerability variables ---
+six demographic, two describing household air-conditioning, one describing
+vegetation cover, and one describing diabetes prevalence --- to four factors
+explaining more than \SI{75}{\percent} of total variance: social and
+environmental vulnerability, social isolation, air-conditioning prevalence, and
+the proportion of elderly and diabetic residents. Two people experiencing the
+same air temperature do not face the same risk. Any instrument that ranks sites
+for intervention on physical heat alone is answering a narrower question than
+the one cities are actually asking.
+
+\subsection{Nature-based solutions as a cooling response}
+
+Vegetation and water cool urban environments through shade, evapotranspiration,
+and evaporation, and the empirical evidence for the effect is well established
+at the scale of individual green sites. \textcite{bowler2010}, restricting their
+meta-analysis to empirical studies, found that an urban park was on average
+\SI{0.94}{\degreeCelsius} cooler during the day than its non-green
+surroundings, with larger parks and parks containing trees cooler than smaller
+or open ones. \textcite{ziter2019} showed that the relationship between canopy
+cover and daytime air temperature is nonlinear, with the greatest cooling
+occurring above approximately \SI{40}{\percent} canopy cover, and that the
+effect is scale-dependent, peaking at radii of \SIrange{60}{90}{\metre} ---
+roughly the scale of a city block. The same study found that impervious cover
+raises temperature approximately linearly and that its warming effect persists
+overnight, where canopy cooling largely does not.
+
+Aggregating across measures and climates, \textcite{keravec2026} conducted an
+umbrella review of 64 systematic reviews with a multilevel meta-regression of
+pedestrian-level daytime air temperature reductions. That synthesis is the
+single most useful cross-typology anchor currently available, and it carries a
+finding with direct consequences for tool design: the type of intervention
+alone explains only \SI{12}{\percent} of the variance in observed cooling
+effectiveness, rising to \SI{30}{\percent} when climate zone is added and to
+\SI{78}{\percent} once the K\"oppen--Geiger climate subzone is included. An
+instrument that reports one global cooling figure per intervention type is
+therefore discarding the majority of the explanatory signal in the evidence
+base.
+
+\subsection{The decision gap}
+
+A city preparing a heat adaptation programme must choose among many more
+candidate sites and interventions than it can study in detail. In practice it
+has two options, and neither serves the triage step.
+
+The first is unstructured judgment, often mediated by a spreadsheet. It is fast
+and cheap, and it draws on genuine local expertise. Its weakness is not that it
+is wrong but that it is not \emph{comparable}: two officers assessing two sites
+apply different implicit weights, cite no evidence that a third party can
+check, and produce numbers that cannot be defended to a funder or a public
+inquiry. Nothing about the process records why one site outranked another.
+
+The second is detailed simulation --- microclimate models of the ENVI-met
+class, computational fluid dynamics, or building energy simulation. These are
+the appropriate instruments for design, and they are rigorous. The work of
+\textcite{zolch2016} illustrates both their value and their cost: a micro-scale
+ENVI-met evaluation of heat mitigation measures which established, among other
+things, that trees achieved a mean physiologically equivalent temperature (PET)
+reduction of \SI{13}{\percent} at pedestrian level, that green fa\c{c}ades
+achieved \SIrange{5}{10}{\percent}, that green roof effects at pedestrian level
+were negligible, and --- a finding of general importance --- that increasing
+green cover did not correspond linearly to PET reduction, because placement
+matters more than quantity. Producing such results requires geometry, material
+properties, meteorological forcing, and specialist time. A city cannot run them
+across two hundred candidate street segments before deciding which twenty to
+investigate.
+
+The gap between the two is the screening step: a structured, repeatable,
+evidence-referenced first pass that narrows a long list to a short one and
+records why. That is the step this methodology addresses.
+
+\subsection{Contribution and structure of this paper}
+
+This paper specifies, in full, the methodology of \tool{} at methodology
+version \methver{}. It is written to be read independently of the software, by
+reviewers who wish to evaluate the scientific basis of the tool's outputs
+before deciding whether to trust, adopt, or contest them. Its contributions
+are four.
+
+\begin{enumerate}
+  \item \textbf{A complete, auditable specification.} Every formula the engine
+  applies is stated and typeset here, every weight is declared with its
+  justification or with an explicit statement that it is a value choice, and
+  every performance value is traced to a cited source whose verification
+  status is disclosed (\Cref{app:verification}).
+
+  \item \textbf{An evidence-derived typology library.} Fourteen intervention
+  typologies carry cooling envelopes derived from published literature, with
+  the derivations exposed rather than summarised. Three calibration decisions
+  that materially lower the tool's headline numbers --- a downward correction
+  for modelling bias, the refusal of super-additivity for combined packages,
+  and conservative treatment where sources conflict --- are presented for
+  scrutiny in \Cref{sec:calibration}.
+
+  \item \textbf{A discipline of honest uncertainty.} All quantitative outputs
+  are ranges; every output block carries its own confidence rating; missing
+  data reduces confidence rather than being silently imputed; and the
+  temperature-envelope clipping rule prevents favourable site conditions from
+  generating claims that exceed published evidence (\Cref{sec:cooling}).
+
+  \item \textbf{Reproducibility as an engineering property.} The methodology
+  lives in versioned configuration files rather than in code, and its evidence
+  rules are enforced by the build: an uncited performance value or a citation
+  pointing at an unrecorded source fails continuous integration
+  (\Cref{sec:implementation}). This is what allows the claims in this paper to
+  be checked rather than merely believed.
+\end{enumerate}
+
+\Cref{sec:scope} states what the tool is and is not, and the design commitments
+that constrain it. \Cref{sec:related} positions it against published work and
+argues for the standards by which a screening instrument should be judged.
+\Cref{sec:framework} presents the three-layer conceptual structure.
+\Cref{sec:inputs,sec:typologies,sec:formulas} specify the inputs, the typology
+library, and every scoring formula.
+\Cref{sec:uncertainty,sec:sensitivity} cover uncertainty treatment and the
+planned sensitivity analysis. \Cref{sec:implementation} describes the
+implementation and the machine-enforced evidence rules.
+\Cref{sec:worked-example} works one illustrative assessment through by hand.
+\Cref{sec:limitations,sec:governance} state the limitations and the governance
+process. Appendices reproduce the full typology library, the complete weight
+tables, the input field reference, a glossary, and the source verification
+register.

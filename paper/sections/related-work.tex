@@ -1,0 +1,158 @@
+\section{Related work and positioning}
+\label{sec:related}
+
+\subsection{The closest published antecedent}
+
+\textcite{norton2015} is the closest published antecedent to this methodology.
+It sets out a framework for prioritising and selecting urban green
+infrastructure to mitigate high temperatures, built on a review of the
+relationships between urban geometry, green infrastructure, and temperature. Its
+logic --- assess the thermal condition of a place, consider who is exposed,
+then determine which intervention is suited to that place --- is the logic this
+tool implements, and the three-layer structure of \Cref{sec:framework} follows
+it directly.
+
+The verification status of this source should be stated plainly, because the
+paper leans on it for framing. The bibliographic record was confirmed from the
+Monash University research portal, and the framework description was confirmed
+from an authoritative secondary description rather than from the full text.
+The tool takes no numeric value from \textcite{norton2015}; it takes a
+structural argument. \Cref{app:verification} records this alongside every other
+source.
+
+Two differences from that antecedent are worth stating. First, this tool is an
+operational instrument with a fixed, versioned, machine-readable
+parameterisation rather than a conceptual framework, which means every
+judgment it embodies must be written down as a number and can therefore be
+disputed as a number. Second, it treats climate as a first-order term rather
+than as context, for the empirical reason given in \Cref{sec:climate-first}.
+
+\subsection{Composite-indicator practice}
+
+The tool is, structurally, a composite indicator: a set of normalised
+sub-indicators combined by weighted aggregation into a headline score. The
+construction sequence adopted here --- theoretical framework, variable
+selection, treatment of missing data, normalisation, weighting and
+aggregation, and presentation --- follows \textcite{nardo2008}, the standard
+reference for this class of instrument.
+
+Two of that handbook's positions are load-bearing for this paper and are
+adopted without qualification.
+
+The first is that \textbf{weighting is a value choice, not a technical
+derivation}. No literature can supply the correct relative importance of
+cooling performance against equity against cost, because that ratio expresses a
+policy preference rather than a fact about the world. The aggregation weights
+in \Cref{sec:aggregation} are therefore declared as expert judgment, versioned,
+adjustable in configuration, and defended empirically through sensitivity
+analysis rather than by appeal to authority. Presenting them as derived would
+be the more persuasive move and the dishonest one.
+
+The second is that \textbf{uncertainty and sensitivity analysis are integral to
+a credible composite indicator, not optional additions}. Because the
+aggregation weights are the tool's most consequential unsourced choice, their
+influence on the output must be quantified and published rather than asserted
+to be small. \Cref{sec:sensitivity} specifies that analysis in full. It also
+states clearly that at methodology version \methver{} the analysis is a
+specified commitment whose results do not yet exist.
+
+\subsection{The risk framing}
+
+The Baseline layer follows the standard climate-risk decomposition, in which
+risk arises from the interaction of a \emph{hazard} with \emph{exposure} and
+\emph{vulnerability}. This is why a physically hot site with no exposed
+population scores differently from an equally hot site surrounded by vulnerable
+residents, and it is the reason the tool computes a Heat Priority Index rather
+than reporting heat alone.
+
+The decomposition is applied concretely: the Heat Exposure Score
+(\Cref{sec:heat-exposure}) represents hazard and physical exposure, drawing on
+surface-energy-balance drivers for which \textcite{ziter2019} supplies direct
+empirical support; the Vulnerability Score (\Cref{sec:vulnerability}) represents
+population susceptibility, with its indicator selection grounded in
+\textcite{reid2009}; and the two are combined into a single priority index
+(\Cref{sec:hpi}).
+
+\subsection{Climate as a first-order term}
+\label{sec:climate-first}
+
+The tool's most consequential departure from common screening practice is its
+refusal to publish a single global cooling number per intervention type. The
+justification is empirical. \textcite{keravec2026} reports that the type of
+solution alone explains \SI{12}{\percent} of the variance in observed cooling
+effectiveness; adding climate zone raises this to \SI{30}{\percent}; and adding
+the K\"oppen--Geiger climate subzone raises it to \SI{78}{\percent}.
+
+\Cref{fig:climate-dependence} shows what that variance decomposition looks like
+at the level of individual measures. For green walls, the same synthesis that
+reports a \qty{3.0}{\degreeCelsius} global central estimate reports
+subzone-specific estimates ranging from \qty{5.7(10)}{\degreeCelsius} in Cwa
+and \qty{5.5(10)}{\degreeCelsius} in BWh down to \qty{1.3}{\degreeCelsius} in
+Cfa/Cfb and \qty{1.0(8)}{\degreeCelsius} in Af --- an approximately fivefold
+spread within a single measure. For street trees, the same review reports
+\qty{4.0(16)}{\degreeCelsius} in tropical (A) climates against
+\qty{1.7(14)}{\degreeCelsius} in arid (B) climates.
+
+A tool reporting one number per measure would discard this. Climate suitability
+is consequently a first-order adjustment in the tool's Layer 2
+(\Cref{sec:adjustment}), not a refinement applied afterwards.
+
+\begin{figure}[htbp]
+\centering
+\input{figures/climate-dependence}
+\caption[Climate dependence of cooling effectiveness]{Climate dependence of
+reported cooling effectiveness, from the umbrella review of
+\textcite{keravec2026}. All values are daytime pedestrian-level
+\emph{air} temperature reductions. Error bars show the uncertainty the source
+states; no bar is drawn for Cfa/Cfb, for which a central estimate is reported
+without an interval. The dashed line marks \qty{3.0}{\degreeCelsius}: the
+global central estimate for green walls in the left panel, and the ceiling this
+methodology adopts for any single site-level intervention in the right panel.
+The spread within each measure is the empirical reason climate suitability is
+treated as a first-order adjustment rather than as context.}
+\label{fig:climate-dependence}
+\end{figure}
+
+\subsection{By what standard should a screening tool be judged?}
+\label{sec:standards}
+
+A recurring failure in the reception of screening instruments is that they are
+evaluated against simulation standards, which they cannot meet and were not
+built to meet. If the question is ``does this reproduce ENVI-met to within
+\qty{0.2}{\degreeCelsius}?'', the answer is no, and it would be no for any
+instrument that asks forty-five questions and runs in seconds. That is not a
+finding about this tool; it is a restatement of what a screening instrument is.
+
+The productive questions are different, and this paper invites reviewers to
+apply them.
+
+\begin{enumerate}
+  \item \textbf{Is every value traceable?} Can a reader locate the source of
+  every number the tool applies, and see what was actually verified about that
+  source? \Cref{app:typologies,app:verification} exist to make this checkable.
+
+  \item \textbf{Are the uncertainties honestly represented?} Does the tool
+  report ranges that reflect the spread in the underlying evidence, and does it
+  lower its stated confidence when it knows less? \Cref{sec:uncertainty}
+  specifies the mechanism.
+
+  \item \textbf{Is the ranking stable?} Because prioritisation is the tool's
+  actual function, the relevant question about the weights is not whether they
+  are correct --- they are a value choice --- but whether the ordering they
+  produce survives reasonable perturbation. \Cref{sec:sensitivity} specifies
+  how this will be measured and published.
+
+  \item \textbf{Are the value judgments disclosed?} Where the methodology takes
+  a position that a reasonable person could reject --- most notably the
+  equity-forward weighting of \Cref{sec:effective-weights} --- is that position
+  stated openly and quantified, or is it buried in an aggregation?
+
+  \item \textbf{Does it refuse to answer when it should?} An instrument that
+  always produces a number is less trustworthy than one that reports
+  \emph{not estimated} when its inputs do not support an estimate. The cost
+  policy of \Cref{sec:costs} and the missing-data rules of
+  \Cref{sec:missing-data} are deliberate refusals.
+\end{enumerate}
+
+A screening tool that satisfies these five is doing its job. One that fails
+them is not rescued by agreeing with a simulation on a test case.

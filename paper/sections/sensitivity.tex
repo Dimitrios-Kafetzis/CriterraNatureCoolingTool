@@ -1,0 +1,115 @@
+\section{Sensitivity analysis}
+\label{sec:sensitivity}
+
+\begin{keynote}
+\noindent\textbf{This section specifies planned methodology. It does not report
+results.}
+
+The analysis described here is executed and published as part of Phase 2 of the
+project, when the calculation engine and the golden-scenario set exist. At
+methodology version \methver{} it has \emph{not} been run, and no numbers from
+it appear anywhere in this paper or in the tool. Readers evaluating this
+version should treat the tool's weights as declared but not yet empirically
+stress-tested.
+
+The design is stated in full here so that it can be criticised before it is
+executed, and so that the eventual results cannot be shaped after the fact to
+suit the outcome.
+\end{keynote}
+
+\subsection{Why sensitivity analysis is obligatory here}
+
+\textcite{nardo2008} treats uncertainty and sensitivity analysis as integral to
+a credible composite indicator rather than as an optional addition. The
+argument applies with particular force to this methodology.
+
+The aggregation weights of \Cref{eq:aggregation} are the tool's most
+consequential unsourced choice. Every other quantitative element --- the
+typology envelopes, the canopy threshold, the energy sensitivity, the LST
+normalisation --- traces to a published source that a reviewer can consult and
+dispute on its own terms. The weights trace to a judgment. That judgment
+determines the headline number, and therefore determines which projects a city
+funds.
+
+Two responses to this are available. One is to argue that the weights are
+reasonable and hope the reader agrees. The other is to measure how much the
+output actually depends on them and publish the answer, including if the answer
+is inconvenient. Only the second is checkable, and it is the one adopted.
+
+There is a further reason specific to this tool. If rank ordering turns out to
+be robust to weight perturbation, then the disclosed equity-forward stance of
+\Cref{sec:effective-weights} --- while remaining a genuine value choice ---
+changes fewer decisions than its prominence suggests, and deployments can adopt
+the tool without first having to resolve a philosophical dispute. If ordering
+turns out to be fragile, users need to know that a different but equally
+defensible weight set would have produced a different priority list, and the
+tool should say so at the point of use. Both outcomes are informative; only
+running the analysis distinguishes them.
+
+\subsection{Design of the analysis}
+
+Each aggregation weight in \Cref{eq:aggregation} is varied by
+$\pm\,\SI{25}{\percent}$ of its nominal value, with the remaining weights
+renormalised to preserve a unit sum, and the full golden-scenario set is
+re-scored under each perturbation. Formally, for the perturbation of weight
+$w_k$ by a factor $\lambda \in \{0.75,\, 1.25\}$:
+
+\begin{equation}
+\label{eq:perturbation}
+w_k' = \frac{\lambda w_k}{\lambda w_k + \sum_{i \neq k} w_i},
+\qquad
+w_j' = \frac{w_j}{\lambda w_k + \sum_{i \neq k} w_i}\ \ \text{for } j \neq k .
+\end{equation}
+
+The golden-scenario set is the same collection of hand-verified input/output
+cases that serves as the engine's regression suite (\Cref{sec:testing}), which
+means the scenarios exercised by the sensitivity analysis are the same ones
+whose correctness is independently asserted.
+
+\subsection{What will be reported}
+
+Four quantities are reported for each perturbation, chosen because they
+correspond to four distinct ways the tool could mislead a user.
+
+\begin{enumerate}
+  \item \textbf{Rank stability} --- the proportion of scenario pairs whose
+  relative ordering is preserved under the perturbation. This is the primary
+  measure. Prioritisation is the tool's actual function, so ordering matters
+  more than absolute values: a perturbation that shifts every score by five
+  points but reorders nothing has not changed a single decision.
+
+  \item \textbf{Score displacement} --- the distribution of the absolute change
+  in the Opportunity Score across the scenario set, reported as a distribution
+  rather than a mean, because a small average displacement concealing a few
+  large ones is a materially different result from a uniformly small one.
+
+  \item \textbf{Category migration} --- how often a scenario crosses a band
+  boundary in \Cref{tab:hpi-bands}, for instance from \emph{Strong
+  opportunity} to \emph{Moderate opportunity}. Categories drive the
+  recommendation text, so a category change is a change in what the tool
+  \emph{says}, not merely in what it scores. A score displacement of two points
+  matters greatly at 80.5 and not at all at 45.
+
+  \item \textbf{Influence ranking} --- which weights the output is most
+  sensitive to, ordered. This tells a deployment considering recalibration
+  which weight to argue about first, and it identifies which of the tool's
+  value judgments are actually load-bearing.
+\end{enumerate}
+
+\subsection{Publication and maintenance}
+
+The results will be appended to this document and to the Methodology Report in
+the repository, and must be regenerated whenever any weight changes. Because a
+weight change requires a methodology version bump
+(\Cref{sec:governance}), and because the version stamp is enforced across all
+configuration files by continuous integration, a weight change that does not
+carry a regenerated sensitivity analysis is visible in review rather than
+silent.
+
+The threshold at which a result would prompt a methodology change is stated in
+advance to avoid its being negotiated afterwards: if rank stability under any
+single $\pm\,\SI{25}{\percent}$ weight perturbation falls below a level at
+which the tool's prioritisation could be considered reliable, the appropriate
+response is to report that limitation prominently at the point of use ---
+telling the user that their priority ordering is weight-sensitive --- rather
+than to adjust the weights until the number improves.

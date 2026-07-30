@@ -1,0 +1,83 @@
+% The temperature-envelope clipping rule (decision D-008).
+% Illustrated for street tree planting: envelope 0.5-3.0 C, with the site
+% adjustment factor ranging over its full 0.5-1.2 span. The unclipped product
+% is shown dashed; the reported values are the clipped ones. The vertical
+% marker locates the worked example of Section 13.
+\begin{tikzpicture}
+\begin{axis}[
+  font=\footnotesize,
+  width=0.80\textwidth,
+  height=74mm,
+  xmin=0.5, xmax=1.22,
+  ymin=0, ymax=3.9,
+  xtick={0.5,0.6,...,1.2},
+  xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=1},
+  ytick={0,0.5,...,3.5},
+  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=1},
+  xlabel={Site adjustment factor $A$},
+  ylabel={Reported temperature reduction (\si{\degreeCelsius})},
+  xlabel style={font=\footnotesize},
+  ylabel style={font=\footnotesize},
+  axis lines=left,
+  axis line style={draw=rulegrey, line width=0.5pt},
+  tick style={draw=rulegrey},
+  grid=both,
+  grid style={draw=rulegrey!40, line width=0.3pt, dash pattern=on 1pt off 1.5pt},
+  legend style={at={(0.5,-0.20)}, anchor=north, font=\scriptsize,
+    legend columns=1, draw=rulegrey, fill=white, legend cell align=left,
+    row sep=1.5pt},
+  clip=true,
+]
+
+% --- literature envelope band -------------------------------------------
+\addplot[draw=none, fill=criterragreen!12, forget plot]
+  coordinates {(0.5,0.5) (1.22,0.5) (1.22,3.0) (0.5,3.0)} \closedcycle;
+
+% --- unclipped upper bound: 3.0 * A --------------------------------------
+\addplot[dashed, draw=criterraink, line width=0.9pt, domain=0.5:1.22, samples=2]
+  {3.0*x};
+\addlegendentry{Unclipped $\Delta T_{\max}=3.0\,A$ --- rejected as unsupported}
+
+% --- clipped upper bound: clip(3.0*A, 0.5, 3.0) --------------------------
+\addplot[draw=criterragreen, line width=1.5pt, domain=0.5:1.0, samples=2] {3.0*x};
+\addlegendentry{Reported $\Delta T_{\max}=\mathrm{clip}(3.0\,A,\;0.5,\;3.0)$}
+\addplot[draw=criterragreen, line width=1.5pt, domain=1.0:1.22, samples=2,
+  forget plot] {3.0};
+
+% --- clipped lower bound: clip(0.5*A, 0.5, 3.0) --------------------------
+\addplot[draw=criterragreen, line width=1.5pt, dash pattern=on 3pt off 2pt,
+  domain=0.5:1.0, samples=2] {0.5};
+\addlegendentry{Reported $\Delta T_{\min}=\mathrm{clip}(0.5\,A,\;0.5,\;3.0)$}
+\addplot[draw=criterragreen, line width=1.5pt, dash pattern=on 3pt off 2pt,
+  domain=1.0:1.22, samples=2, forget plot] {0.5*x};
+
+% --- envelope boundary guides -------------------------------------------
+\addplot[draw=rulegrey, line width=0.5pt, domain=0.5:1.22, samples=2,
+  forget plot] {3.0};
+\node[anchor=south west, font=\scriptsize\itshape, color=criterraink,
+      inner sep=1.5pt] at (axis cs:0.51,3.01)
+  {literature ceiling \SI{3.0}{\degreeCelsius}};
+\node[anchor=south west, font=\scriptsize\itshape, color=criterraink,
+      inner sep=1.5pt] at (axis cs:0.51,0.51)
+  {literature floor \SI{0.5}{\degreeCelsius}};
+
+% --- suppressed inflation -----------------------------------------------
+\draw[{Latex[length=1.8mm]}-{Latex[length=1.8mm]}, draw=criterraink,
+  line width=0.6pt] (axis cs:1.20,3.02) -- (axis cs:1.20,3.58);
+\node[anchor=east, font=\scriptsize\itshape, align=right, color=criterraink,
+      inner sep=2pt] at (axis cs:1.195,2.68)
+  {clipping suppresses\\this inflation};
+\draw[draw=criterraink, line width=0.5pt] (axis cs:1.20,2.86) -- (axis cs:1.20,3.00);
+
+% --- the worked example of Section 13 -----------------------------------
+\draw[dotted, draw=criterraink, line width=0.8pt]
+  (axis cs:0.95,0) -- (axis cs:0.95,2.85);
+\addplot[only marks, mark=*, mark size=2pt,
+  mark options={draw=criterraink, fill=white, line width=0.8pt}, forget plot]
+  coordinates {(0.95,2.85) (0.95,0.5)};
+\node[anchor=south east, font=\scriptsize\itshape, align=right,
+      color=criterraink, inner sep=2pt] at (axis cs:0.945,2.86)
+  {worked example:\\$A=0.95$};
+
+\end{axis}
+\end{tikzpicture}

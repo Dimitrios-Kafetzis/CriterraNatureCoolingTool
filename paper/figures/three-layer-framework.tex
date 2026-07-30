@@ -1,0 +1,94 @@
+% Three-layer conceptual framework.
+% Layer 1 Baseline -> Layer 2 NbS performance -> Layer 3 impact & feasibility,
+% collected on a right-hand bus into the NbS Cooling Opportunity Score.
+% Explicit coordinates (mm) are used so the routing cannot drift.
+\begin{tikzpicture}[
+  x=1mm, y=1mm,
+  font=\small,
+  box/.style={draw=rulegrey, line width=0.6pt, rounded corners=1.5pt,
+    align=center, inner sep=4pt, fill=white},
+  inbox/.style={box, text width=30mm},
+  outbox/.style={box, text width=34mm, draw=criterragreen, line width=0.9pt},
+  finalbox/.style={box, text width=72mm, draw=criterragreen, line width=1.2pt,
+    fill=criterrapaper},
+  layerlabel/.style={font=\small\bfseries\color{criterraink}, align=left,
+    anchor=north west},
+  layerq/.style={font=\footnotesize\itshape\color{criterraink}, align=left,
+    anchor=north west},
+  flow/.style={-{Latex[length=2mm,width=1.6mm]}, draw=criterraink, line width=0.6pt},
+  link/.style={draw=criterraink, line width=0.6pt},
+  layerbg/.style={draw=rulegrey, dash pattern=on 2pt off 2pt, line width=0.5pt,
+    rounded corners=2pt},
+]
+
+\def\junc{28}   % x of the merge junction between inputs and layer output
+\def\outx{60}   % x of the layer output box centre
+\def\bus{97}    % x of the right-hand collection bus
+
+%% ================= Layer 1 =================
+\node[inbox] (l1a) at (0,0)   {Heat Exposure\\Score};
+\node[inbox] (l1b) at (0,-14) {Vulnerability\\Score};
+\node[outbox] (hpi) at (\outx,-7) {\textbf{Heat Priority}\\\textbf{Index} (0--100)};
+
+\draw[link] (l1a.east) -- (\junc,0);
+\draw[link] (l1b.east) -- (\junc,-14);
+\draw[link] (\junc,0) -- (\junc,-14);
+\draw[flow] (\junc,-7) -- (hpi.west);
+
+%% ================= Layer 2 =================
+\node[inbox] (l2a) at (0,-42) {Typology library\\value};
+\node[inbox] (l2b) at (0,-56) {Site adjustment\\factor};
+\node[outbox] (cps) at (\outx,-49)
+  {\textbf{Cooling Potential}\\\textbf{Score} (0--100)\\[1pt]
+   \footnotesize{}+ $\Delta T$ range (\si{\degreeCelsius})};
+
+\draw[link] (l2a.east) -- (\junc,-42);
+\draw[link] (l2b.east) -- (\junc,-56);
+\draw[link] (\junc,-42) -- (\junc,-56);
+\draw[flow] (\junc,-49) -- (cps.west);
+
+%% ================= Layer 3 =================
+\node[inbox] (l3a) at (0,-86)  {Energy savings\\$\rightarrow$ GHG avoided};
+\node[inbox] (l3b) at (0,-100) {Capital cost\\$\rightarrow$ payback};
+\node[inbox] (l3c) at (0,-114) {Co-benefits\\and equity};
+\node[outbox] (imp) at (\outx,-100)
+  {\textbf{Impact and}\\\textbf{feasibility}\\scores};
+
+\draw[link] (l3a.east) -- (\junc,-86);
+\draw[link] (l3b.east) -- (\junc,-100);
+\draw[link] (l3c.east) -- (\junc,-114);
+\draw[link] (\junc,-86) -- (\junc,-114);
+\draw[flow] (\junc,-100) -- (imp.west);
+
+%% ================= Collection bus =================
+\draw[link] (hpi.east) -- (\bus,-7);
+\draw[link] (cps.east) -- (\bus,-49);
+\draw[link] (imp.east) -- (\bus,-100);
+\draw[link] (\bus,-7) -- (\bus,-134);
+
+\node[finalbox] (final) at (36,-134)
+  {\textbf{NbS Cooling Opportunity Score} (0--100)\\[1pt]
+   \footnotesize with per-block confidence, flags, and recommendation};
+
+\draw[flow] (\bus,-134) -- (final.east);
+
+%% ================= Layer annotations =================
+\node[layerlabel] (lab1) at (-62,4)
+  {Layer 1\\[1pt]\normalfont\footnotesize Baseline assessment};
+\node[layerq] at (-62,-9) {Does this site\\deserve attention?};
+
+\node[layerlabel] (lab2) at (-62,-38)
+  {Layer 2\\[1pt]\normalfont\footnotesize NbS performance};
+\node[layerq] at (-62,-51) {What can this\\intervention deliver\\on this site?};
+
+\node[layerlabel] (lab3) at (-62,-82)
+  {Layer 3\\[1pt]\normalfont\footnotesize Impact and feasibility};
+\node[layerq] at (-62,-95) {What does it cost,\\and what else\\does it do?};
+
+\begin{scope}[on background layer]
+  \node[layerbg, fit=(lab1)(l1a)(l1b)(hpi), inner sep=3mm] {};
+  \node[layerbg, fit=(lab2)(l2a)(l2b)(cps), inner sep=3mm] {};
+  \node[layerbg, fit=(lab3)(l3a)(l3c)(imp), inner sep=3mm] {};
+\end{scope}
+
+\end{tikzpicture}

@@ -1,0 +1,109 @@
+\section{Conceptual framework}
+\label{sec:framework}
+
+\subsection{Three layers, three questions}
+
+The methodology is organised into three layers, each answering a distinct
+question that a planner asks in sequence. The structure is shown in
+\Cref{fig:framework}.
+
+\begin{description}[leftmargin=0pt, labelwidth=0pt, labelsep=0pt, style=nextline]
+  \item[Layer 1 --- Baseline assessment: \emph{does this site deserve
+  attention?}] A Heat Exposure Score and a Vulnerability Score are computed
+  from the site description and combined into a Heat Priority Index. This layer
+  is independent of the proposed intervention: it characterises the place, not
+  the project. Two options assessed for the same site share an identical
+  Layer 1 result, which is what makes side-by-side comparison meaningful.
+
+  \item[Layer 2 --- NbS performance: \emph{what can this intervention deliver
+  here?}] A base value drawn from the typology library is modulated by a site
+  adjustment factor derived from conditions the user has already described.
+  This layer produces the Cooling Potential Score and the indicative
+  temperature reduction range. It is where the tool's evidence base does its
+  work, and where the clipping rule of \Cref{sec:cooling} constrains what may
+  be claimed.
+
+  \item[Layer 3 --- Impact and feasibility: \emph{what does it cost, and what
+  else does it do?}] Cooling-energy savings are derived from the Layer 2
+  temperature estimate and converted to avoided greenhouse-gas emissions;
+  capital cost, where supplied, yields payback and a derived cost-feasibility
+  score; and co-benefit and equity scores capture what a purely thermal
+  assessment would miss.
+\end{description}
+
+The three layers are then aggregated into a single NbS Cooling Opportunity
+Score, accompanied by per-block confidence ratings, any suitability or
+evidence flags, and a deterministically composed recommendation.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{\input{figures/three-layer-framework}}
+\caption[The three-layer conceptual framework]{The three-layer conceptual
+framework. Layer 1 characterises the site independently of any intervention;
+Layer 2 evaluates one proposed intervention against that site; Layer 3 adds
+economic, climate, and social dimensions. The layers are aggregated by the
+weighted sum of \Cref{sec:aggregation}. Because Layer 1 does not depend on the
+intervention, two options assessed for the same site differ only from Layer 2
+onward.}
+\label{fig:framework}
+\end{figure}
+
+\subsection{Why this decomposition}
+
+The separation is not merely presentational; it has three consequences that
+matter for how outputs should be read.
+
+\textbf{It separates the place from the project.} A high Heat Priority Index
+with a low Cooling Potential Score identifies a site that badly needs
+intervention but for which the proposed intervention is poorly matched --- a
+result that a single blended score would conceal. This pattern is common and
+decision-relevant: it argues for a different intervention, not for abandoning
+the site.
+
+\textbf{It keeps the evidence base localised.} Layer 2 is where published
+cooling evidence enters, and it enters in one place: the typology library of
+\Cref{sec:typologies}. Revising the evidence base means revising that library
+and its adjustment rules, not tracing consequences through the whole
+methodology. This is what makes the version-controlled configuration described
+in \Cref{sec:implementation} tractable.
+
+\textbf{It makes the confidence structure natural.} A site typically has good
+physical data and poor economic data, or the reverse. Because the layers are
+distinct, confidence can be computed and reported per block
+(\Cref{sec:confidence}) rather than collapsed into a single figure that would
+be dominated by whichever block happened to be worst.
+
+\subsection{From inputs to outputs}
+
+\Cref{fig:dataflow} shows the same structure as an implementation data flow.
+Three boundaries in that diagram carry the design commitments of
+\Cref{sec:commitments} into the software.
+
+First, methodology values reach the engine only as configuration. The
+scoring code contains no typology value, no weight, and no threshold; all of
+these live in \texttt{config/*.yaml} and are validated on load. Changing the
+methodology never requires changing code, and the methodology version travels
+with the result.
+
+Second, the engine is a pure function of its inputs and that configuration. It
+performs no input or output, makes no network call, holds no global state, and
+contains no stochastic component. Determinism is therefore a structural
+property rather than a testing aspiration.
+
+Third, every output is a range or a categorical judgment accompanied by its
+confidence, and every default the engine applied is itemised in the result. A
+reader of a report can see exactly which numbers came from the user and which
+from the tool.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{\input{figures/data-flow}}
+\caption[Input, engine, and output data flow]{Data flow from the six input
+groups through validation and the scoring engine to the result. Methodology
+values enter only as versioned configuration (dashed path); the engine is a
+pure, deterministic function of inputs and configuration; and every output is
+reported as a range or a categorical judgment with its own confidence rating.
+Validation distinguishes errors, which block an assessment, from warnings,
+which do not.}
+\label{fig:dataflow}
+\end{figure}

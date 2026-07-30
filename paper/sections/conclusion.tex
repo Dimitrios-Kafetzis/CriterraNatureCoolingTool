@@ -1,0 +1,60 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper has specified, in full, the methodology of \tool{} at methodology
+version \methver{}: every input and its normalisation, the fourteen-typology
+evidence library and the derivations behind it, every scoring formula and every
+weight, the treatment of uncertainty and missing data, the design of the
+sensitivity analysis, and the engineering arrangement that keeps the software
+in correspondence with the specification.
+
+The instrument occupies a deliberately narrow position. It is faster and more
+comparable than unstructured judgment, and far less capable than microclimate
+simulation. It exists for the triage step: narrowing a long list of candidate
+sites and interventions to a short one, on a transparent and
+evidence-referenced basis, and recording why. Judged as a simulation it fails;
+judged as a screening instrument, the questions that matter are whether its
+values are traceable, whether its uncertainties are honestly represented,
+whether its rankings are stable, whether its value judgments are disclosed, and
+whether it declines to answer when its inputs do not support an answer
+(\Cref{sec:standards}).
+
+Several of the methodology's choices lower its apparent authority, and they
+were the substance of the work rather than concessions to it. Adopted cooling
+envelopes sit at or below synthesis central estimates because much of the
+underlying evidence is modelling-derived and modelling reports larger effects
+than measurement. The mixed intervention package is capped at the
+best-evidenced single-measure ceiling because no retrieved source quantifies
+super-additive cooling. Reported temperature ranges are clipped to the
+literature envelope, so that a favourable site raises a relative score but never
+a physical claim. Per-typology energy factors that no source supported were
+deleted and replaced by a derivation from a published sensitivity. No default
+unit costs ship, so the tool declines to produce the payback figure that would
+otherwise be its most quotable output. Green fa\c{c}ades, rain gardens, and
+courtyard greening are labelled low confidence and their confidence caps
+propagate into results.
+
+The limitations are correspondingly explicit. All values are daytime, and
+nighttime heat --- the more consequential quantity for health outcomes --- is
+not estimated. The quantity modelled is air temperature, not thermal comfort,
+which means the tool systematically understates shade-dominant interventions;
+the bias is stated rather than corrected by an unsourced factor. The evidence
+base is skewed toward temperate and subtropical Northern Hemisphere cities, and
+the confidence model does not yet measure that skew. The aggregation weights are
+expert judgment, including a disclosed equity-forward stance that gives
+vulnerability an effective weight of \num{0.25} against heat exposure at
+\num{0.15}. The sensitivity analysis specified in \Cref{sec:sensitivity} is a
+commitment whose results do not yet exist, and several sub-indicator derivation
+rules remain unspecified at this version.
+
+The methodology is offered for review in that condition rather than after its
+gaps have been closed, because the values most in need of scrutiny are settled
+most cheaply before an engine, a user base, and a set of published assessments
+have accumulated around them. The tool, its complete configuration, and this
+document are public under the Apache License 2.0. Every value it applies names
+its source; \Cref{app:verification} states what was actually verified about
+each of those sources, including where publisher restrictions meant a finding
+was confirmed from an abstract or an indexing record rather than a full text.
+That disclosure is not a weakness in the evidence base. It is the property that
+makes the evidence base checkable, and it is what the authors would want to
+know before trusting an instrument of this kind.

@@ -1,0 +1,648 @@
+\section{Scoring formulas}
+\label{sec:formulas}
+
+\subsection{Notation}
+
+All scores are on a \numrange{0}{100} scale unless stated otherwise. Two
+bounding operators are used throughout:
+
+\begin{align}
+\clamp{x}          &= \min\bigl(100,\; \max(0,\; x)\bigr), \\
+\clip{x}{l}{u}     &= \min\bigl(u,\; \max(l,\; x)\bigr).
+\end{align}
+
+$\clampop$ bounds a score to the reporting scale; $\clipop$ bounds a physical
+estimate to a stated envelope. The distinction matters in
+\Cref{sec:cooling}, where a score is clamped to $[0,100]$ while a temperature
+is clipped to a literature-derived interval.
+
+Every weight appearing below is reproduced with its rationale in
+\Cref{app:weights}. Within each weighted sum, the weights sum to unity.
+
+\subsection{Heat Exposure Score}
+\label{sec:heat-exposure}
+
+There are two paths, selected by data availability.
+
+\paragraph{Data-rich path.} Where a land-surface-temperature anomaly is
+supplied and converted to $S_{\mathrm{LST}}$ by \Cref{eq:lst}:
+
+\begin{equation}
+\label{eq:heat-exposure-rich}
+S_{\mathrm{heat}} \;=\; \clampop\bigl(
+  0.40\,S_{\mathrm{LST}}
++ 0.25\,S_{\mathrm{imp}}
++ 0.20\,S_{\mathrm{solar}}
++ 0.15\,S_{\mathrm{vegdef}}\bigr),
+\end{equation}
+
+where $S_{\mathrm{imp}}$ is the impervious surface percentage of the site used
+directly as a \numrange{0}{100} score, $S_{\mathrm{solar}}$ is the qualitative
+solar exposure level normalised by \Cref{tab:levels}, and the vegetation
+deficit is
+
+\begin{equation}
+\label{eq:vegdef}
+S_{\mathrm{vegdef}} \;=\; \clamp{100 - g},
+\end{equation}
+
+with $g$ the existing green cover percentage.
+
+\paragraph{Data-poor path.} Where no LST anomaly is supplied, the Heat Exposure
+Score is the normalised qualitative heat exposure level directly:
+$S_{\mathrm{heat}} = S_{\mathrm{heatlevel}}$.
+
+\paragraph{Basis.} The component selection reflects established
+surface-energy-balance drivers of urban heat: surface temperature, sealed
+surfaces, solar loading, and vegetation deficit. \textcite{ziter2019} provides
+direct empirical support for two of the four --- impervious cover raises air
+temperature approximately linearly, and canopy cover reduces it nonlinearly ---
+and additionally establishes that the warming effect of impervious surfaces
+persists at night while canopy cooling largely does not.
+
+\paragraph{What is expert judgment here.} The \emph{relative} weights are not
+derived from literature. No retrieved source ranks the marginal contribution of
+LST anomaly against imperviousness against solar loading against vegetation
+deficit for the purpose of a screening index. The weights express a judgment
+that a directly measured thermal signal should dominate where it is available,
+that sealed surface is the strongest single proxy where it is not, and that
+vegetation deficit --- already partly captured by the other three --- should
+carry the least. This judgment is declared, versioned, and subject to the
+sensitivity analysis of \Cref{sec:sensitivity}.
+
+\subsection{Vulnerability Score}
+\label{sec:vulnerability}
+
+\begin{equation}
+\label{eq:vulnerability}
+S_{\mathrm{vuln}} \;=\; \clampop\bigl(
+  0.40\,S_{\mathrm{dens}}
++ 0.40\,S_{\mathrm{groups}}
++ 0.20\,S_{\mathrm{coolaccess}}\bigr),
+\end{equation}
+
+where $S_{\mathrm{dens}}$ is normalised population density,
+$S_{\mathrm{groups}}$ is normalised vulnerable-group presence, and
+$S_{\mathrm{coolaccess}}$ is the cooling access \emph{deficit} obtained through
+the inverted mapping of \Cref{sec:inverted}.
+
+\paragraph{Basis.} Indicator selection follows \textcite{reid2009}, whose
+factor analysis of ten heat-vulnerability variables identified four factors
+explaining more than \SI{75}{\percent} of total variance: social and
+environmental vulnerability, social isolation, air-conditioning prevalence, and
+the proportion of elderly and diabetic residents.
+
+Population density and vulnerable-group presence are weighted \emph{equally}
+because that analysis provides no basis for ranking demographic vulnerability
+above exposure density; asserting a difference would be inventing a finding.
+Cooling access carries the smaller weight for two stated reasons: it is a
+single indicator where the other two are composites, and it is the field most
+frequently unknown at screening stage, so a larger weight would amplify the
+neutral default of \Cref{sec:unknown}.
+
+\subsection{Heat Priority Index}
+\label{sec:hpi}
+
+\begin{equation}
+\label{eq:hpi}
+\mathrm{HPI} \;=\; \clampop\bigl(0.60\,S_{\mathrm{heat}} + 0.40\,S_{\mathrm{vuln}}\bigr).
+\end{equation}
+
+The index is interpreted by the bands in \Cref{tab:hpi-bands}. Band boundaries
+drive recommendation text, which is why their stability under weight
+perturbation is one of the four quantities the sensitivity analysis reports
+(\Cref{sec:sensitivity}).
+
+\begin{table}[H]
+\centering
+\caption{Interpretation bands for the Heat Priority Index and the NbS Cooling
+Opportunity Score.}
+\label{tab:hpi-bands}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Range} & \textbf{Heat Priority Index} & \textbf{Opportunity Score} \\
+\midrule
+0\,--\,30   & Low      & Low priority \\
+31\,--\,60  & Medium   & Moderate opportunity \\
+61\,--\,80  & High     & Strong opportunity \\
+81\,--\,100 & Critical & High-priority project \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Derived site adjustment factor}
+\label{sec:adjustment}
+
+Four site conditions modulate typology performance. Each condition resolves to
+a level, and each level maps to a multiplicative factor:
+
+\begin{center}
+\small
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Condition level} & Poor & Moderate & Good & Excellent & Unknown \\
+\midrule
+\textbf{Factor} & 0.5 & 0.8 & 1.0 & 1.2 & 1.0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The composite adjustment factor is
+
+\begin{equation}
+\label{eq:adjustment}
+A \;=\; 0.40\,f_{\mathrm{canopy}}
+      + 0.25\,f_{\mathrm{soilwater}}
+      + 0.20\,f_{\mathrm{scale}}
+      + 0.15\,f_{\mathrm{climate}},
+\end{equation}
+
+which ranges over $[0.5, 1.2]$, attaining its bounds only when all four
+conditions are poor or all four are excellent.
+
+\paragraph{All four conditions are derived, not asked.} No additional questions
+are put to the user; each condition is computed from inputs already supplied.
+\Cref{tab:derivation} gives the rules.
+
+\begin{table}[htbp]
+\centering
+\caption[Derivation of site adjustment conditions]{Derivation of the four site
+adjustment conditions from inputs the user has already supplied.}
+\label{tab:derivation}
+\small
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Condition} & \textbf{Derivation rule} \\
+\midrule
+Canopy &
+$c = \dfrac{\text{existing tree canopy} + \text{new canopy at maturity}}
+           {\text{site area}}\times 100$, then:
+poor if $c < 10$; moderate if $10 \le c < 25$; good if $25 \le c < 40$;
+excellent if $c \ge 40$. \\
+\addlinespace
+Soil--water &
+Soil availability and irrigation availability are each mapped to a condition
+level, and the \emph{more limiting} of the two is taken. The mapping is
+\emph{none}\,$\rightarrow$\,poor;
+\emph{limited}, \emph{occasional}\,$\rightarrow$\,moderate;
+\emph{moderate}, \emph{reliable}\,$\rightarrow$\,good;
+\emph{high}\,$\rightarrow$\,excellent. \\
+\addlinespace
+Scale &
+From the declared assessment scale:
+\emph{city}, \emph{district}\,$\rightarrow$\,excellent;
+\emph{neighbourhood}\,$\rightarrow$\,good;
+\emph{site}, \emph{building}\,$\rightarrow$\,moderate. \\
+\addlinespace
+Climate &
+A lookup of typology family against climate zone
+(\Cref{tab:climate-matrix}). \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Why canopy carries the largest weight.} It is the condition with the
+strongest direct empirical support. \textcite{ziter2019} found that cooling
+increases nonlinearly with canopy cover and is greatest above approximately
+\SI{40}{\percent} cover; the \emph{excellent} boundary is placed at that
+empirically identified inflection rather than chosen for convenience. The same
+study locates maximum daytime cooling at \SIrange{60}{90}{\metre} radii, which
+is the basis for the scale condition: a district-scale or city-scale
+intervention is more likely to reach the spatial scale at which the effect is
+strongest than a single-building one.
+
+\paragraph{Why climate is present at all.} \textcite{keravec2026} finds that
+adding K\"oppen--Geiger subzone raises explained variance in cooling
+effectiveness from \SI{12}{\percent} to \SI{78}{\percent}. Omitting climate
+would discard the largest single explanatory term in the available evidence.
+
+\begin{table}[htbp]
+\centering
+\caption[Climate suitability matrix]{Climate suitability matrix: the condition
+level assigned to each typology family in each supported climate zone, resolved
+to a factor through the condition-level table above. Vegetation-based
+typologies are downgraded in arid and semi-arid zones where water limitation
+constrains evapotranspiration; blue-green typologies are downgraded in
+tropical-wet zones following the humidity caveat of
+\textcite{gunawardena2017}, and upgraded in tropical-dry zones. An
+unrecognised zone yields \emph{unknown}, whose factor is the neutral 1.0.}
+\label{tab:climate-matrix}
+\small
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Climate zone} & \textbf{Green} & \textbf{Building} &
+\textbf{Blue-green} & \textbf{Hybrid} \\
+\midrule
+Tropical wet & Good     & Good     & Moderate  & Good \\
+Tropical dry & Good     & Good     & Excellent & Good \\
+Arid         & Moderate & Moderate & Moderate  & Good \\
+Semi-arid    & Moderate & Good     & Good      & Good \\
+Temperate    & Good     & Good     & Good      & Good \\
+Other        & Unknown  & Unknown  & Unknown   & Unknown \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Cooling Potential Score and temperature reduction}
+\label{sec:cooling}
+
+The Cooling Potential Score scales the typology's base cooling score by the
+site adjustment factor:
+
+\begin{equation}
+\label{eq:cps}
+S_{\mathrm{cool}} \;=\; \clamp{B \times A},
+\end{equation}
+
+where $B$ is the base cooling score from \Cref{tab:typologies}.
+
+The reported temperature reduction range is computed differently, and the
+difference is the point of this subsection:
+
+\begin{align}
+\label{eq:dtmin}
+\dT_{\min} &= \clip{\tau_{\min} \times A}{\tau_{\min}}{\tau_{\max}}, \\
+\label{eq:dtmax}
+\dT_{\max} &= \clip{\tau_{\max} \times A}{\tau_{\min}}{\tau_{\max}},
+\end{align}
+
+where $[\tau_{\min}, \tau_{\max}]$ is the typology's literature envelope from
+\Cref{tab:typologies}.
+
+\begin{keynote}
+\noindent\textbf{The clipping rule is a deliberate correction to the draft
+methodology.} Without it, an adjustment factor above 1.0 applied to a
+typology's upper bound produces temperature claims exceeding anything in the
+retrieved literature. An urban forest on an excellent site
+($A = 1.2$, $\tau_{\max} = \qty{3.0}{\degreeCelsius}$) would report up to
+\qty{3.6}{\degreeCelsius} --- a figure no retrieved source supports for a
+site-level intervention.
+
+Because the published envelopes already represent well-executed interventions
+under favourable conditions, favourable site conditions must not be permitted
+to compound that favourability. The \numrange{0}{100} Cooling Potential Score
+of \Cref{eq:cps} remains free to rise above the base value, so the tool can
+still express that a site is exceptionally well suited --- but it expresses
+this as a higher relative score, not as a larger physical claim.
+\end{keynote}
+
+\Cref{fig:clipping} shows the behaviour across the full range of the adjustment
+factor. The rule is asymmetric in effect, and it is worth being precise about
+what it does. For $A < 1$ the upper bound falls --- a poor site is reported as
+delivering less --- while the lower bound is held at $\tau_{\min}$, so the
+reported range narrows from the top. For $A > 1$ the upper bound is held at
+$\tau_{\max}$ while the lower bound rises, so the range narrows from the
+bottom. In both directions the reported interval remains a subinterval of the
+literature envelope: site conditions shift an estimate \emph{within} the
+published evidence, and never outside it.
+
+\begin{figure}[htbp]
+\centering
+\input{figures/envelope-clipping}
+\caption[The temperature-envelope clipping rule]{The temperature-envelope
+clipping rule of \Cref{eq:dtmin,eq:dtmax}, illustrated for street tree planting
+(envelope \SIrange{0.5}{3.0}{\degreeCelsius}) across the full
+\numrange{0.5}{1.2} range of the site adjustment factor $A$. The dashed line is
+the unclipped product $3.0\,A$, which the methodology rejects because for
+$A > 1$ it exceeds the literature ceiling. The reported bounds remain within
+the shaded envelope throughout. The marked point locates the worked example of
+\Cref{sec:worked-example}.}
+\label{fig:clipping}
+\end{figure}
+
+\paragraph{Derived reporting quantities.} Two further quantities are reported
+directly. Shade potential is the fraction of the site brought under new canopy
+at maturity:
+
+\begin{equation}
+\label{eq:shade}
+S_{\mathrm{shade}} \;=\; \clamp{\frac{a_{\mathrm{canopy}}}{a_{\mathrm{site}}}\times 100},
+\end{equation}
+
+with $a_{\mathrm{canopy}}$ the new canopy area at maturity and
+$a_{\mathrm{site}}$ the site area, both in square metres. And the midpoint of
+the adjusted temperature range,
+$\overline{\dT} = (\dT_{\min} + \dT_{\max})/2$, is assigned a heat-index
+improvement bucket: \emph{low} below \qty{0.5}{\degreeCelsius}, \emph{medium}
+from \qty{0.5}{\degreeCelsius} to \qty{1.5}{\degreeCelsius}, and \emph{high}
+above \qty{1.5}{\degreeCelsius}.
+
+\subsection{NbS Suitability, co-benefit, and equity scores}
+\label{sec:composite-subscores}
+
+Three further composite sub-scores enter the result. Their aggregation weights
+are declared in configuration and reproduced in \Cref{app:weights}:
+
+\begin{align}
+\label{eq:suitability}
+S_{\mathrm{suit}} &= \clampop\bigl(
+  0.30\,S_{\mathrm{space}} + 0.25\,S_{\mathrm{soil}} + 0.20\,S_{\mathrm{water}}
++ 0.15\,S_{\mathrm{maint}} + 0.10\,S_{\mathrm{context}}\bigr), \\[2pt]
+\label{eq:cobenefit}
+S_{\mathrm{cobenefit}} &= \clampop\bigl(
+  0.25\,S_{\mathrm{biodiv}} + 0.25\,S_{\mathrm{storm}} + 0.20\,S_{\mathrm{health}}
++ 0.15\,S_{\mathrm{social}} + 0.15\,S_{\mathrm{urbanq}}\bigr), \\[2pt]
+\label{eq:equity}
+S_{\mathrm{equity}} &= \clampop\bigl(
+  0.35\,S_{\mathrm{vulnben}} + 0.25\,S_{\mathrm{access}} + 0.20\,S_{\mathrm{safety}}
++ 0.20\,S_{\mathrm{particip}}\bigr).
+\end{align}
+
+The co-benefit sub-indicators take per-typology default levels, each cited in
+the typology library (\Cref{app:typologies}), which the user may override.
+
+\begin{keynote}
+\noindent\textbf{Specification gaps at version \methver{}, disclosed.} Three
+things about this subsection are incomplete at the current methodology version,
+and a reviewer should know which parts of the tool are fully specified and
+which are not.
+
+\begin{enumerate}
+  \item The weights in \Cref{eq:suitability,eq:cobenefit,eq:equity} are
+  declared in \texttt{config/weights.yaml}, but the rules mapping user inputs
+  to the individual sub-indicator scores $S_{\mathrm{space}}$,
+  $S_{\mathrm{soil}}$, $S_{\mathrm{water}}$, $S_{\mathrm{maint}}$,
+  $S_{\mathrm{context}}$ and to the four equity sub-indicators are
+  \emph{not} specified in version \methver{}. They are to be specified
+  alongside the engine implementation and will require a version bump and an
+  update to this document.
+
+  \item The co-benefit weights include a \emph{social inclusion} term, but the
+  typology library supplies default levels for only four of the five
+  sub-indicators (biodiversity, stormwater, public health, urban quality).
+  Absent a user override, social inclusion falls to the neutral default of
+  \Cref{sec:unknown} and is itemised as an applied assumption.
+
+  \item The Equity Score of \Cref{eq:equity} is computed and reported as an
+  output block with its own confidence rating, but it does \emph{not} enter the
+  final aggregation of \Cref{sec:aggregation}. Equity influences the headline
+  score through the Vulnerability Score instead. Whether this is the right
+  design is a legitimate question for reviewers; it is recorded here so that
+  the omission is visible rather than inferred.
+\end{enumerate}
+\end{keynote}
+
+\subsection{Energy savings --- derived, not assumed}
+\label{sec:energy}
+
+An earlier draft of the methodology stored per-typology ``energy reduction
+factors'' in the range \SIrange{2}{15}{\percent}. No source could be found for
+any of them. They were removed and replaced by a derivation from the tool's own
+estimated cooling effect:
+
+\begin{equation}
+\label{eq:energy}
+E \;=\; D \times \dT \times s,
+\qquad s \in [0.02,\, 0.04]\ \text{per \si{\degreeCelsius}},
+\end{equation}
+
+where $D$ is the user-supplied annual cooling energy demand in
+\unit{\kilo\watt\hour} and $s$ is the temperature--electricity-demand
+sensitivity. Because both $\dT$ and $s$ are intervals, the result is an
+interval:
+
+\begin{equation}
+\label{eq:energy-range}
+E_{\min} = D \times \dT_{\min} \times 0.02,
+\qquad
+E_{\max} = D \times \dT_{\max} \times 0.04 .
+\end{equation}
+
+\paragraph{Basis.} \textcite{akbari2001} reports that urban electricity demand
+increases by \SIrange{2}{4}{\percent} for each \qty{1}{\degreeCelsius} of
+temperature increase, and estimates that \SIrange{5}{10}{\percent} of urban
+electricity demand serves to compensate for the
+\SIrange{0.5}{3.0}{\degreeCelsius} urban temperature elevation. Applying that
+sensitivity in reverse to an estimated temperature reduction yields an energy
+saving that is sourced, internally consistent with the tool's own cooling
+estimate, and automatically responsive to site conditions --- a poorly suited
+site yields a smaller $\dT$ and therefore a smaller energy saving, with no
+separate parameter to maintain.
+
+\paragraph{Preconditions.} Energy savings are calculated only when all three of
+the following hold: the user confirms that nearby building cooling demand is
+relevant to the intervention; an annual cooling energy demand is supplied; and
+the selected typology is flagged as capable of affecting adjacent building
+loads. Otherwise the result carries an explicit status ---
+\texttt{not\_applicable}, \texttt{missing\_energy\_demand}, or
+\texttt{typology\_not\_applicable} --- and \textbf{never a zero}, which would
+understate the result while appearing to be a finding.
+
+\paragraph{An acknowledged weakness.} The sensitivity is drawn from
+predominantly North American evidence, and its transferability to other
+building stocks, construction practices, and climates is untested. Building
+stock differs in envelope performance, in the prevalence and type of mechanical
+cooling, and in occupant behaviour, all of which affect how a change in outdoor
+air temperature translates into a change in electricity demand. This is an area
+where reviewer input is specifically sought. It is also worth noting that
+\textcite{akbari2001} is recorded in \Cref{app:verification} as
+\emph{metadata + finding (secondary)}: the bibliographic record and the
+\SIrange{2}{4}{\percent} figure were confirmed from multiple indexing records
+and an institutional listing, not from a retrieved full text.
+
+\subsection{Greenhouse gas emissions avoided}
+\label{sec:ghg}
+
+\begin{equation}
+\label{eq:ghg}
+G \;=\; E \times \phi,
+\end{equation}
+
+where $\phi$ is the grid emission factor in
+\unit{\kilo\gram\per\kilo\watt\hour} of carbon dioxide equivalent, applied to
+both ends of the energy interval.
+
+Grid emission factors are sourced per country from \textcite{ember}, which
+publishes electricity carbon intensity for 215 countries under a CC-BY-4.0
+licence permitting redistribution with attribution inside an Apache-2.0 tool.
+Where no verified factor is available for a country, the tool reports
+greenhouse gas savings as \emph{not calculated} rather than substituting a
+global average.
+
+\begin{keynote}
+\noindent\textbf{At version \methver{} no country emission factors ship with
+the tool.} The country defaults file declares the source, licence, unit, and
+per-entry schema, but its country table is empty pending per-country
+verification. In consequence, a deployment using the shipped configuration
+unmodified will report greenhouse gas savings as \emph{not calculated} for
+every country. This is the intended failure mode of the verification policy ---
+no unverified value ships --- but it means \Cref{eq:ghg} is at present a
+specified formula awaiting its data, and any assessment reporting a greenhouse
+gas figure is necessarily using a locally supplied factor.
+\end{keynote}
+
+\subsection{Costs --- why the tool ships no default values}
+\label{sec:costs}
+
+\textcite{worldbank2021} states that nature-based solution project costs vary
+significantly and are highly site- and project-specific, that unit costs differ
+sharply between developed and developing contexts --- illustrated by dredging
+at \qty{2}{\USD\per\cubic\metre} in Bangladesh against
+\qty{59}{\USD\per\cubic\metre} in the United Kingdom, roughly a thirtyfold
+difference for the same operation --- and that urban implementation costs
+typically exceed rural ones. No source was found offering globally applicable
+unit costs for the typologies in this library.
+
+The tool therefore ships \textbf{no default cost values} in version 1. Where a
+user supplies a capital cost, the tool computes cost outputs; where they do
+not, capital cost, payback, and cost feasibility are all reported as
+\emph{not estimated}.
+
+The reasoning is worth stating explicitly, because shipping a plausible default
+would have been easy and would have made the tool look more complete.
+Fabricating a default per-square-metre cost would generate the most
+decision-relevant number in the entire assessment --- simple payback --- from
+an invented input. No confidence rating adequately qualifies a payback figure
+whose numerator was guessed: the reader sees a number of years, and the number
+of years is what enters the decision. Locally calibrated cost tables remain a
+defined extension point; a deployment may supply its own cost configuration,
+which the tool records as a documented assumption in the result.
+
+Where costs are supplied:
+
+\begin{align}
+\label{eq:annual-savings}
+C_{\mathrm{annual}} &= E \times p, \\
+\label{eq:payback}
+T_{\mathrm{payback}} &= \frac{C_{\mathrm{capital}}}{C_{\mathrm{annual}}},
+\qquad \text{undefined if } C_{\mathrm{annual}} \le 0,
+\end{align}
+
+with $p$ the energy price per \unit{\kilo\watt\hour}. Because $E$ is an
+interval, so is the payback, with the bounds inverted: the largest energy
+saving gives the shortest payback.
+
+Cost feasibility is \emph{derived} rather than user-asserted:
+
+\begin{equation}
+\label{eq:cost-feasibility}
+S_{\mathrm{cost}} \;=\; f\bigl(\text{payback bracket},\;
+\text{implementation complexity},\; \text{maintenance intensity}\bigr),
+\end{equation}
+
+with short payback, low complexity, and low maintenance yielding high
+feasibility. As with the sub-scores of \Cref{sec:composite-subscores}, the
+bracket boundaries and the combination rule realising $f$ are not specified in
+version \methver{} and are to be fixed alongside the engine implementation.
+
+\paragraph{Exclusion rather than substitution.} When payback cannot be
+computed, cost feasibility is reported as unavailable and is \emph{excluded}
+from the final aggregation, with the remaining weights redistributed
+proportionally (\Cref{eq:aggregation-redistributed}). The alternative ---
+substituting a neutral 50 --- would silently reward projects that have provided
+no economic evidence at all, placing them ahead of projects that supplied a
+genuinely poor payback figure. Exclusion preserves the ordering among options
+that did supply data, and the missing block is reported rather than hidden.
+
+\subsection{Aggregation and the weighting question}
+\label{sec:aggregation}
+
+The headline score is a weighted sum of six components:
+
+\begin{equation}
+\label{eq:aggregation}
+S_{\mathrm{opp}} =
+  0.25\,\mathrm{HPI}
++ 0.25\,S_{\mathrm{cool}}
++ 0.15\,S_{\mathrm{suit}}
++ 0.15\,S_{\mathrm{vuln}}
++ 0.10\,S_{\mathrm{cobenefit}}
++ 0.10\,S_{\mathrm{cost}} .
+\end{equation}
+
+Where a component is unavailable --- in practice, cost feasibility --- the sum
+is taken over the available set $\mathcal{A}$ and renormalised:
+
+\begin{equation}
+\label{eq:aggregation-redistributed}
+S_{\mathrm{opp}} \;=\;
+\frac{\displaystyle\sum_{i \in \mathcal{A}} w_i\,S_i}
+     {\displaystyle\sum_{i \in \mathcal{A}} w_i} .
+\end{equation}
+
+The result is interpreted through the bands of \Cref{tab:hpi-bands}.
+
+\paragraph{These weights are expert judgment, and the tool says so.}
+\textcite{nardo2008} is explicit that weighting in composite indicators is a
+value choice rather than a technical derivation, and no literature can supply
+the relative importance of cooling performance against equity against cost. The
+weights are declared here, versioned in configuration, adjustable by any
+deployment, and defended empirically through the sensitivity analysis of
+\Cref{sec:sensitivity} rather than by appeal to authority.
+
+\subsection{The equity-forward weighting, stated openly}
+\label{sec:effective-weights}
+
+Vulnerability enters the final score \emph{twice}. It contributes \num{0.40} of
+the Heat Priority Index, which itself carries \num{0.25} in
+\Cref{eq:aggregation}, and it appears again directly at \num{0.15}. Decomposing
+the Heat Priority Index in \Cref{eq:aggregation} gives
+
+\begin{align}
+S_{\mathrm{opp}} &=
+  0.25\bigl(0.60\,S_{\mathrm{heat}} + 0.40\,S_{\mathrm{vuln}}\bigr)
++ 0.25\,S_{\mathrm{cool}} + 0.15\,S_{\mathrm{suit}} + 0.15\,S_{\mathrm{vuln}}
++ 0.10\,S_{\mathrm{cobenefit}} + 0.10\,S_{\mathrm{cost}} \notag \\[2pt]
+\label{eq:effective}
+&= 0.15\,S_{\mathrm{heat}} + 0.25\,S_{\mathrm{vuln}} + 0.25\,S_{\mathrm{cool}}
+ + 0.15\,S_{\mathrm{suit}} + 0.10\,S_{\mathrm{cobenefit}}
+ + 0.10\,S_{\mathrm{cost}} .
+\end{align}
+
+The effective weights are set out in \Cref{tab:effective-weights}.
+
+\begin{table}[H]
+\centering
+\caption[Effective weights in the final score]{Effective weights in the NbS
+Cooling Opportunity Score, after decomposing the Heat Priority Index. The
+nominal weights are those of \Cref{eq:aggregation}; the effective weights are
+those of \Cref{eq:effective}. Both columns sum to unity.}
+\label{tab:effective-weights}
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{Component} & \textbf{Nominal weight} & \textbf{Effective weight} \\
+\midrule
+Heat Priority Index & 0.25 & --- \\
+\quad of which heat exposure   & & 0.15 \\
+\quad of which vulnerability   & & 0.10 \\
+Cooling Potential   & 0.25 & 0.25 \\
+NbS Suitability     & 0.15 & 0.15 \\
+Vulnerability (direct) & 0.15 & 0.15 \\
+Co-benefits         & 0.10 & 0.10 \\
+Cost Feasibility    & 0.10 & 0.10 \\
+\midrule
+\textbf{Vulnerability, total} & & \textbf{0.25} \\
+\textbf{Heat exposure, total} & & \textbf{0.15} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{keynote}
+\noindent The tool therefore weights \emph{who is affected} (\num{0.25}) above
+\emph{how hot the site is physically} (\num{0.15}). Between two equally hot
+sites, the one serving a more vulnerable population ranks higher.
+
+\textbf{This is a value position, not a technical necessity.} There is no
+finding in the literature that requires it, and a reasonable reviewer may
+reject it. A city whose mandate is to reduce peak thermal load across its
+territory, rather than to direct adaptation investment toward disadvantaged
+communities, would be right to rebalance it.
+
+It is disclosed here, and quantified, for a specific reason: an undisclosed
+double contribution would be a defect, indistinguishable from an arithmetic
+error, and a reviewer discovering it unaided would be entitled to distrust
+everything else in the methodology. Disclosed and quantified, it is a
+defensible position that reviewers may legitimately dispute. Any deployment may
+rebalance it in \texttt{config/weights.yaml} without touching code, and every
+result records the methodology version under which it was produced.
+\end{keynote}
+
+The double contribution is also not an accident of construction that happened
+to be noticed afterwards. It follows from a deliberate decision, recorded in
+the project's decision log as D-007, that the tool should prioritise who is
+affected slightly above how hot a place is. The alternative designs --- dropping
+the direct vulnerability term, or removing vulnerability from the Heat Priority
+Index --- were both available; each would have produced a defensible instrument
+with a different value stance.

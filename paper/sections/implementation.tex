@@ -1,0 +1,178 @@
+\section{Implementation and reproducibility}
+\label{sec:implementation}
+
+This section describes how the methodology is realised in software. It is not
+an appendix to the science: it is the part of the paper that makes the
+preceding claims \emph{checkable} rather than merely asserted. A methodology
+whose values live in prose can drift from the code that applies them, and a
+reader has no way to detect the drift. The arrangement described here is
+designed so that such drift fails the build.
+
+\subsection{Configuration as data}
+\label{sec:config-as-data}
+
+Every methodology value lives in schema-validated, version-stamped YAML under
+\texttt{config/}:
+
+\begin{table}[H]
+\centering
+\caption{The methodology configuration files.}
+\label{tab:config-files}
+\small
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{File} & \textbf{Content} \\
+\midrule
+\texttt{nbs\_typologies.yaml} &
+The fourteen typologies: base cooling scores, temperature envelopes, evidence
+confidence, cooling mechanisms, suitability conditions, co-benefit defaults,
+and a \texttt{sources} array carrying, for each citation, the source key and
+the specific finding it supports. \\
+\addlinespace
+\texttt{weights.yaml} &
+Every weighted sum in \Cref{sec:formulas}, with its rationale, plus the
+sensitivity-analysis perturbation parameter. \\
+\addlinespace
+\texttt{adjustment\_factors.yaml} &
+The condition-level to factor table, the four derivation rules of
+\Cref{tab:derivation}, and the climate suitability matrix of
+\Cref{tab:climate-matrix}. \\
+\addlinespace
+\texttt{input\_mapping.yaml} &
+Qualitative to numeric normalisation, the inverted scale, the LST
+normalisation, and the heat-index improvement buckets. \\
+\addlinespace
+\texttt{country\_defaults.yaml} &
+Grid emission factor source, licence, and per-country schema; energy price
+policy. Deliberately contains no cost values. \\
+\addlinespace
+\texttt{recommendation\_templates.yaml} &
+The deterministic text fragments from which recommendations are composed. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The scoring code contains no typology value, no weight, and no threshold.
+Changing the methodology never requires changing code, which has three
+consequences. A deployment can rebalance the weights it disagrees with ---
+including the equity-forward stance of \Cref{sec:effective-weights} --- without
+forking the software. A reviewer can read the complete parameterisation of the
+tool in six short files rather than by tracing constants through source code.
+And the diff of a methodology change is legible: it shows values moving, not
+logic moving.
+
+\subsection{A pure, deterministic engine}
+
+The calculation engine is a pure function
+
+\[
+\texttt{run\_assessment}(\textit{AssessmentInput},\ \textit{MethodologyConfig})
+\;\longrightarrow\; \textit{AssessmentResult}
+\]
+
+with no input or output, no network access, no global mutable state, and no
+stochastic component. Determinism is therefore a structural property of the
+design rather than a behaviour that testing hopes to confirm; there is no
+source of variation for a test to detect. A determinism test is nonetheless
+part of the suite, on the principle that a structural guarantee worth relying
+on is worth verifying.
+
+Every result records both the engine version and the methodology version that
+produced it. Comparisons between results computed under differing methodology
+versions raise a warning rather than being silently rendered side by side.
+
+\subsection{Machine-enforced evidence rules}
+\label{sec:evidence-rules}
+
+The project's evidence policy is a build gate, not a review convention.
+Configuration loading fails --- and continuous integration fails with it --- if
+any of the following holds.
+
+\begin{enumerate}
+  \item \textbf{A typology carries no citation.} The schema requires a
+  non-empty \texttt{sources} array on every typology, and each entry must carry
+  both a source key and the finding it supports. An uncited performance value
+  cannot be loaded.
+
+  \item \textbf{A citation points at an unrecorded source.} Every
+  \texttt{sources[].key} appearing anywhere in the configuration tree is
+  collected recursively and checked against the set of keys declared in the
+  bibliography. A citation naming a source the bibliography does not record is
+  a hard error. This is the rule that makes the traceability claim of
+  \Cref{sec:commitments} enforceable: a value cannot cite something that does
+  not exist.
+
+  \item \textbf{The configuration files fall out of version lock-step.} Every
+  file carries a top-level date-stamped \texttt{version}, and all must agree. A
+  methodology version moves as a single unit or not at all.
+
+  \item \textbf{A temperature envelope is inverted or implausible.} The maximum
+  must not fall below the minimum, and no typology may declare a maximum above
+  \qty{3.5}{\degreeCelsius}. The upper guard encodes a methodology judgment: no
+  retrieved source supports a daytime pedestrian-level air temperature
+  reduction above roughly \qty{3}{\degreeCelsius} for a single site-level
+  intervention, so a larger value in configuration indicates a calibration
+  error rather than new evidence. Raising the guard requires changing the test,
+  which makes the change visible in review.
+
+  \item \textbf{The low-confidence declarations are removed.} A test asserts
+  that green fa\c{c}ade, rain garden / bioswale, and courtyard greening remain
+  declared as low evidence confidence, guarding against a future edit quietly
+  promoting a weakly evidenced typology.
+
+  \item \textbf{Default costs appear.} A test asserts that the country defaults
+  ship no cost or emission values pending verification, and that the typology
+  library carries no per-square-metre unit cost. The cost policy of
+  \Cref{sec:costs} holds in configuration, not only in prose.
+\end{enumerate}
+
+The practical effect is that the integrity claims made in this paper degrade
+loudly rather than quietly. A contributor who adds a typology without a
+citation, or who bumps one configuration file without the others, does not
+produce a subtly wrong tool; they produce a red build.
+
+\subsection{Testing and continuous integration}
+\label{sec:testing}
+
+The test suite comprises unit tests for each scoring module against a
+\SI{100}{\percent} engine coverage target; configuration schema and evidence
+tests implementing the rules above; a set of golden scenarios, each a stored
+input with a hand-verified expected output, serving as regression armour
+against unintended methodology drift; API contract tests; and a determinism
+test asserting byte-identical results across repeated runs.
+
+Continuous integration runs linting, strict static type checking of the engine,
+the full test suite, and a coverage gate on every push and pull request, across
+supported Python versions.
+
+\subsection{Methodology versioning stamped into every result}
+
+The methodology version --- \methver{} at the time of writing --- stamps this
+document, the Methodology Report in the repository, and every configuration
+file, and is recorded in every assessment result the engine produces.
+
+This has a consequence that matters for how the tool behaves over time.
+Existing assessments are \emph{never} silently recomputed. A result retains the
+version that produced it, and the interface indicates when a newer methodology
+version is available, leaving the decision to re-run with the user. A city
+whose priority list was produced under version \methver{} can therefore explain,
+years later, exactly which rules generated it --- because those rules are a
+tagged, public, immutable artefact rather than the current state of a codebase.
+
+\subsection{What this arrangement does and does not guarantee}
+
+It is worth being precise about the limits of these guarantees, since this
+section makes the strongest reproducibility claims in the paper.
+
+The arrangement guarantees that the tool applies exactly the methodology
+described in this document, that every value it applies carries a citation to a
+recorded source, and that any change to either is versioned and visible. These
+are properties of internal consistency and traceability.
+
+It does \emph{not} guarantee that the methodology is correct, that the adopted
+envelopes are the right ones, or that the cited sources support the weight
+placed on them. Those are scientific questions, and no build gate can settle
+them. What the arrangement does is make them \emph{answerable} by an external
+reviewer: the complete parameterisation is public, each value names its source,
+and \Cref{app:verification} states what was actually verified about each
+source. The engineering makes the science auditable; it does not make it right.

@@ -1,0 +1,136 @@
+\section{Uncertainty, confidence, and missing data}
+\label{sec:uncertainty}
+
+\subsection{Ranges, not point estimates}
+
+All quantitative outputs --- temperature reduction, energy savings, greenhouse
+gases avoided, cost savings, payback --- are reported as ranges. This is not a
+presentational preference; it is what the evidence supports.
+
+The adopted cooling envelopes of \Cref{tab:typologies} span factors of two to
+six: street tree planting from \qty{0.5}{\degreeCelsius} to
+\qty{3.0}{\degreeCelsius} is a sixfold range, and green roof from
+\qty{0.1}{\degreeCelsius} to \qty{1.0}{\degreeCelsius} is tenfold. The
+climate-subzone estimates in \textcite{keravec2026} carry uncertainty intervals
+ranging from about $\pm\,$\qty{0.6}{\degreeCelsius} to about
+$\pm\,$\qty{2.0}{\degreeCelsius}. A single figure drawn from within a spread of
+that magnitude would imply a precision that does not exist, and would be
+quoted, in practice, without its provenance.
+
+The ranges compound. An energy estimate combines a temperature interval with a
+sensitivity interval (\Cref{eq:energy-range}), so its width is the product of
+the two --- the worked example in \Cref{sec:worked-example} produces an energy
+range spanning roughly an order of magnitude. That width is uncomfortable to
+present and it is the honest answer. A user who needs a tighter energy figure
+needs a building energy model, which is precisely the boundary
+\Cref{sec:not} draws.
+
+\subsection{Confidence levels}
+\label{sec:confidence-levels}
+
+Two distinct things are called confidence in this methodology, and separating
+them prevents a common confusion.
+
+\textbf{Evidence confidence} is a property of a \emph{typology}, recorded in
+the library, expressing how well grounded its adopted values are:
+
+\begin{description}[leftmargin=1.5em, style=sameline, font=\normalfont\itshape]
+  \item[High] multiple converging sources, including a synthesis.
+  \item[Medium] a synthesis estimate with limited typology-specific
+  corroboration.
+  \item[Low] sparse, indirect, or conflicting evidence. The tool flags these
+  results explicitly in its output.
+\end{description}
+
+\textbf{Block confidence} is a property of an \emph{assessment}, expressing how
+completely the user filled in the inputs that a given output block depends on.
+It is computed as described below.
+
+A typology may have high evidence confidence in an assessment with low block
+confidence, or the reverse. Reporting a single merged figure would lose the
+distinction between ``we know this intervention well but you told us little
+about your site'' and ``you described your site thoroughly but the evidence for
+this intervention is thin''. Those call for different responses.
+
+\subsection{Branched confidence}
+\label{sec:confidence}
+
+A single confidence rating would be dominated by whichever input block happened
+to be least complete, and would obscure the common case of a site with good
+physical data and no economic data. Confidence is therefore computed separately
+for each output block --- cooling, energy, economic, and equity --- from the
+completeness of the inputs feeding that block:
+
+\begin{table}[H]
+\centering
+\caption[The confidence model]{The block confidence model. Completeness is the
+proportion of the fields relevant to that output block which the user
+supplied.}
+\label{tab:confidence}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Completeness of relevant fields} & \textbf{Confidence} &
+\textbf{How the result should be read} \\
+\midrule
+Below \SI{40}{\percent}   & Low    & A screening signal for further investigation \\
+\SIrange{40}{70}{\percent} & Medium & Indicative; the main drivers are known \\
+Above \SI{70}{\percent}   & High   & As reliable as a screening instrument gets \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two additional constraints apply.
+
+\subsubsection{Evidence confidence propagates}
+\label{sec:evidence-propagation}
+
+A typology rated \emph{low} evidence confidence in the library --- green
+fa\c{c}ade, rain garden / bioswale, and courtyard greening at version
+\methver{} --- caps the cooling-block confidence at \emph{medium} regardless of
+how complete the user's inputs are.
+
+The reason is straightforward: complete inputs cannot compensate for thin
+underlying evidence. A user who answers every question about a site where a
+green fa\c{c}ade is proposed has told the tool a great deal about the site and
+nothing at all about whether green fa\c{c}ades reliably reduce street-level air
+temperature, which is the question the disagreement between
+\textcite{keravec2026} and \textcite{zolch2016} leaves open. The interface
+states the reason for the cap explicitly rather than showing an unexplained
+ceiling.
+
+\subsubsection{A high score with low confidence is a flag, not a verdict}
+
+The combination of a high Opportunity Score and low block confidence is
+presented as an invitation to investigate further, never as a conclusion. In
+practice this is the most dangerous output the tool can produce, because the
+headline number is exactly what gets extracted and quoted. The interface and
+the exported report attach the confidence rating to the score wherever the
+score appears, and \Cref{sec:misuse} identifies quoting a score without its
+confidence as a misuse.
+
+\subsection{Missing data}
+\label{sec:missing-data}
+
+Required inputs must be present; the assessment does not proceed without them.
+Optional inputs, when absent, follow explicit rules:
+
+\begin{itemize}
+  \item \textbf{Qualitative inputs} default to \emph{unknown}, which normalises
+  to the neutral 50 of \Cref{sec:unknown}.
+  \item \textbf{Quantitative inputs} propagate as \emph{not calculated}. They
+  are \textbf{never} treated as zero. A zero would understate the result while
+  appearing to be a finding --- an energy saving reported as
+  \qty{0}{\kilo\watt\hour} reads as ``this intervention saves no energy'',
+  which is a claim, whereas the truth is ``we were not told the demand'', which
+  is an absence.
+  \item \textbf{Derived outputs} whose inputs are missing carry an explicit
+  status naming the reason, as the energy statuses of \Cref{sec:energy}
+  illustrate.
+\end{itemize}
+
+Every default the engine applies is itemised in the result and reproduced in
+the exported report, so that a reader can see exactly which numbers came from
+the user and which from the tool. This list is not a diagnostic aid; it is part
+of the output, and a report circulated without it has removed the information
+needed to judge the numbers it contains.

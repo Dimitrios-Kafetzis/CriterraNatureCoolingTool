@@ -55,12 +55,14 @@ The tool is explicitly **not** a microclimate simulation (ENVI-met-class), a bui
 ├── backend/       Python: calculation engine (pure) + FastAPI API
 ├── frontend/      React + TypeScript web application (Phase 4)
 ├── docs/          Architecture, decision log, methodology & evidence base, v2 vision
+├── paper/         The methodology as a LaTeX scientific paper (for external review)
 └── .github/       CI/CD workflows
 ```
 
 Key documents:
 
 - **[docs/methodology/METHODOLOGY.md](docs/methodology/METHODOLOGY.md)** — the Methodology Report: the complete scientific basis, written for expert review
+- **[paper/](paper/)** — the same methodology as a full scientific paper ([main.pdf](paper/main.pdf), 72 pages): the document to send to UNEP, scientific reviewers, and public authorities
 - [docs/methodology/EVIDENCE-TABLES.md](docs/methodology/EVIDENCE-TABLES.md) — per-typology derivations from the literature
 - [docs/methodology/BIBLIOGRAPHY.md](docs/methodology/BIBLIOGRAPHY.md) — sources with verification status
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — system design

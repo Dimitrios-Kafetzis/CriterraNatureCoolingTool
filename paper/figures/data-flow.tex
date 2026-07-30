@@ -1,0 +1,90 @@
+% Input -> engine -> output data flow, showing the configuration-as-data
+% boundary and the deterministic pure-function contract of the engine.
+% Explicit coordinates (mm) keep the routing stable.
+\begin{tikzpicture}[
+  x=1mm, y=1mm,
+  font=\footnotesize,
+  box/.style={draw=rulegrey, line width=0.6pt, rounded corners=1.5pt,
+    align=center, inner sep=4pt, fill=white},
+  stage/.style={box, text width=38mm},
+  cfg/.style={box, text width=38mm, draw=criterraink,
+    dash pattern=on 2pt off 1.5pt},
+  engine/.style={box, text width=40mm, draw=criterragreen, line width=1pt},
+  resultbox/.style={box, text width=36mm, draw=criterragreen, line width=0.8pt},
+  grouplabel/.style={font=\footnotesize\bfseries\color{criterraink}},
+  flow/.style={-{Latex[length=2mm,width=1.6mm]}, draw=criterraink, line width=0.6pt},
+  link/.style={draw=criterraink, line width=0.6pt},
+  cfgflow/.style={-{Latex[length=2mm,width=1.6mm]}, draw=criterraink,
+    line width=0.6pt, dash pattern=on 2pt off 1.5pt},
+  groupbg/.style={draw=rulegrey, dash pattern=on 2pt off 2pt, line width=0.5pt,
+    rounded corners=2pt},
+]
+
+\def\junc{27}    % merge junction for the six input groups
+\def\valx{56}    % validation stage centre
+\def\engx{104}   % engine centre
+\def\outx{158}   % results column centre
+\def\fan{132}    % fan-out point to the results column
+
+%% ------------- Inputs (six groups) -------------
+\node[stage] (i1) at (0,0)   {1.\ Project information};
+\node[stage] (i2) at (0,-13) {2.\ Site characteristics};
+\node[stage] (i3) at (0,-26) {3.\ Climate and heat exposure};
+\node[stage] (i4) at (0,-39) {4.\ Vulnerability and equity};
+\node[stage] (i5) at (0,-52) {5.\ Proposed NbS intervention};
+\node[stage] (i6) at (0,-65) {6.\ Cost and energy\\\emph{(optional)}};
+\node[grouplabel] (ilab) at (0,10) {Structured inputs};
+
+\foreach \y in {0,-13,-26,-39,-52,-65}{\draw[link] (21,\y) -- (\junc,\y);}
+\draw[link] (\junc,0) -- (\junc,-65);
+
+%% ------------- Validation -------------
+\node[stage, text width=28mm] (val) at (\valx,-32.5)
+  {Schema validation\\[1pt]\emph{errors block,}\\\emph{warnings do not}};
+\draw[flow] (\junc,-32.5) -- (val.west);
+
+%% ------------- Engine -------------
+\node[engine] (eng) at (\engx,-32.5)
+  {\textbf{Scoring engine}\\[1pt]
+   pure $\cdot$ deterministic $\cdot$ no I/O\\[1pt]
+   \texttt{run\_assessment()}};
+\draw[flow] (val.east) -- (eng.west);
+
+%% ------------- Configuration -------------
+\node[cfg] (cfg1) at (\engx,4)
+  {\texttt{config/*.yaml}\\[1pt]
+   typologies $\cdot$ weights\\
+   adjustment factors\\
+   input mapping $\cdot$ energy model};
+\node[grouplabel] at (\engx,17) {Methodology as data};
+\draw[cfgflow] (cfg1.south) -- (eng.north)
+  node[midway, right=1.5mm, font=\scriptsize\itshape, align=left]
+  {version\\\methver};
+
+%% ------------- Outputs -------------
+\node[resultbox] (o1) at (\outx,6)   {Heat Priority Index};
+\node[resultbox] (o2) at (\outx,-7)  {Cooling Potential Score + $\Delta T$ range};
+\node[resultbox] (o3) at (\outx,-20) {Energy savings and GHG avoided};
+\node[resultbox] (o4) at (\outx,-33) {Costs and payback};
+\node[resultbox] (o5) at (\outx,-46) {Co-benefits and equity};
+\node[resultbox] (o6) at (\outx,-59) {\textbf{Opportunity Score}};
+\node[resultbox] (o7) at (\outx,-72) {Per-block confidence, flags, assumptions};
+\node[grouplabel] (olab) at (\outx,19) {Results (ranges, never point estimates)};
+
+\draw[link] (eng.east) -- (\fan,-32.5);
+\draw[link] (\fan,6) -- (\fan,-72);
+\foreach \y in {6,-7,-20,-33,-46,-59,-72}{\draw[flow] (\fan,\y) -- (139,\y);}
+
+\begin{scope}[on background layer]
+  \node[groupbg, fit=(ilab)(i1)(i6), inner sep=3mm] {};
+  \node[groupbg, fit=(olab)(o1)(o7), inner sep=3mm] {};
+\end{scope}
+
+%% ------------- Determinism note -------------
+\node[font=\scriptsize\itshape\color{criterraink}, align=center,
+      text width=150mm] at (72,-92)
+  {Identical inputs and an identical methodology version always produce
+   identical outputs. Every result records the methodology version that
+   produced it, and itemises every default the engine applied.};
+
+\end{tikzpicture}

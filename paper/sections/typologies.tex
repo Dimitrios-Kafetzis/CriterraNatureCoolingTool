@@ -1,0 +1,285 @@
+\section{The NbS typology library}
+\label{sec:typologies}
+
+\subsection{Structure}
+
+Fourteen intervention typologies are supported, in four families:
+
+\begin{description}[leftmargin=1.5em, style=sameline, font=\normalfont\itshape]
+  \item[Green] street tree planting, shaded pedestrian corridor, pocket park,
+  urban forest / dense canopy planting, park upgrade, schoolyard greening.
+  \item[Building] green roof, green fa\c{c}ade.
+  \item[Blue-green] rain garden / bioswale, blue-green corridor, riparian
+  restoration.
+  \item[Hybrid] permeable shaded plaza, courtyard greening, mixed NbS package.
+\end{description}
+
+Each typology carries a base cooling score on a \numrange{0}{100} scale, a
+temperature reduction envelope expressed as a minimum and a maximum in degrees
+Celsius, its primary cooling mechanism, a set of suitability conditions, an
+evidence confidence rating, default co-benefit levels, and its source
+citations. The complete library, including every citation and the specific
+finding each citation supports, is reproduced in \Cref{app:typologies}.
+
+\subsection{The metric, stated once and enforced throughout}
+\label{sec:metric}
+
+\begin{keynote}
+\noindent All adopted temperature values in this library are
+\textbf{daytime, pedestrian-level \emph{air} temperature reductions}, relative
+to an equivalent unimproved site.
+
+They are \textbf{not} land surface temperatures, and they are \textbf{not}
+thermal comfort indices such as the physiologically equivalent temperature
+(PET) or the universal thermal climate index (UTCI). These are different
+physical quantities, measured differently, with different magnitudes and
+different policy meanings.
+
+Where a source reports surface temperature or a comfort index, that is stated
+explicitly, and the value is used only for the \emph{relative ranking} of
+intervention families or to support a caveat. It is never converted into a
+\si{\degreeCelsius} air-temperature claim.
+\end{keynote}
+
+This discipline is not pedantry. Conflating the three metrics is the single
+most common way screening instruments mislead their users, and the divergence
+is large: \textcite{venter2021} report an approximately sixfold difference
+between surface and canopy-layer heat island magnitudes, and
+\textcite{zolch2016} report comfort improvements from trees
+(\SI{13}{\percent} PET reduction) that have no direct air-temperature
+equivalent. A decision-maker reading ``\qty{3}{\degreeCelsius} of cooling''
+assumes air temperature. The methodology gives them air temperature, and where
+it cannot, it says so.
+
+A direct consequence is that the tool systematically \emph{understates} the
+benefit of shade-dominant interventions, because radiant load reduction --- the
+mechanism through which shade most improves human thermal comfort --- does not
+appear in an air-temperature figure. This is recorded as a limitation in
+\Cref{sec:limit-airtemp} rather than corrected by an unsourced adjustment.
+
+\subsection{Adopted values}
+\label{sec:adopted}
+
+\Cref{tab:typologies} gives the adopted values for all fourteen typologies.
+Derivations are summarised in \Cref{sec:derivation} and reproduced in full,
+with citations, in \Cref{app:typologies}.
+
+\begin{table}[htbp]
+\centering
+\caption[Adopted typology values]{The fourteen NbS typologies with their
+adopted values at methodology version \methver{}. All temperature envelopes are
+daytime, pedestrian-level \emph{air} temperature reductions in degrees Celsius.
+The base cooling score is a \numrange{0}{100} index expressing relative
+expected cooling performance before site adjustment; it is not a temperature.
+Evidence confidence is the rating defined in \Cref{sec:confidence-levels}.}
+\label{tab:typologies}
+\small
+\begin{tabular}{@{}llrcl@{}}
+\toprule
+\textbf{ID} & \textbf{Typology} & \textbf{Base score} &
+\textbf{Envelope (\si{\degreeCelsius})} & \textbf{Confidence} \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Green}}\\
+01 & Street tree planting              & 75 & 0.5\,--\,3.0 & High \\
+02 & Shaded pedestrian corridor        & 80 & 0.5\,--\,3.0 & Medium \\
+03 & Pocket park                       & 65 & 0.3\,--\,1.5 & High \\
+04 & Urban forest / dense canopy       & 90 & 1.0\,--\,3.0 & High \\
+05 & Park upgrade                      & 70 & 0.5\,--\,2.0 & High \\
+06 & Schoolyard greening               & 75 & 0.5\,--\,2.0 & Medium \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textit{Building}}\\
+07 & Green roof                        & 45 & 0.1\,--\,1.0 & Medium \\
+08 & Green fa\c{c}ade                  & 50 & 0.3\,--\,2.0 & Low \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textit{Blue-green}}\\
+09 & Rain garden / bioswale            & 55 & 0.1\,--\,0.8 & Low \\
+10 & Blue-green corridor               & 85 & 1.0\,--\,3.0 & Medium \\
+11 & Riparian restoration              & 85 & 1.0\,--\,3.0 & Medium \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textit{Hybrid}}\\
+12 & Permeable shaded plaza            & 70 & 0.5\,--\,2.5 & Medium \\
+13 & Courtyard greening                & 60 & 0.3\,--\,1.5 & Low \\
+14 & Mixed NbS package                 & 80 & 1.0\,--\,3.0 & Medium \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{How envelopes were derived}
+\label{sec:derivation}
+
+\Cref{fig:cooling-evidence} shows the principal cross-typology anchor: the
+per-measure daytime central estimates reported by \textcite{keravec2026}, with
+two contrasting estimates overlaid.
+
+\begin{figure}[htbp]
+\centering
+\input{figures/cooling-evidence}
+\caption[Per-measure cooling evidence]{Central estimates of daytime
+pedestrian-level \emph{air} temperature reduction by measure, from the umbrella
+review of 64 systematic reviews by \textcite{keravec2026}. Overlaid markers
+show, where an alternative estimate exists for the same measure, the nighttime
+central estimate from the same review and the empirical-only park meta-analytic
+mean of \qty{0.94}{\degreeCelsius} reported by \textcite{bowler2010}. The gap
+between the park bar (\qty{1.3}{\degreeCelsius}, modelling-inclusive) and the
+open marker (\qty{0.94}{\degreeCelsius}, empirical only) is the modelling bias
+discussed in \Cref{sec:modelling-bias}; the diamonds show how much smaller
+nighttime effects are (\Cref{sec:limit-daytime}).}
+\label{fig:cooling-evidence}
+\end{figure}
+
+Three principles governed the derivation of an envelope from these estimates.
+
+\textbf{An envelope is not a prediction.} The lower bound represents a poorly
+performing instance of the typology; the upper bound represents a well-executed
+instance under favourable conditions. Site adjustment moves an assessment
+\emph{within} this envelope (\Cref{sec:cooling}); it does not extend it.
+
+\textbf{Central estimates are ceilings, not midpoints.} Because published
+central estimates already describe interventions that were built, studied, and
+in many cases modelled under favourable assumptions, adopted upper bounds sit
+at or below the synthesis central estimate rather than above it.
+
+\textbf{Where sources disagree, the conservative value is adopted and the
+disagreement is documented} rather than averaged away. Two typologies ---
+green roof and green fa\c{c}ade --- rest on genuinely conflicting evidence, and
+both are treated in \Cref{sec:weak-points}.
+
+\subsection{Three calibration decisions that warrant reviewer attention}
+\label{sec:calibration}
+
+Three decisions materially lowered the tool's headline numbers relative to a
+naive reading of the literature. Each is stated here because each is
+contestable.
+
+\subsubsection{Modelling bias is corrected downward}
+\label{sec:modelling-bias}
+
+\textcite{keravec2026} synthesises 64 systematic reviews, many of them
+dominated by simulation studies, and simulation systematically reports larger
+cooling effects than field measurement. The magnitude of this bias is visible
+within the tool's own source set. For parks, the modelling-inclusive synthesis
+gives a central estimate of \qty{1.3}{\degreeCelsius}, while
+\textcite{bowler2010}, whose meta-analysis is restricted to empirical studies,
+gives \qty{0.94}{\degreeCelsius} --- roughly \SI{72}{\percent} of the
+modelling-inclusive figure, for the one measure where both are available.
+
+Adopted upper bounds therefore sit at or below synthesis central estimates
+rather than above them. The clearest case is street tree planting: the
+synthesis reports \qty{4.0(16)}{\degreeCelsius} for street trees in tropical
+climates, but the adopted ceiling is \qty{3.0}{\degreeCelsius}. The tropical
+figure carries a \qty{\pm 1.6}{\degreeCelsius} interval and describes
+favourable tropical conditions; adopting it as a general ceiling would overstate
+typical performance.
+
+This correction is a judgment, not a calculation. A single ratio observed for a
+single measure is not a bias correction factor, and the methodology does not
+present it as one --- it is used to justify the \emph{direction} of the
+adjustment, not its size. A reviewer who considers the correction too
+aggressive, or not aggressive enough, is disputing exactly the right thing.
+
+\subsubsection{The mixed package does not claim super-additivity}
+\label{sec:super-additivity}
+
+An earlier draft of the methodology proposed a \qty{3.5}{\degreeCelsius}
+ceiling for the mixed NbS package, on the intuition that combining measures
+should outperform any single measure. That value was rejected.
+
+No retrieved source quantifies super-additive cooling from combining
+interventions. \textcite{gunawardena2017} describes green and blue features as
+offering synergistic benefits, but qualitatively and without quantification.
+\textcite{keravec2026} reports no synthesis estimate for combined packages at
+all; its best-performing individual measures cluster at
+\SIrange{2.0}{3.0}{\degreeCelsius}.
+
+The envelope is therefore capped at \qty{1.0}{--}\qty{3.0}{\degreeCelsius}, the
+best-evidenced single-measure ceiling. Claiming that a package outperforms its
+strongest component would be an unsourced assumption placed at exactly the
+point where a user is most likely to select it. The package's genuine advantage
+is expressed where evidence supports it --- breadth of co-benefits and
+robustness across varying site conditions --- and not as additional degrees.
+
+\subsubsection{Green roofs and green fa\c{c}ades are the weakest points, and
+are labelled as such}
+\label{sec:weak-points}
+
+\paragraph{Green roof.} Three sources point in different directions.
+\textcite{keravec2026} places green roofs at \qty{1.1}{\degreeCelsius}, the
+lowest-performing green measure in the synthesis. \textcite{zolch2016} finds
+green roof effects at pedestrian level \emph{negligible}.
+\textcite{santamouris2014} reports a \SIrange{0.3}{3}{\kelvin} reduction in
+average urban ambient temperature --- but the abstract states this explicitly
+for green roofs \emph{applied on a city scale} in \emph{simulation studies}.
+
+That last qualification decides the matter. A site-level assessment evaluates
+one roof on one building, not mass deployment across a city, and the physics
+differ: a green roof's thermal benefit is concentrated at roof level and inside
+the building beneath, and it does not propagate to the street canyon in the way
+city-scale albedo and evapotranspiration changes would. The
+\SIrange{0.3}{3}{\kelvin} figure is therefore \textbf{not} used as a site-level
+typology value. The adopted envelope of
+\SIrange{0.1}{1.0}{\degreeCelsius} sits near the bottom of the published
+spread, and the tool states in its output that green roof benefits are
+principally building-level rather than street-level.
+
+\paragraph{Green fa\c{c}ade.} Here the sources conflict outright.
+\textcite{keravec2026} ranks green walls at the top of its air-temperature
+table with a \qty{3.0}{\degreeCelsius} central estimate --- but with an
+approximately fivefold spread across climate subzones
+(\Cref{fig:climate-dependence}). \textcite{zolch2016} ranks green fa\c{c}ades
+\emph{below} trees on thermal comfort, at \SIrange{5}{10}{\percent} PET
+reduction against \SI{13}{\percent} for trees.
+
+The two are not directly comparable, since one reports air temperature and the
+other a comfort index; but the ranking reversal is real and needs an
+explanation. The most plausible one is measurement position: near-wall
+measurements capture a strong local effect that does not extend across a street
+canyon. This is a hypothesis, not a finding from either source, and it is
+labelled as such.
+
+Given an unresolved conflict between sources and a fivefold climate spread, the
+typology receives a conservative envelope of
+\SIrange{0.3}{2.0}{\degreeCelsius}, an evidence confidence rating of
+\emph{low}, and an explicit caveat in the tool's output. Its confidence rating
+also caps the cooling-block confidence at medium regardless of how complete the
+user's inputs are (\Cref{sec:evidence-propagation}).
+
+\paragraph{And one further weak point.} Rain garden / bioswale deserves the
+same flag. No retrieved source quantifies air-temperature cooling for rain
+gardens or bioswales specifically. \textcite{keravec2026} offers no
+bioswale-specific estimate, and its neighbouring categories --- green areas at
+\qty{2.0}{\degreeCelsius}, water bodies at \qty{2.1}{\degreeCelsius} --- are
+not transferable to a small drainage feature.
+\textcite{gunawardena2017} identifies tree-dominated greenspace as delivering
+heat-stress relief and does not identify small blue features as significant
+coolers. The adopted envelope of \SIrange{0.1}{0.8}{\degreeCelsius} is a
+reasoned lower bound from adjacent evidence, flagged low confidence, and the
+tool reports this typology's primary benefits as stormwater management and
+biodiversity rather than cooling.
+
+\subsection{Suitability conditions}
+\label{sec:suitability}
+
+Each typology declares conditions under which it is unsuitable: a minimum
+viable site area, a soil requirement, an irrigation requirement, and any
+unsuitable climate zones. \Cref{app:typologies} lists these per typology.
+
+When a disqualifying condition is met, the tool computes the assessment
+transparently but attaches a prominent \emph{``not suitable for this site''}
+flag naming the reason, which is carried into the recommendation text and the
+exported report. Silently returning a merely lower score for a physically
+implausible intervention --- riparian restoration on a site with no water
+feature, for instance --- would misrepresent the finding as a matter of degree
+when it is a matter of kind.
+
+Unsuitable typologies nonetheless remain fully selectable. A user deliberately
+testing a hypothesis should not be overridden by the tool, and the flag
+follows the result through to the report regardless.
+
+One suitability rule is worth singling out because it encodes a caveat that
+would otherwise be lost in prose. \textcite{gunawardena2017} notes that poorly
+designed bluespace may \emph{exacerbate} heat stress under oppressive humid
+conditions. Rather than leaving this as a written warning, the methodology
+encodes it as a climate-suitability penalty: blue-green typologies are
+downgraded to the \emph{moderate} condition level in tropical-wet zones
+(\Cref{tab:climate-matrix}). A caveat that changes a number is a caveat that
+gets read.

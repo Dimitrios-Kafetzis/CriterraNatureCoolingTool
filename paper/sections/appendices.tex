@@ -1,0 +1,803 @@
+\section{The complete NbS typology library}
+\label{app:typologies}
+
+This appendix reproduces the full typology library at methodology version
+\methver{}, as it appears in \texttt{config/nbs\_typologies.yaml}. All
+temperature values are daytime, pedestrian-level \emph{air} temperature
+reductions in degrees Celsius, relative to an equivalent unimproved site.
+
+\subsection{Adopted values and suitability conditions}
+
+{\small
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}llrcccrl@{}}
+\caption[Complete typology library]{Adopted values and suitability conditions
+for all fourteen typologies. \emph{Bldg.\ energy} indicates whether the
+typology is flagged as capable of affecting adjacent building cooling loads, a
+precondition for the energy derivation of \Cref{sec:energy}.}
+\label{tab:app-typologies}\\
+\toprule
+\textbf{ID} & \textbf{Typology} & \textbf{Base} & \textbf{Envelope} &
+\textbf{Conf.} & \textbf{Bldg.} & \textbf{Min.\ area} & \textbf{Soil / water} \\
+& & \textbf{score} & (\si{\degreeCelsius}) & & \textbf{energy} &
+(\si{\metre\squared}) & \textbf{required} \\
+\midrule
+\endfirsthead
+\multicolumn{8}{@{}l}{\small\itshape \Cref{tab:app-typologies} continued from
+previous page}\\
+\toprule
+\textbf{ID} & \textbf{Typology} & \textbf{Base} & \textbf{Envelope} &
+\textbf{Conf.} & \textbf{Bldg.} & \textbf{Min.\ area} & \textbf{Soil / water} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{8}{r@{}}{\small\itshape continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\multicolumn{8}{@{}l}{\textit{Green}}\\
+01 & Street tree planting        & 75 & 0.5--3.0 & High   & Yes & 100  & Limited / occas. \\
+02 & Shaded pedestrian corridor  & 80 & 0.5--3.0 & Medium & No  & 200  & Limited / occas. \\
+03 & Pocket park                 & 65 & 0.3--1.5 & High   & No  & 200  & Limited / occas. \\
+04 & Urban forest / dense canopy & 90 & 1.0--3.0 & High   & Yes & 2000 & Moderate / occas. \\
+05 & Park upgrade                & 70 & 0.5--2.0 & High   & No  & 500  & Limited / occas. \\
+06 & Schoolyard greening         & 75 & 0.5--2.0 & Medium & Yes & 300  & Limited / occas. \\
+\addlinespace
+\multicolumn{8}{@{}l}{\textit{Building}}\\
+07 & Green roof                  & 45 & 0.1--1.0 & Medium & Yes & 50   & None / occas. \\
+08 & Green fa\c{c}ade            & 50 & 0.3--2.0 & Low    & Yes & 20   & None / reliable \\
+\addlinespace
+\multicolumn{8}{@{}l}{\textit{Blue-green}}\\
+09 & Rain garden / bioswale      & 55 & 0.1--0.8 & Low    & No  & 50   & Moderate / none \\
+10 & Blue-green corridor         & 85 & 1.0--3.0 & Medium & No  & 1000 & Moderate / none \\
+11 & Riparian restoration        & 85 & 1.0--3.0 & Medium & No  & 1000 & Moderate / none \\
+\addlinespace
+\multicolumn{8}{@{}l}{\textit{Hybrid}}\\
+12 & Permeable shaded plaza      & 70 & 0.5--2.5 & Medium & No  & 200  & Limited / occas. \\
+13 & Courtyard greening          & 60 & 0.3--1.5 & Low    & Yes & 50   & Limited / occas. \\
+14 & Mixed NbS package           & 80 & 1.0--3.0 & Medium & Yes & 500  & Limited / occas. \\
+\end{longtable}
+}
+
+No typology declares an unsuitable climate zone at version \methver{}. Climate
+influences performance through the adjustment matrix of
+\Cref{tab:climate-matrix} rather than through outright disqualification.
+
+\subsection{Primary cooling mechanisms and co-benefit defaults}
+
+\begin{longtable}{@{}l>{\raggedright\arraybackslash}p{52mm}cccc@{}}
+\caption[Cooling mechanisms and co-benefit defaults]{Primary cooling mechanism
+and default co-benefit levels per typology. The library supplies no default for
+the \emph{social inclusion} sub-indicator of \Cref{eq:cobenefit}; absent a user
+override it falls to the neutral \emph{unknown} value and is itemised as an
+applied assumption.}
+\label{tab:app-cobenefits}\\
+\toprule
+\textbf{ID} & \textbf{Primary cooling mechanism} & \textbf{Biodiv.} &
+\textbf{Storm.} & \textbf{Health} & \textbf{Urban q.} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Primary cooling mechanism} & \textbf{Biodiv.} &
+\textbf{Storm.} & \textbf{Health} & \textbf{Urban q.} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+01 & Shade and evapotranspiration & Med & Med & High & High \\
+02 & Continuous shade and evapotranspiration & Med & Low & High & High \\
+03 & Evapotranspiration and shade & Med & Med & High & High \\
+04 & Dense shade and evapotranspiration & High & High & High & High \\
+05 & Increased canopy and evapotranspiration & High & Med & High & High \\
+06 & Shade and evapotranspiration & Med & Med & High & High \\
+07 & Roof surface cooling and evapotranspiration & Med & High & Low & Med \\
+08 & Wall shading and evapotranspiration & Low & Low & Low & Med \\
+09 & Evapotranspiration and infiltration & Med & High & Low & Med \\
+10 & Evaporation from water surfaces and canopy shade & High & High & High & High \\
+11 & Evaporation from water surfaces and riparian canopy & High & High & Med & High \\
+12 & Shade, surface permeability and evaporation & Low & High & Med & High \\
+13 & Shade and evapotranspiration in enclosed space & Med & Med & Med & High \\
+14 & Combined shade, evapotranspiration and evaporation & High & High & High & High \\
+\end{longtable}
+
+\subsection{Citations and the findings they support}
+
+Every performance value in the library carries at least one citation, and each
+citation records the specific finding it supports. Configuration loading fails
+if a typology is uncited or if a citation names a source absent from the
+bibliography (\Cref{sec:evidence-rules}). The findings below are reproduced
+from the configuration.
+
+\begin{longtable}{@{}l l >{\raggedright\arraybackslash}p{95mm}@{}}
+\caption[Typology citations and findings]{Citations supporting each typology's
+adopted values, with the finding each citation supports. Metrics are stated
+where a source reports something other than air temperature.}
+\label{tab:app-citations}\\
+\toprule
+\textbf{ID} & \textbf{Source} & \textbf{Finding relied upon} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\itshape \Cref{tab:app-citations} continued}\\
+\toprule
+\textbf{ID} & \textbf{Source} & \textbf{Finding relied upon} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r@{}}{\small\itshape continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+01 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Street trees \qty{1.5}{\degreeCelsius} central estimate for pedestrian-level
+daytime air temperature; \qty{4.0(16)}{\degreeCelsius} in tropical (A) and
+\qty{1.7(14)}{\degreeCelsius} in arid (B) climates. \\
+   & \citeauthor{ziter2019}\,\citeyear{ziter2019} &
+Air temperature decreases nonlinearly with canopy cover, greatest cooling above
+about \SI{40}{\percent} cover; peak effect at \SIrange{60}{90}{\metre} scale. \\
+   & \citeauthor{bowler2010}\,\citeyear{bowler2010} &
+Empirical studies broadly support cooler air beneath tree canopy. \\
+   & \citeauthor{rahman2020}\,\citeyear{rahman2020} &
+Species and leaf area index materially change delivered cooling. \\
+\addlinespace
+02 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Street trees \qty{1.5}{\degreeCelsius} and shading devices
+\qty{2.0}{\degreeCelsius} pedestrian-level daytime air temperature reduction. \\
+   & \citeauthor{zolch2016}\,\citeyear{zolch2016} &
+Shade placement in heat-exposed locations outperforms maximising total green
+cover; trees \SI{-13}{\percent} PET \emph{(comfort index)}. \\
+\addlinespace
+03 & \citeauthor{bowler2010}\,\citeyear{bowler2010} &
+Meta-analysis: park on average \qty{0.94}{\degreeCelsius} cooler by day; larger
+parks and those with trees cooler. \\
+   & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Parks \qty{1.3}{\degreeCelsius} pedestrian-level daytime air temperature
+reduction. \\
+\addlinespace
+04 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Urban forests \qty{2.1}{\degreeCelsius}, among the highest-performing green
+measures. \\
+   & \citeauthor{ziter2019}\,\citeyear{ziter2019} &
+Greatest cooling where canopy cover exceeds \SI{40}{\percent}; effect grows
+with patch scale to \SIrange{60}{90}{\metre}. \\
+   & \citeauthor{bowler2010}\,\citeyear{bowler2010} &
+Larger, tree-rich green sites cooler during the day. \\
+\addlinespace
+05 & \citeauthor{bowler2010}\,\citeyear{bowler2010} &
+Park mean \qty{0.94}{\degreeCelsius} daytime cooling; parks with trees cooler
+than open turf. \\
+   & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Parks \qty{1.3}{\degreeCelsius}, green areas \qty{2.0}{\degreeCelsius}. \\
+\addlinespace
+06 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Green areas \qty{2.0}{\degreeCelsius} and street trees
+\qty{1.5}{\degreeCelsius}. \\
+   & \citeauthor{ziter2019}\,\citeyear{ziter2019} &
+Cooling maximised at city-block scale (\SIrange{60}{90}{\metre}), comparable to
+a schoolyard footprint. \\
+   & \citeauthor{bowler2010}\,\citeyear{bowler2010} &
+Tree-containing green sites outperform open green space. \\
+\addlinespace
+07 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Green roofs \qty{1.1}{\degreeCelsius}, the lowest-performing green measure in
+the synthesis. \\
+   & \citeauthor{zolch2016}\,\citeyear{zolch2016} &
+Green roof effects at pedestrian level negligible \emph{(PET)}. \\
+   & \citeauthor{santamouris2014}\,\citeyear{santamouris2014} &
+\SIrange{0.3}{3}{\kelvin} average urban ambient reduction, but \emph{only for
+city-scale deployment in simulation studies}, not single-building
+installation. \\
+\addlinespace
+08 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Green walls \qty{3.0}{\degreeCelsius} central, with fivefold spread across
+climate subzones (Cwa 5.7, BWh 5.5, Csa 2.9, Cfa/Cfb 1.3, Af
+\qty{1.0}{\degreeCelsius}). \\
+   & \citeauthor{zolch2016}\,\citeyear{zolch2016} &
+Green fa\c{c}ades \SIrange{-5}{-10}{\percent} PET, below trees at
+\SI{-13}{\percent} \emph{(comfort index)}. \\
+\addlinespace
+09 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+No bioswale-specific estimate available; neighbouring categories (green areas
+\qty{2.0}{\degreeCelsius}, water bodies \qty{2.1}{\degreeCelsius}) are not
+transferable to small drainage features. \\
+   & \citeauthor{gunawardena2017}\,\citeyear{gunawardena2017} &
+Tree-dominated greenspace delivers heat-stress relief; small blue features are
+not identified as significant coolers. \\
+\addlinespace
+10 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Water bodies \qty{2.1}{\degreeCelsius} and urban forests
+\qty{2.1}{\degreeCelsius}; water bodies and parks reported as largely
+climate-independent. \\
+   & \citeauthor{gunawardena2017}\,\citeyear{gunawardena2017} &
+Green and blue features together offer synergistic benefits; poorly designed
+bluespace may exacerbate heat stress in humid conditions. \\
+\addlinespace
+11 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Water bodies \qty{2.1}{\degreeCelsius}, climate-robust; urban forests
+\qty{2.1}{\degreeCelsius}. \\
+   & \citeauthor{gunawardena2017}\,\citeyear{gunawardena2017} &
+Bluespace cooling mechanisms; humid-condition heat-stress caveat. \\
+\addlinespace
+12 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Permeable pavements \qty{2.9}{\degreeCelsius}, cool pavements
+\qty{2.0}{\degreeCelsius}, shading devices \qty{2.0}{\degreeCelsius}. \\
+   & \citeauthor{zolch2016}\,\citeyear{zolch2016} &
+Shade positioned in heat-exposed locations is the decisive design factor. \\
+\addlinespace
+13 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Green areas \qty{2.0}{\degreeCelsius} and green walls
+\qty{3.0}{\degreeCelsius}; enclosed-courtyard geometry not separately
+resolved. \\
+   & \citeauthor{ziter2019}\,\citeyear{ziter2019} &
+Cooling scales with patch size; courtyards fall below the
+\SIrange{60}{90}{\metre} optimum. \\
+   & \citeauthor{zolch2016}\,\citeyear{zolch2016} &
+Micro-scale greening in dense residential fabric reduces PET; placement
+dominates quantity \emph{(comfort index)}. \\
+\addlinespace
+14 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
+Best-performing individual NbS measures cluster at
+\SIrange{2.0}{3.0}{\degreeCelsius}; no synthesis estimate exists for combined
+packages. \\
+   & \citeauthor{gunawardena2017}\,\citeyear{gunawardena2017} &
+Combined green and blue features offer synergistic ecosystem benefits, stated
+qualitatively and not quantified. \\
+\end{longtable}
+
+\subsection{Calibration notes recorded in configuration}
+
+\begin{longtable}{@{}l>{\raggedright\arraybackslash}p{115mm}@{}}
+\caption[Typology calibration notes]{Calibration notes carried in the typology
+library, explaining why an adopted value departs from a naive reading of its
+sources. Typologies 04, 10, and 11 carry no note; their values follow directly
+from converging sources.}
+\label{tab:app-notes}\\
+\toprule
+\textbf{ID} & \textbf{Note} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Note} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r@{}}{\small\itshape continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+01 & Upper bound capped at \qty{3.0}{\degreeCelsius} rather than the tropical
+central estimate of \qty{4.0}{\degreeCelsius}, which carries a
+$\pm\,$\qty{1.6}{\degreeCelsius} interval and reflects favourable
+conditions. \\
+02 & Scored above street trees because shade is placed where exposure occurs.
+The narrow-street effect reported in the synthesis is an urban-form effect, not
+an NbS intervention, and is deliberately not inherited. \\
+03 & Explicitly the small end of the park distribution, bounded below the
+general park estimate by the size relationship reported in
+\textcite{bowler2010}. \\
+05 & Represents added cooling over an already partly green baseline, so the
+achievable increment is bounded below new-forest values. \\
+06 & No schoolyard-specific synthesis found; values inherited from small green
+areas with trees at matching spatial scale. The typology's distinct value is
+exposure of a vulnerable group, expressed through vulnerability and equity
+scoring rather than through inflated cooling. \\
+07 & Benefits are concentrated at roof level and inside the building beneath.
+The tool states in its output that green-roof benefits are principally
+building-level rather than street-level. \\
+08 & Sources conflict outright: the synthesis ranks green walls near the top on
+air temperature while the micro-scale comparison ranks them below trees on
+comfort, plausibly explained by near-wall measurement position. Low confidence,
+conservative envelope, explicit caveat in tool output. \\
+09 & No source quantifies air-temperature cooling for rain gardens or bioswales
+specifically. Value is a reasoned lower bound from adjacent evidence. Primary
+benefits are stormwater and biodiversity, not cooling. \\
+12 & The permeable-pavement estimate rests on a narrower evidence base than the
+vegetation figures, so the adopted upper bound is set below it. \\
+13 & Small, enclosed, often sheltered from ventilation. Bounded by scale
+limitation; no courtyard-specific synthesis exists. \\
+14 & The draft methodology's \qty{3.5}{\degreeCelsius} upper bound was
+rejected: no retrieved source quantifies super-additive cooling from combining
+measures. Capped at the best-evidenced single-measure ceiling. The package's
+advantage is expressed as co-benefit breadth and robustness, not additional
+degrees. \\
+\end{longtable}
+
+\clearpage
+\section{Complete weight tables}
+\label{app:weights}
+
+All weights are from \texttt{config/weights.yaml} at version \methver{}. Within
+each block the weights sum to unity. All are expert judgment in the sense of
+\textcite{nardo2008}; where a source informs the \emph{selection} of indicators
+or the \emph{relative ordering} of weights, it is named.
+
+\subsection{Heat Exposure Score (data-rich path only)}
+
+\begin{center}\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Component} & \textbf{Weight} \\
+\midrule
+Land surface temperature anomaly & 0.40 \\
+Imperviousness                   & 0.25 \\
+Solar exposure                   & 0.20 \\
+Vegetation deficit               & 0.15 \\
+\midrule
+\textbf{Total} & \textbf{1.00} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\emph{Basis.} Component selection reflects established
+surface-energy-balance drivers of urban heat. \textcite{ziter2019} gives direct
+empirical support for two components: impervious cover raises air temperature
+approximately linearly and canopy cover reduces it nonlinearly. The relative
+weights are expert judgment.
+
+\subsection{Vulnerability Score}
+
+\begin{center}\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Component} & \textbf{Weight} \\
+\midrule
+Population density        & 0.40 \\
+Vulnerable groups         & 0.40 \\
+Cooling access deficit    & 0.20 \\
+\midrule
+\textbf{Total} & \textbf{1.00} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\emph{Basis.} Indicator selection follows \textcite{reid2009}, whose
+factor analysis of ten heat-vulnerability variables found four factors
+explaining over \SI{75}{\percent} of variance, with air-conditioning prevalence
+emerging as an independent dimension. Density and vulnerable-group presence are
+weighted equally because that analysis gives no basis for ranking one above the
+other; cooling access carries less weight as a single, frequently unknown
+indicator.
+
+\subsection{Heat Priority Index and site adjustment}
+
+\begin{center}\small
+\begin{tabular}{@{}lr@{}lr@{}}
+\toprule
+\multicolumn{2}{@{}l}{\textbf{Heat Priority Index}} &
+\multicolumn{2}{l}{\textbf{Site adjustment}} \\
+\midrule
+Heat exposure  & 0.60 & \quad Canopy      & 0.40 \\
+Vulnerability  & 0.40 & \quad Soil--water & 0.25 \\
+               &      & \quad Scale       & 0.20 \\
+               &      & \quad Climate     & 0.15 \\
+\midrule
+\textbf{Total} & \textbf{1.00} & \quad\textbf{Total} & \textbf{1.00} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\emph{Basis for site adjustment.} Canopy carries the largest weight as
+the condition with the strongest direct empirical support
+\parencite{ziter2019}. The climate component is justified by
+\textcite{keravec2026}: adding K\"oppen--Geiger subzone raises variance
+explained in cooling effectiveness from \SI{12}{\percent} to
+\SI{78}{\percent}.
+
+\subsection{Composite sub-scores}
+
+\begin{center}\small
+\begin{tabular}{@{}lr@{\qquad}lr@{\qquad}lr@{}}
+\toprule
+\multicolumn{2}{@{}l}{\textbf{NbS Suitability}} &
+\multicolumn{2}{l}{\textbf{Co-benefits}} &
+\multicolumn{2}{l}{\textbf{Equity}} \\
+\midrule
+Space         & 0.30 & Biodiversity     & 0.25 & Vulnerable user benefit & 0.35 \\
+Soil          & 0.25 & Stormwater       & 0.25 & Public accessibility    & 0.25 \\
+Water         & 0.20 & Public health    & 0.20 & Safety and comfort      & 0.20 \\
+Maintenance   & 0.15 & Social inclusion & 0.15 & Participation relevance & 0.20 \\
+Urban context & 0.10 & Urban quality    & 0.15 &                         &      \\
+\midrule
+\textbf{Total} & \textbf{1.00} & \textbf{Total} & \textbf{1.00} &
+\textbf{Total} & \textbf{1.00} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent As disclosed in \Cref{sec:composite-subscores}, the rules mapping
+user inputs to these individual sub-indicator scores are not specified at
+version \methver{}, and the Equity Score does not enter the final aggregation.
+
+\subsection{Final aggregation and effective weights}
+
+\begin{center}\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{Component} & \textbf{Nominal} & \textbf{Effective} \\
+\midrule
+Heat Priority Index    & 0.25 & --- \\
+\quad heat exposure    &      & 0.15 \\
+\quad vulnerability    &      & 0.10 \\
+Cooling Potential      & 0.25 & 0.25 \\
+NbS Suitability        & 0.15 & 0.15 \\
+Vulnerability (direct) & 0.15 & 0.15 \\
+Co-benefits            & 0.10 & 0.10 \\
+Cost Feasibility       & 0.10 & 0.10 \\
+\midrule
+\textbf{Total}                & \textbf{1.00} & \textbf{1.00} \\
+\midrule
+\textbf{Vulnerability, total} &      & \textbf{0.25} \\
+\textbf{Heat exposure, total} &      & \textbf{0.15} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The equity-forward double contribution of vulnerability is deliberate
+and is argued in \Cref{sec:effective-weights}. The sensitivity-analysis
+perturbation parameter is $\pm\,\SI{25}{\percent}$
+(\Cref{sec:sensitivity}).
+
+\clearpage
+\section{Input field reference}
+\label{app:fields}
+
+\begin{keynote}
+\noindent The definitive enumeration of which fields are required and which are
+optional is fixed by the input schema, which is implemented alongside the
+engine in Phase 2. The \emph{Status} column below records what the methodology
+documents at version \methver{}: fields marked \emph{Required} are those
+without which a documented formula cannot be evaluated at all; fields marked
+\emph{Optional} are those whose absence the methodology explicitly handles
+through a default or a \emph{not calculated} status. Fields marked
+\emph{Not enumerated} await the schema.
+\end{keynote}
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{46mm}
+                    >{\raggedright\arraybackslash}p{22mm}
+                    >{\raggedright\arraybackslash}p{60mm}@{}}
+\caption[Input field reference]{Input fields, their status, and the
+normalisation applied to each.}
+\label{tab:app-fields}\\
+\toprule
+\textbf{Field} & \textbf{Status} & \textbf{Normalisation / use} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\itshape \Cref{tab:app-fields} continued}\\
+\toprule
+\textbf{Field} & \textbf{Status} & \textbf{Normalisation / use} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r@{}}{\small\itshape continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\multicolumn{3}{@{}l}{\textit{Site characteristics}}\\
+\fieldname{site_area_m2} & Required &
+Denominator of the canopy condition and of shade potential
+(\Cref{eq:shade}). \\
+\fieldname{existing_tree_canopy_percent} & Optional &
+Canopy condition derivation (\Cref{tab:derivation}). \\
+\fieldname{existing_green_cover_percent} & Optional &
+Vegetation deficit, $\clamp{100-g}$ (\Cref{eq:vegdef}). \\
+\texttt{imperviousness}\textsuperscript{a} & Optional &
+Percentage used directly as a \numrange{0}{100} score in
+\Cref{eq:heat-exposure-rich}. \\
+\fieldname{soil_availability} & Optional &
+none 25 / limited 50 / moderate 75 / high 100; unknown 50. Also feeds the
+soil--water condition. \\
+\fieldname{irrigation_availability} & Optional &
+none 25 / occasional 50 / reliable 100; unknown 50. Also feeds the soil--water
+condition. \\
+\fieldname{current_shade_level} & Optional &
+very low 25 / low 50 / medium 75 / high 100; unknown 50. \\
+\addlinespace
+
+\multicolumn{3}{@{}l}{\textit{Project information}}\\
+\fieldname{assessment_scale} & Required &
+Scale condition: city, district $\rightarrow$ excellent; neighbourhood
+$\rightarrow$ good; site, building $\rightarrow$ moderate. \\
+\addlinespace
+
+\multicolumn{3}{@{}l}{\textit{Climate and heat exposure}}\\
+\fieldname{climate_zone} & Required &
+Climate condition lookup (\Cref{tab:climate-matrix}). \\
+\fieldname{lst_anomaly_c} & Optional &
+Linear, \qty{0}{\degreeCelsius}$\rightarrow$0,
+\qty{+10}{\degreeCelsius}$\rightarrow$100, clamped (\Cref{eq:lst}). Selects the
+data-rich heat exposure path. \\
+\fieldname{heat_exposure_level} & Optional &
+Standard levels. Used directly as the Heat Exposure Score on the data-poor
+path. \\
+\fieldname{solar_exposure} & Optional & Standard levels. \\
+\fieldname{heat_index_concern} & Optional & Standard levels. \\
+\addlinespace
+
+\multicolumn{3}{@{}l}{\textit{Vulnerability and equity}}\\
+\fieldname{population_density} & Optional & Standard levels. \\
+\fieldname{vulnerable_population_presence} & Optional & Standard levels. \\
+\fieldname{access_to_cooled_indoor_space} & Optional &
+\textbf{Inverted} levels: high 25 / medium 50 / low 100; unknown 50
+(\Cref{sec:inverted}). \\
+\fieldname{safety_concern} & Optional & Standard levels. \\
+\addlinespace
+
+\multicolumn{3}{@{}l}{\textit{NbS intervention}}\\
+\fieldname{nbs_type} & Required &
+Selects the typology and its climate-family row. \\
+\fieldname{new_canopy_area_at_maturity_m2} & Optional &
+Canopy condition and shade potential. \\
+\fieldname{expected_maturity_period} & Optional &
+Time-to-benefit output. No maturity discount is applied to cooling values at
+version \methver{}. \\
+implementation complexity & Not enumerated &
+Input to cost feasibility (\Cref{eq:cost-feasibility}). \\
+maintenance intensity & Not enumerated &
+Input to cost feasibility. \\
+\addlinespace
+
+\multicolumn{3}{@{}l}{\textit{Cost and energy (all optional)}}\\
+\fieldname{nearby_building_cooling_demand_relevant} & Optional &
+Precondition for the energy derivation (\Cref{sec:energy}). \\
+\fieldname{annual_cooling_energy_demand_kwh} & Optional &
+$D$ in \Cref{eq:energy}. Absent: \texttt{missing\_energy\_demand}. \\
+energy price & Optional &
+$p$ in \Cref{eq:annual-savings}. Absent: cost savings not calculated. \\
+capital cost & Optional &
+$C_{\mathrm{capital}}$ in \Cref{eq:payback}. Absent: capital cost, payback, and
+cost feasibility all \emph{not estimated}. \\
+\end{longtable}
+
+\noindent\footnotesize\textsuperscript{a}\,The imperviousness field is used by
+\Cref{eq:heat-exposure-rich} but is not declared in
+\texttt{config/input\_mapping.yaml} at version \methver{}; its direct
+percentage-as-score treatment is inferred from the formula and should be made
+explicit in configuration.\normalsize
+
+\clearpage
+\section{Glossary}
+\label{app:glossary}
+
+\begin{description}[leftmargin=0pt, labelwidth=0pt, labelsep=0pt, style=nextline, itemsep=4pt]
+
+\item[Air temperature] The temperature of the air, here measured or estimated
+at pedestrian level. The quantity this methodology reports. Distinct from land
+surface temperature and from thermal comfort indices.
+
+\item[Base cooling score] A \numrange{0}{100} index expressing a typology's
+relative expected cooling performance before site adjustment. Not a
+temperature.
+
+\item[Block confidence] A property of an \emph{assessment}: how completely the
+user supplied the inputs a given output block depends on
+(\Cref{tab:confidence}). Distinct from evidence confidence.
+
+\item[Boundary-layer urban heat island] The heat island of the air mass above
+roof level, distinguished from the canopy-layer and surface heat islands by
+\textcite{oke1976}.
+
+\item[Canopy-layer urban heat island (CUHI)] The heat island of the air between
+the ground and roof level --- the layer people occupy. The quantity relevant to
+this methodology.
+
+\item[Clamp] $\clamp{x}$ bounds a value to the \numrange{0}{100} reporting
+scale.
+
+\item[Clip] $\clip{x}{l}{u}$ bounds a value to a stated interval. Used to
+confine reported temperature estimates to the literature envelope
+(\Cref{sec:cooling}).
+
+\item[Composite indicator] An index formed by normalising and aggregating
+several sub-indicators. Construction here follows \textcite{nardo2008}.
+
+\item[Cooling Potential Score] The Layer 2 headline score: the typology's base
+cooling score scaled by the site adjustment factor (\Cref{eq:cps}).
+
+\item[Envelope] The literature-supported interval of temperature reduction for
+a typology. Its lower bound represents a poorly performing instance, its upper
+bound a well-executed instance under favourable conditions. Not a prediction
+and not a confidence interval.
+
+\item[Evidence confidence] A property of a \emph{typology}: how well grounded
+its adopted values are (high, medium, low). Propagates into an assessment by
+capping cooling-block confidence (\Cref{sec:evidence-propagation}).
+
+\item[Golden scenario] A stored input case with a hand-verified expected
+output, used as regression armour against unintended methodology drift and as
+the basis of the sensitivity analysis.
+
+\item[Heat Priority Index (HPI)] The Layer 1 headline score, combining heat
+exposure and vulnerability (\Cref{eq:hpi}). Independent of the proposed
+intervention.
+
+\item[K\"oppen--Geiger classification] A climate classification system whose
+subzones (Af, BWh, Csa, Cfa, Cfb, Cwa, \dots) raise the variance explained in
+cooling effectiveness from \SI{12}{\percent} to \SI{78}{\percent}
+\parencite{keravec2026}.
+
+\item[Land surface temperature (LST)] The radiometric temperature of the
+ground and building surfaces, typically satellite-derived. Substantially
+exceeds air temperature \parencite{venter2021}; used here only as a relative
+screening proxy (\Cref{sec:lst}).
+
+\item[NbS Cooling Opportunity Score] The final aggregated score
+(\Cref{eq:aggregation}), on a \numrange{0}{100} scale, for comparing options
+and sites.
+
+\item[Nature-based solutions (NbS)] Interventions using vegetation, water, and
+natural processes to deliver benefits --- here, urban cooling.
+
+\item[PET (physiologically equivalent temperature)] A thermal comfort index
+representing perceived thermal conditions. \textbf{Not} air temperature; used
+in this methodology only for relative ranking and caveats.
+
+\item[Screening level] An assessment tier producing indicative, comparable
+estimates for triage, positioned between unstructured judgment and detailed
+simulation.
+
+\item[Site adjustment factor] The composite multiplier $A \in [0.5, 1.2]$
+derived from canopy, soil--water, scale, and climate conditions
+(\Cref{eq:adjustment}).
+
+\item[Super-additivity] The hypothesis that combined interventions cool more
+than their strongest component. Not adopted, because no retrieved source
+quantifies it (\Cref{sec:super-additivity}).
+
+\item[Surface urban heat island (SUHI)] The heat island measured in surface
+temperatures. Reported at roughly six times the canopy-layer magnitude by
+\textcite{venter2021}.
+
+\item[UTCI (universal thermal climate index)] A thermal comfort index. As with
+PET, not air temperature, and not reported by this tool.
+
+\end{description}
+
+\clearpage
+\section{Source verification status}
+\label{app:verification}
+
+Every source enters the methodology's bibliography only after its bibliographic
+details have been checked against the publisher record, an institutional
+repository, or an indexing service. \Cref{tab:app-verification} reproduces the
+verification register from \texttt{docs/methodology/BIBLIOGRAPHY.md} at version
+\methver{}.
+
+Three verification levels are used.
+
+\begin{description}[leftmargin=1.5em, style=sameline, font=\normalfont\itshape]
+  \item[Full] Bibliographic details \emph{and} the specific quantitative
+  finding used by the methodology were both confirmed from a retrieved source.
+  \item[Metadata + finding (secondary)] Bibliographic details confirmed from
+  the publisher or repository; the quantitative finding confirmed from an
+  authoritative secondary description --- a publisher abstract page or an
+  indexing service --- rather than from the full text.
+  \item[Metadata only] Bibliographic details confirmed; the source is
+  referenced qualitatively only, and no numeric value in the tool depends on
+  it.
+\end{description}
+
+\begin{keynote}
+\noindent This register is reproduced rather than summarised because the
+distinction it records is material. Several publisher sites --- Elsevier, PNAS,
+Science --- block automated retrieval, so a number of findings were confirmed
+from open repositories, PubMed, or publisher abstract pages. Where a value in
+the tool depends on a finding that is not \emph{Full}, the configuration marks
+its confidence accordingly.
+
+A reader should not read \emph{metadata + finding (secondary)} as an implied
+full-text reading. It means what it says: the number was confirmed from an
+authoritative description of the paper, not from the paper.
+\end{keynote}
+
+\begin{longtable}{@{}l>{\raggedright\arraybackslash}p{34mm}
+                    >{\raggedright\arraybackslash}p{66mm}@{}}
+\caption[Source verification register]{Verification status of every source
+cited by the methodology.}
+\label{tab:app-verification}\\
+\toprule
+\textbf{Key} & \textbf{Verified} & \textbf{Basis and notes} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\itshape \Cref{tab:app-verification} continued}\\
+\toprule
+\textbf{Key} & \textbf{Verified} & \textbf{Basis and notes} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r@{}}{\small\itshape continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\texttt{keravec2026} & Full &
+IOPscience, open access. The primary cross-typology anchor and the empirical
+basis for treating climate suitability as a first-order adjustment. \\
+\addlinespace
+\texttt{ziter2019} & Full &
+PubMed record, PMID 30910972. \\
+\addlinespace
+\texttt{zolch2016} & Full &
+Lund University research portal record. \emph{Note:} PET is a thermal-comfort
+index, not air temperature; used for relative ranking of intervention families
+and for the green-roof street-level caveat, never as an air-temperature
+value. \\
+\addlinespace
+\texttt{santamouris2014} & Full &
+Open PDF via EEA Climate-ADAPT; abstract read directly. \emph{Critical
+caveat:} the \SIrange{0.3}{3}{\kelvin} figure describes city-scale mass
+deployment in simulation studies, not one green roof on one building, and is
+therefore not used as a site-level typology value. \\
+\addlinespace
+\texttt{reid2009} & Full &
+PMC open access record, PMC2801183. Grounds the vulnerability sub-indicators
+and the treatment of low cooling access as an independent vulnerability
+dimension. \\
+\addlinespace
+\texttt{ember} & Full &
+Licence and coverage confirmed on Ember's data pages; 215 countries, CC-BY-4.0,
+redistribution permitted with attribution. \\
+\addlinespace
+\texttt{nardo2008} & Full &
+Full bibliographic record from the JRC repository; step sequence confirmed from
+OECD/JRC descriptions. \\
+\addlinespace
+\texttt{worldbank2021} & Full &
+World Bank plain-text document retrieved directly. The documented
+justification for shipping no global default unit costs. \\
+\addlinespace
+\texttt{bowler2010} & Metadata + finding (secondary) &
+Metadata from the Bangor University repository; the \qty{0.94}{\degreeCelsius}
+finding from the publisher abstract description. Elsevier full text blocked. \\
+\addlinespace
+\texttt{gunawardena2017} & Metadata + finding (secondary) &
+Metadata from TU Delft and Bath research portals; findings from the publisher
+abstract description. Elsevier full text blocked. Justifies the humidity caveat
+applied to blue typologies in tropical-wet climates. \\
+\addlinespace
+\texttt{venter2021} & Metadata + finding (secondary) &
+Metadata from the ADS record and an author-hosted PDF; the surface-versus-canopy
+comparison from an indexed description. Publisher full text blocked. Basis for
+treating LST as a relative screening proxy only. \\
+\addlinespace
+\texttt{akbari2001} & Metadata + finding (secondary) &
+Multiple indexing records and an LBNL institutional listing. Basis for
+\emph{deriving} cooling-energy savings from estimated air temperature
+reduction, replacing unsourced per-typology energy factors. \\
+\addlinespace
+\texttt{norton2015} & Metadata + framework description (secondary) &
+Metadata from the Monash University research portal; framework description
+secondary. The closest published antecedent to this tool. No numeric value is
+taken from it. \\
+\addlinespace
+\texttt{rahman2020} & Metadata only &
+Publisher listing. Used qualitatively --- to justify that canopy condition
+modulates performance --- never for a numeric value. \\
+\addlinespace
+\texttt{oke1976} & Metadata only &
+Widely indexed. Cited for the conceptual distinction between canopy-layer,
+boundary-layer, and surface urban heat islands, not for a numeric value. \\
+\end{longtable}
+
+\subsection*{Which tool values depend on non-full verification}
+
+Three dependencies are worth naming explicitly.
+
+The \textbf{energy derivation} of \Cref{sec:energy} rests entirely on
+\texttt{akbari2001}, verified at \emph{metadata + finding (secondary)}. The
+\SIrange{2}{4}{\percent} per \si{\degreeCelsius} sensitivity is the sole input
+to every energy and greenhouse-gas figure the tool produces.
+
+The \textbf{pocket park and park upgrade envelopes} depend on
+\texttt{bowler2010}'s \qty{0.94}{\degreeCelsius} mean, verified at the same
+level, which is also the empirical anchor for the modelling-bias correction of
+\Cref{sec:modelling-bias}.
+
+The \textbf{LST proxy restriction} of \Cref{sec:lst} rests on
+\texttt{venter2021}, again at the same level --- though here the tool's use is
+qualitative, and the conclusion is independently supported by the conceptual
+distinction in \texttt{oke1976}.
+
+In each case the tool's confidence ratings and stated limitations reflect the
+verification level, and in no case does a value verified only at
+\emph{metadata only} carry a number.

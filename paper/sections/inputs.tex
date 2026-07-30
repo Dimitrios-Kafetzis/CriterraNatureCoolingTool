@@ -1,0 +1,164 @@
+\section{Inputs and normalisation}
+\label{sec:inputs}
+
+\subsection{Input structure}
+
+Inputs are collected in six groups: project information; site characteristics;
+climate and heat exposure; vulnerability and equity; the proposed NbS
+intervention; and cost and energy parameters. The full field reference, with
+required or optional status and the normalisation applied to each field, is
+reproduced in \Cref{app:fields}.
+
+Every input is either \emph{required}, in which case the assessment cannot
+proceed without it, or \emph{optional}, in which case its absence reduces
+confidence but never blocks the assessment. The methodology requires roughly
+forty-five inputs, of which about twenty are mandatory. Reducing that count
+would not reduce uncertainty; it would move uncertainty from visible --- a
+stated confidence level --- to invisible --- a silent default. The interface
+consequently asks everything, makes skipping free, and shows the user what
+skipping costs.
+
+\subsection{Qualitative normalisation}
+\label{sec:qualitative}
+
+Most inputs accept a qualitative level, because most users at screening stage
+do not have measured data. Levels map to a \numrange{0}{100} scale as shown in
+\Cref{tab:levels}.
+
+\begin{table}[H]
+\centering
+\caption[Qualitative level normalisation]{Normalisation of qualitative input
+levels. The standard scale applies where a higher level indicates higher risk
+or higher quantity; the inverted scale applies where a higher level indicates
+\emph{lower} risk.}
+\label{tab:levels}
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{Level} & \textbf{Standard scale} & \textbf{Inverted scale} \\
+\midrule
+Low        & 25  & 100 \\
+Medium     & 50  & 50  \\
+High       & 75  & 25  \\
+Very high  & 100 & --- \\
+Unknown    & 50  & 50  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three fields use scales of their own, because their natural vocabularies are
+not the four standard levels. Soil availability maps
+\emph{none}\,$\rightarrow$\,25, \emph{limited}\,$\rightarrow$\,50,
+\emph{moderate}\,$\rightarrow$\,75, \emph{high}\,$\rightarrow$\,100. Irrigation
+availability maps \emph{none}\,$\rightarrow$\,25,
+\emph{occasional}\,$\rightarrow$\,50, \emph{reliable}\,$\rightarrow$\,100.
+Current shade level maps \emph{very low}\,$\rightarrow$\,25,
+\emph{low}\,$\rightarrow$\,50, \emph{medium}\,$\rightarrow$\,75,
+\emph{high}\,$\rightarrow$\,100. In each case \emph{unknown} maps to 50.
+
+\subsection{The inverted mapping for cooling access}
+\label{sec:inverted}
+
+The principal application of the inverted scale is access to cooled indoor
+space, where \emph{high} access maps to 25, \emph{medium} to 50, and \emph{low}
+to 100. The field enters the Vulnerability Score
+(\Cref{sec:vulnerability}) as a \emph{cooling access deficit}: low access
+indicates higher vulnerability, so it must produce a higher score.
+
+The justification is \textcite{reid2009}. In that factor analysis of ten heat
+vulnerability variables, air-conditioning prevalence emerged as one of four
+factors explaining more than \SI{75}{\percent} of total variance --- and,
+importantly, as an \emph{independent} dimension rather than as a proxy for
+income or for the social and environmental vulnerability factor. That
+independence is what justifies giving cooling access its own term in the
+vulnerability formula instead of allowing it to be absorbed into a general
+deprivation indicator.
+
+Two qualifications should be read alongside this. The study population was
+North American, and access to mechanical cooling has a different distribution
+and a different meaning in cities where air conditioning is rare across all
+income groups. And the tool asks about access to cooled indoor space generally
+rather than about air-conditioning ownership specifically, which is a
+deliberate broadening --- a shaded, ventilated, publicly accessible cool refuge
+counts --- but a broadening that the underlying study does not itself
+validate.
+
+\subsection{The treatment of \emph{unknown}}
+\label{sec:unknown}
+
+Assigning \emph{unknown} a neutral score of 50 is a deliberate and disclosed
+choice. Three alternatives were available and each carries a bias.
+
+Treating an unknown as the best case flatters sites with poor data; treating it
+as the worst case penalises them; and imputing a value from other fields
+introduces a correlation the user never asserted and cannot see. The neutral
+midpoint avoids both optimistic and pessimistic bias in the score, at the cost
+of pulling every score toward the middle in proportion to how much is unknown.
+
+That cost is not concealed. The confidence mechanism of \Cref{sec:confidence}
+records, per output block, how much of the relevant input set was actually
+supplied, so a score dominated by neutral defaults is reported at low
+confidence. The two mechanisms are complementary: the score says what the
+evidence supports, and the confidence says how much evidence there was. Neither
+alone is sufficient, and quoting a score without its confidence rating is
+identified in \Cref{sec:misuse} as a misuse of the tool.
+
+\subsection{Land surface temperature as an optional proxy}
+\label{sec:lst}
+
+Where a user can supply a land-surface-temperature (LST) anomaly --- degrees
+Celsius above the city mean, typically derived from satellite imagery --- the
+tool converts it linearly to a \numrange{0}{100} score, with
+\qty{0}{\degreeCelsius} mapping to 0 and \qty{+10}{\degreeCelsius} mapping to
+100, clamped at both ends:
+
+\begin{equation}
+\label{eq:lst}
+S_{\mathrm{LST}} \;=\; \clamp{10 \times a_{\mathrm{LST}}},
+\end{equation}
+
+where $a_{\mathrm{LST}}$ is the supplied anomaly in degrees Celsius and
+$\clampop$ bounds its argument to $[0, 100]$. The \qty{10}{\degreeCelsius}
+ceiling is consistent with observed intra-urban surface anomaly ranges while
+keeping the normalisation interpretable.
+
+\begin{keynote}
+\noindent\textbf{This proxy is used under a stated restriction, and the
+restriction is the most important sentence in this subsection.} Land surface
+temperature is not air temperature, and the two diverge by a large and
+systematic factor.
+
+\textcite{venter2021} contrasted crowdsourced air temperature measurements
+against satellite estimates and found the satellite-derived \emph{surface}
+urban heat island to substantially exceed the air-temperature
+(\emph{canopy-layer}) urban heat island: a reported mean surface UHI of
+\qty{1.45}{\degreeCelsius} against a canopy-layer UHI of
+\qty{0.26}{\degreeCelsius}, an approximately sixfold difference. This reflects
+the physical distinction between surface, canopy-layer, and boundary-layer heat
+islands established by \textcite{oke1976}.
+
+The tool therefore treats LST \textbf{only as a relative indicator of which
+parts of a city are hotter than others}. It is never interpreted as an
+air-temperature value, never converted into a \si{\degreeCelsius} outcome, and
+never compared against the tool's own air-temperature reduction estimates. It
+influences only the ranking of sites within the Heat Exposure Score.
+\end{keynote}
+
+The verification status of \textcite{venter2021} is relevant here: the
+bibliographic record was confirmed from the ADS record and an author-hosted
+PDF, and the specific surface-versus-canopy comparison was confirmed from an
+indexed secondary description, publisher full text being blocked. The claim the
+methodology rests on --- that surface UHI substantially exceeds canopy-layer
+UHI --- is corroborated conceptually by \textcite{oke1976}, and the tool's use
+of the finding is qualitative (treat LST as relative only) rather than
+numerical, so no tool output depends on the precise sixfold ratio.
+
+\subsection{Where the tool has no LST}
+
+Most screening-stage users will not have an LST anomaly. The methodology
+therefore provides a second path through the Heat Exposure Score
+(\Cref{sec:heat-exposure}) that requires only a qualitative heat exposure level.
+The two paths are not equivalent in information content, and the confidence
+mechanism reflects that. The data-poor path is not a degraded mode to be
+avoided; it is the expected mode for most assessments, and the tool is designed
+to give a defensible answer in it.

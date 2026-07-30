@@ -1,0 +1,83 @@
+% Climate dependence of measured cooling effectiveness (keravec2026).
+% Left panel: green walls by Koppen-Geiger subzone.
+% Right panel: street trees, tropical (A) against arid (B).
+% Error bars show the uncertainty the source states; no bar is drawn for
+% Cfa/Cfb, for which the source states a central estimate only.
+% All values are daytime pedestrian-level AIR temperature reductions.
+\begin{tikzpicture}[font=\footnotesize]
+
+\pgfplotsset{
+  climatepanel/.style={
+    ybar,
+    ymin=0, ymax=7.6,
+    ytick={0,1,...,7},
+    height=64mm,
+    axis lines=left,
+    axis line style={draw=rulegrey, line width=0.5pt},
+    tick style={draw=rulegrey},
+    ymajorgrids=true,
+    grid style={draw=rulegrey!45, line width=0.3pt, dash pattern=on 1pt off 1.5pt},
+    xtick=data,
+    xticklabel style={font=\scriptsize},
+    error bars/y dir=both,
+    error bars/y explicit,
+    error bars/error bar style={draw=criterraink, line width=0.7pt},
+    nodes near coords,
+    nodes near coords style={font=\scriptsize\color{criterraink},
+      /pgf/number format/fixed, /pgf/number format/precision=1,
+      /pgf/number format/zerofill, yshift=1pt},
+    every node near coord/.append style={anchor=south west, xshift=2pt},
+  },
+}
+
+\begin{axis}[
+  name=left,
+  climatepanel,
+  width=0.56\textwidth,
+  bar width=10pt,
+  enlarge x limits=0.14,
+  ylabel={Air temperature reduction (\si{\degreeCelsius})},
+  ylabel style={font=\footnotesize},
+  symbolic x coords={Cwa,BWh,Csa,{Cfa/Cfb},Af},
+  title={\footnotesize Green walls, by K\"oppen--Geiger subzone},
+]
+\addplot[draw=criterragreen, fill=criterragreen!75]
+  coordinates {
+    (Cwa,        5.7) +- (0,1.0)
+    (BWh,        5.5) +- (0,1.0)
+    (Csa,        2.9) +- (0,0.8)
+    ({Cfa/Cfb},  1.3) +- (0,0.0)
+    (Af,         1.0) +- (0,0.8)
+  };
+\draw[dashed, draw=criterraink, line width=0.7pt]
+  ({rel axis cs:0,0}|-{axis cs:Cwa,3.0}) -- ({rel axis cs:1,0}|-{axis cs:Cwa,3.0});
+\node[anchor=south east, font=\scriptsize\itshape, align=right,
+      color=criterraink, inner sep=1.5pt]
+  at (axis cs:Af,3.06) {global central estimate\\\SI{3.0}{\degreeCelsius}};
+\end{axis}
+
+\begin{axis}[
+  name=right,
+  climatepanel,
+  at={($(left.south east)+(14mm,0)$)}, anchor=south west,
+  width=0.40\textwidth,
+  bar width=14pt,
+  enlarge x limits=0.34,
+  yticklabel=\empty,
+  symbolic x coords={{Tropical (A)},{Arid (B)}},
+  title={\footnotesize Street trees, by climate zone},
+]
+\addplot[draw=criterragreen, fill=criterragreen!75]
+  coordinates {
+    ({Tropical (A)}, 4.0) +- (0,1.6)
+    ({Arid (B)},     1.7) +- (0,1.4)
+  };
+\draw[dashed, draw=criterraink, line width=0.7pt]
+  ({rel axis cs:0,0}|-{axis cs:{Tropical (A)},3.0})
+  -- ({rel axis cs:1,0}|-{axis cs:{Tropical (A)},3.0});
+\node[anchor=south east, font=\scriptsize\itshape, align=right,
+      color=criterraink, inner sep=1.5pt]
+  at (axis cs:{Arid (B)},3.06) {adopted ceiling\\\SI{3.0}{\degreeCelsius}};
+\end{axis}
+
+\end{tikzpicture}

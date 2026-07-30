@@ -1,0 +1,370 @@
+\section{Worked example}
+\label{sec:worked-example}
+
+\begin{keynote}
+\noindent\textbf{This example is illustrative. The site does not exist, and the
+result is not a finding about any real place.}
+
+The calculation was performed \textbf{by hand} from the formulas and
+configuration values specified in this paper. At methodology version
+\methver{} the calculation engine is not yet implemented, so this is not
+engine output and has not been verified against an implementation. Its purpose
+is to make the specification concrete enough to check: a reader who disagrees
+with any number below can locate the equation that produced it and recompute
+it.
+
+Where a quantity depends on a rule that version \methver{} does not specify ---
+the NbS Suitability sub-indicators of \Cref{sec:composite-subscores} and the
+grid emission factor of \Cref{sec:ghg} --- the value used is labelled as an
+assumption, and \Cref{sec:we-assumptions} states how much the conclusion
+depends on it.
+\end{keynote}
+
+\subsection{The illustrative site and intervention}
+
+A neighbourhood-scale street corridor in a dense, largely sealed inner-city
+area in a temperate climate. The proposed intervention is street tree planting
+(typology 01). \Cref{tab:we-inputs} gives the inputs.
+
+\begin{table}[htbp]
+\centering
+\caption[Worked example inputs]{Inputs to the illustrative assessment. Fields
+left unsupplied are shown explicitly, because their absence changes both the
+result and its confidence.}
+\label{tab:we-inputs}
+\small
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}Xl@{}}
+\toprule
+\textbf{Group} & \textbf{Field} & \textbf{Value} \\
+\midrule
+Project    & Assessment scale                     & Neighbourhood \\
+\addlinespace
+Site       & Site area                            & \qty{6000}{\metre\squared} \\
+           & Existing tree canopy                 & \SI{8}{\percent} \\
+           & Existing green cover                 & \SI{12}{\percent} \\
+           & Impervious surface                   & \SI{85}{\percent} \\
+           & Soil availability                    & Limited \\
+           & Irrigation availability              & Occasional \\
+\addlinespace
+Climate    & Climate zone                         & Temperate \\
+           & Land surface temperature anomaly     & \qty{+4.2}{\degreeCelsius} \\
+           & Solar exposure                       & High \\
+\addlinespace
+Vulnerability & Population density                & High \\
+           & Vulnerable population presence       & High \\
+           & Access to cooled indoor space        & Low \\
+\addlinespace
+Intervention & Typology                           & Street tree planting (01) \\
+           & New canopy area at maturity          & \qty{1200}{\metre\squared} \\
+\addlinespace
+Energy     & Nearby building cooling demand relevant & Yes \\
+           & Annual cooling energy demand         & \qty{450000}{\kilo\watt\hour} \\
+           & Energy price                         & \emph{not supplied} \\
+\addlinespace
+Cost       & Capital cost                         & \emph{not supplied} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Layer 1 --- Baseline assessment}
+
+An LST anomaly is available, so the data-rich path of
+\Cref{eq:heat-exposure-rich} applies. Normalising by \Cref{eq:lst},
+$S_{\mathrm{LST}} = \clamp{10 \times 4.2} = 42.0$. The impervious percentage
+enters directly as $S_{\mathrm{imp}} = 85$; solar exposure \emph{high}
+normalises to $S_{\mathrm{solar}} = 75$ by \Cref{tab:levels}; and the
+vegetation deficit is $S_{\mathrm{vegdef}} = \clamp{100 - 12} = 88$ by
+\Cref{eq:vegdef}. Then
+
+\begin{align*}
+S_{\mathrm{heat}}
+&= 0.40(42.0) + 0.25(85) + 0.20(75) + 0.15(88) \\
+&= 16.80 + 21.25 + 15.00 + 13.20 \;=\; \mathbf{66.25}.
+\end{align*}
+
+For vulnerability, population density and vulnerable-group presence are both
+\emph{high} and normalise to 75. Access to cooled indoor space is \emph{low},
+which under the inverted mapping of \Cref{sec:inverted} yields a cooling access
+\emph{deficit} of 100. By \Cref{eq:vulnerability},
+
+\[
+S_{\mathrm{vuln}} = 0.40(75) + 0.40(75) + 0.20(100)
+                  = 30.00 + 30.00 + 20.00 = \mathbf{80.00}.
+\]
+
+The Heat Priority Index follows from \Cref{eq:hpi}:
+
+\[
+\mathrm{HPI} = 0.60(66.25) + 0.40(80.00) = 39.75 + 32.00 = \mathbf{71.75},
+\]
+
+which falls in the \emph{High} band of \Cref{tab:hpi-bands}. Note that
+vulnerability (80.0) exceeds heat exposure (66.25) here, so the equity-forward
+weighting of \Cref{sec:effective-weights} raises this site's final score
+relative to a heat-only instrument. That is the disclosed value choice
+operating as intended, and a reviewer who rejects the choice should read this
+result as correspondingly inflated.
+
+\subsection{Layer 2 --- NbS performance}
+
+Each of the four adjustment conditions of \Cref{tab:derivation} is derived from
+inputs already supplied.
+
+\emph{Canopy.} Existing tree canopy is \SI{8}{\percent} of
+\qty{6000}{\metre\squared}, or \qty{480}{\metre\squared}. Adding
+\qty{1200}{\metre\squared} of new canopy at maturity gives
+\qty{1680}{\metre\squared}, which is \SI{28.0}{\percent} of the site --- inside
+the \emph{good} band ($25 \le c < 40$), so $f_{\mathrm{canopy}} = 1.0$. The site
+falls short of the \SI{40}{\percent} inflection identified by
+\textcite{ziter2019}, which is why it does not reach \emph{excellent}.
+
+\emph{Soil--water.} Soil availability \emph{limited} maps to \emph{moderate};
+irrigation availability \emph{occasional} also maps to \emph{moderate}. The
+more limiting of the two is \emph{moderate}, so
+$f_{\mathrm{soilwater}} = 0.8$.
+
+\emph{Scale.} Assessment scale \emph{neighbourhood} maps to \emph{good}, so
+$f_{\mathrm{scale}} = 1.0$.
+
+\emph{Climate.} Street tree planting is a \emph{green}-family typology in a
+\emph{temperate} zone, which \Cref{tab:climate-matrix} rates \emph{good}, so
+$f_{\mathrm{climate}} = 1.0$.
+
+By \Cref{eq:adjustment},
+
+\[
+A = 0.40(1.0) + 0.25(0.8) + 0.20(1.0) + 0.15(1.0)
+  = 0.400 + 0.200 + 0.200 + 0.150 = \mathbf{0.95}.
+\]
+
+Street tree planting has base cooling score $B = 75$ and envelope
+$[\tau_{\min}, \tau_{\max}] = [0.5,\, 3.0]$. By \Cref{eq:cps},
+
+\[
+S_{\mathrm{cool}} = \clamp{75 \times 0.95} = \mathbf{71.25}.
+\]
+
+The temperature range follows from \Cref{eq:dtmin,eq:dtmax}, and the clipping
+rule binds on the lower bound:
+
+\begin{align*}
+\dT_{\min} &= \clip{0.5 \times 0.95}{0.5}{3.0} = \clip{0.475}{0.5}{3.0}
+            = \mathbf{0.50}\ \si{\degreeCelsius}, \\
+\dT_{\max} &= \clip{3.0 \times 0.95}{0.5}{3.0} = \clip{2.85}{0.5}{3.0}
+            = \mathbf{2.85}\ \si{\degreeCelsius}.
+\end{align*}
+
+The raw product $0.5 \times 0.95 = 0.475$ falls below the literature floor and
+is clipped up to it; the upper bound is unaffected because $A < 1$. This is the
+point marked on \Cref{fig:clipping}.
+
+The midpoint is $\overline{\dT} = (0.50 + 2.85)/2 = \qty{1.675}{\degreeCelsius}$,
+which exceeds \qty{1.5}{\degreeCelsius} and therefore falls in the \emph{high}
+heat-index improvement bucket. Shade potential, by \Cref{eq:shade}, is
+$\clamp{1200/6000 \times 100} = \SI{20.0}{\percent}$.
+
+\subsection{Layer 3 --- Impact and feasibility}
+
+\paragraph{Energy.} All three preconditions of \Cref{sec:energy} hold: nearby
+building cooling demand is confirmed relevant, an annual demand of
+\qty{450000}{\kilo\watt\hour} is supplied, and street tree planting is flagged
+as capable of affecting adjacent building loads. By \Cref{eq:energy-range},
+
+\begin{align*}
+E_{\min} &= 450\,000 \times 0.50 \times 0.02 = \qty{4500}{\kilo\watt\hour\per\year}, \\
+E_{\max} &= 450\,000 \times 2.85 \times 0.04 = \qty{51300}{\kilo\watt\hour\per\year}.
+\end{align*}
+
+The upper bound is roughly eleven times the lower. That width is not a defect
+of the arithmetic; it is the product of a sixfold temperature envelope and a
+twofold sensitivity range, and it is the honest consequence of what the
+evidence supports. A user who needs a tighter figure needs a building energy
+model.
+
+\paragraph{Greenhouse gases.} Version \methver{} ships no country emission
+factors (\Cref{sec:ghg}). \emph{For this illustration only}, assume the
+deploying authority has supplied a locally verified grid emission factor of
+\qty{0.30}{\kilo\gram\per\kilo\watt\hour}. This value is not a Criterra
+estimate, is not shipped with the tool, and carries no citation; it is a
+placeholder input chosen to demonstrate \Cref{eq:ghg}. On that assumption,
+
+\[
+G = \qtyrange{1350}{15390}{\kilo\gram} \text{ CO\textsubscript{2}e per year,
+or about \qtyrange{1.4}{15.4}{\tonne} CO\textsubscript{2}e per year.}
+\]
+
+Under the shipped configuration with no factor supplied, this output would read
+\emph{not calculated}.
+
+\paragraph{Costs.} No capital cost and no energy price were supplied.
+Consistent with \Cref{sec:costs}, capital cost, annual cost savings, simple
+payback, and cost feasibility are all reported as \emph{not estimated}. Cost
+feasibility is therefore excluded from the final aggregation and its weight
+redistributed.
+
+\paragraph{Co-benefits.} Street tree planting carries library default levels of
+\emph{medium} biodiversity, \emph{medium} stormwater, \emph{high} public
+health, and \emph{high} urban quality. As noted in
+\Cref{sec:composite-subscores}, the library supplies no default for social
+inclusion, so it falls to the neutral \emph{unknown} value of 50 and is
+itemised as an applied assumption. By \Cref{eq:cobenefit},
+
+\begin{align*}
+S_{\mathrm{cobenefit}}
+&= 0.25(50) + 0.25(50) + 0.20(75) + 0.15(50) + 0.15(75) \\
+&= 12.50 + 12.50 + 15.00 + 7.50 + 11.25 = \mathbf{58.75}.
+\end{align*}
+
+\paragraph{NbS Suitability.} The sub-indicator derivation rules are not
+specified at version \methver{}. A value of $S_{\mathrm{suit}} = 78$ is
+\textbf{assumed} for this illustration --- a well-suited typology on an
+adequate site, constrained by limited soil and only occasional irrigation.
+\Cref{sec:we-assumptions} quantifies how much the conclusion depends on it.
+
+\subsection{Aggregation}
+
+Cost feasibility is unavailable, so \Cref{eq:aggregation-redistributed} applies
+over the remaining five components, whose nominal weights sum to
+$\sum_{i \in \mathcal{A}} w_i = 0.90$.
+
+\begin{table}[H]
+\centering
+\caption[Worked example aggregation]{Aggregation of the illustrative
+assessment. Cost feasibility is excluded and its \num{0.10} weight
+redistributed proportionally across the remaining five components.}
+\label{tab:we-aggregation}
+\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\textbf{Component} & \textbf{Score} & \textbf{Nominal $w_i$} &
+\textbf{Renormalised $w_i'$} & \textbf{Contribution} \\
+\midrule
+Heat Priority Index  & 71.75 & 0.25 & 0.2778 & 19.93 \\
+Cooling Potential    & 71.25 & 0.25 & 0.2778 & 19.79 \\
+NbS Suitability\textsuperscript{a} & 78.00 & 0.15 & 0.1667 & 13.00 \\
+Vulnerability        & 80.00 & 0.15 & 0.1667 & 13.33 \\
+Co-benefits          & 58.75 & 0.10 & 0.1111 &  6.53 \\
+Cost Feasibility     & \multicolumn{3}{l}{\emph{not estimated --- excluded}} & --- \\
+\midrule
+\textbf{NbS Cooling Opportunity Score} & & & & \textbf{72.58} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\footnotesize\textsuperscript{a}\,Assumed value; the derivation rule
+is not specified at version \methver{}.\normalsize
+
+\medskip
+
+The NbS Cooling Opportunity Score is \textbf{72.6}, which falls in the
+\emph{Strong opportunity} band (61--80) of \Cref{tab:hpi-bands}.
+
+\subsection{Confidence and reported result}
+
+Applying the branched confidence model of \Cref{sec:confidence}: the cooling
+block is well populated and street tree planting carries \emph{high} evidence
+confidence, so no cap applies and cooling confidence is \emph{high}. The energy
+block has the demand and the relevance confirmation but no energy price, giving
+\emph{medium}. The economic block has no inputs at all, giving \emph{low}. The
+equity block has the three vulnerability fields but not all equity
+sub-indicators, giving \emph{medium}. These ratings are themselves illustrative,
+since the field-to-block mapping is not enumerated at version \methver{}.
+
+\begin{table}[htbp]
+\centering
+\caption[Worked example results]{The illustrative assessment as it would be
+reported, with confidence ratings and applied assumptions. All temperature
+values are daytime, pedestrian-level air temperature reductions.}
+\label{tab:we-results}
+\small
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}Xl@{}}
+\toprule
+\textbf{Output} & \textbf{Value} & \textbf{Confidence} \\
+\midrule
+Heat Priority Index        & 71.8 --- \emph{High} & High \\
+Cooling Potential Score    & 71.3 & High \\
+Temperature reduction      & \qtyrange{0.50}{2.85}{\degreeCelsius} (daytime, pedestrian-level air) & High \\
+Heat-index improvement     & \emph{High} (midpoint \qty{1.675}{\degreeCelsius}) & High \\
+Shade potential            & \SI{20.0}{\percent} of site & High \\
+Energy savings             & \qtyrange{4500}{51300}{\kilo\watt\hour} per year & Medium \\
+GHG avoided                & \qtyrange{1.4}{15.4}{\tonne} CO\textsubscript{2}e per year\textsuperscript{b} & Medium \\
+Capital cost               & \emph{Not estimated --- no cost data supplied} & Low \\
+Simple payback             & \emph{Not estimated} & Low \\
+Cost feasibility           & \emph{Not estimated --- excluded from aggregation} & Low \\
+Co-benefit Score           & 58.8 & Medium \\
+\textbf{Opportunity Score} & \textbf{72.6 --- \emph{Strong opportunity}} & Medium \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent\footnotesize\textsuperscript{b}\,On an assumed locally supplied grid
+emission factor of \qty{0.30}{\kilo\gram\per\kilo\watt\hour}. The shipped
+configuration would report this as \emph{not calculated}.\normalsize
+
+\medskip
+
+\noindent\textbf{Assumptions the engine would itemise:} social inclusion
+co-benefit defaulted to \emph{unknown} (50); cost feasibility excluded and
+weights redistributed; energy price absent, so cost savings not computed;
+grid emission factor supplied locally rather than from configuration.
+
+\subsection{How much the result depends on the assumed values}
+\label{sec:we-assumptions}
+
+One input to the headline score was assumed rather than derived, and its
+influence should be quantified rather than hoped to be small.
+
+The NbS Suitability Score enters at renormalised weight $0.1\overline{6}$. Over
+the entire plausible range of that sub-score, the Opportunity Score moves as
+follows:
+
+\begin{center}
+\small
+\begin{tabular}{@{}lrl@{}}
+\toprule
+\textbf{Assumed $S_{\mathrm{suit}}$} & \textbf{Opportunity Score} &
+\textbf{Band} \\
+\midrule
+50 (poorly suited)     & 67.9 & Strong opportunity \\
+78 (value used)        & 72.6 & Strong opportunity \\
+100 (ideally suited)   & 76.3 & Strong opportunity \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Across the full range the score moves by \num{8.4} points and the reported
+category does not change. The qualitative conclusion --- that this is a strong
+opportunity --- is therefore robust to the unspecified sub-indicator, and the
+gap in the specification does not invalidate this illustration. That will not
+be true of every case: a site scoring near a band boundary would migrate, and
+this is precisely the category-migration effect the sensitivity analysis of
+\Cref{sec:sensitivity} is designed to quantify across the whole scenario set.
+
+The assumed grid emission factor affects only the greenhouse-gas output, which
+scales linearly with it and enters no score.
+
+\subsection{What this example demonstrates}
+
+Four properties of the methodology are visible in the arithmetic above, and
+each corresponds to a design commitment from \Cref{sec:commitments}.
+
+\textbf{The clipping rule binds in practice.} The raw lower bound
+$0.5 \times 0.95 = 0.475$ was clipped up to the literature floor. On a better
+site the rule would bind at the ceiling instead, and the reported range would
+not exceed \qty{3.0}{\degreeCelsius} regardless of how favourable the
+conditions were.
+
+\textbf{Refusal is a first-class output.} Four of the eleven reported
+quantities are \emph{not estimated}. The tool did not substitute a plausible
+capital cost, and consequently did not produce a payback figure --- the single
+number most likely to be extracted from a report and quoted without
+qualification.
+
+\textbf{Exclusion preserves ordering.} Because cost feasibility was excluded
+rather than set to a neutral 50, this assessment remains comparable to another
+option for the same site that also lacks cost data, without either being
+rewarded for the absence.
+
+\textbf{The ranges are wide, and stay wide.} The reported temperature range
+spans nearly a factor of six and the energy range a factor of eleven. Nothing
+in the methodology narrows them for presentational comfort.

@@ -1,0 +1,127 @@
+\section{Scope and intended use}
+\label{sec:scope}
+
+\subsection{What the tool is}
+
+\Tool{} is a screening-level, multi-criteria decision-support instrument. It
+converts a structured description of an urban site and one proposed
+nature-based intervention into comparable scores and indicative quantitative
+estimates, so that early planning and investment decisions can be made on a
+transparent, evidence-referenced basis.
+
+A user describes a site through six input groups, selects one of fourteen
+intervention typologies, and receives a Heat Priority Index, a Cooling
+Potential Score with an indicative daytime pedestrian-level air temperature
+reduction range, derived cooling-energy and greenhouse-gas estimates, cost
+outputs where cost data has been supplied, equity and co-benefit scores, a
+single NbS Cooling Opportunity Score for comparing options, per-block
+confidence ratings, and an itemised list of every default the engine applied.
+Interventions for the same site can be assessed and compared side by side.
+
+\subsection{What the tool is not}
+\label{sec:not}
+
+The following exclusions are definitional, not caveats to be read past.
+
+\begin{itemize}
+  \item \textbf{It is not a microclimate simulation.} It does not solve an
+  energy balance, does not represent site geometry, and does not predict the
+  temperature at a specific location at a specific time. Its outputs are not
+  comparable to ENVI-met-class or CFD results and must never be presented as
+  such.
+
+  \item \textbf{It is not a building energy model.} Cooling-energy savings are
+  derived from an estimated air temperature reduction through a published
+  temperature--electricity-demand sensitivity (\Cref{sec:energy}). No building
+  is modelled.
+
+  \item \textbf{It is not a planting design or species selection tool.} The
+  evidence that species and leaf area index materially change delivered cooling
+  \parencite{rahman2020} is used only to justify that canopy condition
+  modulates performance. The tool gives no species guidance.
+
+  \item \textbf{It is not a regulatory, engineering, or approval instrument.}
+  Outputs are indicative ranges for comparison and prioritisation. They are not
+  design specifications and they are not contractual performance guarantees.
+
+  \item \textbf{It does not replace site investigation or local expertise.} It
+  structures a judgment; it does not substitute for one.
+\end{itemize}
+
+\subsection{Intended users and decisions}
+
+Three user groups are supported: municipal planners and public agencies;
+developers and consultants; and researchers and non-governmental
+organisations. The tool is designed to inform three questions:
+
+\begin{enumerate}
+  \item Does this site merit attention at all, given how hot it is and who is
+  exposed?
+  \item Which of several candidate interventions best suits this particular
+  site?
+  \item How does a proposed intervention perform simultaneously across cooling,
+  energy, climate, cost, equity, and co-benefit dimensions?
+\end{enumerate}
+
+Each of these is a comparative question. The tool is built to rank and to
+compare, and its outputs should be interpreted comparatively. An Opportunity
+Score of 72 is meaningful principally in relation to the score another option
+or another site receives under the same methodology version; it is not a
+physical measurement.
+
+\subsection{The five design commitments}
+\label{sec:commitments}
+
+Five commitments constrain the methodology. They are listed here because
+several of them cost the tool apparent capability, and a reader should
+understand that those costs were chosen.
+
+\begin{table}[H]
+\centering
+\caption{Design commitments and their consequences for the methodology.}
+\label{tab:commitments}
+\small
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Commitment} & \textbf{Consequence} \\
+\midrule
+Transparency &
+Every score has exactly one documented formula, reproduced in this paper. No
+machine learning, no opaque calibration, no undisclosed adjustment. A user who
+disagrees with a number can locate the rule that produced it. \\
+\addlinespace
+Determinism &
+Identical inputs under an identical methodology version always yield identical
+outputs. There are no stochastic components anywhere in the scoring or
+reporting path, including the recommendation text, which is composed from
+templates rather than generated. \\
+\addlinespace
+Evidence traceability &
+Every performance value cites a source. Values that could not be grounded in
+retrieved literature are either omitted --- as unit costs are
+(\Cref{sec:costs}) --- or shipped with an explicit low-confidence flag. \\
+\addlinespace
+Honest uncertainty &
+All quantitative outputs are ranges. Every result carries a confidence rating,
+computed separately per output block. Missing data reduces confidence rather
+than being silently imputed, and every applied default is itemised in the
+result. \\
+\addlinespace
+Auditability &
+The methodology lives in versioned configuration files, not in code. Every
+result records the methodology version that produced it, and the evidence
+rules are enforced by continuous integration rather than by review convention
+(\Cref{sec:implementation}). \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The commitment to honest uncertainty is the one that most visibly reduces the
+tool's apparent authority. A screening instrument that reported single numbers
+would look more decisive and would be easier to put in a slide. The adopted
+cooling envelopes span factors of two to six, and the climate-subzone estimates
+in \textcite{keravec2026} carry uncertainty intervals ranging from about
+$\pm\,$\qty{0.6}{\degreeCelsius} to about $\pm\,$\qty{2.0}{\degreeCelsius}; a
+point estimate would imply a
+precision the evidence does not support. The ranges are the honest
+representation of what is known.
