@@ -64,6 +64,7 @@ Key documents:
 - [docs/methodology/EVIDENCE-TABLES.md](docs/methodology/EVIDENCE-TABLES.md) — per-typology derivations from the literature
 - [docs/methodology/BIBLIOGRAPHY.md](docs/methodology/BIBLIOGRAPHY.md) — sources with verification status
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — system design
+- [docs/UX-SPECIFICATION.md](docs/UX-SPECIFICATION.md) — questionnaire and results interaction design
 - [docs/DECISIONS.md](docs/DECISIONS.md) — decision log with rationale
 - [docs/V2-VISION.md](docs/V2-VISION.md) — deferred features and product vision
 
