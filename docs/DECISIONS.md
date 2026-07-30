@@ -209,6 +209,16 @@ Recorded during the Phase 5 implementation of D-033; none alters a methodology v
 - **Download filenames** are an ASCII slug of "project name – label" (`riverside-pilot-option-a.pdf`), falling back to `assessment` when nothing survives slugging; served via `Content-Disposition: attachment`.
 - **Test tooling:** `pypdf` is the dev-only PDF text-extraction dependency (D-033); `types-openpyxl` is added beside the existing `types-PyYAML` stub so `mypy --strict` covers the workbook builder. Both are dev-only; runtime additions remain exactly `fpdf2` and `openpyxl`.
 
+## D-035 — Phase 6 packaging and publication design decisions (2026-07-31)
+
+Approved ahead of implementation so Phase 6 implements rather than re-designs (the D-028/D-030/D-033 pattern). Scope is fixed by ARCHITECTURE §6 (the v1 deployment model) and the roadmap; these decisions fix the implementation shape. Recorded in [PHASE-6-BRIEF.md](PHASE-6-BRIEF.md).
+
+- **The wheel ships the app.** The production frontend build is embedded in the Python package as static assets and served by FastAPI at `/` from the same origin as `/api` — the packaged realisation of D-030's same-origin decision, still with no CORS middleware. A `nature-cooling serve` console script (wrapping uvicorn behind the existing `serve` extra) makes the local-first story one `pip install` and one command. CI builds the frontend and the wheel together so the embedded assets can never go stale.
+- **The container is packaging, not architecture.** One image built from the wheel (python-slim, non-root), plus a minimal `compose.yaml` mounting a named volume at the `platformdirs` data path so projects survive container replacement. No reverse proxy, TLS, or multi-user machinery in v1 — that remains the host's concern and v2's scope (OQ-31).
+- **The documentation site renders the existing corpus; it is not a second corpus.** MkDocs + Material sourcing the current Markdown under `docs/` with the README as the landing page — no page authored twice, so the site cannot drift from the repository (D-030's one-source-of-truth rule applied to prose). Brand styling via the criterra.eu tokens and the three self-hosted families; no third-party requests from the published site. Published to GitHub Pages by CI on pushes to `main`.
+- **Releases are automated from tags.** A `vX.Y.Z` tag triggers: full gates, wheel build, container image to GHCR, docs deploy, GitHub release with the wheel attached. The paper PDF and the Methodology Report remain versioned in-repo (D-012).
+- **Gates unchanged**, plus a packaged-wheel smoke check (install the built wheel, start the server, assert `/` serves the app shell and `/api/meta` answers) rather than any new test framework. The engine and methodology are untouched; no methodology version bump.
+
 ## D-013 — Weights are expert-calibrated and defended by sensitivity analysis (2026-07-30)
 
 Aggregation weights cannot be "derived" from literature and we do not pretend otherwise. They are declared as expert judgment following composite-indicator practice (OECD/JRC Handbook), and defended empirically via the published sensitivity analysis (see D-011/OQ-29).
