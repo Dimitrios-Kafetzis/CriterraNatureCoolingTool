@@ -92,6 +92,17 @@ describe('ResultsScreen', () => {
     }
   });
 
+  it('enables the Export action as two downloads hitting the report endpoints', async () => {
+    renderResults(assessmentEvaluated);
+    const base = `/api/projects/${project.project_id}/assessments/${evaluated.assessment_id}`;
+    const pdf = await screen.findByRole('link', { name: messages.results.actions.exportPdf });
+    expect(pdf).toHaveAttribute('href', `${base}/report.pdf`);
+    expect(pdf).toHaveAttribute('download');
+    const xlsx = screen.getByRole('link', { name: messages.results.actions.exportXlsx });
+    expect(xlsx).toHaveAttribute('href', `${base}/report.xlsx`);
+    expect(xlsx).toHaveAttribute('download');
+  });
+
   it('offers the questionnaire, not results, for a draft', async () => {
     renderResults(assessmentDraft);
     expect(await screen.findByText(messages.results.draftNotice)).toBeInTheDocument();

@@ -510,8 +510,8 @@ export const messages = {
       'A newer methodology version is now loaded. This stored result is never recomputed; re-running under the newer methodology creates a new assessment.',
     warningsHeading: 'Warnings recorded with this result',
     actions: {
-      export: 'Export report',
-      exportSoon: 'Report export arrives in Phase 5.',
+      exportPdf: 'Export report (PDF)',
+      exportXlsx: 'Export data (XLSX)',
       compare: 'Compare another option',
       backToProject: 'Back to project',
     },

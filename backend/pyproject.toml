@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "criterra-nature-cooling"
-version = "0.4.0"
+version = "0.5.0"
 description = "Screening-level decision-support engine for evaluating and prioritising nature-based solutions for urban cooling"
 readme = "../README.md"
 license = "Apache-2.0"
@@ -23,6 +23,8 @@ dependencies = [
     "PyYAML>=6.0",
     "fastapi>=0.115",
     "platformdirs>=4.0",
+    "fpdf2>=2.8",
+    "openpyxl>=3.1",
 ]
 
 [project.optional-dependencies]
@@ -35,7 +37,9 @@ dev = [
     "ruff>=0.5",
     "mypy>=1.10",
     "types-PyYAML",
+    "types-openpyxl",
     "httpx>=0.27",
+    "pypdf>=5.0",
 ]
 
 [project.urls]
@@ -51,6 +55,9 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "RUF"]
+# The report catalog's typography is deliberate (en dashes, multiplication
+# sign), matching the web application's message catalog.
+allowed-confusables = ["–", "×"]
 
 [tool.mypy]
 strict = true

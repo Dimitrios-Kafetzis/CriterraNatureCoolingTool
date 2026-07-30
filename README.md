@@ -7,7 +7,7 @@ Developed by [Criterra](https://criterra.eu).
 [![CI](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-> **Status: Phase 4 complete — web application implemented.** The React/TypeScript app now realises the full UX specification: the six-step questionnaire with inline validation, auto-save, and the live per-block confidence panel; the guided typology picker; the results dashboard; same-site A/B/C comparison; and a methodology browser rendering the live configuration with citations. The frontend computes no number — every figure, level, and text renders from an API response. Report export (PDF/XLSX) is next. See [Roadmap](#roadmap).
+> **Status: Phase 5 complete — report export implemented.** Every evaluated assessment now exports as a 2-page PDF report (summary + detail, with the brand typography embedded) and an XLSX workbook (Inputs, Results, Assumptions & Warnings), rendered verbatim from the stored result — the builders compute no number, never call the engine, and produce byte-identical documents for the same stored assessment. Documentation site, packaging, and hosting are next. See [Roadmap](#roadmap).
 
 ---
 
@@ -89,8 +89,8 @@ The methodology also states plainly where it is weak: green façade and bioswale
 | 2 | Calculation engine (pure Python, 100% test coverage, golden scenarios, sensitivity analysis) | ✅ |
 | 3 | FastAPI service (scoring, validation + confidence preview, local-first project storage) | ✅ |
 | 4 | React/TypeScript web app (questionnaire wizard, dashboard, A/B/C comparison) | ✅ |
-| 5 | Report export (PDF / XLSX) | 🔄 next |
-| 6 | Documentation site, packaging, hosting | ⏳ |
+| 5 | Report export (PDF / XLSX) | ✅ |
+| 6 | Documentation site, packaging, hosting | 🔄 next |
 
 ## Running locally
 
@@ -111,7 +111,7 @@ npm install
 npm run dev                           # http://127.0.0.1:5173
 ```
 
-The API serves scoring (`POST /api/assessments/evaluate`), inline validation with a live confidence preview (`POST /api/assessments/validate`), the typology library and methodology as data, and local-first project storage — see the endpoint table in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#23-api-surface-v1). Projects are stored as JSON under your platform user-data directory; stored results are never silently recomputed when the methodology moves.
+The API serves scoring (`POST /api/assessments/evaluate`), inline validation with a live confidence preview (`POST /api/assessments/validate`), the typology library and methodology as data, local-first project storage, and report export — `GET /api/projects/{id}/assessments/{aid}/report.pdf` and `…/report.xlsx` render a stored, evaluated assessment as the 2-page PDF report or the XLSX workbook (the results page's **Export** actions download exactly these). See the endpoint table in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#23-api-surface-v1). Projects are stored as JSON under your platform user-data directory; stored results are never silently recomputed when the methodology moves.
 
 The frontend's API types are generated from the service's OpenAPI schema and committed (`frontend/openapi.json`, `frontend/src/api/schema.ts`); after changing the API, regenerate with `npm run generate` — CI fails on drift.
 

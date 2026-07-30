@@ -2292,7 +2292,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0"
     },
     "title": "Nature for Cooling Rapid Assessment Tool",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -2954,6 +2954,106 @@
         "summary": "Evaluate Assessment",
         "tags": [
           "projects"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/assessments/{assessment_id}/report.pdf": {
+      "get": {
+        "description": "The 2-page PDF report of a stored, evaluated assessment.",
+        "operationId": "report_pdf_api_projects__project_id__assessments__assessment_id__report_pdf_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Assessment Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/octet-stream": {}
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Report Pdf",
+        "tags": [
+          "reports"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/assessments/{assessment_id}/report.xlsx": {
+      "get": {
+        "description": "The XLSX workbook (Inputs, Results, Assumptions & Warnings).",
+        "operationId": "report_xlsx_api_projects__project_id__assessments__assessment_id__report_xlsx_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Assessment Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/octet-stream": {}
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Report Xlsx",
+        "tags": [
+          "reports"
         ]
       }
     },

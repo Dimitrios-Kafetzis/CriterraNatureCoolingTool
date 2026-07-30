@@ -12,7 +12,7 @@ flowchart LR
     subgraph backend["backend/ (Python)"]
       Engine["nature_cooling.engine<br/>pure, deterministic scoring"]
       API["nature_cooling.api<br/>FastAPI (stateless)"]
-      Report["report builder<br/>PDF / XLSX (Phase 5)"]
+      Report["nature_cooling.report<br/>PDF / XLSX builders"]
     end
     subgraph frontend["frontend/ (React + TS)"]
       Wizard["6-step questionnaire wizard"]
@@ -24,7 +24,7 @@ flowchart LR
     API --> Wizard
     API --> Dash
     API --> Method
-    Engine --> Report
+    API --> Report
 ```
 
 Three hard boundaries:
@@ -60,16 +60,23 @@ backend/
 │   │   ├── confidence.py           # branched per-block confidence (OQ-09)
 │   │   ├── recommendation.py       # deterministic template composer
 │   │   └── runner.py               # orchestration: run_assessment()
-│   └── api/
-│       ├── main.py                 # FastAPI app factory
-│       ├── schemas.py              # API-layer models + storage document schema (D-028)
-│       ├── storage.py              # local-first project store (platformdirs, atomic JSON)
-│       ├── validation.py           # /validate: errors, warnings, confidence preview + hint
-│       └── routes/                 # assessments, methodology, meta, projects
+│   ├── api/
+│   │   ├── main.py                 # FastAPI app factory
+│   │   ├── schemas.py              # API-layer models + storage document schema (D-028)
+│   │   ├── storage.py              # local-first project store (platformdirs, atomic JSON)
+│   │   ├── validation.py           # /validate: errors, warnings, confidence preview + hint
+│   │   └── routes/                 # assessments, methodology, meta, projects, reports
+│   └── report/
+│       ├── catalog.py              # module-level English string catalog (D-033)
+│       ├── content.py              # stored assessment → display rows, verbatim
+│       ├── pdf.py                  # 2-page PDF (OQ-13/D-011), brand TTFs embedded
+│       ├── xlsx.py                 # workbook: Inputs / Results / Assumptions & Warnings
+│       └── fonts/                  # static TTF builds + OFL notices
 └── tests/
     ├── scoring/                    # unit tests per module (100% engine coverage target)
     ├── scenarios/                  # golden cases: input JSON → hand-verified expected output
-    └── api/                        # contract tests per endpoint (100% api coverage target)
+    ├── api/                        # contract tests per endpoint (100% api coverage target)
+    └── report/                     # extracted-text/structure + byte-determinism tests
 ```
 
 ### 2.2 Engine contract
@@ -99,7 +106,8 @@ backend/
 | `DELETE /api/projects/{id}/assessments/{aid}` | Delete an assessment |
 | `POST /api/projects/{id}/assessments/{aid}/evaluate` | Explicitly run the engine and persist the result; refuses to recompute a stored result (OQ-15) |
 | `POST /api/projects/{id}/assessments/{aid}/duplicate` | Comparison draft: carries the site description, blanks intervention + cost/energy groups (D-021) |
-| `POST /api/reports/pdf` (Phase 5) | Render a result to the 2-page PDF |
+| `GET  /api/projects/{id}/assessments/{aid}/report.pdf` | The 2-page PDF report of a **stored** result (D-033, OQ-15); 404 unknown ids, 409 for a draft |
+| `GET  /api/projects/{id}/assessments/{aid}/report.xlsx` | The XLSX workbook (Inputs, Results, Assumptions & Warnings) of a stored result; same refusals |
 
 Persistence in v1 is **local-first**: one JSON document per project (`schema_version`, identity, timestamps, site description, `assessments[]` each holding its full input and full versioned result) under the `platformdirs` user-data directory, owned by a thin storage layer behind the API (D-028); multi-user storage is v2. Stored results are never recomputed — a newer methodology version is surfaced as available, and re-running is an explicit user action creating a new assessment (OQ-15).
 

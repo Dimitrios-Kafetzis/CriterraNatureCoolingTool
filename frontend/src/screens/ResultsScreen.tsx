@@ -381,14 +381,20 @@ export function ResultsScreen() {
 
       {/* 7 — actions */}
       <div className="actions-row">
-        <button
-          type="button"
-          className="button button--quiet"
-          disabled
-          title={t.actions.exportSoon}
+        <a
+          className="button"
+          href={`/api/projects/${projectId}/assessments/${assessmentId}/report.pdf`}
+          download
         >
-          {t.actions.export}
-        </button>
+          {t.actions.exportPdf}
+        </a>
+        <a
+          className="button button--secondary"
+          href={`/api/projects/${projectId}/assessments/${assessmentId}/report.xlsx`}
+          download
+        >
+          {t.actions.exportXlsx}
+        </a>
         <button type="button" className="button" onClick={() => void compareAnother()}>
           {t.actions.compare}
         </button>

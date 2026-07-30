@@ -1,0 +1,20 @@
+The font files in this directory are static TrueType builds of:
+
+- Newsreader (c) The Newsreader Project Authors
+  (https://github.com/productiontype/Newsreader)
+- Hanken Grotesk (c) The Hanken Grotesk Project Authors
+  (https://github.com/marcologous/hanken-grotesk)
+- IBM Plex Mono (c) IBM Corp., with Reserved Font Name "Plex"
+  (https://github.com/IBM/plex)
+
+All three families are licensed under the SIL Open Font License 1.1.
+The complete license text of each family, including its copyright
+statement and any Reserved Font Names, is alongside this file:
+OFL-newsreader.txt, OFL-hankengrotesk.txt, OFL-ibmplexmono.txt.
+
+The static instances of Newsreader (weights 400 and 600 at optical
+size 16) and Hanken Grotesk (weights 400 and 700) were produced from
+the upstream variable fonts with fonttools varLib.instancer, without
+any other modification. They are embedded in the exported PDF report
+so that the document is self-contained on any machine (D-033), the
+same three self-hosted families the web application uses.
