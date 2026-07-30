@@ -16,32 +16,6 @@ from nature_cooling.engine.models import AssessmentInput
 
 _MISSING_ID = "00000000-0000-0000-0000-000000000000"
 
-# A draft touching every duplication group: carried site/climate/vulnerability
-# fields plus blanked intervention, co-benefit override, and cost/energy ones.
-FULL_DRAFT: dict[str, Any] = {
-    "project_name": "Riverside pilot",
-    "assessment_scale": "neighbourhood",
-    "country": "GR",
-    "site_area_m2": 6000.0,
-    "existing_tree_canopy_percent": 15.0,
-    "land_use": "residential",
-    "climate_zone": "temperate",
-    "heat_exposure_level": "high",
-    "population_density": "high",
-    "vulnerable_population_presence": "medium",
-    "nbs_type": "street_tree_planting",
-    "intervention_area_m2": 900.0,
-    "expected_maturity_period_years": 6.0,
-    "implementation_complexity": "medium",
-    "maintenance_intensity": "medium",
-    "co_benefit_biodiversity": "high",
-    "nearby_building_cooling_demand_relevant": "yes",
-    "annual_cooling_energy_demand_kwh": 120000.0,
-    "energy_price_per_kwh": 0.2,
-    "capital_cost": 90000.0,
-    "currency": "EUR",
-}
-
 
 def _project(client: TestClient) -> str:
     response = client.post("/api/projects", json={"name": "Riverside pilot"})
@@ -80,17 +54,17 @@ def test_create_assessment_rejects_unknown_input_fields(client: TestClient) -> N
     assert "unknown assessment input field(s): ['planted_area_m2']" in str(response.json())
 
 
-def test_get_patch_and_delete_an_assessment(client: TestClient) -> None:
+def test_get_patch_and_delete_an_assessment(client: TestClient, full_draft: dict[str, Any]) -> None:
     project_id = _project(client)
     created = _assessment(client, project_id)
     base = f"/api/projects/{project_id}/assessments/{created['assessment_id']}"
 
     assert client.get(base).json() == created
 
-    patched = client.patch(base, json={"label": "Option A2", "input": FULL_DRAFT})
+    patched = client.patch(base, json={"label": "Option A2", "input": full_draft})
     assert patched.status_code == 200
     assert patched.json()["label"] == "Option A2"
-    assert patched.json()["input"] == FULL_DRAFT
+    assert patched.json()["input"] == full_draft
 
     assert client.delete(base).status_code == 204
     assert client.get(base).status_code == 404
@@ -121,10 +95,10 @@ def test_unknown_assessment_is_404(client: TestClient) -> None:
 
 
 def test_evaluate_stores_the_engine_result_and_bumps_updated_at(
-    client: TestClient, config: MethodologyConfig
+    client: TestClient, config: MethodologyConfig, full_draft: dict[str, Any]
 ) -> None:
     project_id = _project(client)
-    created = _assessment(client, project_id, input=FULL_DRAFT)
+    created = _assessment(client, project_id, input=full_draft)
     before = client.get(f"/api/projects/{project_id}").json()["updated_at"]
 
     response = client.post(
@@ -132,9 +106,9 @@ def test_evaluate_stores_the_engine_result_and_bumps_updated_at(
     )
     assert response.status_code == 200
     body = response.json()
-    expected = run_assessment(AssessmentInput.model_validate(FULL_DRAFT), config)
+    expected = run_assessment(AssessmentInput.model_validate(full_draft), config)
     assert body["result"] == expected.model_dump(mode="json")
-    assert body["input"] == FULL_DRAFT
+    assert body["input"] == full_draft
     assert body["methodology_update_available"] is False
 
     after = client.get(f"/api/projects/{project_id}").json()
@@ -142,9 +116,11 @@ def test_evaluate_stores_the_engine_result_and_bumps_updated_at(
     assert after["assessments"][0]["result"] == expected.model_dump(mode="json")
 
 
-def test_evaluate_refuses_to_recompute_a_stored_result(client: TestClient) -> None:
+def test_evaluate_refuses_to_recompute_a_stored_result(
+    client: TestClient, full_draft: dict[str, Any]
+) -> None:
     project_id = _project(client)
-    created = _assessment(client, project_id, input=FULL_DRAFT)
+    created = _assessment(client, project_id, input=full_draft)
     base = f"/api/projects/{project_id}/assessments/{created['assessment_id']}"
     assert client.post(f"{base}/evaluate").status_code == 200
 
@@ -154,10 +130,10 @@ def test_evaluate_refuses_to_recompute_a_stored_result(client: TestClient) -> No
 
 
 def test_an_evaluated_assessments_input_is_frozen_but_its_label_is_not(
-    client: TestClient,
+    client: TestClient, full_draft: dict[str, Any]
 ) -> None:
     project_id = _project(client)
-    created = _assessment(client, project_id, input=FULL_DRAFT)
+    created = _assessment(client, project_id, input=full_draft)
     base = f"/api/projects/{project_id}/assessments/{created['assessment_id']}"
     assert client.post(f"{base}/evaluate").status_code == 200
 
@@ -181,9 +157,11 @@ def test_evaluate_rejects_an_incomplete_draft(client: TestClient) -> None:
     assert fields == {"assessment_scale", "climate_zone", "nbs_type"}
 
 
-def test_evaluate_rejects_an_unknown_typology(client: TestClient) -> None:
+def test_evaluate_rejects_an_unknown_typology(
+    client: TestClient, full_draft: dict[str, Any]
+) -> None:
     project_id = _project(client)
-    created = _assessment(client, project_id, input={**FULL_DRAFT, "nbs_type": "not_a_typology"})
+    created = _assessment(client, project_id, input={**full_draft, "nbs_type": "not_a_typology"})
     response = client.post(
         f"/api/projects/{project_id}/assessments/{created['assessment_id']}/evaluate"
     )
@@ -192,10 +170,10 @@ def test_evaluate_rejects_an_unknown_typology(client: TestClient) -> None:
 
 
 def test_duplicate_carries_the_site_and_blanks_the_intervention_and_cost_groups(
-    client: TestClient,
+    client: TestClient, full_draft: dict[str, Any]
 ) -> None:
     project_id = _project(client)
-    created = _assessment(client, project_id, input=FULL_DRAFT)
+    created = _assessment(client, project_id, input=full_draft)
     base = f"/api/projects/{project_id}/assessments/{created['assessment_id']}"
     assert client.post(f"{base}/evaluate").status_code == 200
 
@@ -206,7 +184,7 @@ def test_duplicate_carries_the_site_and_blanks_the_intervention_and_cost_groups(
     assert body["label"] == "Option B"
     assert body["result"] is None
     assert body["input"] == {
-        field: value for field, value in FULL_DRAFT.items() if field in SITE_DESCRIPTION_FIELDS
+        field: value for field, value in full_draft.items() if field in SITE_DESCRIPTION_FIELDS
     }
     assert not set(body["input"]) & BLANKED_ON_DUPLICATE
     # The duplicate is a fresh draft: it can be edited and evaluated.
@@ -224,10 +202,10 @@ def test_duplicate_without_a_body_derives_a_label(client: TestClient) -> None:
 
 
 def test_methodology_update_is_surfaced_but_the_result_is_untouched(
-    client: TestClient, storage_root: Path
+    client: TestClient, storage_root: Path, full_draft: dict[str, Any]
 ) -> None:
     project_id = _project(client)
-    created = _assessment(client, project_id, input=FULL_DRAFT)
+    created = _assessment(client, project_id, input=full_draft)
     base = f"/api/projects/{project_id}/assessments/{created['assessment_id']}"
     stored_result = client.post(f"{base}/evaluate").json()["result"]
 

@@ -9,7 +9,6 @@ from typing import Any
 
 from openpyxl import load_workbook
 from openpyxl.worksheet.worksheet import Worksheet
-from tests.report.conftest import CREATED_AT, PROJECT_NAME, SCENARIO_NAMES
 
 from nature_cooling.report import build_xlsx_report
 from nature_cooling.report.catalog import STRINGS
@@ -20,7 +19,9 @@ def _cells(sheet: Worksheet) -> list[tuple[Any, ...]]:
     return [tuple(row) for row in sheet.iter_rows(values_only=True)]
 
 
-def test_workbook_has_the_three_sheets_with_version_stamps(render_args: Any) -> None:
+def test_workbook_has_the_three_sheets_with_version_stamps(
+    render_args: Any, project_name: str
+) -> None:
     args = render_args("s01_temperate_street_trees_worked_example")
     result = args["result"]
     workbook = load_workbook(BytesIO(build_xlsx_report(**args)))
@@ -35,14 +36,16 @@ def test_workbook_has_the_three_sheets_with_version_stamps(render_args: Any) -> 
         assert result["methodology_version"] in stamp
         assert result["engine_version"] in stamp
         banner = workbook[name].cell(row=1, column=1).value
-        assert PROJECT_NAME in banner
+        assert project_name in banner
         assert args["label"] in banner
 
 
-def test_document_timestamps_derive_from_created_at_never_the_clock(render_args: Any) -> None:
+def test_document_timestamps_derive_from_created_at_never_the_clock(
+    render_args: Any, created_at: str
+) -> None:
     payload = build_xlsx_report(**render_args("s01_temperate_street_trees_worked_example"))
     workbook = load_workbook(BytesIO(payload))
-    expected = datetime.fromisoformat(CREATED_AT).replace(tzinfo=None)
+    expected = datetime.fromisoformat(created_at).replace(tzinfo=None)
     assert workbook.properties.created == expected.replace(microsecond=0)
     assert workbook.properties.modified == expected.replace(microsecond=0)
     with zipfile.ZipFile(BytesIO(payload)) as archive:
@@ -131,7 +134,9 @@ def test_assumptions_sheet_states_when_no_default_was_applied(render_args: Any) 
     assert STRINGS["assumptions_none"] in values
 
 
-def test_same_stored_assessment_produces_byte_identical_workbooks(render_args: Any) -> None:
-    for name in SCENARIO_NAMES:
+def test_same_stored_assessment_produces_byte_identical_workbooks(
+    render_args: Any, scenario_names: list[str]
+) -> None:
+    for name in scenario_names:
         args = render_args(name)
         assert build_xlsx_report(**args) == build_xlsx_report(**args), name

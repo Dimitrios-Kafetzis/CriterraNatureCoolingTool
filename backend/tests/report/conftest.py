@@ -27,6 +27,21 @@ PROJECT_NAME = "Riverside school quarter"
 
 
 @pytest.fixture(scope="session")
+def scenario_names() -> list[str]:
+    return list(SCENARIO_NAMES)
+
+
+@pytest.fixture(scope="session")
+def created_at() -> str:
+    return CREATED_AT
+
+
+@pytest.fixture(scope="session")
+def project_name() -> str:
+    return PROJECT_NAME
+
+
+@pytest.fixture(scope="session")
 def scenarios(config: MethodologyConfig) -> dict[str, dict[str, Any]]:
     """Every golden scenario as a stored assessment: input plus result JSON."""
     stored = {}

@@ -6,7 +6,6 @@ from io import BytesIO
 from typing import Any
 
 from pypdf import PdfReader
-from tests.report.conftest import PROJECT_NAME, SCENARIO_NAMES
 
 from nature_cooling.report import build_pdf_report
 from nature_cooling.report.catalog import STATUS_TEXTS, STRINGS
@@ -17,17 +16,21 @@ def _pages(payload: bytes) -> list[str]:
     return [page.extract_text() for page in PdfReader(BytesIO(payload)).pages]
 
 
-def test_every_golden_scenario_renders_exactly_two_pages(render_args: Any) -> None:
-    for name in SCENARIO_NAMES:
+def test_every_golden_scenario_renders_exactly_two_pages(
+    render_args: Any, scenario_names: list[str]
+) -> None:
+    for name in scenario_names:
         reader = PdfReader(BytesIO(build_pdf_report(**render_args(name))))
         assert len(reader.pages) == 2, name
 
 
-def test_page_one_carries_identity_scores_categories_and_versions(render_args: Any) -> None:
+def test_page_one_carries_identity_scores_categories_and_versions(
+    render_args: Any, project_name: str
+) -> None:
     args = render_args("s01_temperate_street_trees_worked_example")
     result = args["result"]
     page_one, _ = _pages(build_pdf_report(**args))
-    assert PROJECT_NAME in page_one
+    assert project_name in page_one
     assert args["label"] in page_one
     assert result["typology"]["display_name"] in page_one
     assert fmt(result["heat_priority"]["score"]) in page_one
@@ -110,14 +113,16 @@ def test_an_empty_assumptions_list_is_stated_not_omitted(render_args: Any) -> No
     assert STRINGS["assumptions_none"][:40] in page_two.replace("\n", " ")
 
 
-def test_document_metadata_derives_from_created_at_never_the_clock(render_args: Any) -> None:
+def test_document_metadata_derives_from_created_at_never_the_clock(
+    render_args: Any, project_name: str
+) -> None:
     args = render_args("s01_temperate_street_trees_worked_example")
     reader = PdfReader(BytesIO(build_pdf_report(**args)))
     metadata = reader.metadata
     assert metadata is not None
     assert metadata.get("/CreationDate") == "D:20260730202254Z"
     assert metadata.get("/Author") == "Criterra"
-    assert PROJECT_NAME in str(metadata.get("/Title"))
+    assert project_name in str(metadata.get("/Title"))
 
 
 def test_the_brand_families_are_embedded_in_the_document(render_args: Any) -> None:
@@ -126,7 +131,9 @@ def test_the_brand_families_are_embedded_in_the_document(render_args: Any) -> No
         assert family in payload
 
 
-def test_same_stored_assessment_produces_byte_identical_pdfs(render_args: Any) -> None:
-    for name in SCENARIO_NAMES:
+def test_same_stored_assessment_produces_byte_identical_pdfs(
+    render_args: Any, scenario_names: list[str]
+) -> None:
+    for name in scenario_names:
         args = render_args(name)
         assert build_pdf_report(**args) == build_pdf_report(**args), name
