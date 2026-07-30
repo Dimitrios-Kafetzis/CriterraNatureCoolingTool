@@ -21,7 +21,19 @@ ruff check .    # lint
 mypy src        # types
 ```
 
-Frontend setup instructions arrive with Phase 4.
+```bash
+# Frontend (Node 18+)
+cd frontend
+npm install
+npm run dev           # dev server; proxies /api to http://127.0.0.1:8000
+npm test              # vitest (contract tests against recorded API responses)
+npm run lint          # eslint
+npm run format:check  # prettier
+npm run typecheck     # tsc --noEmit
+npm run generate      # regenerate openapi.json + src/api/schema.ts (CI fails on drift)
+```
+
+Frontend ground rules: no number originates client-side — every score, threshold, band, default, confidence level, and recommendation text renders from an API response; API types are generated from the OpenAPI schema, never hand-written; runtime dependencies stay limited to `react`, `react-dom`, and `react-router` (D-030); all user-facing strings live in the message catalog (`src/i18n/`).
 
 ## Reporting issues
 

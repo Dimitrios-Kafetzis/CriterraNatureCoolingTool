@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "criterra-nature-cooling"
-version = "0.3.0"
+version = "0.4.0"
 description = "Screening-level decision-support engine for evaluating and prioritising nature-based solutions for urban cooling"
 readme = "../README.md"
 license = "Apache-2.0"

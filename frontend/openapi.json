@@ -1,0 +1,2983 @@
+{
+  "components": {
+    "schemas": {
+      "AdjustmentBlock": {
+        "additionalProperties": false,
+        "description": "Site adjustment factor and its four derived conditions (5.4).",
+        "properties": {
+          "canopy": {
+            "$ref": "#/components/schemas/AdjustmentCondition"
+          },
+          "climate": {
+            "$ref": "#/components/schemas/AdjustmentCondition"
+          },
+          "factor": {
+            "title": "Factor",
+            "type": "number"
+          },
+          "scale": {
+            "$ref": "#/components/schemas/AdjustmentCondition"
+          },
+          "soil_water": {
+            "$ref": "#/components/schemas/AdjustmentCondition"
+          }
+        },
+        "required": [
+          "factor",
+          "canopy",
+          "soil_water",
+          "scale",
+          "climate"
+        ],
+        "title": "AdjustmentBlock",
+        "type": "object"
+      },
+      "AdjustmentCondition": {
+        "additionalProperties": false,
+        "description": "One derived site condition and the factor it resolved to.",
+        "properties": {
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          },
+          "factor": {
+            "title": "Factor",
+            "type": "number"
+          },
+          "level": {
+            "enum": [
+              "poor",
+              "moderate",
+              "good",
+              "excellent",
+              "unknown"
+            ],
+            "title": "Level",
+            "type": "string"
+          }
+        },
+        "required": [
+          "level",
+          "factor"
+        ],
+        "title": "AdjustmentCondition",
+        "type": "object"
+      },
+      "AssessmentCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "input": {
+            "additionalProperties": true,
+            "title": "Input",
+            "type": "object"
+          },
+          "label": {
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "title": "AssessmentCreate",
+        "type": "object"
+      },
+      "AssessmentDuplicate": {
+        "additionalProperties": false,
+        "properties": {
+          "label": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          }
+        },
+        "title": "AssessmentDuplicate",
+        "type": "object"
+      },
+      "AssessmentInput": {
+        "additionalProperties": false,
+        "description": "One site plus one proposed NbS intervention, as described by the user.\n\nRequired fields are those without which a documented formula cannot be\nevaluated at all; everything else is optional, and absence reduces\nconfidence but never blocks the assessment.",
+        "properties": {
+          "access_to_cooled_indoor_space": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Access To Cooled Indoor Space"
+          },
+          "annual_cooling_energy_demand_kwh": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Annual Cooling Energy Demand Kwh"
+          },
+          "assessment_scale": {
+            "enum": [
+              "city",
+              "district",
+              "neighbourhood",
+              "site",
+              "building"
+            ],
+            "title": "Assessment Scale",
+            "type": "string"
+          },
+          "capital_cost": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capital Cost"
+          },
+          "climate_zone": {
+            "enum": [
+              "tropical_wet",
+              "tropical_dry",
+              "arid",
+              "semi_arid",
+              "temperate",
+              "other"
+            ],
+            "title": "Climate Zone",
+            "type": "string"
+          },
+          "co_benefit_biodiversity": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Co Benefit Biodiversity"
+          },
+          "co_benefit_public_health": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Co Benefit Public Health"
+          },
+          "co_benefit_social_inclusion": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Co Benefit Social Inclusion"
+          },
+          "co_benefit_stormwater": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Co Benefit Stormwater"
+          },
+          "co_benefit_urban_quality": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Co Benefit Urban Quality"
+          },
+          "community_participation": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Community Participation"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "maxLength": 3,
+                "minLength": 2,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "maxLength": 3,
+                "minLength": 3,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "current_shade_level": {
+            "anyOf": [
+              {
+                "enum": [
+                  "very_low",
+                  "low",
+                  "medium",
+                  "high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Shade Level"
+          },
+          "energy_price_per_kwh": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Energy Price Per Kwh"
+          },
+          "existing_green_cover_percent": {
+            "anyOf": [
+              {
+                "maximum": 100.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Existing Green Cover Percent"
+          },
+          "existing_tree_canopy_percent": {
+            "anyOf": [
+              {
+                "maximum": 100.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Existing Tree Canopy Percent"
+          },
+          "expected_maturity_period_years": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Maturity Period Years"
+          },
+          "grid_emission_factor_kgco2e_per_kwh": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grid Emission Factor Kgco2E Per Kwh"
+          },
+          "heat_exposure_level": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heat Exposure Level"
+          },
+          "heat_index_concern": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heat Index Concern"
+          },
+          "impervious_surface_percent": {
+            "anyOf": [
+              {
+                "maximum": 100.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Impervious Surface Percent"
+          },
+          "implementation_complexity": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Implementation Complexity"
+          },
+          "intervention_area_m2": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intervention Area M2"
+          },
+          "irrigation_availability": {
+            "anyOf": [
+              {
+                "enum": [
+                  "none",
+                  "occasional",
+                  "reliable",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Irrigation Availability"
+          },
+          "land_use": {
+            "anyOf": [
+              {
+                "enum": [
+                  "street_corridor",
+                  "residential",
+                  "mixed_use",
+                  "commercial",
+                  "public_space",
+                  "park",
+                  "school",
+                  "healthcare",
+                  "industrial",
+                  "other"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Land Use"
+          },
+          "lst_anomaly_c": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lst Anomaly C"
+          },
+          "maintenance_intensity": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maintenance Intensity"
+          },
+          "nbs_type": {
+            "title": "Nbs Type",
+            "type": "string"
+          },
+          "nearby_building_cooling_demand_relevant": {
+            "anyOf": [
+              {
+                "enum": [
+                  "yes",
+                  "no",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nearby Building Cooling Demand Relevant"
+          },
+          "new_canopy_area_at_maturity_m2": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "New Canopy Area At Maturity M2"
+          },
+          "population_density": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Population Density"
+          },
+          "project_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Name"
+          },
+          "public_accessibility": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Public Accessibility"
+          },
+          "safety_concern": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Safety Concern"
+          },
+          "site_area_m2": {
+            "exclusiveMinimum": 0.0,
+            "title": "Site Area M2",
+            "type": "number"
+          },
+          "soil_availability": {
+            "anyOf": [
+              {
+                "enum": [
+                  "none",
+                  "limited",
+                  "moderate",
+                  "high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Soil Availability"
+          },
+          "solar_exposure": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solar Exposure"
+          },
+          "vulnerable_population_presence": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "very_high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vulnerable Population Presence"
+          }
+        },
+        "required": [
+          "assessment_scale",
+          "site_area_m2",
+          "climate_zone",
+          "nbs_type"
+        ],
+        "title": "AssessmentInput",
+        "type": "object"
+      },
+      "AssessmentPatch": {
+        "additionalProperties": false,
+        "properties": {
+          "input": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          }
+        },
+        "title": "AssessmentPatch",
+        "type": "object"
+      },
+      "AssessmentResult": {
+        "additionalProperties": false,
+        "description": "Everything the engine reports for one assessment run.",
+        "properties": {
+          "adjustment": {
+            "$ref": "#/components/schemas/AdjustmentBlock"
+          },
+          "assumptions_applied": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Assumptions Applied",
+            "type": "array"
+          },
+          "co_benefits": {
+            "$ref": "#/components/schemas/CoBenefitsBlock"
+          },
+          "confidence": {
+            "$ref": "#/components/schemas/ConfidenceBlock"
+          },
+          "cooling": {
+            "$ref": "#/components/schemas/CoolingBlock"
+          },
+          "costs": {
+            "$ref": "#/components/schemas/CostsBlock"
+          },
+          "energy": {
+            "$ref": "#/components/schemas/EnergyBlock"
+          },
+          "engine_version": {
+            "title": "Engine Version",
+            "type": "string"
+          },
+          "equity": {
+            "$ref": "#/components/schemas/EquityBlock"
+          },
+          "ghg": {
+            "$ref": "#/components/schemas/GhgBlock"
+          },
+          "heat_exposure": {
+            "$ref": "#/components/schemas/HeatExposureBlock"
+          },
+          "heat_priority": {
+            "$ref": "#/components/schemas/HeatPriorityBlock"
+          },
+          "method_note": {
+            "title": "Method Note",
+            "type": "string"
+          },
+          "methodology_version": {
+            "title": "Methodology Version",
+            "type": "string"
+          },
+          "opportunity": {
+            "$ref": "#/components/schemas/OpportunityBlock"
+          },
+          "recommendation": {
+            "title": "Recommendation",
+            "type": "string"
+          },
+          "suitability": {
+            "$ref": "#/components/schemas/SuitabilityBlock"
+          },
+          "typology": {
+            "$ref": "#/components/schemas/TypologySummary"
+          },
+          "vulnerability": {
+            "$ref": "#/components/schemas/VulnerabilityBlock"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "engine_version",
+          "methodology_version",
+          "typology",
+          "heat_exposure",
+          "vulnerability",
+          "heat_priority",
+          "adjustment",
+          "suitability",
+          "cooling",
+          "energy",
+          "ghg",
+          "costs",
+          "co_benefits",
+          "equity",
+          "opportunity",
+          "confidence",
+          "recommendation",
+          "method_note",
+          "assumptions_applied",
+          "warnings"
+        ],
+        "title": "AssessmentResult",
+        "type": "object"
+      },
+      "AssessmentView": {
+        "additionalProperties": false,
+        "description": "A stored assessment plus the OQ-15 surfacing flag.\n\n``methodology_update_available`` is true when the stored result was\nproduced under an older methodology version than the one currently loaded.\nThe stored result itself is never recomputed; re-running is an explicit\nuser action that creates a new assessment.",
+        "properties": {
+          "assessment_id": {
+            "title": "Assessment Id",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "input": {
+            "additionalProperties": true,
+            "title": "Input",
+            "type": "object"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "methodology_update_available": {
+            "title": "Methodology Update Available",
+            "type": "boolean"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result"
+          }
+        },
+        "required": [
+          "assessment_id",
+          "label",
+          "created_at",
+          "input",
+          "methodology_update_available"
+        ],
+        "title": "AssessmentView",
+        "type": "object"
+      },
+      "BlockConfidencePreview": {
+        "additionalProperties": false,
+        "description": "Live confidence for one output block (UX specification section 4).",
+        "properties": {
+          "completeness_percent": {
+            "title": "Completeness Percent",
+            "type": "number"
+          },
+          "hint": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceHint"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "level": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Level",
+            "type": "string"
+          }
+        },
+        "required": [
+          "level",
+          "completeness_percent",
+          "hint"
+        ],
+        "title": "BlockConfidencePreview",
+        "type": "object"
+      },
+      "CoBenefitsBlock": {
+        "additionalProperties": false,
+        "description": "Co-benefit Score and its five sub-indicators.",
+        "properties": {
+          "biodiversity": {
+            "title": "Biodiversity",
+            "type": "number"
+          },
+          "public_health": {
+            "title": "Public Health",
+            "type": "number"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
+          "social_inclusion": {
+            "title": "Social Inclusion",
+            "type": "number"
+          },
+          "stormwater": {
+            "title": "Stormwater",
+            "type": "number"
+          },
+          "urban_quality": {
+            "title": "Urban Quality",
+            "type": "number"
+          }
+        },
+        "required": [
+          "score",
+          "biodiversity",
+          "stormwater",
+          "public_health",
+          "social_inclusion",
+          "urban_quality"
+        ],
+        "title": "CoBenefitsBlock",
+        "type": "object"
+      },
+      "ConfidenceBlock": {
+        "additionalProperties": false,
+        "description": "Branched per-block confidence (D-011/OQ-09, D-024).",
+        "properties": {
+          "completeness_percent": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Completeness Percent",
+            "type": "object"
+          },
+          "cooling": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Cooling",
+            "type": "string"
+          },
+          "cooling_capped_by_evidence": {
+            "title": "Cooling Capped By Evidence",
+            "type": "boolean"
+          },
+          "economic": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Economic",
+            "type": "string"
+          },
+          "energy": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Energy",
+            "type": "string"
+          },
+          "equity": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Equity",
+            "type": "string"
+          },
+          "overall": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Overall",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cooling",
+          "energy",
+          "economic",
+          "equity",
+          "overall",
+          "cooling_capped_by_evidence",
+          "completeness_percent"
+        ],
+        "title": "ConfidenceBlock",
+        "type": "object"
+      },
+      "ConfidenceHint": {
+        "additionalProperties": false,
+        "description": "The highest-value missing field group for one block (D-028).\n\n``fields`` lists the group's alternative fields (usually one; the heat\nsignal slot offers two). ``raises_level_to`` is the level the block reaches\nif any of them is answered, or ``None`` when no single completion raises\nthe level and the group is simply the first unsupplied one in configured\norder.",
+        "properties": {
+          "fields": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Fields",
+            "type": "array"
+          },
+          "raises_level_to": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raises Level To"
+          }
+        },
+        "required": [
+          "fields",
+          "raises_level_to"
+        ],
+        "title": "ConfidenceHint",
+        "type": "object"
+      },
+      "ConfidencePreview": {
+        "additionalProperties": false,
+        "description": "Per-block confidence preview, computed by ``nature_cooling.engine.confidence``.",
+        "properties": {
+          "cooling": {
+            "$ref": "#/components/schemas/BlockConfidencePreview"
+          },
+          "cooling_capped_by_evidence": {
+            "title": "Cooling Capped By Evidence",
+            "type": "boolean"
+          },
+          "economic": {
+            "$ref": "#/components/schemas/BlockConfidencePreview"
+          },
+          "energy": {
+            "$ref": "#/components/schemas/BlockConfidencePreview"
+          },
+          "equity": {
+            "$ref": "#/components/schemas/BlockConfidencePreview"
+          },
+          "overall": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Overall",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cooling",
+          "energy",
+          "economic",
+          "equity",
+          "overall",
+          "cooling_capped_by_evidence"
+        ],
+        "title": "ConfidencePreview",
+        "type": "object"
+      },
+      "CoolingBlock": {
+        "additionalProperties": false,
+        "description": "Cooling Potential Score and clipped temperature range (5.5, D-008).",
+        "properties": {
+          "delta_t_max_c": {
+            "title": "Delta T Max C",
+            "type": "number"
+          },
+          "delta_t_midpoint_c": {
+            "title": "Delta T Midpoint C",
+            "type": "number"
+          },
+          "delta_t_min_c": {
+            "title": "Delta T Min C",
+            "type": "number"
+          },
+          "heat_index_improvement": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Heat Index Improvement",
+            "type": "string"
+          },
+          "potential_score": {
+            "title": "Potential Score",
+            "type": "number"
+          },
+          "shade_potential_percent": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shade Potential Percent"
+          },
+          "shade_potential_status": {
+            "enum": [
+              "calculated",
+              "not_estimated"
+            ],
+            "title": "Shade Potential Status",
+            "type": "string"
+          },
+          "time_to_benefit": {
+            "anyOf": [
+              {
+                "enum": [
+                  "immediate",
+                  "short_term",
+                  "medium_term",
+                  "long_term"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time To Benefit"
+          },
+          "time_to_benefit_status": {
+            "enum": [
+              "derived",
+              "not_estimated"
+            ],
+            "title": "Time To Benefit Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "potential_score",
+          "delta_t_min_c",
+          "delta_t_max_c",
+          "delta_t_midpoint_c",
+          "heat_index_improvement",
+          "shade_potential_percent",
+          "shade_potential_status",
+          "time_to_benefit",
+          "time_to_benefit_status"
+        ],
+        "title": "CoolingBlock",
+        "type": "object"
+      },
+      "CostsBlock": {
+        "additionalProperties": false,
+        "description": "Cost outputs: savings, payback, derived feasibility, readiness (5.8).",
+        "properties": {
+          "annual_savings_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Annual Savings Max"
+          },
+          "annual_savings_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Annual Savings Min"
+          },
+          "annual_savings_status": {
+            "enum": [
+              "calculated",
+              "energy_not_calculated",
+              "missing_energy_price"
+            ],
+            "title": "Annual Savings Status",
+            "type": "string"
+          },
+          "cost_feasibility_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Feasibility Score"
+          },
+          "cost_feasibility_status": {
+            "enum": [
+              "derived",
+              "not_estimated"
+            ],
+            "title": "Cost Feasibility Status",
+            "type": "string"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "investment_readiness": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Investment Readiness"
+          },
+          "investment_readiness_status": {
+            "enum": [
+              "derived",
+              "not_estimated"
+            ],
+            "title": "Investment Readiness Status",
+            "type": "string"
+          },
+          "payback_bracket": {
+            "anyOf": [
+              {
+                "enum": [
+                  "short",
+                  "medium",
+                  "long",
+                  "very_long"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payback Bracket"
+          },
+          "payback_status": {
+            "enum": [
+              "calculated",
+              "missing_capital_cost",
+              "annual_savings_unavailable"
+            ],
+            "title": "Payback Status",
+            "type": "string"
+          },
+          "payback_years_central": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payback Years Central"
+          },
+          "payback_years_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payback Years Max"
+          },
+          "payback_years_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payback Years Min"
+          }
+        },
+        "required": [
+          "annual_savings_status",
+          "annual_savings_min",
+          "annual_savings_max",
+          "currency",
+          "payback_status",
+          "payback_years_min",
+          "payback_years_max",
+          "payback_years_central",
+          "cost_feasibility_status",
+          "cost_feasibility_score",
+          "payback_bracket",
+          "investment_readiness_status",
+          "investment_readiness"
+        ],
+        "title": "CostsBlock",
+        "type": "object"
+      },
+      "EnergyBlock": {
+        "additionalProperties": false,
+        "description": "Derived cooling-energy savings (5.6, D-015).",
+        "properties": {
+          "savings_max_kwh_per_year": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Savings Max Kwh Per Year"
+          },
+          "savings_min_kwh_per_year": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Savings Min Kwh Per Year"
+          },
+          "status": {
+            "enum": [
+              "calculated",
+              "not_applicable",
+              "missing_energy_demand",
+              "typology_not_applicable",
+              "relevance_not_confirmed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "status_message": {
+            "title": "Status Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "status_message",
+          "savings_min_kwh_per_year",
+          "savings_max_kwh_per_year"
+        ],
+        "title": "EnergyBlock",
+        "type": "object"
+      },
+      "EquityBlock": {
+        "additionalProperties": false,
+        "description": "Equity Score (reported with its own confidence; not aggregated).\n\nThe Equity Score deliberately does not enter the final aggregation:\nequity influences the headline score through the Vulnerability Score\ninstead. This is disclosed in the Methodology Report.",
+        "properties": {
+          "participation_relevance": {
+            "title": "Participation Relevance",
+            "type": "number"
+          },
+          "public_accessibility": {
+            "title": "Public Accessibility",
+            "type": "number"
+          },
+          "safety_comfort": {
+            "title": "Safety Comfort",
+            "type": "number"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
+          "vulnerable_user_benefit": {
+            "title": "Vulnerable User Benefit",
+            "type": "number"
+          }
+        },
+        "required": [
+          "score",
+          "vulnerable_user_benefit",
+          "public_accessibility",
+          "safety_comfort",
+          "participation_relevance"
+        ],
+        "title": "EquityBlock",
+        "type": "object"
+      },
+      "FieldIssue": {
+        "additionalProperties": false,
+        "description": "One validation error, addressed to the form field it belongs to.",
+        "properties": {
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "field",
+          "message"
+        ],
+        "title": "FieldIssue",
+        "type": "object"
+      },
+      "GhgBlock": {
+        "additionalProperties": false,
+        "description": "Greenhouse gas emissions avoided (5.7).",
+        "properties": {
+          "avoided_max_kgco2e_per_year": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avoided Max Kgco2E Per Year"
+          },
+          "avoided_min_kgco2e_per_year": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avoided Min Kgco2E Per Year"
+          },
+          "emission_factor_kgco2e_per_kwh": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emission Factor Kgco2E Per Kwh"
+          },
+          "emission_factor_origin": {
+            "anyOf": [
+              {
+                "enum": [
+                  "user_supplied",
+                  "country_default"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emission Factor Origin"
+          },
+          "status": {
+            "enum": [
+              "calculated",
+              "missing_emission_factor",
+              "energy_not_calculated"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "avoided_min_kgco2e_per_year",
+          "avoided_max_kgco2e_per_year",
+          "emission_factor_kgco2e_per_kwh",
+          "emission_factor_origin"
+        ],
+        "title": "GhgBlock",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HeatExposureBlock": {
+        "additionalProperties": false,
+        "description": "Heat Exposure Score (Methodology Report 5.1).",
+        "properties": {
+          "path": {
+            "enum": [
+              "data_rich",
+              "data_poor"
+            ],
+            "title": "Path",
+            "type": "string"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "score",
+          "path"
+        ],
+        "title": "HeatExposureBlock",
+        "type": "object"
+      },
+      "HeatPriorityBlock": {
+        "additionalProperties": false,
+        "description": "Heat Priority Index (Methodology Report 5.3).",
+        "properties": {
+          "category": {
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "score",
+          "category"
+        ],
+        "title": "HeatPriorityBlock",
+        "type": "object"
+      },
+      "MetaResponse": {
+        "additionalProperties": false,
+        "description": "``GET /api/meta``.",
+        "properties": {
+          "engine_version": {
+            "title": "Engine Version",
+            "type": "string"
+          },
+          "license": {
+            "title": "License",
+            "type": "string"
+          },
+          "methodology_version": {
+            "title": "Methodology Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "engine_version",
+          "methodology_version",
+          "license"
+        ],
+        "title": "MetaResponse",
+        "type": "object"
+      },
+      "OpportunityBlock": {
+        "additionalProperties": false,
+        "description": "NbS Cooling Opportunity Score (5.9), with full weight transparency.",
+        "properties": {
+          "category": {
+            "enum": [
+              "low",
+              "moderate",
+              "strong",
+              "high_priority"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "components": {
+            "items": {
+              "$ref": "#/components/schemas/OpportunityComponent"
+            },
+            "title": "Components",
+            "type": "array"
+          },
+          "excluded_components": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Excluded Components",
+            "type": "array"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "score",
+          "category",
+          "components",
+          "excluded_components"
+        ],
+        "title": "OpportunityBlock",
+        "type": "object"
+      },
+      "OpportunityComponent": {
+        "additionalProperties": false,
+        "description": "One component of the final aggregation, with the weight applied.",
+        "properties": {
+          "applied_weight": {
+            "title": "Applied Weight",
+            "type": "number"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "nominal_weight": {
+            "title": "Nominal Weight",
+            "type": "number"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "score",
+          "nominal_weight",
+          "applied_weight"
+        ],
+        "title": "OpportunityComponent",
+        "type": "object"
+      },
+      "ProjectCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "site": {
+            "additionalProperties": true,
+            "title": "Site",
+            "type": "object"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "ProjectCreate",
+        "type": "object"
+      },
+      "ProjectPatch": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "site": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Site"
+          }
+        },
+        "title": "ProjectPatch",
+        "type": "object"
+      },
+      "ProjectSummary": {
+        "additionalProperties": false,
+        "description": "``GET /api/projects`` list entry.",
+        "properties": {
+          "assessment_count": {
+            "title": "Assessment Count",
+            "type": "integer"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "project_id": {
+            "title": "Project Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id",
+          "name",
+          "created_at",
+          "updated_at",
+          "assessment_count"
+        ],
+        "title": "ProjectSummary",
+        "type": "object"
+      },
+      "ProjectView": {
+        "additionalProperties": false,
+        "description": "A project document plus the current methodology version, for OQ-15.",
+        "properties": {
+          "assessments": {
+            "items": {
+              "$ref": "#/components/schemas/AssessmentView"
+            },
+            "title": "Assessments",
+            "type": "array"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "current_methodology_version": {
+            "title": "Current Methodology Version",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "project_id": {
+            "title": "Project Id",
+            "type": "string"
+          },
+          "schema_version": {
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "site": {
+            "additionalProperties": true,
+            "title": "Site",
+            "type": "object"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_version",
+          "project_id",
+          "name",
+          "created_at",
+          "updated_at",
+          "site",
+          "assessments",
+          "current_methodology_version"
+        ],
+        "title": "ProjectView",
+        "type": "object"
+      },
+      "Source": {
+        "additionalProperties": false,
+        "description": "A citation supporting a configuration value.",
+        "properties": {
+          "finding": {
+            "minLength": 1,
+            "title": "Finding",
+            "type": "string"
+          },
+          "key": {
+            "minLength": 1,
+            "title": "Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "finding"
+        ],
+        "title": "Source",
+        "type": "object"
+      },
+      "Suitability": {
+        "additionalProperties": false,
+        "description": "Conditions under which a typology is considered unsuitable for a site.",
+        "properties": {
+          "minimum_site_area_m2": {
+            "exclusiveMinimum": 0.0,
+            "title": "Minimum Site Area M2",
+            "type": "number"
+          },
+          "requires_irrigation": {
+            "enum": [
+              "none",
+              "occasional",
+              "reliable"
+            ],
+            "title": "Requires Irrigation",
+            "type": "string"
+          },
+          "requires_soil": {
+            "enum": [
+              "none",
+              "limited",
+              "moderate",
+              "high"
+            ],
+            "title": "Requires Soil",
+            "type": "string"
+          },
+          "unsuitable_climate_zones": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Unsuitable Climate Zones",
+            "type": "array"
+          }
+        },
+        "required": [
+          "minimum_site_area_m2",
+          "requires_soil",
+          "requires_irrigation"
+        ],
+        "title": "Suitability",
+        "type": "object"
+      },
+      "SuitabilityBlock": {
+        "additionalProperties": false,
+        "description": "NbS Suitability Score, its sub-indicators, and hard flags (D-022).",
+        "properties": {
+          "flags": {
+            "items": {
+              "$ref": "#/components/schemas/SuitabilityFlag"
+            },
+            "title": "Flags",
+            "type": "array"
+          },
+          "maintenance": {
+            "title": "Maintenance",
+            "type": "number"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
+          "soil": {
+            "title": "Soil",
+            "type": "number"
+          },
+          "space": {
+            "title": "Space",
+            "type": "number"
+          },
+          "suitable": {
+            "title": "Suitable",
+            "type": "boolean"
+          },
+          "urban_context": {
+            "title": "Urban Context",
+            "type": "number"
+          },
+          "water": {
+            "title": "Water",
+            "type": "number"
+          }
+        },
+        "required": [
+          "score",
+          "space",
+          "soil",
+          "water",
+          "maintenance",
+          "urban_context",
+          "flags",
+          "suitable"
+        ],
+        "title": "SuitabilityBlock",
+        "type": "object"
+      },
+      "SuitabilityFlag": {
+        "additionalProperties": false,
+        "description": "A hard 'not suitable for this site' condition (D-009).",
+        "properties": {
+          "code": {
+            "enum": [
+              "below_minimum_area",
+              "insufficient_soil",
+              "insufficient_irrigation",
+              "unsuitable_climate"
+            ],
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "SuitabilityFlag",
+        "type": "object"
+      },
+      "Typology": {
+        "additionalProperties": false,
+        "description": "One NbS typology and its literature-grounded performance assumptions.",
+        "properties": {
+          "base_cooling_score": {
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Base Cooling Score",
+            "type": "number"
+          },
+          "building_energy_applicable": {
+            "title": "Building Energy Applicable",
+            "type": "boolean"
+          },
+          "category": {
+            "enum": [
+              "green",
+              "building",
+              "blue_green",
+              "hybrid"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "co_benefit_defaults": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Co Benefit Defaults",
+            "type": "object"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "evidence_confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Evidence Confidence",
+            "type": "string"
+          },
+          "nbs_id": {
+            "title": "Nbs Id",
+            "type": "string"
+          },
+          "nbs_type": {
+            "title": "Nbs Type",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "output_caveats": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Output Caveats",
+            "type": "array"
+          },
+          "primary_cooling_mechanism": {
+            "title": "Primary Cooling Mechanism",
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "minItems": 1,
+            "title": "Sources",
+            "type": "array"
+          },
+          "suitability": {
+            "$ref": "#/components/schemas/Suitability"
+          },
+          "temp_reduction_max_c": {
+            "minimum": 0.0,
+            "title": "Temp Reduction Max C",
+            "type": "number"
+          },
+          "temp_reduction_min_c": {
+            "minimum": 0.0,
+            "title": "Temp Reduction Min C",
+            "type": "number"
+          },
+          "typical_use_context": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Typical Use Context",
+            "type": "array"
+          }
+        },
+        "required": [
+          "nbs_id",
+          "nbs_type",
+          "display_name",
+          "category",
+          "base_cooling_score",
+          "temp_reduction_min_c",
+          "temp_reduction_max_c",
+          "evidence_confidence",
+          "primary_cooling_mechanism",
+          "building_energy_applicable",
+          "typical_use_context",
+          "suitability",
+          "co_benefit_defaults",
+          "sources"
+        ],
+        "title": "Typology",
+        "type": "object"
+      },
+      "TypologyLibrary": {
+        "additionalProperties": false,
+        "description": "The complete typology library, as loaded from ``nbs_typologies.yaml``.",
+        "properties": {
+          "typologies": {
+            "items": {
+              "$ref": "#/components/schemas/Typology"
+            },
+            "minItems": 1,
+            "title": "Typologies",
+            "type": "array"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "typologies"
+        ],
+        "title": "TypologyLibrary",
+        "type": "object"
+      },
+      "TypologySummary": {
+        "additionalProperties": false,
+        "description": "The library values the assessment was computed against.",
+        "properties": {
+          "base_cooling_score": {
+            "title": "Base Cooling Score",
+            "type": "number"
+          },
+          "category": {
+            "enum": [
+              "green",
+              "building",
+              "blue_green",
+              "hybrid"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "evidence_confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Evidence Confidence",
+            "type": "string"
+          },
+          "nbs_id": {
+            "title": "Nbs Id",
+            "type": "string"
+          },
+          "nbs_type": {
+            "title": "Nbs Type",
+            "type": "string"
+          },
+          "temp_reduction_max_c": {
+            "title": "Temp Reduction Max C",
+            "type": "number"
+          },
+          "temp_reduction_min_c": {
+            "title": "Temp Reduction Min C",
+            "type": "number"
+          }
+        },
+        "required": [
+          "nbs_id",
+          "nbs_type",
+          "display_name",
+          "category",
+          "evidence_confidence",
+          "base_cooling_score",
+          "temp_reduction_min_c",
+          "temp_reduction_max_c"
+        ],
+        "title": "TypologySummary",
+        "type": "object"
+      },
+      "ValidateResponse": {
+        "additionalProperties": false,
+        "description": "``POST /api/assessments/validate`` (D-028).\n\nExactly two severities exist (OQ-08): ``errors`` block progression within\ntheir step, ``warnings`` never block. Warning texts are the engine's own.",
+        "properties": {
+          "confidence": {
+            "$ref": "#/components/schemas/ConfidencePreview"
+          },
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/FieldIssue"
+            },
+            "title": "Errors",
+            "type": "array"
+          },
+          "valid": {
+            "title": "Valid",
+            "type": "boolean"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "valid",
+          "errors",
+          "warnings",
+          "confidence"
+        ],
+        "title": "ValidateResponse",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "VulnerabilityBlock": {
+        "additionalProperties": false,
+        "description": "Vulnerability Score (Methodology Report 5.2).",
+        "properties": {
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "score"
+        ],
+        "title": "VulnerabilityBlock",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "license": {
+      "name": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "title": "Nature for Cooling Rapid Assessment Tool",
+    "version": "0.4.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/assessments/evaluate": {
+      "post": {
+        "description": "Validate the input, run the engine, return the full result.\n\nStateless and deterministic: an identical request body against an\nidentical methodology version yields a byte-identical response body.",
+        "operationId": "evaluate_api_assessments_evaluate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Evaluate",
+        "tags": [
+          "assessments"
+        ]
+      }
+    },
+    "/api/assessments/validate": {
+      "post": {
+        "description": "Dry-run validation of a partial questionnaire state (D-028).",
+        "operationId": "validate_api_assessments_validate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Payload",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Validate",
+        "tags": [
+          "assessments"
+        ]
+      }
+    },
+    "/api/meta": {
+      "get": {
+        "description": "Engine version, methodology version, and licence.",
+        "operationId": "meta_api_meta_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Meta",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/api/methodology": {
+      "get": {
+        "description": "Formulas, weights, factors, and defaults, with the methodology version.",
+        "operationId": "methodology_api_methodology_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Methodology Api Methodology Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Methodology",
+        "tags": [
+          "methodology"
+        ]
+      }
+    },
+    "/api/projects": {
+      "get": {
+        "description": "All projects, most recently updated first.",
+        "operationId": "list_projects_api_projects_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectSummary"
+                  },
+                  "title": "Response List Projects Api Projects Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Projects",
+        "tags": [
+          "projects"
+        ]
+      },
+      "post": {
+        "operationId": "create_project_api_projects_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Project",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/{project_id}": {
+      "delete": {
+        "operationId": "delete_project_api_projects__project_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Project",
+        "tags": [
+          "projects"
+        ]
+      },
+      "get": {
+        "operationId": "get_project_api_projects__project_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Project",
+        "tags": [
+          "projects"
+        ]
+      },
+      "patch": {
+        "operationId": "update_project_api_projects__project_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Project",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/assessments": {
+      "post": {
+        "operationId": "create_assessment_api_projects__project_id__assessments_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Assessment",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/assessments/{assessment_id}": {
+      "delete": {
+        "operationId": "delete_assessment_api_projects__project_id__assessments__assessment_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Assessment Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Assessment",
+        "tags": [
+          "projects"
+        ]
+      },
+      "get": {
+        "operationId": "get_assessment_api_projects__project_id__assessments__assessment_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Assessment Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Assessment",
+        "tags": [
+          "projects"
+        ]
+      },
+      "patch": {
+        "operationId": "update_assessment_api_projects__project_id__assessments__assessment_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Assessment Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Assessment",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/assessments/{assessment_id}/duplicate": {
+      "post": {
+        "description": "Create a comparison draft from an existing assessment (D-021).",
+        "operationId": "duplicate_assessment_api_projects__project_id__assessments__assessment_id__duplicate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Assessment Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/AssessmentDuplicate"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Duplicate Assessment",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/{project_id}/assessments/{assessment_id}/evaluate": {
+      "post": {
+        "description": "Run the engine on the stored draft input and persist the result.\n\nAn explicit user action (OQ-15): refused once a result exists, because a\nstored result is never recomputed — re-running means creating a new\nassessment.",
+        "operationId": "evaluate_assessment_api_projects__project_id__assessments__assessment_id__evaluate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Assessment Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Evaluate Assessment",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/typologies": {
+      "get": {
+        "description": "The NbS typology library, including suitability conditions and citations.",
+        "operationId": "typologies_api_typologies_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TypologyLibrary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Typologies",
+        "tags": [
+          "methodology"
+        ]
+      }
+    }
+  }
+}

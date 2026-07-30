@@ -1,0 +1,7 @@
+dist
+node_modules
+openapi.json
+package-lock.json
+public/fonts
+# recorded API responses, kept byte-for-byte as captured
+src/test/fixtures

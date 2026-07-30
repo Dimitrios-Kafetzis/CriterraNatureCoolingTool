@@ -174,6 +174,18 @@ The three questionnaire-shaped findings deferred by D-027 are ruled on ahead of 
 
 D-027's second finding (the investment-readiness downgrade on low energy confidence being unreachable with the shipped confidence lists) needs no Phase 4 action: it remains specified, documented behaviour that binds only in deployments that alter those lists, exactly as D-023 recorded.
 
+## D-032 — Phase 4 implementation rulings (2026-07-30)
+
+Recorded during the Phase 4 implementation of D-030/D-031; none alters a methodology value, an API contract, or a screen's scope.
+
+- **Co-benefit overrides are asked in step 5, with the intervention they describe.** D-029 fixed their duplication behaviour by ruling them part of the intervention group; the questionnaire follows the same reading. They render as a collapsed disclosure under the sizing fields, labelled as overrides of the typology's cited library defaults, so the common path stays skippable in one action.
+- **Picker fit annotations are comparisons of served data, not frontend rules.** The D-019 cards annotate fit by comparing the site answers already entered against each typology's suitability conditions from `GET /api/typologies`, using the ordinal ranks served in `GET /api/methodology` (`derived_scores.suitability_sub_indicators.requirement_match`). No rank, minimum, or threshold exists as a frontend constant. Mirroring D-022, a disqualification is asserted only from a *supplied* answer below a requirement; an unanswered requirement renders as a caution ("Needs reliable irrigation"), never a verdict. The authoritative flags remain the engine's (D-009) and follow into results.
+- **The effective-weights table is derived visibly from served weights.** UX §8 requires the D-007 effective-weights table, but the effective values exist in `weights.yaml` only as a comment. The methodology browser therefore shows each effective weight as the product of served weights with its derivation displayed alongside (e.g. `0.15 + 0.25 × 0.4`), keeping the API the sole source of every operand.
+- **The step 6 "do you have cost data?" gate is a UI-only disclosure.** It maps to no stored field; the underlying cost/energy fields alone determine what the engine sees, so skipping the step and answering "no" are indistinguishable to the methodology — as OQ-08's two-severity model intends.
+- **Score cards carry the overall confidence badge.** UX §6 gives each score card "its category and confidence"; the result schema deliberately has no per-score confidence, so both cards render `confidence.overall` and each output block renders its own block confidence — nothing is invented to fill the gap.
+- **Toolchain pinned for Node 18.** The development machine runs Node 18 LTS, so the D-030 toolchain resolves to Vite 6 and Vitest 3 (the last majors supporting Node ≥18; Vite 7 requires Node 20+), React 19, and `react-router` 7 (the package D-030 names; its DOM bindings live in the core package from v7). CI runs Node 22.
+- **Contract tests run against recorded responses.** Every fixture under `frontend/src/test/fixtures/` is captured verbatim from the live service (same capture flow as the golden scenarios' spirit); the fetch-boundary mock rejects any request without a recorded route, so a contract drift fails loudly instead of passing against an invented shape.
+
 ## D-013 — Weights are expert-calibrated and defended by sensitivity analysis (2026-07-30)
 
 Aggregation weights cannot be "derived" from literature and we do not pretend otherwise. They are declared as expert judgment following composite-indicator practice (OECD/JRC Handbook), and defended empirically via the published sensitivity analysis (see D-011/OQ-29).

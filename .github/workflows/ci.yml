@@ -31,3 +31,37 @@ jobs:
         run: mypy
       - name: Tests (pytest + coverage)
         run: pytest
+
+  frontend:
+    name: Frontend (lint · format · types · tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install backend (for the OpenAPI schema)
+        run: pip install -e "../backend"
+      - name: Install
+        run: npm ci
+      - name: Generated API types are current (D-030 drift gate)
+        run: |
+          npm run generate
+          git diff --exit-code -- openapi.json src/api/schema.ts
+      - name: Lint (eslint)
+        run: npm run lint
+      - name: Format check (prettier)
+        run: npm run format:check
+      - name: Type check (tsc)
+        run: npm run typecheck
+      - name: Tests (vitest)
+        run: npm test
