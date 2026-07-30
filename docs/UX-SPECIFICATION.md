@@ -75,7 +75,7 @@ The fix is not to reorder the questions but to make the picker context-aware. By
 
 Each card shows fit, the literature cooling envelope, and evidence confidence — the three things that should drive the choice. Unsuitable typologies stay fully selectable: a user deliberately testing a hypothesis must not be overridden, and the flag follows through to results and the report.
 
-Selecting a card reveals its sizing fields (intervention area, canopy at maturity, planted area, maturity period, maintenance, complexity).
+Selecting a card reveals its sizing fields (intervention area, canopy at maturity, maturity period, maintenance, complexity — the schema's intervention group, per D-031).
 
 ## 6. Results
 

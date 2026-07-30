@@ -153,6 +153,27 @@ Recorded during the Phase 3 implementation of D-028; none alters a methodology v
 - **`/validate` previews without a typology assume no evidence cap.** Before step 5 (or with an unknown `nbs_type`, which is reported as a field error) no evidence-confidence cap can be asserted, so the confidence preview is computed uncapped; once a typology resolves, the engine's cap applies and the missing-field hint respects it (a completion that cannot raise a capped level promises nothing).
 - **Storage location and format.** `platformdirs` user-data directory for app `criterra-nature-cooling` (author `Criterra`), one pretty-printed UTF-8 JSON file per project named by its UUID, written atomically (temp file + rename), `schema_version: 1`; unsupported schema versions are refused rather than migrated silently. Duplicate labels default to "<source label> (copy)" when the client supplies none.
 
+## D-030 — Phase 4 web application design decisions (2026-07-30)
+
+Approved ahead of implementation so Phase 4 implements rather than re-designs (the D-028 pattern). Scope and screens are fixed by the UX specification (D-018–D-021); these decisions fix the implementation shape.
+
+- **Toolchain.** Vite + React + TypeScript (`strict`), as decided in D-003. Tests with `vitest` + Testing Library; linting with ESLint (typescript-eslint) and Prettier. CI gains a frontend job (lint, format check, `tsc --noEmit`, tests) beside the unchanged backend job.
+- **Same-origin integration, no CORS.** The Vite dev server proxies `/api` to the FastAPI service; the packaged app (Phase 6) serves both from one origin. The API gains no CORS middleware — the local-first deployment model never needs cross-origin requests, and not having the middleware is one less security surface to reason about.
+- **API types are generated, never hand-written.** TypeScript types for every request/response are generated from the service's OpenAPI schema and committed; CI regenerates and fails on drift. A hand-maintained duplicate of the engine's schemas would be a second source of truth, which D-028's rules forbid in spirit for the frontend as well.
+- **No data-fetching or global-state library in v1.** A thin typed `fetch` client plus React state/context; `react-router` for navigation. The app talks to a local API measured in milliseconds; cache-invalidation machinery is unjustified complexity. Auto-save (D-020) is a debounced `PATCH` of the draft input; inline validation and the confidence panel are fed by a debounced `POST /api/assessments/validate` with the full draft payload, errors filtered to the active step's fields. The frontend computes no score, threshold, band, or confidence level — ever (ARCHITECTURE boundary 3).
+- **Strings and fonts.** All user-facing strings live in one externalised message catalog (UX specification §9, translation-ready); Newsreader, Hanken Grotesk, and IBM Plex Mono are self-hosted — the app makes no third-party requests.
+- **Versioning.** Phase 4 closes with repo tag `v0.4.0`; the backend package and the frontend `package.json` move to 0.4.0 together so the tag and package versions stay aligned (as in Phases 2–3).
+
+## D-031 — D-027 deferrals closed (2026-07-30)
+
+The three questionnaire-shaped findings deferred by D-027 are ruled on ahead of the Phase 4 build. **No methodology value moves; no version bump is required.**
+
+1. **`heat_index_concern` is not asked in the v1 questionnaire.** It feeds no formula and no confidence block, so asking it would cost user effort and change nothing — the UX premise ("show the user exactly what skipping costs") cannot honestly present a field whose cost of skipping is zero. The field stays in the input schema and its mapping stays in configuration, unchanged: data-rich API integrations may still supply it, and removing it from config would force a version bump for no behavioural gain.
+2. **`current_shade_level` is asked in step 2 (site characteristics).** It counts toward cooling-block completeness only, as shipped and as disclosed in the paper's field reference. It is retained because the cooling confidence denominators measure how completely the site's cooling context is described — shade is a legitimate part of that description and a documented extension point — and because removing it from the D-024 field lists would be a methodology configuration change (version bump, report §6.2, paper) disproportionate to the finding.
+3. **The "planted area" sizing field is dropped from the UX specification.** It is consumed by no formula and exists in no schema; `intervention_area_m2` and `new_canopy_area_at_maturity_m2` already cover intervention sizing. The specification is corrected in the same change set.
+
+D-027's second finding (the investment-readiness downgrade on low energy confidence being unreachable with the shipped confidence lists) needs no Phase 4 action: it remains specified, documented behaviour that binds only in deployments that alter those lists, exactly as D-023 recorded.
+
 ## D-013 — Weights are expert-calibrated and defended by sensitivity analysis (2026-07-30)
 
 Aggregation weights cannot be "derived" from literature and we do not pretend otherwise. They are declared as expert judgment following composite-indicator practice (OECD/JRC Handbook), and defended empirically via the published sensitivity analysis (see D-011/OQ-29).
