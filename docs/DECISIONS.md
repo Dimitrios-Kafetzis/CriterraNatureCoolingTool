@@ -143,6 +143,16 @@ Approved ahead of implementation so Phase 3 implements rather than re-designs.
 - **Comparison (D-021).** A duplicate-assessment operation copies the project's site and vulnerability description into a new draft and blanks only the intervention and cost/energy groups.
 - The project/assessment CRUD endpoints this implies extend the v1 API table in ARCHITECTURE.md; that table is updated in the same Phase 3 change set.
 
+## D-029 — Phase 3 implementation rulings (2026-07-30)
+
+Recorded during the Phase 3 implementation of D-028; none alters a methodology value.
+
+- **Co-benefit overrides are blanked on duplicate.** D-021 names "the intervention and cost/energy groups"; the co-benefit override fields are typology-specific overrides, so carrying them onto a differently chosen typology would silently misdescribe it. They are treated as part of the intervention group and blanked. (D-027 already defers the questionnaire placement of these fields to Phase 4; this ruling only fixes their duplication behaviour.)
+- **An evaluated assessment's input is frozen.** Editing the input after a result exists would detach the stored result from the answers that produced it; the API refuses with 409 (the label stays editable). Evaluating an assessment that already holds a result is likewise refused with 409 — re-running is a new assessment (OQ-15). Evaluation of a stored draft is itself an explicit endpoint (`POST …/evaluate`): results enter storage only from the engine, never from the client.
+- **Draft inputs are stored as partial JSON, validated late.** Auto-save (D-020) must accept an incomplete questionnaire, so a stored draft is any subset of the engine's input fields (unknown keys rejected) and is validated as a full `AssessmentInput` only at explicit evaluation. Stored results are held as opaque JSON and never re-validated against later engine schemas, so an engine upgrade cannot make older stored results unreadable.
+- **`/validate` previews without a typology assume no evidence cap.** Before step 5 (or with an unknown `nbs_type`, which is reported as a field error) no evidence-confidence cap can be asserted, so the confidence preview is computed uncapped; once a typology resolves, the engine's cap applies and the missing-field hint respects it (a completion that cannot raise a capped level promises nothing).
+- **Storage location and format.** `platformdirs` user-data directory for app `criterra-nature-cooling` (author `Criterra`), one pretty-printed UTF-8 JSON file per project named by its UUID, written atomically (temp file + rename), `schema_version: 1`; unsupported schema versions are refused rather than migrated silently. Duplicate labels default to "<source label> (copy)" when the client supplies none.
+
 ## D-013 — Weights are expert-calibrated and defended by sensitivity analysis (2026-07-30)
 
 Aggregation weights cannot be "derived" from literature and we do not pretend otherwise. They are declared as expert judgment following composite-indicator practice (OECD/JRC Handbook), and defended empirically via the published sensitivity analysis (see D-011/OQ-29).

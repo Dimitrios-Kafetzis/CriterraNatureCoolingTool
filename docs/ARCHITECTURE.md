@@ -62,11 +62,14 @@ backend/
 │   │   └── runner.py               # orchestration: run_assessment()
 │   └── api/
 │       ├── main.py                 # FastAPI app factory
-│       └── routes/                 # assessments, methodology, meta
+│       ├── schemas.py              # API-layer models + storage document schema (D-028)
+│       ├── storage.py              # local-first project store (platformdirs, atomic JSON)
+│       ├── validation.py           # /validate: errors, warnings, confidence preview + hint
+│       └── routes/                 # assessments, methodology, meta, projects
 └── tests/
     ├── scoring/                    # unit tests per module (100% engine coverage target)
     ├── scenarios/                  # golden cases: input JSON → hand-verified expected output
-    └── api/
+    └── api/                        # contract tests per endpoint (100% api coverage target)
 ```
 
 ### 2.2 Engine contract
@@ -81,13 +84,24 @@ backend/
 | Endpoint | Purpose |
 |---|---|
 | `POST /api/assessments/evaluate` | Validate input, run engine, return full result (stateless) |
-| `POST /api/assessments/validate` | Dry-run validation for inline form feedback (errors + warnings) |
+| `POST /api/assessments/validate` | Dry-run validation for inline form feedback: errors + warnings, per-block confidence preview, highest-value missing field hint (D-028) |
 | `GET  /api/typologies` | Typology library incl. suitability conditions and citations |
 | `GET  /api/methodology` | Formulas, weights, factors, version — powers the methodology browser |
 | `GET  /api/meta` | Engine version, methodology version, license |
+| `GET  /api/projects` | Project summaries, most recently updated first |
+| `POST /api/projects` | Create a project (name + site description) |
+| `GET  /api/projects/{id}` | Full project incl. assessments and `methodology_update_available` flags (OQ-15) |
+| `PATCH /api/projects/{id}` | Update name / site description |
+| `DELETE /api/projects/{id}` | Delete a project |
+| `POST /api/projects/{id}/assessments` | Create a draft assessment (auto-save target, D-020) |
+| `GET  /api/projects/{id}/assessments/{aid}` | One stored assessment |
+| `PATCH /api/projects/{id}/assessments/{aid}` | Update label / draft input (input frozen once evaluated) |
+| `DELETE /api/projects/{id}/assessments/{aid}` | Delete an assessment |
+| `POST /api/projects/{id}/assessments/{aid}/evaluate` | Explicitly run the engine and persist the result; refuses to recompute a stored result (OQ-15) |
+| `POST /api/projects/{id}/assessments/{aid}/duplicate` | Comparison draft: carries the site description, blanks intervention + cost/energy groups (D-021) |
 | `POST /api/reports/pdf` (Phase 5) | Render a result to the 2-page PDF |
 
-Persistence in v1 is **local-first**: projects/assessments as JSON on disk (per the original spec §13), owned by a thin storage layer behind the API; multi-user storage is v2.
+Persistence in v1 is **local-first**: one JSON document per project (`schema_version`, identity, timestamps, site description, `assessments[]` each holding its full input and full versioned result) under the `platformdirs` user-data directory, owned by a thin storage layer behind the API (D-028); multi-user storage is v2. Stored results are never recomputed — a newer methodology version is surfaced as available, and re-running is an explicit user action creating a new assessment (OQ-15).
 
 ## 3. Frontend
 

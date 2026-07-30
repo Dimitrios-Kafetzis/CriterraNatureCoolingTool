@@ -7,7 +7,7 @@ Developed by [Criterra](https://criterra.eu).
 [![CI](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-> **Status: Phase 2 complete — calculation engine implemented.** The pure, deterministic engine realises the [Methodology Report](docs/methodology/METHODOLOGY.md) with 100% test coverage, 20 hand-verified golden scenarios, and a published [sensitivity analysis](docs/methodology/SENSITIVITY-ANALYSIS.md). The FastAPI service is next. See [Roadmap](#roadmap).
+> **Status: Phase 3 complete — FastAPI service implemented.** A thin, stateless API now wraps the pure, deterministic engine (100% test coverage across engine and API): scoring and dry-run validation with a live per-block confidence preview, the typology library and methodology served as data, and local-first project storage with same-site comparison. The React web app is next. See [Roadmap](#roadmap).
 
 ---
 
@@ -87,21 +87,25 @@ The methodology also states plainly where it is weak: green façade and bioswale
 | 0 | Repository scaffold, governance docs, CI | ✅ |
 | 1 | Methodology evidence base + expert Methodology Report + cited configuration | ✅ |
 | 2 | Calculation engine (pure Python, 100% test coverage, golden scenarios, sensitivity analysis) | ✅ |
-| 3 | FastAPI service | 🔄 next |
-| 4 | React/TypeScript web app (questionnaire wizard, dashboard, A/B/C comparison) | ⏳ |
+| 3 | FastAPI service (scoring, validation + confidence preview, local-first project storage) | ✅ |
+| 4 | React/TypeScript web app (questionnaire wizard, dashboard, A/B/C comparison) | 🔄 next |
 | 5 | Report export (PDF / XLSX) | ⏳ |
 | 6 | Documentation site, packaging, hosting | ⏳ |
 
 ## Running locally
 
-The engine is usable standalone today:
-
 ```bash
 cd backend
 python -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
-pytest   # 100% engine coverage gate
+pip install -e ".[dev,serve]"
+pytest   # 100% coverage gate (engine + API)
+
+uvicorn nature_cooling.api.main:app   # http://127.0.0.1:8000/docs
 ```
+
+The API serves scoring (`POST /api/assessments/evaluate`), inline validation with a live confidence preview (`POST /api/assessments/validate`), the typology library and methodology as data, and local-first project storage — see the endpoint table in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#23-api-surface-v1). Projects are stored as JSON under your platform user-data directory; stored results are never silently recomputed when the methodology moves.
+
+The engine also remains usable standalone:
 
 ```python
 from nature_cooling.engine import AssessmentInput, load_config, run_assessment
@@ -118,7 +122,7 @@ result = run_assessment(
 print(result.opportunity.score, result.opportunity.category)
 ```
 
-The single-command full stack (API + web app) arrives with Phases 3/4.
+The single-command full stack (API + web app) arrives with Phase 4.
 
 ## License
 
