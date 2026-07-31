@@ -1,0 +1,68 @@
+# Documentation site (D-035): MkDocs + Material rendering the existing
+# corpus under docs/ — no page is authored twice. The README becomes the
+# landing page and the brand fonts are injected at build time by
+# tools/mkdocs_hooks.py; the published site makes no third-party requests
+# (fonts self-hosted, Material's Mermaid bundled, font: false).
+
+site_name: Nature for Cooling Rapid Assessment Tool
+site_description: >-
+  Open-source, screening-level decision support for evaluating and
+  prioritising nature-based solutions for urban cooling.
+site_url: https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/
+repo_url: https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool
+repo_name: Dimitrios-Kafetzis/CriterraNatureCoolingTool
+copyright: Apache-2.0 © Criterra
+docs_dir: docs
+
+exclude_docs: |
+  requirements.txt
+
+hooks:
+  - tools/mkdocs_hooks.py
+
+theme:
+  name: material
+  font: false
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - scheme: default
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - content.code.copy
+
+extra_css:
+  - assets/criterra.css
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: index.md
+  - Methodology:
+      - Overview: methodology/README.md
+      - Methodology Report: methodology/METHODOLOGY.md
+      - Evidence tables: methodology/EVIDENCE-TABLES.md
+      - Bibliography: methodology/BIBLIOGRAPHY.md
+      - Sensitivity analysis: methodology/SENSITIVITY-ANALYSIS.md
+  - Architecture: ARCHITECTURE.md
+  - UX specification: UX-SPECIFICATION.md
+  - Decision log: DECISIONS.md
+  - V2 vision: V2-VISION.md
+  - Phase briefs:
+      - Phase 3 — API service: PHASE-3-BRIEF.md
+      - Phase 4 — Web application: PHASE-4-BRIEF.md
+      - Phase 5 — Report export: PHASE-5-BRIEF.md
+      - Phase 6 — Packaging & publication: PHASE-6-BRIEF.md

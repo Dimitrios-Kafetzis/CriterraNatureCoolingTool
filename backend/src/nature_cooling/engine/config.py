@@ -152,14 +152,34 @@ def repo_root() -> Path:
     return Path(__file__).resolve().parents[4]
 
 
+def bundled_data_dir() -> Path:
+    """Return the wheel's embedded data directory (D-035).
+
+    The distributable wheel embeds the methodology configuration, the
+    bibliography, and the production frontend build under
+    ``nature_cooling/_bundled`` (staged by ``tools/build_wheel.sh``; never
+    committed). In a repository checkout the directory does not exist.
+    """
+    return Path(__file__).resolve().parents[1] / "_bundled"
+
+
 def default_config_dir() -> Path:
-    """Return the repository's ``config/`` directory."""
-    return repo_root() / "config"
+    """Return the ``config/`` directory: the repository's, else the wheel's.
+
+    The repository copy wins whenever it exists, so a checkout always runs
+    against the live methodology files; the embedded copy serves installed
+    wheels, where no repository layout surrounds the package.
+    """
+    repo_config = repo_root() / "config"
+    return repo_config if repo_config.is_dir() else bundled_data_dir() / "config"
 
 
 def default_bibliography_path() -> Path:
-    """Return the path to the methodology bibliography."""
-    return repo_root() / "docs" / "methodology" / "BIBLIOGRAPHY.md"
+    """Return the methodology bibliography: the repository's, else the wheel's."""
+    repo_bibliography = repo_root() / "docs" / "methodology" / "BIBLIOGRAPHY.md"
+    if repo_bibliography.is_file():
+        return repo_bibliography
+    return bundled_data_dir() / "BIBLIOGRAPHY.md"
 
 
 def _load_yaml(path: Path) -> dict[str, Any]:

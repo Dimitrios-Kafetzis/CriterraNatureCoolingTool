@@ -262,3 +262,27 @@ def test_inverted_temperature_envelope_is_rejected() -> None:
                 ],
             }
         )
+
+
+def test_default_paths_prefer_the_repository_checkout() -> None:
+    """In a checkout, the live repository files win over any bundled copy."""
+    from nature_cooling.engine import config as config_module
+
+    assert config_module.default_config_dir() == config_module.repo_root() / "config"
+    assert (
+        config_module.default_bibliography_path()
+        == config_module.repo_root() / "docs" / "methodology" / "BIBLIOGRAPHY.md"
+    )
+
+
+def test_default_paths_fall_back_to_the_bundled_wheel_data(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """An installed wheel has no repository around it; the embedded data serves (D-035)."""
+    from nature_cooling.engine import config as config_module
+
+    monkeypatch.setattr(config_module, "repo_root", lambda: tmp_path)
+    bundled = config_module.bundled_data_dir()
+    assert bundled.name == "_bundled"
+    assert config_module.default_config_dir() == bundled / "config"
+    assert config_module.default_bibliography_path() == bundled / "BIBLIOGRAPHY.md"

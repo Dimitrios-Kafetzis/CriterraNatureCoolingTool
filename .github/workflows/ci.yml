@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_call:
 
 jobs:
   backend:
@@ -65,3 +66,80 @@ jobs:
         run: npm run typecheck
       - name: Tests (vitest)
         run: npm test
+
+  package:
+    name: Packaged app (wheel · smoke · container)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build the wheel with the frontend embedded (D-035)
+        run: |
+          pip install build
+          tools/build_wheel.sh
+      - name: Smoke-check the installed wheel
+        run: |
+          python -m venv /tmp/smoke
+          /tmp/smoke/bin/pip install "$(ls backend/dist/*.whl)[serve]"
+          export XDG_DATA_HOME=/tmp/smoke-data
+          /tmp/smoke/bin/nature-cooling serve --port 8123 &
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:8123/api/meta > /tmp/meta.json 2>/dev/null && break
+            sleep 1
+          done
+          cat /tmp/meta.json
+          python -c "import json; m = json.load(open('/tmp/meta.json')); assert m['engine_version'] and m['methodology_version'], m"
+          curl -fsS http://127.0.0.1:8123/ | grep -q 'id="root"'
+          curl -fsS http://127.0.0.1:8123/projects/deep-link | grep -q 'id="root"'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8123/api/nonexistent)" = 404
+      - name: Container image builds from the wheel
+        run: docker build -t nature-cooling:ci .
+
+  docs:
+    name: Docs site (build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Build (strict)
+        run: |
+          pip install -r docs/requirements.txt
+          mkdocs build --strict
+      - name: The published site makes no third-party requests (D-035)
+        run: |
+          if grep -rE 'src="https?://' site --include='*.html'; then exit 1; fi
+          if grep -rE '<link[^>]*rel="(stylesheet|preload)"[^>]*href="https?://' site --include='*.html'; then exit 1; fi
+      - name: Upload the site for GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  docs-deploy:
+    name: Docs site (publish)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: docs
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

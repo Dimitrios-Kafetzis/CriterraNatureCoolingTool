@@ -5,6 +5,10 @@ substitute them: the loaded methodology configuration and the project store.
 Run locally with the ``serve`` extra installed:
 
     uvicorn nature_cooling.api.main:app
+
+An installed wheel additionally embeds the production frontend build, served
+at ``/`` from the same origin as ``/api`` (D-030/D-035); ``nature-cooling
+serve`` wraps the same app.
 """
 
 from __future__ import annotations
@@ -16,6 +20,7 @@ from fastapi import FastAPI
 import nature_cooling
 from nature_cooling.api.routes import api_router
 from nature_cooling.api.storage import ProjectStore, default_storage_root
+from nature_cooling.api.webapp import SinglePageStaticFiles, default_webapp_dir
 from nature_cooling.engine import MethodologyConfig, get_config
 
 
@@ -23,6 +28,7 @@ def create_app(
     *,
     config: MethodologyConfig | None = None,
     storage_root: Path | None = None,
+    webapp_dir: Path | None = None,
 ) -> FastAPI:
     """Build the service around one methodology configuration and one store."""
     app = FastAPI(
@@ -35,6 +41,9 @@ def create_app(
         storage_root if storage_root is not None else default_storage_root()
     )
     app.include_router(api_router, prefix="/api")
+    webapp = webapp_dir if webapp_dir is not None else default_webapp_dir()
+    if webapp is not None:
+        app.mount("/", SinglePageStaticFiles(directory=webapp, html=True), name="webapp")
     return app
 
 

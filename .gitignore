@@ -19,6 +19,12 @@ node_modules/
 frontend/dist/
 *.tsbuildinfo
 
+# Packaging: data staged into the wheel by tools/build_wheel.sh (D-035)
+backend/src/nature_cooling/_bundled/
+
+# Documentation site build
+site/
+
 # Local project data (user assessments)
 projects/
 !projects/.gitkeep

@@ -60,11 +60,13 @@ backend/
 │   │   ├── confidence.py           # branched per-block confidence (OQ-09)
 │   │   ├── recommendation.py       # deterministic template composer
 │   │   └── runner.py               # orchestration: run_assessment()
+│   ├── cli.py                      # `nature-cooling serve` console script (D-035)
 │   ├── api/
 │   │   ├── main.py                 # FastAPI app factory
 │   │   ├── schemas.py              # API-layer models + storage document schema (D-028)
 │   │   ├── storage.py              # local-first project store (platformdirs, atomic JSON)
 │   │   ├── validation.py           # /validate: errors, warnings, confidence preview + hint
+│   │   ├── webapp.py               # embedded frontend at `/`, SPA fallback (D-035)
 │   │   └── routes/                 # assessments, methodology, meta, projects, reports
 │   └── report/
 │       ├── catalog.py              # module-level English string catalog (D-033)
@@ -139,10 +141,11 @@ Each file has a top-level `version:` (date-stamped). CI validates schemas and re
 
 - **Tooling:** `ruff` (lint + format), `mypy --strict` on the engine, `pytest` + coverage; frontend: `eslint`, `tsc`, `vitest` (from Phase 4).
 - **Tests:** unit tests per scoring module; ~20 golden scenarios with hand-verified outputs as regression armor; config schema tests; API contract tests; determinism test (repeat runs byte-identical).
-- **CI (GitHub Actions):** every push/PR → lint, type-check, tests, coverage gate. Releases tagged `vX.Y.Z`; methodology version changes require a matching Methodology Report update (checked in review).
+- **CI (GitHub Actions):** every push/PR → lint, type-check, tests, coverage gate, plus (from Phase 6) the packaged-wheel smoke check (build frontend + wheel together, install, assert `/` serves the app shell and `/api/meta` answers), a container-image build, and a strict documentation-site build; pushes to `main` redeploy the docs site to GitHub Pages. Methodology version changes require a matching Methodology Report update (checked in review).
+- **Releases:** a `vX.Y.Z` tag runs the full gates, then builds the wheel, pushes the container image to GHCR, redeploys the docs site, and creates a GitHub release with the wheel attached (D-035).
 - **Conventional Commits**; one development phase per PR/merge to `main`.
 
 ## 6. Deployment model
 
-- **v1 local-first:** one command starts API + frontend on the developer/user machine.
-- **Later hosting:** the same containers deploy to a small VPS or PaaS; the engine's statelessness makes this a packaging exercise, not a rewrite.
+- **v1 local-first (realised in Phase 6, D-035):** the wheel embeds the production frontend build and the cited methodology configuration; `pip install "criterra-nature-cooling[serve]"` + `nature-cooling serve` starts API and web app on one origin (D-030, no CORS middleware). Projects live under the `platformdirs` user-data path (D-028).
+- **Hosting:** one container image built from the wheel (python-slim, non-root) with a minimal `compose.yaml` mounting a named volume at the data path; reverse proxy, TLS, and multi-user machinery remain the host's concern and v2's scope (OQ-31).

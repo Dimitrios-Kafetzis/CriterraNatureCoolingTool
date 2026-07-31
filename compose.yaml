@@ -1,0 +1,19 @@
+# Minimal hosting composition (D-035): the packaged app plus a named volume
+# at the platformdirs data path (D-028) so projects survive container
+# replacement. No reverse proxy, TLS, or multi-user machinery in v1 — that
+# remains the host's concern and v2's scope (OQ-31).
+#
+#     docker compose up -d        # http://127.0.0.1:8000
+
+services:
+  nature-cooling:
+    image: ghcr.io/dimitrios-kafetzis/criterranaturecoolingtool:latest
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - nature-cooling-data:/home/app/.local/share/criterra-nature-cooling
+    restart: unless-stopped
+
+volumes:
+  nature-cooling-data:

@@ -7,7 +7,7 @@ Developed by [Criterra](https://criterra.eu).
 [![CI](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-> **Status: Phase 5 complete — report export implemented.** Every evaluated assessment now exports as a 2-page PDF report (summary + detail, with the brand typography embedded) and an XLSX workbook (Inputs, Results, Assumptions & Warnings), rendered verbatim from the stored result — the builders compute no number, never call the engine, and produce byte-identical documents for the same stored assessment. Documentation site, packaging, and hosting are next. See [Roadmap](#roadmap).
+> **Status: Phase 6 complete — the tool is packaged and published.** One `pip install` and one command (`nature-cooling serve`) now start the whole application — API and web app on a single origin — from a wheel that embeds the production frontend build and the cited methodology configuration. A container image ships to GHCR with a minimal compose file, the full documentation corpus is published at **[dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/)**, and `vX.Y.Z` tags build and publish every artefact automatically. See [Roadmap](#roadmap).
 
 ---
 
@@ -90,11 +90,34 @@ The methodology also states plainly where it is weak: green façade and bioswale
 | 3 | FastAPI service (scoring, validation + confidence preview, local-first project storage) | ✅ |
 | 4 | React/TypeScript web app (questionnaire wizard, dashboard, A/B/C comparison) | ✅ |
 | 5 | Report export (PDF / XLSX) | ✅ |
-| 6 | Documentation site, packaging, hosting | 🔄 next |
+| 6 | Documentation site, packaging, hosting | ✅ |
 
-## Running locally
+## Running the tool
 
-Two processes during development: the FastAPI service and the Vite dev server, which proxies `/api` to it (same-origin integration, D-030 — the API has no CORS middleware and needs none).
+### Packaged (one command)
+
+Install the wheel from the [latest release](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/releases/latest) — it embeds the web application and the cited methodology configuration, so nothing else is needed:
+
+```bash
+pip install "criterra_nature_cooling-<version>-py3-none-any.whl[serve]"
+nature-cooling serve                  # http://127.0.0.1:8000 — app + API, one origin
+```
+
+Or run the container image (projects persist in a named volume at the platform data path):
+
+```bash
+docker run -p 8000:8000 ghcr.io/dimitrios-kafetzis/criterranaturecoolingtool:latest
+# or, with the durable volume from the repository's compose.yaml:
+docker compose up -d
+```
+
+Both serve the web app at `/` and the API at `/api` from one origin (D-030 — no CORS middleware, by design). Projects are stored as JSON under your platform user-data directory; stored results are never silently recomputed when the methodology moves.
+
+To build the wheel yourself: `tools/build_wheel.sh` (Node 18+ and the backend `dev` extra) — it builds the frontend, embeds it with the configuration into the package, and produces `backend/dist/*.whl`.
+
+### Development (two processes)
+
+The FastAPI service and the Vite dev server, which proxies `/api` to it (same-origin integration, D-030).
 
 ```bash
 # Terminal 1 — the API
@@ -132,7 +155,9 @@ result = run_assessment(
 print(result.opportunity.score, result.opportunity.category)
 ```
 
-The single-command packaged stack (one origin serving API and app) arrives with Phase 6.
+## Documentation site
+
+The full documentation corpus — Methodology Report, evidence tables, bibliography, sensitivity analysis, architecture, decision log, UX specification — is published at [dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/), rendered directly from the Markdown in this repository (no page is authored twice) and redeployed by CI on every push to `main`. Preview locally with `pip install -r docs/requirements.txt && mkdocs serve`.
 
 ## License
 

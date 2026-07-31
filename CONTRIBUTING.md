@@ -35,6 +35,19 @@ npm run generate      # regenerate openapi.json + src/api/schema.ts (CI fails on
 
 Frontend ground rules: no number originates client-side — every score, threshold, band, default, confidence level, and recommendation text renders from an API response; API types are generated from the OpenAPI schema, never hand-written; runtime dependencies stay limited to `react`, `react-dom`, and `react-router` (D-030); all user-facing strings live in the message catalog (`src/i18n/`).
 
+## Packaging and documentation site
+
+```bash
+tools/build_wheel.sh                  # the distributable wheel: frontend build +
+                                      # methodology config embedded (D-035);
+                                      # needs Node 18+ and the backend dev extra
+
+pip install -r docs/requirements.txt  # docs site toolchain (docs-only)
+mkdocs serve                          # preview at http://127.0.0.1:8000
+```
+
+The docs site renders the Markdown under `docs/` directly — edit the corpus, never a site copy. The landing page is generated from the README at build time (`tools/mkdocs_hooks.py`). The published site must make no third-party requests; CI enforces this.
+
 ## Reporting issues
 
 Use GitHub Issues. For methodology critique (a welcome contribution category — the tool exists to be reviewable), reference the specific section of the Methodology Report and, where possible, the literature supporting your point.

@@ -1,0 +1,81 @@
+name: Release
+
+# A vX.Y.Z tag triggers the packaged release (D-035): the full CI gates,
+# the wheel with the frontend embedded, the container image on GHCR, the
+# documentation site, and a GitHub release carrying the wheel.
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+jobs:
+  gates:
+    name: Gates
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    name: Wheel · container image · GitHub release
+    needs: gates
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build the wheel with the frontend embedded (D-035)
+        run: |
+          pip install build
+          tools/build_wheel.sh
+      - name: Push the container image to GHCR
+        run: |
+          echo "${{ github.token }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          docker build -t "$image:$GITHUB_REF_NAME" -t "$image:latest" .
+          docker push "$image:$GITHUB_REF_NAME"
+          docker push "$image:latest"
+      - name: Create the GitHub release with the wheel attached
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" backend/dist/*.whl \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes \
+            --notes "Packaged application: install the attached wheel (\`pip install <wheel>[serve]\` then \`nature-cooling serve\`) or pull the container image \`ghcr.io/${GITHUB_REPOSITORY,,}:$GITHUB_REF_NAME\`."
+
+  docs:
+    name: Docs site (publish)
+    needs: gates
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Build (strict)
+        run: |
+          pip install -r docs/requirements.txt
+          mkdocs build --strict
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
