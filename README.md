@@ -91,6 +91,7 @@ The methodology also states plainly where it is weak: green façade and bioswale
 | 4 | React/TypeScript web app (questionnaire wizard, dashboard, A/B/C comparison) | ✅ |
 | 5 | Report export (PDF / XLSX) | ✅ |
 | 6 | Documentation site, packaging, hosting | ✅ |
+| 7 | v1.0 stabilisation — external methodology review & hardening | 🔄 next |
 
 ## Running the tool
 

@@ -230,6 +230,15 @@ Recorded during the Phase 6 implementation of D-035; none alters a methodology v
 - **Docs tooling lives in `docs/requirements.txt`** (MkDocs + Material only, no further plugins), installed by the CI docs jobs and by contributors previewing the site — the backend package's dependencies are untouched, keeping the D-035 "packaging tooling only, dev-only" rule literal. The `build` package joins the backend `dev` extra for the wheel build.
 - **The container image name is the lowercased repository path on GHCR** (`ghcr.io/dimitrios-kafetzis/criterranaturecoolingtool`), tagged with the release tag and `latest`. CI builds the image on every push — not only at release — so a broken `Dockerfile` cannot reach a tag.
 
+## D-037 — Phase 7 is v1.0 stabilisation: external review and hardening (2026-07-31)
+
+The original roadmap ends at Phase 6, so the path onward was decided rather than inherited. Approved scope for Phase 7, recorded in [PHASE-7-BRIEF.md](PHASE-7-BRIEF.md):
+
+- **In: an external methodology review round.** The review package is the existing paper and Methodology Report (D-012) plus the published site — no new document. The phase's repository work is structured critique intake (an issue template asking for the report section, the claim challenged, and supporting literature) and a triage rule: methodology-blocking findings change configuration/report through the D-017 evidence gates with a version bump; clarifications change wording without one; declined findings are recorded with rationale. Outreach itself is the author's action, outside the codebase.
+- **In: a bounded hardening set.** A WCAG AA accessibility pass (verifying the promise ARCHITECTURE §3 already makes), packaged-app UX polish limited to defects found by use, and the D-034 frontend catalog defect corrected the way the report catalog already corrected it.
+- **Out: PyPI publication — deferred, not rejected.** Distribution remains the GitHub release wheel and the GHCR image; PyPI is revisited after v1.0 alongside the V2 decision.
+- **Out: a strict review-gated exit.** `v1.0.0` is **time-boxed**: it ships when the hardening set lands, and review findings are handled as they arrive — a methodology change accepted afterwards is an ordinary versioned release (OQ-15). Package semver and the date-stamped methodology version stay independent: `v1.0.0` asserts product stability, not methodological finality.
+
 ## D-013 — Weights are expert-calibrated and defended by sensitivity analysis (2026-07-30)
 
 Aggregation weights cannot be "derived" from literature and we do not pretend otherwise. They are declared as expert judgment following composite-indicator practice (OECD/JRC Handbook), and defended empirically via the published sensitivity analysis (see D-011/OQ-29).
