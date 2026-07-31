@@ -11,6 +11,13 @@ on:
 jobs:
   gates:
     name: Gates
+    # The called workflow's Pages jobs declare these permissions; a reusable
+    # call must grant at least what its called jobs request, even when those
+    # jobs are skipped on tag refs.
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     uses: ./.github/workflows/ci.yml
 
   publish:
