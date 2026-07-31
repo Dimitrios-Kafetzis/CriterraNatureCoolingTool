@@ -10,6 +10,7 @@ import assessmentDraft from './fixtures/assessment-draft.json';
 import assessmentEvaluated from './fixtures/assessment-evaluated.json';
 import meta from './fixtures/meta.json';
 import project from './fixtures/project.json';
+import resultMinimal from './fixtures/result-minimal.json';
 import resultUnsuitable from './fixtures/result-unsuitable.json';
 
 const evaluated = assessmentEvaluated as unknown as AssessmentView;
@@ -90,6 +91,26 @@ describe('ResultsScreen', () => {
     for (const flag of (resultUnsuitable as unknown as AssessmentResult).suitability.flags) {
       expect(screen.getByText(flag.message)).toBeInTheDocument();
     }
+  });
+
+  it('uses the neutral wording for non-derived cooling outputs, never the cost sentence', async () => {
+    const view: AssessmentView = {
+      assessment_id: 'minimal-1',
+      label: 'Option M',
+      created_at: evaluated.created_at,
+      input: {},
+      result: resultMinimal,
+      methodology_update_available: false,
+    };
+    renderResults(view, `/projects/${project.project_id}/assessments/minimal-1/results`);
+    await screen.findByText(messages.results.heading);
+    // Shade potential and time to benefit (D-034): sizing inputs, not cost data.
+    expect(screen.getAllByText(messages.results.cooling.notEstimated)).toHaveLength(2);
+    // The economic wording remains reserved for the cost outputs.
+    const costsBlock = screen
+      .getByRole('heading', { name: messages.results.blocks.costs })
+      .closest('section') as HTMLElement;
+    expect(costsBlock.textContent).toContain(messages.results.statuses.not_estimated);
   });
 
   it('enables the Export action as two downloads hitting the report endpoints', async () => {

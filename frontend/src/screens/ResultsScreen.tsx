@@ -203,13 +203,13 @@ export function ResultsScreen() {
             {result.cooling.shade_potential_status === 'calculated' &&
             result.cooling.shade_potential_percent != null
               ? `${fmt(result.cooling.shade_potential_percent)} %`
-              : t.statuses[result.cooling.shade_potential_status]}
+              : t.cooling.notEstimated}
           </dd>
           <dt>{t.cooling.timeToBenefit}</dt>
           <dd>
             {result.cooling.time_to_benefit_status === 'derived' && result.cooling.time_to_benefit
               ? optionLabel(result.cooling.time_to_benefit).replace('_', ' ')
-              : t.statuses[result.cooling.time_to_benefit_status]}
+              : t.cooling.notEstimated}
           </dd>
           <dt>{t.cooling.adjustment}</dt>
           <dd>{fmt(result.adjustment.factor)}</dd>

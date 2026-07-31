@@ -409,6 +409,10 @@ export const messages = {
       potential: 'Cooling Potential Score',
       deltaT: 'Indicative temperature reduction',
       deltaTNote: 'Daytime, pedestrian-level air temperature; clipped to the literature envelope.',
+      // Shade potential and time to benefit depend on intervention sizing
+      // inputs, not on cost data, so they carry a neutral wording instead of
+      // the economic statuses.not_estimated sentence (D-034).
+      notEstimated: 'Not estimated — the required input was not provided.',
       heatIndexImprovement: 'Heat-index improvement',
       shadePotential: 'Shade potential',
       timeToBenefit: 'Time to benefit',
