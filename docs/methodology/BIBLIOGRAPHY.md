@@ -78,7 +78,17 @@ Where a value in the tool depends on a finding that is not *Full*, the configura
 **`reid2009`** — Reid, C.E., O'Neill, M.S., Gronlund, C.J., Brines, S.J., Brown, D.G., Diez-Roux, A.V., Schwartz, J. (2009). Mapping community determinants of heat vulnerability. *Environmental Health Perspectives*, 117(11), 1730–1736. DOI: [10.1289/ehp.0900683](https://doi.org/10.1289/ehp.0900683)
 *Findings used:* ten vulnerability variables (six demographic, two household air-conditioning, vegetation cover, diabetes prevalence) reduce to **four factors explaining >75% of variance**: social/environmental vulnerability (education/poverty/race/green space), social isolation, **air-conditioning prevalence**, and elderly/diabetes proportion. Inner-city areas showed highest vulnerability.
 *Verified:* Full (PMC open access record, PMC2801183).
-*Role:* grounds the vulnerability sub-indicators, and specifically the treatment of **low access to cooled space as elevated vulnerability** as an independent dimension.
+*Role:* grounds the vulnerability sub-indicators, and specifically the treatment of **low access to cooled space as elevated vulnerability** as an independent dimension. Within the cooling access deficit dimension it grounds the **indoor** indicator (D-039).
+
+**`burkart2016`** — Burkart, K., Meier, F., Schneider, A., Breitner, S., Canário, P., Alcoforado, M.J., Scherer, D., Endlicher, W. (2016). Modification of heat-related mortality in an elderly urban population by vegetation (urban green) and proximity to water (urban blue): evidence from Lisbon, Portugal. *Environmental Health Perspectives*, 124(7), 927–934. DOI: [10.1289/ehp.1409529](https://doi.org/10.1289/ehp.1409529)
+*Findings used:* above the 99th temperature percentile (24.8 °C), mortality in the over-65 population rose **14.7% per °C in the least-vegetated areas against 3.0% in the most vegetated**, and **7.1% per °C beyond 4 km from water against 2.1% within 4 km**. Lisbon, 1998–2008.
+*Verified:* Metadata (PubMed record, PMID 26566198; EHP open access) + findings (publisher abstract).
+*Role:* grounds the **outdoor** indicator of the cooling access deficit dimension (D-039) — access to reachable shaded green or blue space as an evidenced protective factor, quantified separately from air conditioning.
+
+**`sera2019`** — Sera, F., Armstrong, B., Tobias, A., Vicedo-Cabrera, A.M., Åström, C., Bell, M.L., Chen, B.-Y., et al. (2019). How urban characteristics affect vulnerability to heat and cold: a multi-country analysis. *International Journal of Epidemiology*, 48(4), 1101–1112. DOI: [10.1093/ije/dyz008](https://doi.org/10.1093/ije/dyz008)
+*Findings used:* across **340 cities in 22 countries**, higher levels of **green space were associated with a decreased effect of heat** on mortality, while higher population density, PM2.5, GDP, and income inequality were associated with an increased effect. Heat-related deaths amounted to 0.54% (95% CI 0.49–0.58) of total deaths.
+*Verified:* Metadata (PubMed record, PMID 30815699) + findings (publisher abstract).
+*Role:* corroborates `burkart2016` at multi-country scale for the outdoor cooling-refuge indicator, and independently supports population density as a vulnerability indicator.
 
 ---
 

@@ -19,7 +19,7 @@
 # belong to the lower band, matching the Methodology Report's "0-30 / 31-60"
 # reading.
 
-version: "2026.08.02"
+version: "2026.08.03"
 
 suitability_sub_indicators:
   # NbS Suitability Score = 0.30 space + 0.25 soil + 0.20 water
@@ -79,6 +79,30 @@ suitability_sub_indicators:
       suitable; deployment outside them is a strong caution rather than a
       disqualification, because the context list is typical rather than
       exhaustive. At weight 0.10 the maximum penalty is 7.5 points.
+
+cooling_access_deficit:
+  # The Vulnerability Score's third dimension (weight 0.20 in weights.yaml,
+  # unchanged), measured by up to TWO indicators since version 2026.08.03
+  # (D-039): access to cooled INDOOR space (reid2009) and access to a cool
+  # OUTDOOR refuge - shaded green or blue space users can reach (burkart2016,
+  # sera2019). Both normalise through inverted_levels, so low access scores
+  # high deficit.
+  indicators: [access_to_cooled_indoor_space, access_to_cool_outdoor_refuge]
+  # Combination: the mean of the indicators ACTUALLY SUPPLIED. One supplied ->
+  # the dimension equals it. Neither supplied (absent or explicit unknown) ->
+  # the neutral 50, exactly as when the dimension had a single indicator.
+  rule: mean_of_supplied
+  neutral_when_none_supplied: 50
+  rationale: >
+    Averaging an unsupplied indicator in at the neutral 50 was rejected: it
+    would drag a signal the user did give toward the middle purely because a
+    second question was skipped, letting an unknown change the meaning of an
+    answer - the defect D-026 fixed for the soil-water pair. Under the adopted
+    rule, answering the second question moves the dimension in whichever
+    direction the answer warrants and skipping it costs nothing, which is the
+    unknown-neutral principle of section 3.2 stated for a two-indicator
+    dimension. The two indicators share one confidence slot (see confidence
+    blocks below) because either one answers the completeness question.
 
 equity_sub_indicators:
   # Equity Score = 0.35 vulnerable_user_benefit + 0.25 public_accessibility
@@ -173,9 +197,11 @@ confidence:
   # Completeness of a block = supplied groups / total groups, as a percentage.
   # A group (inner list) counts as supplied when ANY of its fields is present:
   # lst_anomaly_c and heat_exposure_level are alternative signals for the same
-  # quantity, so supplying either completes that slot. A field answered
-  # "unknown" counts as not supplied: an explicit unknown carries no more
-  # information than a skipped question.
+  # quantity, so supplying either completes that slot; the two cooling-refuge
+  # access indicators are alternative measures of one dimension (D-039) and
+  # share a slot on the same reading. A field answered "unknown" counts as not
+  # supplied: an explicit unknown carries no more information than a skipped
+  # question.
   thresholds:
     low_below_percent: 40
     high_above_percent: 70
@@ -203,7 +229,7 @@ confidence:
     equity:
       - [population_density]
       - [vulnerable_population_presence]
-      - [access_to_cooled_indoor_space]
+      - [access_to_cooled_indoor_space, access_to_cool_outdoor_refuge]
       - [safety_concern]
       - [public_accessibility]
       - [community_participation]

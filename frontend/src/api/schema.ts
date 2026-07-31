@@ -321,6 +321,8 @@ export interface components {
      *     confidence but never blocks the assessment.
      */
     AssessmentInput: {
+      /** Access To Cool Outdoor Refuge */
+      access_to_cool_outdoor_refuge?: ('low' | 'medium' | 'high' | 'unknown') | null;
       /** Access To Cooled Indoor Space */
       access_to_cooled_indoor_space?: ('low' | 'medium' | 'high' | 'unknown') | null;
       /** Annual Cooling Energy Demand Kwh */
@@ -387,7 +389,9 @@ export interface components {
             | 'public_space'
             | 'park'
             | 'school'
+            | 'campus'
             | 'healthcare'
+            | 'memorial'
             | 'industrial'
             | 'other'
           )

@@ -62,11 +62,13 @@ Current shade level maps \emph{very low}\,$\rightarrow$\,25,
 \subsection{The inverted mapping for cooling access}
 \label{sec:inverted}
 
-The principal application of the inverted scale is access to cooled indoor
-space, where \emph{high} access maps to 25, \emph{medium} to 50, and \emph{low}
-to 100. The field enters the Vulnerability Score
-(\Cref{sec:vulnerability}) as a \emph{cooling access deficit}: low access
-indicates higher vulnerability, so it must produce a higher score.
+The principal application of the inverted scale is access to cooling refuge,
+measured by two fields --- access to cooled \emph{indoor} space and access to a
+cool \emph{outdoor} refuge --- where in each case \emph{high} access maps to
+25, \emph{medium} to 50, and \emph{low} to 100. Both enter the Vulnerability
+Score (\Cref{sec:vulnerability}) through a single \emph{cooling access
+deficit} term: low access indicates higher vulnerability, so it must produce a
+higher score.
 
 The justification is \textcite{reid2009}. In that factor analysis of ten heat
 vulnerability variables, air-conditioning prevalence emerged as one of four
@@ -87,6 +89,15 @@ rather than about air-conditioning ownership specifically, which is a
 deliberate broadening --- a shaded, ventilated, publicly accessible cool refuge
 counts --- but a broadening that the underlying study does not itself
 validate.
+
+The second field, added at version \texttt{2026.08.03}, addresses part of the
+first qualification directly. Where mechanical cooling is rare, refuge from
+heat is found outdoors, and the evidence for that is its own:
+\textcite{burkart2016} and \textcite{sera2019} measure reachable vegetation and
+water as modifiers of heat mortality rather than inferring them. The
+combination rule for the two indicators, and the reason an unanswered indicator
+is excluded rather than averaged in at the neutral 50, are given with the
+formula in \Cref{sec:vulnerability}.
 
 \subsection{The treatment of \emph{unknown}}
 \label{sec:unknown}

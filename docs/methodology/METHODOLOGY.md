@@ -1,9 +1,9 @@
 # Nature for Cooling Rapid Assessment Tool — Methodology Report
 
-**Version:** 2026.08.02 (methodology configuration version `2026.08.02`)
+**Version:** 2026.08.03 (methodology configuration version `2026.08.03`)
 **Status:** Version 1 methodology, released for expert review; calculation engine implemented (Phase 2)
 
-Version `2026.08.01` discharged the specification gaps disclosed at `2026.07.30`: the sub-indicator derivation rules (§5.10), the cost-feasibility brackets and combination rule (§5.8), the confidence field-to-block mapping (§6.2), and the published sensitivity analysis (§7). Version `2026.08.02` corrects an incentive defect in the soil–water condition found during engine implementation (§5.4, D-026): reliable irrigation now maps to *excellent*, and a condition pair containing an unknown is capped at the neutral factor — so complete favourable data strictly dominates leaving the question blank. No typology value, envelope, or aggregation weight has changed since `2026.07.30`.
+Version `2026.08.01` discharged the specification gaps disclosed at `2026.07.30`: the sub-indicator derivation rules (§5.10), the cost-feasibility brackets and combination rule (§5.8), the confidence field-to-block mapping (§6.2), and the published sensitivity analysis (§7). Version `2026.08.02` corrects an incentive defect in the soil–water condition found during engine implementation (§5.4, D-026): reliable irrigation now maps to *excellent*, and a condition pair containing an unknown is capped at the neutral factor — so complete favourable data strictly dominates leaving the question blank. Version `2026.08.03` makes two additive changes arising from the v1 review (D-039, D-040): the cooling access deficit becomes one dimension measured by two indicators, indoor and outdoor, at its existing 0.20 weight (§5.2); and the land-use enumeration gains *campus* and *memorial*, with the affected typology context lists extended (§4.4, §5.10). **No typology value, cooling envelope, or aggregation weight has changed since `2026.07.30`**, and every golden-scenario output is unchanged at `2026.08.03` — the new indicator is strictly additive, so the sensitivity analysis of §7 remains valid as published.
 **Prepared by:** Criterra
 **Licence:** Apache-2.0. Source code, configuration, and this document are public.
 
@@ -109,7 +109,7 @@ Most inputs accept a qualitative level, because most users do not have measured 
 | Very high | 100 |
 | Unknown | 50 (neutral) |
 
-An inverted mapping applies where a high level indicates *lower* risk. Access to cooled indoor space is the principal case: high access → 25, medium → 50, low → 100. `reid2009` supports treating air-conditioning access as an independent protective dimension — in that study air-conditioning prevalence emerged as one of four factors explaining more than 75% of variance across ten heat-vulnerability variables.
+An inverted mapping applies where a high level indicates *lower* risk. The two cooling-refuge access indicators are the principal case: high access → 25, medium → 50, low → 100. `reid2009` supports treating air-conditioning access as an independent protective dimension — in that study air-conditioning prevalence emerged as one of four factors explaining more than 75% of variance across ten heat-vulnerability variables — and `burkart2016` and `sera2019` support the same treatment for reachable shaded green and blue space (§5.2).
 
 Assigning `unknown` a neutral 50 is a deliberate, disclosed choice: it avoids both optimistic and pessimistic bias in the score while the confidence mechanism (§6) records that the information was absent.
 
@@ -198,7 +198,25 @@ Vulnerability = clamp( 0.40 × Population_density_score
                      + 0.20 × Cooling_access_deficit_score )
 ```
 
-Indicator selection follows `reid2009`, whose factor analysis of ten heat-vulnerability variables identified social/environmental vulnerability, social isolation, air-conditioning prevalence, and elderly/diabetes proportion as four factors explaining more than 75% of total variance. Population density and vulnerable-group presence are weighted equally because that analysis gives no basis for ranking demographic vulnerability above exposure density; cooling access carries the smaller weight because it is a single indicator and the most frequently unknown at screening stage.
+Indicator selection follows `reid2009`, whose factor analysis of ten heat-vulnerability variables identified social/environmental vulnerability, social isolation, air-conditioning prevalence, and elderly/diabetes proportion as four factors explaining more than 75% of total variance. Population density and vulnerable-group presence are weighted equally because that analysis gives no basis for ranking demographic vulnerability above exposure density; cooling access carries the smaller weight because it is the most frequently unknown at screening stage. `sera2019` independently supports population density as a heat-vulnerability modifier across 340 cities in 22 countries.
+
+**The cooling access deficit is one dimension measured by two indicators** (from version `2026.08.03`, D-039). Refuge from heat is reached either indoors or outdoors, and the evidence for the two is separate:
+
+| Indicator | Question | Grounding |
+|---|---|---|
+| `access_to_cooled_indoor_space` | How easily local users can reach air-conditioned or otherwise actively cooled indoor space | `reid2009` — air-conditioning prevalence is one of the four factors, an independent dimension |
+| `access_to_cool_outdoor_refuge` | How easily local users can reach shaded green or blue space | `burkart2016` — above the 99th temperature percentile, elderly mortality rose 14.7% per °C in the least-vegetated areas against 3.0% in the most vegetated, and 7.1% per °C beyond 4 km from water against 2.1% within it; `sera2019` corroborates at multi-country scale |
+
+Both normalise through the inverted scale, so *low* access scores a *high* deficit. The dimension keeps its **0.20 weight, unchanged**; only its measurement changed, so the aggregation weights and the published sensitivity analysis are untouched.
+
+```
+Cooling_access_deficit = mean( indicators actually supplied )
+                       = 50   if neither indicator was supplied
+```
+
+Averaging an *unsupplied* indicator in at the neutral 50 was considered and rejected. It would pull a signal the user did give toward the middle purely because a second question was skipped — an unknown changing the meaning of an answer, which is the defect §5.4 and D-026 removed from the soil–water pair. Under the adopted rule a single answer speaks for the dimension, answering the second moves it in whichever direction that answer warrants, and skipping costs nothing. The two indicators correspondingly share one confidence slot (§6.2): the completeness question is whether cooling-refuge access was described at all, and either indicator answers it.
+
+**Disclosed overlap.** The outdoor indicator describes cool refuges in the *surroundings* that the site's users can reach; the Heat Exposure Score's vegetation-deficit component (§5.1) describes greenness *of the site itself*. The two are distinct quantities but conceptually adjacent, and a site in a green district with a bare site will register both a low outdoor-refuge deficit and a high vegetation deficit. This is stated here rather than left for a reviewer to find, in the manner of the vulnerability double-contribution declared in §5.9.
 
 ### 5.3 Heat Priority Index
 
@@ -341,6 +359,8 @@ Version 2026.07.30 declared the weights of the NbS Suitability, Co-benefit, and 
 | Maintenance | declared maintenance intensity through the inverted scale: low → 100, medium → 50, high → 25, unknown → 50 |
 | Urban context | site land use in the typology's `typical_use_context` → 100; outside it → 25 (a caution, not a disqualification); unknown → 50 |
 
+The land-use enumeration gained **campus** and **memorial** at `2026.08.03` (D-040). Because the enumeration feeds this sub-indicator alone, adding values without extending the typology context lists would have scored both new settings *out of context* for every typology. The lists were therefore extended on a reading of what each setting is: campus — institutional grounds combining buildings, circulation, and open space — was added wherever a school, public-space, or mixed-use context already applied (twelve typologies); memorial — cemeteries and remembrance landscapes, low-intensity public green space — wherever a park or public-space context already applied (seven typologies). Neither was added to the blue-green corridor or riparian restoration, whose context is an existing water feature rather than a land use. No existing land use changed meaning.
+
 **Equity** (`0.35 vulnerable-user benefit + 0.25 public accessibility + 0.20 safety & comfort + 0.20 participation relevance`). Each sub-indicator reads how much equity benefit the intervention can deliver here, so a *deficit* raises the score, paralleling the risk framing of the Vulnerability Score. Vulnerable-user benefit reuses the vulnerable-population input (no duplicate question); public accessibility and community participation are the two new optional inputs introduced at this version; safety concern deliberately uses the standard (non-inverted) scale — a site with greater safety and comfort problems stands to gain more from a well-designed intervention. The Equity Score is reported as its own block with its own confidence and **does not enter the final aggregation**; equity reaches the headline score through the Vulnerability Score, as §5.9 discloses.
 
 **Co-benefits** take the cited per-typology default levels with user override (OQ-18). The library ships no default for *social inclusion*; absent an override it falls to the neutral 50 and is itemised. Every applied library default is likewise itemised, so a reader can see which co-benefit levels came from the user and which from the configuration.
@@ -365,7 +385,7 @@ A single confidence rating would obscure the common case where a site has good p
 
 Two additional constraints apply. Evidence confidence propagates: a typology rated low-confidence in the library (green façade, rain garden/bioswale, courtyard greening) caps the cooling-block confidence at medium regardless of input completeness, because complete inputs cannot compensate for thin underlying evidence. And a high score with low confidence is presented as a flag for further investigation, never as a verdict.
 
-**The field-to-block mapping, fixed at 2026.08.01 (D-024).** The fields counted for each block are enumerated in `derived_scores.yaml`: ten slots for cooling (canopy, green cover, imperviousness, soil, irrigation, shade level, one heat-signal slot filled by *either* the LST anomaly *or* the qualitative heat exposure level, solar exposure, new canopy at maturity, maturity period); three for energy (relevance confirmation, demand, energy price); four for economic (capital cost, energy price, implementation complexity, maintenance intensity); six for equity (population density, vulnerable presence, cooling access, safety concern, public accessibility, community participation). A field answered *unknown* counts as **not supplied** — an explicit unknown carries no more information than a skipped question. Completeness is the share of supplied slots; the thresholds of the table above apply with exact boundaries: below 40% low, 40–70% (inclusive) medium, above 70% high.
+**The field-to-block mapping, fixed at 2026.08.01 (D-024), extended at 2026.08.03 (D-039).** The fields counted for each block are enumerated in `derived_scores.yaml`: ten slots for cooling (canopy, green cover, imperviousness, soil, irrigation, shade level, one heat-signal slot filled by *either* the LST anomaly *or* the qualitative heat exposure level, solar exposure, new canopy at maturity, maturity period); three for energy (relevance confirmation, demand, energy price); four for economic (capital cost, energy price, implementation complexity, maintenance intensity); six for equity (population density, vulnerable presence, one cooling-refuge access slot filled by *either* the indoor *or* the outdoor indicator, safety concern, public accessibility, community participation). A field answered *unknown* counts as **not supplied** — an explicit unknown carries no more information than a skipped question. Completeness is the share of supplied slots; the thresholds of the table above apply with exact boundaries: below 40% low, 40–70% (inclusive) medium, above 70% high.
 
 **Overall confidence** is the lower median of the four block ratings (rank the four, take the second-lowest). A mean would need a rounding rule at half-steps; the lower median is exact, slightly conservative, and never reports an overall rating higher than three of the four blocks.
 
@@ -381,9 +401,9 @@ Required inputs must be present; the assessment does not proceed without them. O
 
 The tool's published sensitivity analysis varies each aggregation weight by **±25%** (renormalising the remainder) across the golden-scenario set and reports rank stability, score displacement, category migration, and an influence ranking. It is implemented in [`tools/sensitivity_analysis.py`](../../tools/sensitivity_analysis.py), its full output is committed at [SENSITIVITY-ANALYSIS.md](SENSITIVITY-ANALYSIS.md), and it must be regenerated whenever any aggregation weight changes.
 
-### 7.1 Results at version 2026.08.02
+### 7.1 Results at version 2026.08.03
 
-The analysis was executed against the 20 hand-verified golden scenarios (190 scenario pairs), re-scoring the full set under each of the 12 perturbations (6 weights × ±25%).
+The analysis was executed against the 20 hand-verified golden scenarios (190 scenario pairs), re-scoring the full set under each of the 12 perturbations (6 weights × ±25%). The figures below were produced at `2026.08.01` and re-confirmed unchanged at `2026.08.03`: no aggregation weight has moved, and no golden-scenario output changed under D-039 or D-040.
 
 1. **Rank stability.** Worst case **0.9737** (under the −25% Heat Priority Index perturbation: 5 of 190 pairs reorder); 9 of 12 perturbations preserve at least 98.4% of pair orderings. Reordering occurs only between scenarios whose baseline scores differ by less than about 2 points — pairs that the methodology itself would describe as materially equivalent.
 2. **Score displacement.** Pooled across all 240 scenario-perturbation combinations: mean **0.42** points, median 0.32, 75th percentile 0.59, maximum **2.01** points (on a 0–100 scale).
@@ -420,7 +440,7 @@ Two honest qualifications. First, the analysis perturbs one weight at a time; si
 
 ## 9. Methodology governance
 
-**Versioning.** The methodology version (`2026.08.02`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
+**Versioning.** The methodology version (`2026.08.03`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
 
 **Change process.** Methodology changes are proposed as public pull requests with their evidence. Existing assessments are never silently recomputed: results retain the version that produced them, and the interface indicates when a newer methodology version is available.
 

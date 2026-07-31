@@ -11,7 +11,9 @@ site_description: >-
 site_url: https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/
 repo_url: https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool
 repo_name: Dimitrios-Kafetzis/CriterraNatureCoolingTool
-copyright: Apache-2.0 © Criterra
+copyright: >-
+  © Criterra — Nature for Cooling is a Criterra product.
+  Code and methodology licensed Apache-2.0.
 docs_dir: docs
 
 exclude_docs: |
@@ -23,6 +25,10 @@ hooks:
 theme:
   name: material
   font: false
+  # Injected from frontend/public by tools/mkdocs_hooks.py — one copy of each
+  # brand asset in the repository, as with the fonts (D-036, D-042).
+  logo: assets/criterra-lockup.svg
+  favicon: assets/favicon.ico
   icon:
     repo: fontawesome/brands/github
   palette:

@@ -74,3 +74,13 @@ def default_note(field: str, value: str | None) -> str:
     if value == "unknown":
         return f"{field} answered 'unknown'; neutral value 50 applied"
     return f"{field} not provided; neutral value 50 applied"
+
+
+def dimension_default_note(dimension: str) -> str:
+    """The ``assumptions_applied`` entry for a neutrally defaulted dimension.
+
+    Used where a dimension is measured by several alternative indicators and
+    none was supplied (D-039): one default was applied, so one entry is
+    itemised, naming the dimension rather than each unanswered indicator.
+    """
+    return f"{dimension}: no indicator supplied; neutral value 50 applied"

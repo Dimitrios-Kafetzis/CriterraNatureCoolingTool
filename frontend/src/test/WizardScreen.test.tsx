@@ -78,8 +78,11 @@ describe('WizardScreen', () => {
     renderWizard();
 
     const user = userEvent.setup();
+    // Scoped to the control: the field's explanation button (D-041) also
+    // carries the field label in its accessible name, by design.
     const scaleSelect = await screen.findByLabelText(
       new RegExp(messages.fields.assessment_scale!.label),
+      { selector: 'select' },
     );
     await user.selectOptions(scaleSelect, 'neighbourhood');
 

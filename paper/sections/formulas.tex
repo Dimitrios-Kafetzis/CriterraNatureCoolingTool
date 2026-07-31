@@ -95,10 +95,55 @@ the proportion of elderly and diabetic residents.
 Population density and vulnerable-group presence are weighted \emph{equally}
 because that analysis provides no basis for ranking demographic vulnerability
 above exposure density; asserting a difference would be inventing a finding.
-Cooling access carries the smaller weight for two stated reasons: it is a
-single indicator where the other two are composites, and it is the field most
+\textcite{sera2019} independently supports density as a modifier of the
+heat--mortality relationship across \num{340} cities in \num{22} countries.
+Cooling access carries the smaller weight because it is the field most
 frequently unknown at screening stage, so a larger weight would amplify the
 neutral default of \Cref{sec:unknown}.
+
+\paragraph{One dimension, two indicators.} From version \texttt{2026.08.03}
+the cooling access deficit is measured by two indicators rather than one, at
+the same \num{0.20} weight: access to actively cooled \emph{indoor} space, and
+access to a cool \emph{outdoor} refuge --- shaded green or blue space the
+site's users can reach. The split is evidenced, not assumed.
+\textcite{reid2009} grounds the indoor indicator. \textcite{burkart2016}
+grounds the outdoor one directly: in Lisbon, above the 99th temperature
+percentile, mortality among residents over \num{65} rose
+\SI{14.7}{\percent} per \si{\degreeCelsius} in the least-vegetated areas
+against \SI{3.0}{\percent} in the most vegetated, and \SI{7.1}{\percent} per
+\si{\degreeCelsius} beyond \SI{4}{\kilo\metre} from water against
+\SI{2.1}{\percent} within it.
+
+The dimension is the \emph{mean of the indicators actually supplied}:
+
+\begin{equation}
+\label{eq:coolaccess}
+S_{\mathrm{coolaccess}} \;=\;
+\begin{cases}
+  \dfrac{1}{\lvert \mathcal{A}\rvert} \displaystyle\sum_{i \in \mathcal{A}} S_i
+    & \text{if } \mathcal{A} \neq \emptyset,\\[2ex]
+  50 & \text{otherwise,}
+\end{cases}
+\end{equation}
+
+where $\mathcal{A}$ is the set of supplied indicators (an explicit
+\emph{unknown} is not supplied). Averaging an \emph{unsupplied} indicator in at
+the neutral \num{50} was considered and rejected: it would pull a signal the
+user did give toward the middle purely because a second question was skipped,
+letting an unknown alter the meaning of an answer --- the defect removed from
+the soil--water pair in \Cref{sec:adjustment}. Under the adopted rule a single
+answer speaks for the dimension, answering the second moves it in whichever
+direction that answer warrants, and skipping costs nothing. The two indicators
+correspondingly share one confidence slot (\Cref{sec:confidence}).
+
+\paragraph{A disclosed overlap.} The outdoor indicator describes cool refuges
+in the \emph{surroundings} that the site's users can reach; the vegetation
+deficit of \Cref{sec:heat-exposure} describes greenness \emph{of the site
+itself}. The two are distinct quantities but conceptually adjacent, and a bare
+site in a green district registers a low outdoor-refuge deficit alongside a
+high vegetation deficit. We state this rather than leave it for a reader to
+discover, as with the vulnerability double contribution of
+\Cref{sec:aggregation}.
 
 \subsection{Heat Priority Index}
 \label{sec:hpi}

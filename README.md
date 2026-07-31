@@ -7,7 +7,9 @@ Developed by [Criterra](https://criterra.eu).
 [![CI](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-> **Status: Phase 6 complete — the tool is packaged and published.** One `pip install` and one command (`nature-cooling serve`) now start the whole application — API and web app on a single origin — from a wheel that embeds the production frontend build and the cited methodology configuration. A container image ships to GHCR with a minimal compose file, the full documentation corpus is published at **[dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/)**, and `vX.Y.Z` tags build and publish every artefact automatically. See [Roadmap](#roadmap).
+> **Status: v1.1 — first review round addressed.** The tool is packaged and published: one `pip install` and one command (`nature-cooling serve`) start the whole application — API and web app on a single origin — from a wheel that embeds the production frontend build and the cited methodology configuration. A container image ships to GHCR with a minimal compose file, the full documentation corpus is published at **[dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/)**, and `vX.Y.Z` tags build and publish every artefact automatically.
+>
+> v1.1 answers the first product review (D-038): every questionnaire parameter now carries an on-demand explanation of what it means and what it affects, cooling-refuge access is asked as two evidenced indicators rather than one ambiguous field, *campus* and *memorial* join the land uses, and the Criterra identity is present in the app, the report, and the docs site. Methodology `2026.08.03`. See [Roadmap](#roadmap).
 
 ---
 
@@ -62,7 +64,7 @@ The tool is explicitly **not** a microclimate simulation (ENVI-met-class), a bui
 Key documents:
 
 - **[docs/methodology/METHODOLOGY.md](docs/methodology/METHODOLOGY.md)** — the Methodology Report: the complete scientific basis, written for expert review
-- **[paper/](paper/)** — the same methodology as a full scientific paper ([main.pdf](paper/main.pdf), 72 pages): the document to send to UNEP, scientific reviewers, and public authorities
+- **[paper/](paper/)** — the same methodology as a full scientific paper ([main.pdf](paper/main.pdf), 79 pages): the document to send to UNEP, scientific reviewers, and public authorities
 - [docs/methodology/EVIDENCE-TABLES.md](docs/methodology/EVIDENCE-TABLES.md) — per-typology derivations from the literature
 - [docs/methodology/BIBLIOGRAPHY.md](docs/methodology/BIBLIOGRAPHY.md) — sources with verification status
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — system design
@@ -91,7 +93,10 @@ The methodology also states plainly where it is weak: green façade and bioswale
 | 4 | React/TypeScript web app (questionnaire wizard, dashboard, A/B/C comparison) | ✅ |
 | 5 | Report export (PDF / XLSX) | ✅ |
 | 6 | Documentation site, packaging, hosting | ✅ |
-| 7 | v1.0 stabilisation — external methodology review & hardening | 🔄 next |
+| 7 | Stabilisation — external methodology review & hardening | ✅ (shipped in v1.1) |
+| 8 | **v1.1** — review round 1: parameter explanations, cooling-refuge split, brand identity | ✅ |
+| 9 | **v1.2** — UNEP NbS catalogue, scale- and condition-based availability, multi-intervention packages | 🔄 next |
+| 10 | **v1.3** — map-based site selection with parameter autofill | ⏳ |
 
 ## Running the tool
 
@@ -162,4 +167,8 @@ The full documentation corpus — Methodology Report, evidence tables, bibliogra
 
 ## License
 
-[Apache-2.0](LICENSE) © Criterra
+Code, configuration, and documentation: [Apache-2.0](LICENSE). Copyright © 2026 Criterra.
+
+The **Criterra name and logo are trademarks** and are not covered by that grant — Apache-2.0 §6 says so explicitly, and [NOTICE](NOTICE) states what it means here. In short: fork, modify, and redistribute freely; swap the brand assets and identity strings before presenting the result as your own product. Nominative reference — saying your work derives from this tool — is welcome.
+
+Nature for Cooling is a Criterra product. See [criterra.eu](https://criterra.eu).

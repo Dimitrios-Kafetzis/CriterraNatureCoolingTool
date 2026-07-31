@@ -15,7 +15,7 @@
 # Derivations: docs/methodology/EVIDENCE-TABLES.md
 # Source keys: docs/methodology/BIBLIOGRAPHY.md
 
-version: "2026.08.02"
+version: "2026.08.03"
 
 typologies:
   - nbs_id: "01"
@@ -28,7 +28,7 @@ typologies:
     evidence_confidence: high
     primary_cooling_mechanism: shade and evapotranspiration
     building_energy_applicable: true
-    typical_use_context: [street_corridor, residential, mixed_use, commercial]
+    typical_use_context: [street_corridor, residential, mixed_use, commercial, campus]
     suitability:
       minimum_site_area_m2: 100
       requires_soil: limited
@@ -62,7 +62,7 @@ typologies:
     evidence_confidence: medium
     primary_cooling_mechanism: continuous shade and evapotranspiration
     building_energy_applicable: false
-    typical_use_context: [street_corridor, public_space, mixed_use]
+    typical_use_context: [street_corridor, public_space, mixed_use, campus, memorial]
     suitability:
       minimum_site_area_m2: 200
       requires_soil: limited
@@ -93,7 +93,7 @@ typologies:
     evidence_confidence: high
     primary_cooling_mechanism: evapotranspiration and shade
     building_energy_applicable: false
-    typical_use_context: [public_space, residential, mixed_use]
+    typical_use_context: [public_space, residential, mixed_use, campus, memorial]
     suitability:
       minimum_site_area_m2: 200
       requires_soil: limited
@@ -123,7 +123,7 @@ typologies:
     evidence_confidence: high
     primary_cooling_mechanism: dense shade and evapotranspiration
     building_energy_applicable: true
-    typical_use_context: [park, public_space, residential]
+    typical_use_context: [park, public_space, residential, campus, memorial]
     suitability:
       minimum_site_area_m2: 2000
       requires_soil: moderate
@@ -152,7 +152,7 @@ typologies:
     evidence_confidence: high
     primary_cooling_mechanism: increased canopy and evapotranspiration
     building_energy_applicable: false
-    typical_use_context: [park, public_space]
+    typical_use_context: [park, public_space, campus, memorial]
     suitability:
       minimum_site_area_m2: 500
       requires_soil: limited
@@ -182,7 +182,7 @@ typologies:
     evidence_confidence: medium
     primary_cooling_mechanism: shade and evapotranspiration
     building_energy_applicable: true
-    typical_use_context: [school, public_space]
+    typical_use_context: [school, public_space, campus]
     suitability:
       minimum_site_area_m2: 300
       requires_soil: limited
@@ -216,7 +216,7 @@ typologies:
     evidence_confidence: medium
     primary_cooling_mechanism: roof surface cooling and evapotranspiration
     building_energy_applicable: true
-    typical_use_context: [commercial, residential, industrial, mixed_use]
+    typical_use_context: [commercial, residential, industrial, mixed_use, campus]
     suitability:
       minimum_site_area_m2: 50
       requires_soil: none
@@ -250,7 +250,7 @@ typologies:
     evidence_confidence: low
     primary_cooling_mechanism: wall shading and evapotranspiration
     building_energy_applicable: true
-    typical_use_context: [commercial, residential, mixed_use, street_corridor]
+    typical_use_context: [commercial, residential, mixed_use, street_corridor, campus]
     suitability:
       minimum_site_area_m2: 20
       requires_soil: none
@@ -282,7 +282,7 @@ typologies:
     evidence_confidence: low
     primary_cooling_mechanism: evapotranspiration and infiltration
     building_energy_applicable: false
-    typical_use_context: [street_corridor, public_space, residential, park]
+    typical_use_context: [street_corridor, public_space, residential, park, campus, memorial]
     suitability:
       minimum_site_area_m2: 50
       requires_soil: moderate
@@ -367,7 +367,7 @@ typologies:
     evidence_confidence: medium
     primary_cooling_mechanism: shade, surface permeability and evaporation
     building_energy_applicable: false
-    typical_use_context: [public_space, commercial, mixed_use]
+    typical_use_context: [public_space, commercial, mixed_use, campus, memorial]
     suitability:
       minimum_site_area_m2: 200
       requires_soil: limited
@@ -397,7 +397,7 @@ typologies:
     evidence_confidence: low
     primary_cooling_mechanism: shade and evapotranspiration in enclosed space
     building_energy_applicable: true
-    typical_use_context: [residential, mixed_use, school, healthcare]
+    typical_use_context: [residential, mixed_use, school, healthcare, campus]
     suitability:
       minimum_site_area_m2: 50
       requires_soil: limited
@@ -429,7 +429,7 @@ typologies:
     evidence_confidence: medium
     primary_cooling_mechanism: combined shade, evapotranspiration and evaporation
     building_energy_applicable: true
-    typical_use_context: [mixed_use, public_space, residential, commercial, park]
+    typical_use_context: [mixed_use, public_space, residential, commercial, park, campus, memorial]
     suitability:
       minimum_site_area_m2: 500
       requires_soil: limited

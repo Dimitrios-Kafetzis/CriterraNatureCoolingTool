@@ -11,6 +11,7 @@
 
 import { useId } from 'react';
 import { messages, optionLabel } from '../i18n/en';
+import { FieldExplainer } from './FieldExplainer';
 
 interface CommonProps {
   field: string;
@@ -23,10 +24,15 @@ function FieldShell(props: CommonProps & { inputId: string; children: React.Reac
   const help = meta?.help;
   return (
     <div className="field">
-      <label className="field__label" htmlFor={props.inputId}>
-        {meta?.label ?? props.field}
-        {!props.required && <span className="muted small"> — {messages.wizard.optionalHint}</span>}
-      </label>
+      <div className="field__label-row">
+        <label className="field__label" htmlFor={props.inputId}>
+          {meta?.label ?? props.field}
+          {!props.required && (
+            <span className="muted small"> — {messages.wizard.optionalHint}</span>
+          )}
+        </label>
+        <FieldExplainer field={props.field} />
+      </div>
       {help ? (
         <p className="field__help" id={`${props.inputId}-help`}>
           {help}

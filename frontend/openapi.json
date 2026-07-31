@@ -113,6 +113,23 @@
         "additionalProperties": false,
         "description": "One site plus one proposed NbS intervention, as described by the user.\n\nRequired fields are those without which a documented formula cannot be\nevaluated at all; everything else is optional, and absence reduces\nconfidence but never blocks the assessment.",
         "properties": {
+          "access_to_cool_outdoor_refuge": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Access To Cool Outdoor Refuge"
+          },
           "access_to_cooled_indoor_space": {
             "anyOf": [
               {
@@ -497,7 +514,9 @@
                   "public_space",
                   "park",
                   "school",
+                  "campus",
                   "healthcare",
+                  "memorial",
                   "industrial",
                   "other"
                 ],

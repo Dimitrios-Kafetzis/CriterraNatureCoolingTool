@@ -147,3 +147,23 @@ def test_overall_is_lower_median(config, build_input):
         "high",
     )
     assert block.overall == "low"
+
+
+def test_the_two_cooling_refuge_indicators_share_one_slot(config, build_input):
+    """D-039: either indicator answers the completeness question, and answering
+    both does not inflate completeness — the equity denominator stays at six."""
+    indoor_only = confidence.compute(
+        build_input(access_to_cooled_indoor_space="low"), _typology(config), config
+    )
+    outdoor_only = confidence.compute(
+        build_input(access_to_cool_outdoor_refuge="low"), _typology(config), config
+    )
+    both = confidence.compute(
+        build_input(access_to_cooled_indoor_space="low", access_to_cool_outdoor_refuge="low"),
+        _typology(config),
+        config,
+    )
+    one_slot_of_six = round(100 / 6, 1)
+    assert indoor_only.completeness_percent["equity"] == one_slot_of_six
+    assert outdoor_only.completeness_percent["equity"] == one_slot_of_six
+    assert both.completeness_percent["equity"] == one_slot_of_six

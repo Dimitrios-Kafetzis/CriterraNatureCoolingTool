@@ -5,7 +5,7 @@
 # deliberate, disclosed choice: it avoids optimistic and pessimistic bias alike
 # while the confidence mechanism records that the information was absent.
 
-version: "2026.08.02"
+version: "2026.08.03"
 
 standard_levels:
   low: 25
@@ -44,6 +44,20 @@ fields:
         finding: "Air-conditioning prevalence emerged as one of four factors explaining over 75% of variance across ten heat-vulnerability variables, supporting treatment of cooling access as an independent protective dimension."
     rationale: >
       Inverted: low access to cooled indoor space indicates HIGHER vulnerability.
+
+  access_to_cool_outdoor_refuge:
+    scale: inverted_levels
+    sources:
+      - key: burkart2016
+        finding: "Above the 99th temperature percentile, elderly mortality rose 14.7% per degree C in the least-vegetated areas versus 3.0% in the most vegetated, and 7.1% per degree C beyond 4 km from water versus 2.1% within 4 km."
+      - key: sera2019
+        finding: "Across 340 cities in 22 countries, higher levels of green space were associated with a decreased effect of heat on mortality."
+    rationale: >
+      Inverted, in parallel with the indoor indicator: low access to shaded
+      green or blue space that users can reach indicates HIGHER vulnerability.
+      Distinct from the site's own greenness, which the Heat Exposure Score
+      reads through the vegetation-deficit component (overlap disclosed in
+      Methodology Report section 5.2).
 
   soil_availability:
     none: 25

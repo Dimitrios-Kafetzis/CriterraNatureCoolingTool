@@ -513,7 +513,10 @@ very low 25 / low 50 / medium 75 / high 100; unknown 50. Counts toward
 cooling-block completeness; enters no formula at version \methver{}. \\
 \fieldname{land_use} & Optional &
 Urban-context suitability sub-indicator: in the typology's typical-use
-contexts 100, outside 25, unknown 50 (\Cref{tab:suitability-rules}). \\
+contexts 100, outside 25, unknown 50 (\Cref{tab:suitability-rules}).
+\emph{campus} and \emph{memorial} added at version \methver{}, with the
+affected typology context lists extended in the same change so that neither
+new setting scores out-of-context by construction. \\
 \addlinespace
 
 \multicolumn{3}{@{}l}{\textit{Project information}}\\
@@ -545,6 +548,10 @@ path. \\
 \fieldname{access_to_cooled_indoor_space} & Optional &
 \textbf{Inverted} levels: high 25 / medium 50 / low 100; unknown 50
 (\Cref{sec:inverted}). \\
+\fieldname{access_to_cool_outdoor_refuge} & Optional &
+\textbf{Inverted} levels, as above. Second indicator of the same cooling
+access deficit dimension; the two are averaged over those supplied and share
+one confidence slot. New at version \methver{}. \\
 \fieldname{safety_concern} & Optional &
 Standard levels; equity safety-and-comfort sub-indicator (deficit reading). \\
 \fieldname{public_accessibility} & Optional &
@@ -766,7 +773,19 @@ therefore not used as a site-level typology value. \\
 \texttt{reid2009} & Full &
 PMC open access record, PMC2801183. Grounds the vulnerability sub-indicators
 and the treatment of low cooling access as an independent vulnerability
-dimension. \\
+dimension; within that dimension, the \emph{indoor} indicator. \\
+\addlinespace
+\texttt{burkart2016} & Metadata + finding &
+PubMed record, PMID 26566198; findings from the \emph{Environmental Health
+Perspectives} abstract. Grounds the \emph{outdoor} cooling-refuge indicator
+added at version \methver{}: reachable vegetation and water quantified as
+modifiers of elderly heat mortality in Lisbon. \\
+\addlinespace
+\texttt{sera2019} & Metadata + finding &
+PubMed record, PMID 30815699; findings from the \emph{International Journal of
+Epidemiology} abstract. Corroborates \texttt{burkart2016} across 340 cities in
+22 countries, and independently supports population density as a vulnerability
+indicator. \\
 \addlinespace
 \texttt{ember} & Full &
 Licence and coverage confirmed on Ember's data pages; 215 countries, CC-BY-4.0,

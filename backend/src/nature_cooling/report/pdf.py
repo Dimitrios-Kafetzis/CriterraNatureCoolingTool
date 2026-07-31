@@ -9,9 +9,10 @@ daytime-only and screening-level caveats verbatim from the stored result.
 
 The PDF embeds static TTF builds of the three self-hosted brand families
 (Newsreader / Hanken Grotesk / IBM Plex Mono; OFL notice alongside the font
-files), so the document is self-contained on any machine. The document
-``CreationDate`` derives from the assessment's ``created_at``, never from the
-clock, which keeps the output byte-deterministic (D-033).
+files) and the Criterra lockup as vector paths (D-042), so the document is
+self-contained on any machine. The document ``CreationDate`` derives from the
+assessment's ``created_at``, never from the clock, which keeps the output
+byte-deterministic (D-033).
 """
 
 from __future__ import annotations
@@ -26,6 +27,9 @@ from nature_cooling.report.catalog import STRINGS
 from nature_cooling.report.content import Block, ReportContent, Row, ScoreCard, build_content
 
 _FONT_DIR = Path(__file__).parent / "fonts"
+_BRAND_DIR = Path(__file__).parent / "brand"
+_LOCKUP = _BRAND_DIR / "criterra-lockup.svg"
+_LOCKUP_WIDTH_MM = 30.0
 
 _MARGIN = 14.0
 _PAGE_WIDTH = 210.0
@@ -153,6 +157,9 @@ def _flag_box(pdf: FPDF, text: str) -> None:
 
 def _page_one(pdf: FPDF, content: ReportContent) -> None:
     pdf.add_page()
+    # The Criterra lockup, as vector paths, above the product name (D-042).
+    pdf.image(_LOCKUP, x=_MARGIN, y=_MARGIN - 1.0, w=_LOCKUP_WIDTH_MM)
+    pdf.set_y(_MARGIN + 8.0)
     pdf.set_font("Hanken", "B", 8.5)
     pdf.set_text_color(*_GREEN)
     pdf.cell(
@@ -210,7 +217,7 @@ def _page_one(pdf: FPDF, content: ReportContent) -> None:
     pdf.set_y(-_MARGIN - 4.5)
     pdf.set_font("Mono", "", 7.0)
     pdf.set_text_color(*_MUTED)
-    pdf.cell(_CONTENT_WIDTH / 2, _line_height(7.0), STRINGS["by_line"])
+    pdf.cell(_CONTENT_WIDTH / 2, _line_height(7.0), STRINGS["copyright_line"])
     pdf.cell(_CONTENT_WIDTH / 2, _line_height(7.0), STRINGS["license_line"], align="R")
 
 

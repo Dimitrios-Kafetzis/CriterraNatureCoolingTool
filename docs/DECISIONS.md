@@ -239,6 +239,63 @@ The original roadmap ends at Phase 6, so the path onward was decided rather than
 - **Out: PyPI publication — deferred, not rejected.** Distribution remains the GitHub release wheel and the GHCR image; PyPI is revisited after v1.0 alongside the V2 decision.
 - **Out: a strict review-gated exit.** `v1.0.0` is **time-boxed**: it ships when the hardening set lands, and review findings are handled as they arrive — a methodology change accepted afterwards is an ordinary versioned release (OQ-15). Package semver and the date-stamped methodology version stay independent: `v1.0.0` asserts product stability, not methodological finality.
 
+## D-038 — Post-v1 review programme: three releases (2026-07-31)
+
+The v1 tool was reviewed in the browser by the author and produced eight comments. They are scheduled as three releases rather than one, because their risk profiles differ sharply and the largest of them should target the questionnaire's *final* shape rather than its current one. Approved 2026-07-31.
+
+| Release | Comments addressed | Character |
+|---|---|---|
+| **v1.1** | Favicon; Criterra brand and copyright presence; `land_use` gains *memorial* and *campus*; cooling-refuge access clarified and split; per-parameter explanations | Interface and identity, plus one bounded methodology change |
+| **v1.2** | The NbS library replaced by the curated UNEP catalogue with scale- and condition-based availability gating, driven by four new site questions; multi-intervention selection | Methodology, engine, configuration, report and interface together |
+| **v1.3** | Map-based site selection with parameter autofill | Interface plus one bundled dataset |
+
+The map is deliberately **last**: autofill must target the questionnaire that v1.2 leaves behind, not the one v1.1 ships. Package semver moves independently of the date-stamped methodology version, as D-037 established.
+
+**On the absent `v1.0.0` tag.** The repository's last tag is `v0.6.0`, and D-037 reserved `v1.0.0` for a time-boxed Phase 7 stabilisation release. The review that produced these eight comments arrived before that time box closed, so the Phase 7 hardening set is not skipped — it ships *inside* v1.1.0, which carries the packaged-app UX polish the review itself identified and confirms the D-034 catalog defect fixed. The version numbering follows the review conversation rather than the roadmap, and the roadmap is corrected to match rather than the other way round: renumbering the approved releases to preserve a tag that was never cut would serve the document, not the reader. Tagging the currently published state retroactively as `v1.0.0` remains available and costs nothing if wanted.
+
+## D-039 — Cooling-refuge access is one dimension measured by two indicators (2026-07-31, v1.1)
+
+Review comment 5 asked whether `access_to_cooled_indoor_space` should be split into indoor and outdoor, and noted that the field's meaning was not clear to users. Both parts are accepted, at version `2026.08.03`.
+
+**The split is literature-supported.** `reid2009` already grounds air-conditioning prevalence as an independent vulnerability dimension (D-007, §5.2). Two further sources ground the outdoor half: `burkart2016` quantifies it directly in Lisbon — above the 99th temperature percentile, elderly mortality rose 14.7% per °C in the least-vegetated areas against 3.0% in the most vegetated, and 7.1% per °C beyond 4 km from water against 2.1% within it — and `sera2019` confirms across 340 cities in 22 countries that higher green-space levels attenuate the heat–mortality relationship. Access to a cool *outdoor* refuge is therefore an evidenced protective factor, not an inferred one, and the tool asks about it as `access_to_cool_outdoor_refuge` (inverted scale, like its indoor counterpart).
+
+**It is one dimension, not two.** The Vulnerability Score's third term keeps its name (`cooling_access_deficit`) and its **0.20 weight, unchanged**; what changes is that the term is now measured by up to two indicators instead of one. `weights.yaml` is untouched, so the published sensitivity analysis remains valid.
+
+**The dimension is the mean of the indicators actually supplied.** If both are answered, the dimension is their mean; if one is answered, it equals that one; if neither is (absent or explicit `unknown`), it takes the neutral 50 exactly as today. Averaging against a neutral 50 for the *unsupplied* indicator was considered and rejected: it would drag a supplied signal toward the middle purely because a second question was skipped, letting an unknown change the meaning of an answer the user did give — the defect D-026 fixed for the soil–water pair, in a new place. Under the adopted rule, answering the new question can move the score in either direction according to what the answer says, and skipping it costs nothing, which is the §3.2 unknown-neutral principle stated for a two-indicator dimension.
+
+**Confidence treats the two as alternatives for one slot.** The equity block's field list pairs them (`[access_to_cooled_indoor_space, access_to_cool_outdoor_refuge]`), following the established `lst_anomaly_c` / `heat_exposure_level` pattern: the completeness question is whether the user described cooling-refuge access at all, and either indicator answers it. The block's denominator stays at six slots.
+
+**Consequence: no golden scenario output changes.** No scenario supplies the new field, so every stored expectation holds unchanged — the new indicator is strictly additive. This is a property of the design, not a constraint imposed on it.
+
+**Disclosed overlap.** The outdoor indicator describes cool refuges in the *surroundings* reachable by the site's users, while the Heat Exposure Score's vegetation-deficit component describes greenness *of the site itself*. They are distinct but adjacent, and the partial conceptual overlap is declared in Methodology Report §5.2 rather than left for a reviewer to discover, in the manner of D-007.
+
+## D-040 — `land_use` gains *memorial* and *campus* (2026-07-31, v1.1)
+
+Review comment 3. Both are common project settings absent from the enumeration, and both are named typologies in the UNEP catalogue that v1.2 adopts (Memorial Landscape, Campus Landscape, Green Campus), so adding them now also prepares the gating rules that release needs.
+
+The land-use enumeration feeds exactly one scoring rule — the suitability urban-context sub-indicator (D-022), which compares the site's land use against each typology's `typical_use_context` list. Adding a value without extending those lists would silently score both new uses as *out of context* (25, a penalty of up to 7.5 points) for every typology, so the lists are extended on a documented reading of what each new setting is:
+
+- **Campus** — educational, healthcare, or corporate institutional grounds — is a mixed environment of buildings, internal circulation, and open space. It is therefore added wherever a school, public-space, or mixed-use context already applies: twelve of the fourteen typologies.
+- **Memorial** — cemeteries, memorial parks, remembrance gardens — is low-intensity public green space. It is added wherever a park or public-space context already applies: seven typologies. It is not added to the building-envelope typologies (green roof, green façade), to schoolyard greening, or to street tree planting, none of which describes a memorial setting; avenue-style planting in a memorial landscape is covered by the shaded pedestrian corridor.
+
+Neither value is added to `blue_green_corridor` or `riparian_restoration`, whose context is an existing water feature rather than a land use. No existing land use changes meaning, and no golden scenario is affected.
+
+## D-041 — Every questionnaire parameter carries an on-demand explanation (2026-07-31, v1.1)
+
+Review comment 6: users could not tell what several parameters meant — "land surface temperature anomaly" was named specifically — and long explanatory text under every field was explicitly unwanted.
+
+Each field gains an **info control beside its label** opening a small popover with three parts: what the parameter means in plain language, what it affects in the scoring, and where to read more. The one-line help text under the field is kept where it is genuinely short and drops out where the popover replaces it, so the default view of the form gets *shorter*, not longer. The popover is a native disclosure pattern — keyboard reachable, dismissible with Escape, associated with its field for screen readers — consistent with the WCAG AA commitment (ARCHITECTURE §3) rather than a hover-only tooltip, which fails touch and keyboard users alike.
+
+All explanation strings live in the existing message catalog (D-030's externalisation rule), stated in the same language the Methodology Report uses so that the two cannot drift into describing different quantities. The catalog defect D-034 recorded — the frontend rendering the cooling block's `not_estimated` statuses with the economic wording "requires cost data" — is corrected in the same change set, as D-037 scheduled.
+
+## D-042 — Criterra identity and copyright are present in the product (2026-07-31, v1.1)
+
+Review comments 1 and 2: the application shipped no favicon and carried the Criterra name only as a four-word subtitle. The tool is Criterra's first product and must say so.
+
+The **horizontal serif lockup** (the decided brand logo) appears in the application header, on the PDF report's first page, and on the documentation site; the **leaf mark alone** becomes the favicon at small sizes, where the wordmark would be illegible. A footer states the copyright and the product relationship, and links to criterra.eu. All assets are self-hosted alongside the three brand font families — the no-third-party-request rule (D-030, D-035) covers images exactly as it covers fonts.
+
+Copyright and licensing are distinct and both are stated: the **code** remains Apache-2.0 (D-004), while the Criterra name and logo are marks that the licence does not convey. A `NOTICE` file records this in the form Apache-2.0 anticipates, so the permissive licence and the brand assertion coexist without ambiguity.
+
 ## D-013 — Weights are expert-calibrated and defended by sensitivity analysis (2026-07-30)
 
 Aggregation weights cannot be "derived" from literature and we do not pretend otherwise. They are declared as expert judgment following composite-indicator practice (OECD/JRC Handbook), and defended empirically via the published sensitivity analysis (see D-011/OQ-29).

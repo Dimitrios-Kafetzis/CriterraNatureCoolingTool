@@ -21,6 +21,11 @@ STRINGS: Final[dict[str, str]] = {
     "app_subtitle": "Rapid Assessment Tool",
     "report_title": "Assessment report",
     "by_line": "by Criterra",
+    # The report carries a copyright line rather than a by-line (D-042). No
+    # year: the document's own creation date is stamped on page 1, and a
+    # literal year here would either go stale or reintroduce a clock into a
+    # builder that must stay byte-deterministic (D-033).
+    "copyright_line": "© Criterra · a Criterra product",
     "license_line": "Apache-2.0 · open methodology",
     "page1_heading": "Summary",
     "page2_heading": "Detail",
@@ -258,6 +263,7 @@ FIELD_LABELS: Final[dict[str, str]] = {
     "population_density": "Population density",
     "vulnerable_population_presence": "Vulnerable population presence",
     "access_to_cooled_indoor_space": "Access to cooled indoor space",
+    "access_to_cool_outdoor_refuge": "Access to cool outdoor refuge",
     "safety_concern": "Safety and comfort concern",
     "public_accessibility": "Public accessibility",
     "community_participation": "Community participation",

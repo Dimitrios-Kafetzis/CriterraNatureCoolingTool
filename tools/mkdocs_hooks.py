@@ -9,7 +9,10 @@ published site:
    third-party requests — and its repository-relative links rebased.
 2. The three brand font families are injected from ``frontend/public/fonts``,
    the same self-hosted files the application serves (with their OFL notice).
-3. Corpus links that point outside ``docs/`` (``config/…``, ``tools/…``) are
+3. The Criterra lockup and favicon are injected the same way, from
+   ``frontend/public`` — one copy of each asset in the repository, exactly as
+   the fonts are handled (D-036, D-042).
+4. Corpus links that point outside ``docs/`` (``config/…``, ``tools/…``) are
    rewritten to the GitHub repository so they resolve from the site.
 """
 
@@ -43,17 +46,28 @@ def _index_markdown() -> str:
     text = text.replace("](docs/methodology/)", "](methodology/README.md)")
     text = text.replace("](docs/", "](")
     text = text.replace("](LICENSE)", f"]({_github_url('LICENSE')})")
+    text = text.replace("](NOTICE)", f"]({_github_url('NOTICE')})")
     text = text.replace("](paper/main.pdf)", f"]({_github_url('paper/main.pdf')})")
     text = text.replace("](paper/)", f"]({_github_url('paper/')})")
     return text
 
 
+_BRAND_ASSETS = {
+    "assets/criterra-lockup.svg": "brand/criterra-lockup.svg",
+    "assets/favicon.ico": "favicon.ico",
+}
+
+
 def on_files(files: Files, config: MkDocsConfig) -> Files:
     files.append(File.generated(config, "index.md", content=_index_markdown()))
-    fonts = REPO_ROOT / "frontend" / "public" / "fonts"
-    for font in sorted(fonts.iterdir()):
+    public = REPO_ROOT / "frontend" / "public"
+    for font in sorted((public / "fonts").iterdir()):
         files.append(
             File.generated(config, f"assets/fonts/{font.name}", abs_src_path=str(font))
+        )
+    for site_path, source in _BRAND_ASSETS.items():
+        files.append(
+            File.generated(config, site_path, abs_src_path=str(public / source))
         )
     return files
 

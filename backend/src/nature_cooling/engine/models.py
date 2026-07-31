@@ -41,7 +41,9 @@ LandUse = Literal[
     "public_space",
     "park",
     "school",
+    "campus",
     "healthcare",
+    "memorial",
     "industrial",
     "other",
 ]
@@ -111,6 +113,7 @@ class AssessmentInput(_FrozenModel):
     population_density: StandardLevel | None = None
     vulnerable_population_presence: StandardLevel | None = None
     access_to_cooled_indoor_space: InvertedLevel | None = None
+    access_to_cool_outdoor_refuge: InvertedLevel | None = None
     safety_concern: StandardLevel | None = None
     public_accessibility: StandardLevel | None = None
     community_participation: StandardLevel | None = None
