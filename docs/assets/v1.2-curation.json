@@ -1,0 +1,2490 @@
+[
+ {
+  "id": "A1",
+  "name": "Strategic individual-tree planting",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Deliberately sited single tree addressing a defined local heat problem; distinct from an isolated existing tree, which the document disqualifies.",
+  "cooling_mechanism": "shade, then evapotranspiration once established",
+  "needs_ruling": false
+ },
+ {
+  "id": "A2",
+  "name": "Tree cluster",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Overlapping canopies produce a continuous shaded microclimate distinct from the same trees dispersed; different soil-volume and spacing requirements.",
+  "cooling_mechanism": "overlapping canopy shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "A3",
+  "name": "Tree grove",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Document distinguishes a grove from a cluster as a composed collective structure forming a defined shaded room for occupation.",
+  "cooling_mechanism": "extensive overhead shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "A4",
+  "name": "Conventional individual tree pit",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct and near-universal physical detail, but the document calls it a minimum planting provision rather than a preferred NbS typology.",
+  "cooling_mechanism": "limited canopy shade + evapotranspiration",
+  "needs_ruling": true
+ },
+ {
+  "id": "A5",
+  "name": "Enlarged tree pit",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Substantially greater rooting volume gives different tree longevity, water storage and failure behaviour than a conventional pit.",
+  "cooling_mechanism": "canopy shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "A6",
+  "name": "Structural-soil tree pit",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Engineered soil-and-stone medium under paving is a distinct substrate with its own specification, usable-volume limits and installation risks.",
+  "cooling_mechanism": "canopy shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "A7",
+  "name": "Suspended-pavement or soil-cell tree pit",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Load-bearing frame over uncompacted soil is a different construction and maintenance system from structural soil, with different cost and utility constraints.",
+  "cooling_mechanism": "canopy shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "A8",
+  "name": "Stormwater tree pit",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Deliberate hydrological connection to adjacent runoff makes it a distinct system; the document calls it more accurately an NbS than a conventional pit.",
+  "cooling_mechanism": "canopy shade + runoff-fed evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "A9",
+  "name": "Bioretention tree pit",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Engineered filter media, storage zones and underdrainage give clogging, sediment and maintenance behaviour genuinely different from a basic stormwater pit.",
+  "cooling_mechanism": "canopy shade + evapotranspiration; infiltration",
+  "needs_ruling": false
+ },
+ {
+  "id": "A10",
+  "name": "Connected tree pits",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "A11",
+  "reason": "Same physical system as a continuous tree trench \u2014 a shared uninterrupted below-ground soil volume; only the surface expression differs.",
+  "cooling_mechanism": "canopy shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "A11",
+  "name": "Continuous tree trench",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical continuous below-ground rooting volume serving a sequence of trees; also functions as a stormwater conveyance and storage structure.",
+  "cooling_mechanism": "continuous canopy shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "A12",
+  "name": "Continuous open planting bed for trees",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Visible unpaved connected soil strip; surface permeability and soil exposure differ from a buried trench under pavement.",
+  "cooling_mechanism": "canopy shade + evapotranspiration; surface permeability",
+  "needs_ruling": false
+ },
+ {
+  "id": "A13",
+  "name": "Connected multi-layer planting bed",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Several vegetation layers give higher evapotranspiration, habitat and maintenance complexity than the tree-only strip in A12.",
+  "cooling_mechanism": "canopy shade + multi-layer evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "A14",
+  "name": "Tree island",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Planted island interrupting a large paved or trafficked surface; distinct form and size-dependent performance.",
+  "cooling_mechanism": "shade + reduced paved surface area/albedo",
+  "needs_ruling": false
+ },
+ {
+  "id": "A15",
+  "name": "Parking-lot tree island",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "A14",
+  "reason": "Same physical system as a tree island; parking is a location context that A14 already lists, not a distinct typology.",
+  "cooling_mechanism": "shade over paving and vehicles",
+  "needs_ruling": false
+ },
+ {
+  "id": "B1",
+  "name": "Conventional planting bed",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Physically distinct, but is effectively the umbrella of B2\u2013B4 and the document says a decorative bed is not automatically NbS.",
+  "cooling_mechanism": "modest evapotranspiration; surface permeability",
+  "needs_ruling": true
+ },
+ {
+  "id": "B2",
+  "name": "Shrub-dominated planting bed",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Shrub layer gives ground-level shading and road/building buffering where trees are impossible; distinct visibility and safety constraints.",
+  "cooling_mechanism": "low-level shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "B3",
+  "name": "Herbaceous perennial bed",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical perennial planting system; distinct vegetation structure, seasonal cover and maintenance regime from shrub or groundcover beds.",
+  "cooling_mechanism": "evapotranspiration; soil shading",
+  "needs_ruling": false
+ },
+ {
+  "id": "B4",
+  "name": "Groundcover planting",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Continuous low soil cover replacing gravel, bare soil or mown turf; distinct surface-temperature and soil-moisture behaviour.",
+  "cooling_mechanism": "reduced surface heating + soil moisture retention",
+  "needs_ruling": false
+ },
+ {
+  "id": "B5",
+  "name": "Pollinator bed",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "B3",
+  "reason": "Physically a herbaceous perennial bed; differs only by species-selection objective, which the document treats as an ecological layer within other typologies.",
+  "cooling_mechanism": "minor evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "B6",
+  "name": "Pocket meadow",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Meadow community with low-frequency cutting is a distinct vegetation and management system, not an ornamental perennial bed.",
+  "cooling_mechanism": "evapotranspiration; soil protection",
+  "needs_ruling": false
+ },
+ {
+  "id": "B7",
+  "name": "Rain garden",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Shallow ground-connected planted depression storing and infiltrating runoff; the document calls it a genuine small-scale NbS.",
+  "cooling_mechanism": "evapotranspiration + evaporation from stored water",
+  "needs_ruling": false
+ },
+ {
+  "id": "B8",
+  "name": "Bioswale",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Linear conveyance function, check dams and longitudinal space requirements distinguish it from the discrete rain-garden basin.",
+  "cooling_mechanism": "evapotranspiration + evaporation",
+  "needs_ruling": false
+ },
+ {
+  "id": "B9",
+  "name": "Infiltration planting bed",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Hydraulically connected but undepressed and without engineered filter layers or underdrainage; different siting constraints from bioretention.",
+  "cooling_mechanism": "evapotranspiration; infiltration/permeability",
+  "needs_ruling": false
+ },
+ {
+  "id": "B10",
+  "name": "Depressed bioretention bed",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Engineered media, storage volume and overflow give different failure and maintenance behaviour from a simple rain garden.",
+  "cooling_mechanism": "evapotranspiration + evaporation",
+  "needs_ruling": false
+ },
+ {
+  "id": "B11",
+  "name": "Vegetated planter with stormwater function",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Explicitly distinguished from an ordinary decorative container by hydraulic connection; enables retrofit where ground infiltration is impossible.",
+  "cooling_mechanism": "evapotranspiration (irrigation-dependent)",
+  "needs_ruling": false
+ },
+ {
+  "id": "B12",
+  "name": "Large-volume connected planters",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Connected large planters create a continuous vegetated edge with shared rooting volume where excavation is impossible; distinct from single stormwater planters.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "B13",
+  "name": "Mobile planter",
+  "kind": "element",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document classifies movable containers as temporary green infrastructure, not NbS; ordinary planters are an explicitly disqualified enabling component.",
+  "cooling_mechanism": "minimal evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "C1",
+  "name": "Extensive green roof",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Shallow substrate, stress-tolerant vegetation and low structural load form a distinct roof system with limited street-level cooling.",
+  "cooling_mechanism": "evapotranspiration + surface albedo at roof level",
+  "needs_ruling": false
+ },
+ {
+  "id": "C2",
+  "name": "Semi-intensive green roof",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Intermediate substrate depth supports wider vegetation and water storage with different structural and irrigation demands from extensive roofs.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "C3",
+  "name": "Intensive green roof",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Deep growing medium supporting lawns, shrubs and trees; distinct structural load, drainage and maintenance regime.",
+  "cooling_mechanism": "evapotranspiration + shade at roof level",
+  "needs_ruling": false
+ },
+ {
+  "id": "C4",
+  "name": "Roof garden",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C3",
+  "reason": "Document states a roof garden is usually an intensive or semi-intensive roof, distinguished by human use rather than a different physical system.",
+  "cooling_mechanism": "evapotranspiration + shade for roof users",
+  "needs_ruling": true
+ },
+ {
+  "id": "C5",
+  "name": "Biodiverse green roof",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Varied substrate depths, mineral materials and microhabitats form a physically different roof build-up from a standardised planting mat.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "C6",
+  "name": "Brown roof",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Locally characteristic nutrient-poor substrate and open heterogeneous habitat is a distinct substrate specification, though it overlaps biodiverse roofs.",
+  "cooling_mechanism": "limited evapotranspiration; surface albedo",
+  "needs_ruling": false
+ },
+ {
+  "id": "C7",
+  "name": "Blue roof",
+  "kind": "element",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Explicitly disqualified: a non-vegetated blue roof is blue infrastructure or an NbS-supporting component, not an NbS; C8 covers the vegetated case.",
+  "cooling_mechanism": "evaporation from stored water only; no vegetation",
+  "needs_ruling": false
+ },
+ {
+  "id": "C8",
+  "name": "Blue-green roof",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical vegetated roof with dedicated water storage feeding plants; integrates stormwater, evapotranspiration and habitat in one build-up.",
+  "cooling_mechanism": "evapotranspiration sustained by stored water",
+  "needs_ruling": false
+ },
+ {
+  "id": "C9",
+  "name": "Retention green roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C8",
+  "reason": "Document says it differs from a blue-green roof only where a methodology needs separate technical categories; in practice the terms overlap.",
+  "cooling_mechanism": "evapotranspiration from retained water",
+  "needs_ruling": true
+ },
+ {
+  "id": "C10",
+  "name": "Detention green roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C8",
+  "reason": "Same physical system as a vegetated roof with controlled storage; peak-flow delay is a hydraulic setting, not a distinct physical form.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": true
+ },
+ {
+  "id": "C11",
+  "name": "Biosolar roof",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Coordinated PV-and-vegetation build-up with panel spacing, substrate and access designed together; the NbS-qualifying form of the solar-green roof.",
+  "cooling_mechanism": "evapotranspiration + panel shading of substrate",
+  "needs_ruling": false
+ },
+ {
+  "id": "C12",
+  "name": "Solar-green roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C11",
+  "reason": "Same physical system (PV plus vegetation); the document separates them only by ecological design intent, so the NbS-qualifying entry is canonical.",
+  "cooling_mechanism": "evapotranspiration + panel shading",
+  "needs_ruling": true
+ },
+ {
+  "id": "C13",
+  "name": "Productive green roof",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Edible planting with raised beds, deeper substrate and nutrient and irrigation management is a distinct roof system from ornamental green roofs.",
+  "cooling_mechanism": "evapotranspiration (irrigated)",
+  "needs_ruling": false
+ },
+ {
+  "id": "C14",
+  "name": "Rooftop farm",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct in scale and management intensity from a productive roof, but the document says it is not automatically NbS unless ecological conditions are met.",
+  "cooling_mechanism": "evapotranspiration (irrigated)",
+  "needs_ruling": true
+ },
+ {
+  "id": "C15",
+  "name": "Roof meadow",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Meadow community needs more varied substrate and moisture than a sedum roof and a mowing regime; distinct build-up and management.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "C16",
+  "name": "Roof wetland",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Wetland vegetation with controlled standing water on a roof is a specialised hydraulic and waterproofing system with strong evaporative cooling.",
+  "cooling_mechanism": "evaporation + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "C17",
+  "name": "Tree roof or rooftop woodland",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Multiple trees on a roof demand soil depth, anchoring and wind assessment beyond an intensive roof, with different failure behaviour.",
+  "cooling_mechanism": "canopy shade + evapotranspiration at roof level",
+  "needs_ruling": false
+ },
+ {
+  "id": "D1",
+  "name": "Direct ground-rooted green facade",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Self-clinging plants on the wall surface with no support frame; lowest technical complexity and distinct facade-maintenance implications.",
+  "cooling_mechanism": "facade shading + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "D2",
+  "name": "Indirect ground-rooted green facade",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical ground-rooted system on a separate support with an air gap; the gap changes facade protection and ventilation behaviour.",
+  "cooling_mechanism": "facade shading + evapotranspiration + ventilated air gap",
+  "needs_ruling": false
+ },
+ {
+  "id": "D3",
+  "name": "Ground-rooted cable facade",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D2",
+  "reason": "Document names it a subtype of the indirect facade; cable is one of the support options D2 already lists.",
+  "cooling_mechanism": "facade shading + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "D4",
+  "name": "Ground-rooted mesh or trellis facade",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D2",
+  "reason": "Support-material variant of the indirect ground-rooted facade, which explicitly includes mesh and trellis panels; same rooting and irrigation system.",
+  "cooling_mechanism": "facade shading + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "D5",
+  "name": "Planter-rooted green facade",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Rooting in planters at multiple levels creates irrigation dependency and failure sensitivity genuinely different from ground-rooted facades.",
+  "cooling_mechanism": "facade shading + evapotranspiration (irrigation-dependent)",
+  "needs_ruling": false
+ },
+ {
+  "id": "D6",
+  "name": "Cascading facade planting",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Trailing growth downward from elevated planters is a distinct physical arrangement with its own container, drainage and access constraints.",
+  "cooling_mechanism": "facade shading + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "D7",
+  "name": "Modular living wall",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical living wall: modular panels fixed to a support structure with integrated irrigation and drainage; rapid coverage, pump-failure risk.",
+  "cooling_mechanism": "evapotranspiration + facade shading (irrigation-dependent)",
+  "needs_ruling": false
+ },
+ {
+  "id": "D8",
+  "name": "Substrate-based living wall",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Substrate buffering of water and nutrients gives different weight, drying and failure behaviour, but it overlaps the modular wall in D7.",
+  "cooling_mechanism": "evapotranspiration + facade shading",
+  "needs_ruling": true
+ },
+ {
+  "id": "D9",
+  "name": "Hydroponic living wall",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Soil-free inert medium with fully engineered nutrient delivery; dependence on mechanical systems and skilled maintenance is distinct from substrate walls.",
+  "cooling_mechanism": "evapotranspiration + facade shading (irrigation-dependent)",
+  "needs_ruling": false
+ },
+ {
+  "id": "D10",
+  "name": "Felt-pocket living wall",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D9",
+  "reason": "Document names it a subtype of the hydroponic or low-substrate wall; same irrigation dependency and drying failure mode.",
+  "cooling_mechanism": "evapotranspiration + facade shading",
+  "needs_ruling": false
+ },
+ {
+  "id": "D11",
+  "name": "Vegetated screen",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Freestanding vertical vegetated structure not part of a facade; used for shade, privacy, wind and glare control.",
+  "cooling_mechanism": "shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "D12",
+  "name": "Green noise barrier",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Acoustic structure combined with vegetation; distinct construction, siting along transport corridors and soil-connection requirements.",
+  "cooling_mechanism": "evapotranspiration + reduced surface heating",
+  "needs_ruling": false
+ },
+ {
+  "id": "D13",
+  "name": "Vegetated retaining wall",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Load-retaining structure with integrated planting cells, terraces or pockets; vegetation stabilises surfaces and reduces exposed mineral heating.",
+  "cooling_mechanism": "evapotranspiration; reduced mineral surface heating",
+  "needs_ruling": false
+ },
+ {
+  "id": "D14",
+  "name": "Green gabion wall",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D13",
+  "reason": "D13 explicitly lists gabions as one of its construction variants; same physical system and planting-and-water strategy requirement.",
+  "cooling_mechanism": "evapotranspiration; reduced surface heating",
+  "needs_ruling": false
+ },
+ {
+  "id": "D15",
+  "name": "Moss wall",
+  "kind": "element",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Explicitly disqualified: preserved moss is not living and provides negligible ecosystem function; outdoor living moss has restricted applicability.",
+  "cooling_mechanism": "none \u2014 negligible; minor humidity if living",
+  "needs_ruling": false
+ },
+ {
+  "id": "E1",
+  "name": "Green pergola",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical overhead frame carrying climbers above an occupied space; delivers shade before or instead of mature tree canopy.",
+  "cooling_mechanism": "overhead shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "E2",
+  "name": "Vine-covered shade structure",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "E1",
+  "reason": "Same physical system as a green pergola \u2014 a frame carrying a climbing-plant canopy; differs only in stated design emphasis and support material.",
+  "cooling_mechanism": "overhead shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "E3",
+  "name": "Vegetated arcade",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Linear repeated-bay covered route giving continuous pedestrian shade along a corridor; distinct geometry from a discrete pergola.",
+  "cooling_mechanism": "continuous route shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "E4",
+  "name": "Vegetated canopy",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "E1",
+  "reason": "A freestanding overhead support carrying climbing or trailing vegetation is the same physical system as a green pergola.",
+  "cooling_mechanism": "overhead shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "E5",
+  "name": "Green bus stop",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "E6",
+  "reason": "Document presents the waiting shelter as the broader category; transport is a location context, not a distinct physical shelter type.",
+  "cooling_mechanism": "shade at waiting area + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "E6",
+  "name": "Green waiting shelter",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical vegetated shelter providing shaded thermal refuge at stops, schools, markets and interchanges; qualifies where vegetation is real and managed.",
+  "cooling_mechanism": "shade (thermal refuge) + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.1",
+  "name": "Street with Individual Trees",
+  "kind": "element",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document binding: \"Street Trees\" must be removed as a street-scale typology; it is an element (A4-A15) already defined at element scale, not an integrated linear system.",
+  "cooling_mechanism": "shade \u2014 discontinuous individual canopies",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.2",
+  "name": "Tree Avenue",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical integrated linear canopy system: continuous connected tree-soil rows (A10-A13) producing a continuous shaded corridor. Distinct form, distinct cooling behaviour.",
+  "cooling_mechanism": "shade \u2014 continuous linear canopy, plus evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.3",
+  "name": "Double Tree Avenue",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "2.2",
+  "reason": "Same system, same elements (A10-A13), same mechanism; only canopy density differs. Row count is an intensity parameter (canopy cover input), not a separate typology.",
+  "cooling_mechanism": "shade \u2014 continuous linear canopy at higher density",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.4",
+  "name": "Green Boulevard",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "2.5",
+  "reason": "Defined by full integration of canopy, ground-level vegetation, permeable surfaces and stormwater \u2014 that is the Green Street definition. Corridor width is a parameter, not a typology.",
+  "cooling_mechanism": "shade + evapotranspiration + surface permeability",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.5",
+  "name": "Green Street",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "The canonical comprehensive street-scale system: vegetation, engineered soils, bioretention and public-realm improvement coordinated across the right-of-way.",
+  "cooling_mechanism": "shade + evapotranspiration + evaporation from bioretention + permeability",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.6",
+  "name": "Complete Green Street",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "2.5",
+  "reason": "Document states the \"complete\" aspect refers to transport functionality, not ecology; its NbS content is explicitly Green Street elements. No distinct cooling behaviour.",
+  "cooling_mechanism": "shade + evapotranspiration + evaporation from bioretention",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.7",
+  "name": "Living Street",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "A traffic-regulation and street-design model (low speed, public-life priority); vegetation is optional infill. Its NbS content is a package of Green Street and pedestrian-street entries.",
+  "cooling_mechanism": "shade + evapotranspiration (incidental, not defining)",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.8",
+  "name": "Shared Street",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document states NbS are supporting elements rather than the defining characteristic; shared-surface is a traffic-management model. Cooling content already captured by Green Street.",
+  "cooling_mechanism": "shade + surface permeability (supporting role only)",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.9",
+  "name": "Green Median",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical linear vegetated strip within the carriageway cross-section: de-sealed, plantable, often bioretentive. Distinct retrofittable form with its own cooling behaviour.",
+  "cooling_mechanism": "evapotranspiration + reduced impervious heat storage; shade where trees",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.10",
+  "name": "Green Verge",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "2.9",
+  "reason": "Physically identical to a green median \u2014 continuous vegetated strip in the right-of-way with the same element palette; only its position in the cross-section differs.",
+  "cooling_mechanism": "evapotranspiration + infiltration + shade where trees",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.11",
+  "name": "Bioswale Street",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "2.5",
+  "reason": "Explicitly \"a Green Street in which bioswales dominate\"; defined by which element (B8) is emphasised. Per the document, elements should be referenced, not redefined as typologies.",
+  "cooling_mechanism": "evaporation and infiltration from swales + shade",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.12",
+  "name": "Rain Garden Street",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "2.5",
+  "reason": "Explicitly \"a Green Street\" with B7 repeated along the corridor; a dominant-element variant of the same system, distinguished only from 2.11 by discrete versus linear retention.",
+  "cooling_mechanism": "evaporation from distributed retention + shade",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.13",
+  "name": "Green Tram Corridor",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Genuinely distinct linear system: vegetation replaces ballast and asphalt within the rail alignment, a de-sealing typology with no pedestrian shade component.",
+  "cooling_mechanism": "surface albedo/permeability + evapotranspiration from de-sealed track bed",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.14",
+  "name": "Green Cycle Corridor",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "2.15",
+  "reason": "Same physical system as a green pedestrian street \u2014 a vegetated car-free corridor under continuous canopy; its components are wholly borrowed. Differs only by user mode.",
+  "cooling_mechanism": "shade over active-travel route + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.15",
+  "name": "Green Pedestrian Street",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct system: no carriageway, so vegetation occupies the full width as primary infrastructure, giving canopy geometry and receptor exposure unlike any trafficked street.",
+  "cooling_mechanism": "shade \u2014 full-width canopy over the pedestrian surface + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.16",
+  "name": "Green Alley",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct constrained system: high aspect ratio, little ground connection, cooling delivered mainly through vertical greening and permeable resurfacing rather than canopy.",
+  "cooling_mechanism": "vertical-greening evapotranspiration + facade shading + permeability",
+  "needs_ruling": false
+ },
+ {
+  "id": "2.17",
+  "name": "Green Parking Lane",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct modular retrofit of the parking bay: intermittent tree islands and bioretention pockets that de-seal carriageway edge while retaining parking. Not a continuous strip.",
+  "cooling_mechanism": "shade over parked vehicles and pavement + permeability and evaporation",
+  "needs_ruling": false
+ },
+ {
+  "id": "3.1",
+  "name": "Tree Plaza",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Document names it a clearly defined public-space typology: canopy organises the whole square. Distinct spatial structure and strong direct shade benefit.",
+  "cooling_mechanism": "shade \u2014 canopy over gathering and seating areas + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "3.2",
+  "name": "Cooling Plaza",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Document names it a valid public-space typology; combination of tree canopy, vegetated overhead structures and water-sensitive planting is a recognisable heat-refuge configuration.",
+  "cooling_mechanism": "shade (trees plus vegetated structures) + evapotranspiration and evaporation",
+  "needs_ruling": false
+ },
+ {
+  "id": "3.3",
+  "name": "Permeable Plaza",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Document names it a valid typology; defined by de-sealing and infiltration rather than shade, so its cooling behaviour is genuinely distinct from tree and cooling plazas.",
+  "cooling_mechanism": "surface permeability and evaporation + reduced heat storage",
+  "needs_ruling": false
+ },
+ {
+  "id": "3.4",
+  "name": "Civic Green",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Document names it a valid typology; replacing a hard civic surface with a substantial green ground plane is a distinct form with distinct cooling behaviour.",
+  "cooling_mechanism": "evapotranspiration from green ground plane + reduced imperviousness",
+  "needs_ruling": false
+ },
+ {
+  "id": "3.5",
+  "name": "Courtyard Greening",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct enclosed-geometry system with restricted air movement and high radiant load; already an approved v1.1 typology (courtyard_greening).",
+  "cooling_mechanism": "facade and ground shading + evapotranspiration in an enclosed volume",
+  "needs_ruling": false
+ },
+ {
+  "id": "3.6",
+  "name": "Schoolyard Greening",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Document calls it a land-use context, but it is an approved literature-grounded v1.1 typology and the gating rules select it directly; dropping it breaks them. Author must rule.",
+  "cooling_mechanism": "shade over play surfaces + evapotranspiration + de-sealing",
+  "needs_ruling": true
+ },
+ {
+  "id": "3.7",
+  "name": "Hospital Landscape",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document: a land-use context, already captured by the tool's land_use input; physically it is a tree/cooling plaza plus paths. But gating rules expect it selectable \u2014 author must rule.",
+  "cooling_mechanism": "shade + evapotranspiration",
+  "needs_ruling": true
+ },
+ {
+  "id": "3.8",
+  "name": "Campus Landscape",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document: a land-use context; also a multi-scale package of kept entries (green streets, avenues, rain gardens, roofs), not one typology. Gating rules expect it \u2014 author must rule.",
+  "cooling_mechanism": "shade + evapotranspiration + permeability (campus-wide package)",
+  "needs_ruling": true
+ },
+ {
+  "id": "3.9",
+  "name": "Market Square Greening",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "3.2",
+  "reason": "A cooling plaza serving a market: perimeter canopy and vegetated shade structures over densely occupied paving. The market use is an operational constraint, not a distinct form.",
+  "cooling_mechanism": "shade over stalls and occupied paving + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "3.10",
+  "name": "Memorial Landscape",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document: a land-use context captured by land_use; its physical content is tree groves, meadows and rain gardens already kept. Gating rules expect it selectable \u2014 author must rule.",
+  "cooling_mechanism": "shade + evapotranspiration",
+  "needs_ruling": true
+ },
+ {
+  "id": "3.11",
+  "name": "Green Public Courtyard",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "3.5",
+  "reason": "Its own text distinguishes it by public access, social use and management \u2014 ownership and access attributes, not physical form or cooling behaviour.",
+  "cooling_mechanism": "facade and ground shading + evapotranspiration in an enclosed volume",
+  "needs_ruling": false
+ },
+ {
+  "id": "3.12",
+  "name": "Green Transport Forecourt",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "3.2",
+  "reason": "A cooling plaza at an interchange: shading waiting zones and pedestrian flows. Defined by the adjacent land use, not by a distinct spatial or climatic structure.",
+  "cooling_mechanism": "shade over waiting zones and pedestrian flows + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "3.13",
+  "name": "Green Cultural Forecourt",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "3.1",
+  "reason": "A tree plaza in a cultural setting; representational and visibility constraints follow from the adjacent building, not from a different physical or cooling system.",
+  "cooling_mechanism": "shade \u2014 canopy over gathering space + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "3.14",
+  "name": "Cooling Refuge",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "3.2",
+  "reason": "Its own text says the defining criterion is its role in a heat-health strategy, not its form; physically it is a small cooling plaza with the same components.",
+  "cooling_mechanism": "shade \u2014 dense canopy and vegetated structures + evaporation",
+  "needs_ruling": false
+ },
+ {
+  "id": "3.15",
+  "name": "Green Playground",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "3.6",
+  "reason": "Same physical system as schoolyard greening \u2014 de-sealed, shaded, vegetated play landscape; differs only in institutional setting. Becomes canonical if 3.6 is dropped as a context.",
+  "cooling_mechanism": "shade over play surfaces + evapotranspiration + de-sealing",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.1",
+  "name": "Pocket Park",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Size-axis typology with distinct constrained form; already the tool's pocket_park, canonical smallest park tier.",
+  "cooling_mechanism": "shade + evapotranspiration, highly localised",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.2",
+  "name": "Neighbourhood Park",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Size/service-area tier with distinct extent and vegetation share; supports a measurable park cool-island beyond a pocket park.",
+  "cooling_mechanism": "shade + evapotranspiration, park cool island",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.3",
+  "name": "Community Park",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "4.2",
+  "reason": "Document states the distinguishing feature is social ownership, not size or form; physically a neighbourhood park, governance is an attribute.",
+  "cooling_mechanism": "shade + evapotranspiration, park cool island",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.4",
+  "name": "District Park",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Size tier large enough for multiple habitat types and documented influence on surrounding microclimate; distinct from neighbourhood scale.",
+  "cooling_mechanism": "shade + evapotranspiration, cool-air export to surroundings",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.5",
+  "name": "Regional Park",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Top tier of the size axis; distinct behaviour through cool-air-mass generation and regional connectivity rather than site-scale shading.",
+  "cooling_mechanism": "evapotranspiration + cool-air-mass generation and advection",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.6",
+  "name": "Cooling Park",
+  "kind": "strategy",
+  "decision": "merge",
+  "merge_into": "park_upgrade",
+  "reason": "Document says its defining characteristic is performance, not form; it is the thermal objective the tool's park_upgrade already expresses.",
+  "cooling_mechanism": "shade + evapotranspiration + low-heat surfaces (objective, not a form)",
+  "needs_ruling": true
+ },
+ {
+  "id": "4.7",
+  "name": "Biodiversity Park",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "4.15",
+  "reason": "Defined by ecological objective; its physical form is the naturalistic park's habitat mosaic, with no separate cooling behaviour.",
+  "cooling_mechanism": "evapotranspiration from multi-layer vegetation + shade",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.8",
+  "name": "Forest Park",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "5.1",
+  "reason": "A tree-dominated park is the site-scale urban forest under public access; duplicates the woodland-scale entry rather than adding a park tier.",
+  "cooling_mechanism": "dense canopy shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.9",
+  "name": "Therapeutic Park",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "User-programme category, not a form; a health-programme and user-group attribute. Its shade and sensory planting are already kept elements.",
+  "cooling_mechanism": "none distinct (shade from generic canopy)",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.10",
+  "name": "Inclusive Park",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Accessibility and equity attribute applicable to every park typology; no distinct physical form or cooling behaviour.",
+  "cooling_mechanism": "none distinct",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.11",
+  "name": "Water Park",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Permanent water bodies form the dominant substrate, giving evaporative cooling absent from vegetation-only parks; document's ecological reading, not the aquatic facility.",
+  "cooling_mechanism": "evaporation from open water + riparian shade",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.12",
+  "name": "Adventure Park",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Play-programme category; its landform, woodland and shaded clearings are existing elements, and it has no distinct cooling behaviour.",
+  "cooling_mechanism": "none distinct",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.13",
+  "name": "Sports Park",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Recreation land-use programme; NbS content is perimeter tree belts and bioswales already catalogued, and exposed pitches remain thermally stressful.",
+  "cooling_mechanism": "none distinct (perimeter shade only)",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.14",
+  "name": "Botanical Garden",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Institutional land-use context defined by collections, research and curation; cooling is that of a well-treed park, captured by land_use.",
+  "cooling_mechanism": "none distinct (canopy shade + evapotranspiration)",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.15",
+  "name": "Naturalistic Park",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct form of multi-layer spontaneous vegetation, meadow and successional woodland replacing mown lawn; canonical entry for biodiversity and restoration parks.",
+  "cooling_mechanism": "evapotranspiration from tall multi-layer vegetation + shade",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.16",
+  "name": "Floodable Park",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "4.17",
+  "reason": "Same multifunctional detention landscape as the stormwater park, differing only in inundation frequency; document treats stormwater park as the broader case.",
+  "cooling_mechanism": "evaporation when inundated + evapotranspiration when dry",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.17",
+  "name": "Stormwater Park",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical detention-landscape park; runoff storage and treatment give a distinct intermittent-moisture cooling regime, unlike a permanent water park.",
+  "cooling_mechanism": "evaporation from moist soils/basins + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.18",
+  "name": "Productive Park",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Food production is a land-use and production category per the document's urban agriculture ruling; orchards and food forests are separate elements.",
+  "cooling_mechanism": "none distinct (varies from orchard canopy to bare beds)",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.19",
+  "name": "Ecological Restoration Park",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "4.15",
+  "reason": "Defined by site history and delivery process, not form; the outcome is a naturalistic park, with brownfield/landfill status a site-condition input.",
+  "cooling_mechanism": "evapotranspiration from re-established vegetation + shade",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.20",
+  "name": "Linear Park",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct elongated form that distributes cooling along the urban fabric and aids ventilation; a park typology, not the tool's blue_green_corridor.",
+  "cooling_mechanism": "shade + evapotranspiration distributed along a corridor; ventilation path",
+  "needs_ruling": true
+ },
+ {
+  "id": "4.21",
+  "name": "River Park",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "4.20",
+  "reason": "A linear park aligned on a watercourse; its riparian ecology is already covered by the tool's riparian_restoration and blue_green_corridor.",
+  "cooling_mechanism": "evaporation from watercourse + riparian canopy shade",
+  "needs_ruling": true
+ },
+ {
+  "id": "4.22",
+  "name": "Coastal Park",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct dune, mangrove and shoreline form with context-gated availability; cooling regime governed by sea breeze and saline substrates.",
+  "cooling_mechanism": "sea-breeze advection + evapotranspiration; mangrove/dune shade",
+  "needs_ruling": false
+ },
+ {
+  "id": "4.23",
+  "name": "Heritage Park",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Conservation context and design constraint rather than a form; belongs in a site-constraint input that limits which interventions are permitted.",
+  "cooling_mechanism": "none distinct (mature canopy shade)",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.1",
+  "name": "Urban Forest",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "CREATION: kept only as meaning 2, a site-scale tree-dominated intervention matching the tool's urban_forest; the citywide tree-resource meaning is a strategy and excluded.",
+  "cooling_mechanism": "continuous canopy shade + evapotranspiration",
+  "needs_ruling": true
+ },
+ {
+  "id": "5.2",
+  "name": "Community Woodland",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "5.1",
+  "reason": "CREATION or RESTORATION depending on site; defined by stewardship and participation rather than woodland form, so governance becomes an attribute.",
+  "cooling_mechanism": "canopy shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.3",
+  "name": "Microforest",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "CREATION: canonical small dense woodland patch; high planting density on a constrained site gives rapid, spatially local canopy cooling.",
+  "cooling_mechanism": "dense canopy shade + evapotranspiration, local",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.4",
+  "name": "Miyawaki-style Forest",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "5.3",
+  "reason": "CREATION: the document rules it a subtype of microforest defined by planting method, not a separate typology.",
+  "cooling_mechanism": "dense canopy shade + evapotranspiration, local",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.5",
+  "name": "Pocket Woodland",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "5.3",
+  "reason": "CREATION (may retain existing trees): same small woodland patch as microforest, differing only in planting density and method; cooling behaviour equivalent.",
+  "cooling_mechanism": "canopy shade + evapotranspiration, local",
+  "needs_ruling": true
+ },
+ {
+  "id": "5.6",
+  "name": "Riparian Forest",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "riparian_restoration",
+  "reason": "CREATION or RESTORATION: same hydrologically driven woodland the tool already carries as riparian_restoration; keeping both would duplicate one system.",
+  "cooling_mechanism": "canopy shade over water + high evapotranspiration from moist soils",
+  "needs_ruling": true
+ },
+ {
+  "id": "5.7",
+  "name": "Climate Forest",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Neither creation nor restoration: the document rules it a management and design objective; becomes a species-and-resilience attribute on kept woodland typologies.",
+  "cooling_mechanism": "none distinct (objective applied to other woodland forms)",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.8",
+  "name": "Native Woodland",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Neither creation nor restoration: an ecological-composition attribute per the document's own classification note; cooling matches any woodland of equal structure.",
+  "cooling_mechanism": "none distinct (canopy shade + evapotranspiration)",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.9",
+  "name": "Native Forest Restoration",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "5.10",
+  "reason": "RESTORATION: the document states degraded woodland restoration is the broader category; native focus is a composition attribute of the same intervention.",
+  "cooling_mechanism": "recovered canopy shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.10",
+  "name": "Degraded Woodland Restoration",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "RESTORATION: canonical intervention on existing woodland, gated on woodland already being present; distinct from establishing new woodland.",
+  "cooling_mechanism": "restored canopy shade + evapotranspiration from repaired soils",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.11",
+  "name": "Forest Expansion",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "5.15",
+  "reason": "CREATION: physically new woodland establishment on adjoining non-forest land; adjacency to an existing patch is a siting attribute, not a form.",
+  "cooling_mechanism": "new canopy shade + evapotranspiration; reduced edge exposure",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.12",
+  "name": "Woodland Edge Restoration",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "5.10",
+  "reason": "RESTORATION: listed by 5.10 itself as one of its typical interventions; a graduated mantle is a component of restoring existing woodland.",
+  "cooling_mechanism": "wind buffering + evapotranspiration from shrub layer",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.13",
+  "name": "Understory Enrichment",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "5.10",
+  "reason": "RESTORATION: an element-scale planting action named within 5.10's own intervention list; not a standalone woodland typology.",
+  "cooling_mechanism": "increased evapotranspiration + ground shading beneath canopy",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.14",
+  "name": "Canopy Diversification",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "5.10",
+  "reason": "RESTORATION: species and age-class enrichment of existing woodland, equivalent to 5.10's canopy gap planting; adds resilience, not a distinct form.",
+  "cooling_mechanism": "canopy shade continuity over time (marginal short-term gain)",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.15",
+  "name": "Afforestation",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "CREATION: canonical establishment of woodland on land not recently forested; availability gated on non-forested, ecologically suitable land.",
+  "cooling_mechanism": "new canopy shade + evapotranspiration (long lead time)",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.16",
+  "name": "Reforestation",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "RESTORATION: re-establishment on previously forested land, gated on land history and residual seed bank; distinct from afforestation on that gate alone.",
+  "cooling_mechanism": "recovered canopy shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.17",
+  "name": "Assisted Natural Regeneration",
+  "kind": "strategy",
+  "decision": "merge",
+  "merge_into": "5.16",
+  "reason": "RESTORATION: a delivery method that 5.16 explicitly names as one of its own routes; produces no distinct woodland form.",
+  "cooling_mechanism": "recovered canopy shade + evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "5.18",
+  "name": "Urban Woodland Buffer",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "CREATION: distinct linear belt sited between heat-generating and sensitive land uses; buffering and screening behaviour differs from patch woodland.",
+  "cooling_mechanism": "canopy shade + evapotranspiration; wind and heat-source buffering",
+  "needs_ruling": false
+ },
+ {
+  "id": "6.1",
+  "name": "Constructed Wetland",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Engineered wetland with distinct physical form and strong evaporative cooling; the rules name it explicitly as a valid composite typology.",
+  "cooling_mechanism": "evaporation + evapotranspiration from open water and emergent vegetation",
+  "requires_waterfront": "none",
+  "needs_ruling": false
+ },
+ {
+  "id": "6.2",
+  "name": "Retention Pond",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Constructed permanent water body with littoral planting; distinct from detention basin by permanent pool and continuous evaporative cooling.",
+  "cooling_mechanism": "evaporation from permanent open water + marginal vegetation evapotranspiration",
+  "requires_waterfront": "none",
+  "needs_ruling": false
+ },
+ {
+  "id": "6.3",
+  "name": "Detention Basin",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Constructed dry basin, distinct form; but document notes cooling is episodic and biodiversity limited, so cooling relevance is marginal.",
+  "cooling_mechanism": "evapotranspiration from grassed/planted basin, episodic (only when wet)",
+  "requires_waterfront": "none",
+  "needs_ruling": true
+ },
+ {
+  "id": "6.4",
+  "name": "Water Square",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct dual-function hard public space with terraced storage; document notes limited ecological value unless heavily vegetated, echoing the blue-roof caveat.",
+  "cooling_mechanism": "episodic evaporation + surface permeability; vegetated shade only if planted",
+  "requires_waterfront": "none",
+  "needs_ruling": true
+ },
+ {
+  "id": "6.5",
+  "name": "Daylighted Stream",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct hydrological intervention (culvert removal) creating new surface water plus riparian vegetation; not a restoration of an existing open channel.",
+  "cooling_mechanism": "evaporation from restored channel + shade and evapotranspiration from riparian planting",
+  "requires_waterfront": [
+   "covered river"
+  ],
+  "needs_ruling": false
+ },
+ {
+  "id": "6.6",
+  "name": "Stream Restoration",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "6.7",
+  "reason": "Same restoration process as river restoration (bank naturalisation, meanders, floodplain reconnection); differs only in watercourse scale, an attribute not a typology.",
+  "cooling_mechanism": "evaporation from open channel + riparian shade and evapotranspiration",
+  "needs_ruling": true
+ },
+ {
+  "id": "6.7",
+  "name": "River Restoration",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical watercourse-restoration typology; distinct physical works on an existing open channel and its banks, with clear cooling behaviour.",
+  "cooling_mechanism": "evaporation from open water + riparian shade and evapotranspiration",
+  "requires_waterfront": [
+   "river",
+   "dry river"
+  ],
+  "needs_ruling": false
+ },
+ {
+  "id": "6.8",
+  "name": "Canal Restoration",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct from river restoration: engineered vertical-walled waterway restored via edge planting, floating wetlands and habitat shelves rather than morphology.",
+  "cooling_mechanism": "evaporation from water surface + edge vegetation evapotranspiration",
+  "requires_waterfront": [
+   "river"
+  ],
+  "needs_ruling": false
+ },
+ {
+  "id": "6.9",
+  "name": "Floodable Park",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "4.17",
+  "reason": "The entry is itself only a cross-reference to Section 4.16; the park-scale entry should be canonical and available at water-landscape scale.",
+  "cooling_mechanism": "evapotranspiration from park vegetation + episodic evaporation when flooded",
+  "needs_ruling": false,
+  "resolution_note": "Chain resolved: 4.16 -> 4.17."
+ },
+ {
+  "id": "6.10",
+  "name": "Floodplain Restoration",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct lateral intervention (levee setback, regrading, secondary channels) on the floodplain rather than the channel; large area, high cooling potential.",
+  "cooling_mechanism": "evapotranspiration from wet meadow and riparian woodland + evaporation from wetted floodplain",
+  "requires_waterfront": [
+   "river",
+   "dry river"
+  ],
+  "needs_ruling": false
+ },
+ {
+  "id": "6.11",
+  "name": "Urban Lake Restoration",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct still-water restoration (shoreline naturalisation, habitat islands, sediment management); large permanent water surface gives strong evaporative cooling.",
+  "cooling_mechanism": "evaporation from large open water surface + shoreline vegetation evapotranspiration",
+  "requires_waterfront": [
+   "lake"
+  ],
+  "needs_ruling": false
+ },
+ {
+  "id": "6.12",
+  "name": "Living Shoreline",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct soft bank-protection system replacing hard engineering; document states it maintains natural coastal OR freshwater processes, so lake shores qualify alongside sea.",
+  "cooling_mechanism": "evapotranspiration from marsh vegetation; cooling secondary to erosion control",
+  "requires_waterfront": [
+   "sea",
+   "lake"
+  ],
+  "needs_ruling": false
+ },
+ {
+  "id": "6.13",
+  "name": "Floating Wetland",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Discrete built planted platform deployable where shoreline restoration is impossible; distinct form from constructed wetland, needs an existing water body of depth.",
+  "cooling_mechanism": "evapotranspiration from wetland planting + shading of the water surface",
+  "requires_waterfront": [
+   "lake",
+   "river"
+  ],
+  "needs_ruling": false
+ },
+ {
+  "id": "6.14",
+  "name": "Riparian Buffer",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Discrete vegetated strip beside a watercourse; document distinguishes it from riparian forest (5.6) by allowing grass, shrub or mixed vegetation.",
+  "cooling_mechanism": "shade over water and bank + evapotranspiration",
+  "requires_waterfront": [
+   "lake",
+   "river",
+   "dry river"
+  ],
+  "needs_ruling": false
+ },
+ {
+  "id": "6.15",
+  "name": "Urban Sponge Landscape",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document states it is not a single intervention but combines rain gardens, wetlands, ponds, basins and permeable surfaces: a package of kept entries.",
+  "cooling_mechanism": "none directly \u2014 inherits cooling from its component typologies",
+  "needs_ruling": false
+ },
+ {
+  "id": "7.1",
+  "name": "Green Corridor",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Multifunctional terrestrial linear system named in the rules as a valid composite; distributes cooling and mobility through the urban fabric.",
+  "cooling_mechanism": "shade + evapotranspiration along a continuous vegetated route",
+  "needs_ruling": false
+ },
+ {
+  "id": "7.2",
+  "name": "Ecological Corridor",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical habitat-driven corridor: low disturbance, species-appropriate vegetation, limited public access \u2014 physically distinct from the public-realm green corridor.",
+  "cooling_mechanism": "shade + evapotranspiration; cooling secondary to connectivity",
+  "needs_ruling": false
+ },
+ {
+  "id": "7.3",
+  "name": "Pollinator Corridor",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "7.2",
+  "reason": "Target-species variant of an ecological corridor; the document's own note makes target function a separate attribute, not an equivalent typology.",
+  "cooling_mechanism": "evapotranspiration from flowering beds and meadow strips; minimal",
+  "needs_ruling": false
+ },
+ {
+  "id": "7.4",
+  "name": "Blue-Green Corridor",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct combined terrestrial-aquatic linear system; already a literature-grounded v1.1 tool typology, so it is the canonical aquatic-medium corridor.",
+  "cooling_mechanism": "evaporation from water + evapotranspiration and shade from corridor vegetation",
+  "needs_ruling": false
+ },
+ {
+  "id": "7.5",
+  "name": "River Corridor",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct from blue-green corridor: organised around an existing river with lateral bank-floodplain connection; strong cooling and ventilation potential.",
+  "cooling_mechanism": "evaporation from river + riparian shade + cool-air channelling along the valley",
+  "requires_waterfront": [
+   "river"
+  ],
+  "needs_ruling": false
+ },
+ {
+  "id": "7.6",
+  "name": "Railway Green Corridor",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct physical context (embankments, trackside pioneer and brownfield habitat, operational constraints); depends on an existing active or former rail alignment.",
+  "cooling_mechanism": "evapotranspiration from trackside and embankment vegetation + shade where woodland strips exist",
+  "requires_railway": true,
+  "needs_ruling": false
+ },
+ {
+  "id": "7.7",
+  "name": "Green Wedge",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Metropolitan-scale open-land planning structure containing forests, agriculture, parks and wetlands; a growth-management model, not a discrete intervention.",
+  "cooling_mechanism": "regional ventilation / cool-air advection toward dense districts",
+  "needs_ruling": true
+ },
+ {
+  "id": "7.8",
+  "name": "Habitat Stepping Stones",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "The document names it a fragmented-connectivity strategy; it is a spacing pattern of already-kept entries (pocket parks, green roofs, rain gardens, pocket meadows).",
+  "cooling_mechanism": "none directly \u2014 distributed shade and evapotranspiration from its component patches",
+  "needs_ruling": false
+ },
+ {
+  "id": "7.9",
+  "name": "Ecological Network",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "The document calls it a complete citywide system of cores, corridors and stepping stones: a metropolitan planning framework packaging kept typologies.",
+  "cooling_mechanism": "none directly \u2014 network-scale distribution of component cooling",
+  "needs_ruling": true
+ },
+ {
+  "id": "7.10",
+  "name": "Habitat Corridor",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "7.2",
+  "reason": "Document states it is 'more specific than a general ecological corridor'; a target-species specification of the same corridor form.",
+  "cooling_mechanism": "shade + evapotranspiration depending on target vegetation",
+  "needs_ruling": false
+ },
+ {
+  "id": "7.11",
+  "name": "Woodland Corridor",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "7.2",
+  "reason": "Vegetation-structure variant of an ecological corridor; but its canopy gives materially stronger shade cooling than a generic corridor, so ruling needed.",
+  "cooling_mechanism": "canopy shade + evapotranspiration; strongest cooling of the corridor variants",
+  "needs_ruling": true
+ },
+ {
+  "id": "7.12",
+  "name": "Wetland Corridor",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "7.4",
+  "reason": "A connected sequence of wetlands, ponds, swales and riparian areas is the aquatic-medium case already covered by the blue-green corridor.",
+  "cooling_mechanism": "evaporation from water + evapotranspiration from wetland vegetation",
+  "needs_ruling": false
+ },
+ {
+  "id": "7.13",
+  "name": "Meadow Corridor",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "7.2",
+  "reason": "Grassland vegetation-structure variant of an ecological corridor; composed of pocket meadows and park meadow systems already defined elsewhere.",
+  "cooling_mechanism": "evapotranspiration from grassland; no shade, weak cooling",
+  "needs_ruling": false
+ },
+ {
+  "id": "7.14",
+  "name": "Coastal Ecological Corridor",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct physical form (dunes, mangroves, coastal wetlands, estuarine habitat) and distinct coastal cooling and erosion-resilience behaviour.",
+  "cooling_mechanism": "evapotranspiration from coastal vegetation + sea-breeze penetration inland",
+  "requires_waterfront": [
+   "sea"
+  ],
+  "needs_ruling": false
+ },
+ {
+  "id": "7.15",
+  "name": "Urban Ecological Spine",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "A city-scale structuring axis assembled from parks, streets, rivers, rail corridors and woodland; a planning designation over kept corridor typologies.",
+  "cooling_mechanism": "none directly \u2014 aggregate of its component corridors",
+  "needs_ruling": true
+ },
+ {
+  "id": "7.16",
+  "name": "Green Belt",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document states its function is growth control and that it should not automatically be classified as an ecological network; a land-use designation.",
+  "cooling_mechanism": "regional evapotranspiration and cool-air supply; no site-scale form",
+  "needs_ruling": false
+ },
+ {
+  "id": "7.17",
+  "name": "Ecological Buffer",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document calls it a supporting component, not a network; defined by protective function with no distinct vegetation form of its own.",
+  "cooling_mechanism": "shade + evapotranspiration of whatever planting realises it; not distinct",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.1",
+  "name": "Community Garden",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical productive-garden composite: beds, fruit trees, composting and water harvesting form one coherent, distinctly cooling planted system.",
+  "cooling_mechanism": "evapotranspiration, with limited shade from fruit trees",
+  "governance": "community",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.2",
+  "name": "Allotment Garden",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct plot-subdivided form with sheds and boundary hedges, but the document lists it as a governance model rather than a physical typology.",
+  "cooling_mechanism": "evapotranspiration; reduced by sheds, paths and paving",
+  "governance": "individual",
+  "needs_ruling": true
+ },
+ {
+  "id": "8.3",
+  "name": "Urban Orchard",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Fruit- and nut-tree stand with flowering understory is a distinct physical form combining canopy shade with production.",
+  "cooling_mechanism": "shade plus evapotranspiration",
+  "governance": "community",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.4",
+  "name": "Food Forest",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Multi-layered woodland-mimicking structure gives it a physical form and cooling behaviour distinct from orchards and gardens.",
+  "cooling_mechanism": "layered canopy shade plus high evapotranspiration",
+  "governance": "community",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.5",
+  "name": "Urban Farm",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Canonical field-scale production site; larger cultivated ground plane and infrastructure distinguish it physically from garden-scale entries.",
+  "cooling_mechanism": "evapotranspiration from cultivated ground; little shade",
+  "governance": "commercial",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.6",
+  "name": "Urban Agriculture",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document states it is a broad land-use and production category, not one typology; it is an umbrella over kept entries 8.1-8.5.",
+  "cooling_mechanism": "none - umbrella category",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.7",
+  "name": "Rooftop Agriculture",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "C13",
+  "reason": "Entry is itself only a cross-reference to C13 Productive Green Roof and C14 Rooftop Farm; merge into the canonical roof entries.",
+  "cooling_mechanism": "evapotranspiration and reduced roof heat gain",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.8",
+  "name": "Vertical Farming",
+  "kind": "element",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document states vertical farming should not normally be classified as NbS; it is a controlled-environment technological system.",
+  "cooling_mechanism": "none - enclosed, energy-intensive",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.9",
+  "name": "School Garden",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Document says productive function warrants separate identification, but it overlaps the tool's existing schoolyard_greening typology.",
+  "cooling_mechanism": "evapotranspiration, with shade where fruit trees included",
+  "governance": "institutional",
+  "needs_ruling": true
+ },
+ {
+  "id": "8.10",
+  "name": "Market Garden",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "8.5",
+  "reason": "Document's own note classes it as a production and business model; its intensive beds are already a listed component of the urban farm.",
+  "cooling_mechanism": "evapotranspiration from cultivated beds",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.11",
+  "name": "Edible Streetscape",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "street_tree_planting",
+  "reason": "Edible species selection within an existing street system; the document directs its elements to Sections 2, A and B rather than redefining them.",
+  "cooling_mechanism": "shade plus evapotranspiration - same as street planting",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.12",
+  "name": "Productive Courtyard",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "courtyard_greening",
+  "reason": "Document directs it to reference 3.5 Courtyard Greening for the spatial system; productive planting is a programme variant, not a new form.",
+  "cooling_mechanism": "evapotranspiration in a sheltered courtyard microclimate",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.13",
+  "name": "Edible Park",
+  "kind": "composite",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Target 4.18 was itself dropped: edible park duplicates the dropped productive park; food production is an attribute of a kept park, not a park typology.",
+  "cooling_mechanism": "shade plus evapotranspiration - park behaviour",
+  "needs_ruling": true,
+  "resolution_note": "Curation conflict resolved: originally proposed merge into 4.18, which is dropped."
+ },
+ {
+  "id": "8.14",
+  "name": "Productive Greenhouse Landscape",
+  "kind": "element",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document states a greenhouse alone is not an NbS; it is built agricultural infrastructure whose surroundings are covered by 8.1 and 8.5.",
+  "cooling_mechanism": "none - enclosed structure, adds sensible heat",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.15",
+  "name": "Agroforestry System",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Deliberate tree-plus-crop structure is a distinct physical form pairing canopy shade with cultivated ground; the canonical productive tree system.",
+  "cooling_mechanism": "canopy shade plus evapotranspiration from two layers",
+  "governance": "commercial",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.16",
+  "name": "Urban Agroforestry",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "8.15",
+  "reason": "Urban application of the same principles and forms already listed under 8.15; a context variant, not a separate physical typology.",
+  "cooling_mechanism": "canopy shade plus evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.17",
+  "name": "Peri-urban Productive Landscape",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "A location-defined land-use context, already captured by the tool's land_use and scale inputs; it is a package of 8.3, 8.4 and 8.15.",
+  "cooling_mechanism": "none as an entry - regional cooling delivered by its components",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.18",
+  "name": "Therapeutic Productive Garden",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "8.1",
+  "reason": "Defined by therapeutic objective and user group, not by physical form; realised as a productive garden with accessible beds.",
+  "cooling_mechanism": "evapotranspiration - garden behaviour",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.19",
+  "name": "Community Orchard",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "8.3",
+  "reason": "Document states explicitly that it is a governance subtype of 8.3 Urban Orchard.",
+  "cooling_mechanism": "shade plus evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.20",
+  "name": "Institutional Productive Garden",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "A land-use context like hospital and campus landscape, captured by the tool's land_use input; physically it is 8.1 or 8.5 on institutional land.",
+  "cooling_mechanism": "none as an entry - evapotranspiration via its components",
+  "needs_ruling": true
+ },
+ {
+  "id": "8.21",
+  "name": "Temporary Productive Landscape",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Defined by tenure and duration rather than form; a temporary condition modifying 8.1 or 8.5, which the document says limits tree planting and soil investment.",
+  "cooling_mechanism": "none as an entry - reduced, no tree canopy",
+  "needs_ruling": false
+ },
+ {
+  "id": "8.22",
+  "name": "Productive Riparian Landscape",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "8.15",
+  "reason": "Flood-compatible orchards and agroforestry sited in a riparian zone; a siting variant of 8.15, with the corridor itself covered by riparian_restoration.",
+  "cooling_mechanism": "canopy shade plus evapotranspiration near water",
+  "needs_ruling": false
+ },
+ {
+  "id": "10.1",
+  "name": "Green Infrastructure Network",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Document classes it as an infrastructure network, but it functions as the umbrella over 10.2-10.4; author may prefer only the specific networks.",
+  "cooling_mechanism": "cumulative shade and evapotranspiration across connected spaces",
+  "needs_ruling": true
+ },
+ {
+  "id": "10.2",
+  "name": "Blue-Green Infrastructure Network",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Water storage and movement give it a spatial structure and cooling behaviour distinct from a vegetation-only network.",
+  "cooling_mechanism": "evaporation and evapotranspiration from retained water",
+  "needs_ruling": false
+ },
+ {
+  "id": "10.3",
+  "name": "Urban Cooling Network",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Connected shaded routes and thermal refuges prioritised by heat exposure form a distinct district-scale spatial system; the core district entry for this tool.",
+  "cooling_mechanism": "shade along routes plus evapotranspiration at refuges",
+  "needs_ruling": false
+ },
+ {
+  "id": "10.4",
+  "name": "Green Mobility Network",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Distinct substrate of walking, cycling and transit corridors, but its components and cooling behaviour overlap 10.3 substantially.",
+  "cooling_mechanism": "shade over movement routes plus evapotranspiration",
+  "needs_ruling": true
+ },
+ {
+  "id": "10.5",
+  "name": "Sponge District",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document states it is a district-wide water-management strategy, not one typology; it is a package of 10.2, rain gardens and floodable parks.",
+  "cooling_mechanism": "none as an entry - evaporation via its components",
+  "needs_ruling": false
+ },
+ {
+  "id": "10.6",
+  "name": "Climate Adaptation District",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document states it is a strategic district model, not a discrete landscape typology; it is a package of 10.1-10.3 plus building and productive entries.",
+  "cooling_mechanism": "none as an entry - delivered by its components",
+  "needs_ruling": false
+ },
+ {
+  "id": "10.7",
+  "name": "Green Campus",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document's note calls it an institutional spatial type; like campus landscape 3.8 it is a land-use context captured by the tool's land_use input.",
+  "cooling_mechanism": "none as an entry - delivered by its components",
+  "needs_ruling": true
+ },
+ {
+  "id": "10.8",
+  "name": "Eco-district",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document states an eco-district is not itself an NbS but a district-development model containing multiple NbS systems.",
+  "cooling_mechanism": "none - development model",
+  "needs_ruling": false
+ },
+ {
+  "id": "10.9",
+  "name": "Biodiversity District",
+  "kind": "composite",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Target 7.9 was itself dropped: biodiversity district duplicates the dropped ecological network; both are citywide strategies composed of kept corridors and cores.",
+  "cooling_mechanism": "evapotranspiration from connected habitat, some canopy shade",
+  "needs_ruling": true,
+  "resolution_note": "Curation conflict resolved: originally proposed merge into 7.9, which is dropped."
+ },
+ {
+  "id": "10.10",
+  "name": "Forest District",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "Continuous district-wide canopy is a distinct physical structure with the strongest cooling, but it depends on the pending urban_forest ambiguity ruling.",
+  "cooling_mechanism": "continuous canopy shade plus evapotranspiration",
+  "needs_ruling": true
+ },
+ {
+  "id": "10.11",
+  "name": "Productive District",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "District-scale coordination of Section 8 entries; the same umbrella logic that disqualified 8.6, and a package of 8.1, 8.3, 8.4 and C13.",
+  "cooling_mechanism": "none as an entry - evapotranspiration via its components",
+  "needs_ruling": false
+ },
+ {
+  "id": "10.12",
+  "name": "Resilient Waterfront District",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "A geographic context rather than a form; a package of riparian_restoration, living shorelines, floodable parks and blue-green streets.",
+  "cooling_mechanism": "none as an entry - evaporation via its components",
+  "needs_ruling": false
+ },
+ {
+  "id": "10.13",
+  "name": "Climate-resilient Regeneration District",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Defined by delivery mode (retrofit of existing fabric) not physical form; a package of retrofitted street, courtyard, roof and park entries.",
+  "cooling_mechanism": "none as an entry - delivered by its components",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.1",
+  "name": "Extensive Green Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C1",
+  "reason": "Restates C1: lightweight shallow-substrate roof, stress-tolerant planting, maintenance-only access; identical functions and limitations.",
+  "cooling_mechanism": "surface albedo/permeability plus limited evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.2",
+  "name": "Semi-intensive Green Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C2",
+  "reason": "Restates C2: intermediate substrate depth, grasses, perennials and small shrubs, partially accessible.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.3",
+  "name": "Intensive Green Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C3",
+  "reason": "Restates C3: deep substrate supporting lawns, shrubs and trees as a constructed landscape over a building.",
+  "cooling_mechanism": "evapotranspiration and shade",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.4",
+  "name": "Roof Garden",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C3",
+  "reason": "Restates C4: accessible amenity-driven roof landscape; both warn a paved terrace with isolated planters is not equivalent.",
+  "cooling_mechanism": "evapotranspiration and shade",
+  "needs_ruling": false,
+  "resolution_note": "Chain resolved: C4 -> C3."
+ },
+ {
+  "id": "9.5",
+  "name": "Biodiverse Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C5",
+  "reason": "Restates C5 Biodiverse Green Roof: varied substrate depths, deadwood, mineral areas, habitat features; name shortened only.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.6",
+  "name": "Brown Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C6",
+  "reason": "Restates C6: nutrient-poor recycled mineral substrates recreating brownfield habitat; both warn it is not an unfinished roof.",
+  "cooling_mechanism": "surface albedo/permeability, limited evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.7",
+  "name": "Solar Green Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C11",
+  "reason": "Cross-references C12; same PV-plus-vegetation system, though 9.7 borrows C11's co-design language (see mismatch note).",
+  "cooling_mechanism": "evapotranspiration and panel shading",
+  "needs_ruling": false,
+  "resolution_note": "Chain resolved: C12 -> C11."
+ },
+ {
+  "id": "9.8",
+  "name": "Biosolar Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C11",
+  "reason": "Restates C11: energy production and biodiversity deliberately co-designed; both reject the label where vegetation is incidental.",
+  "cooling_mechanism": "evapotranspiration and panel shading",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.9",
+  "name": "Blue Roof",
+  "kind": "element",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document binds it as non-NbS blue infrastructure or NbS-supporting component; duplicates C7, which carries the same disqualification.",
+  "cooling_mechanism": "none without vegetation; minor evaporation",
+  "needs_ruling": true
+ },
+ {
+  "id": "9.10",
+  "name": "Blue-green Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C8",
+  "reason": "Restates C8: vegetation combined with dedicated storage, water made available to plants by capillary action or irrigation.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.11",
+  "name": "Retention Green Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C8",
+  "reason": "Restates C9: defined rainfall volume retained in substrate or storage layers for plant use rather than delayed discharge.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false,
+  "resolution_note": "Chain resolved: C9 -> C8."
+ },
+ {
+  "id": "9.12",
+  "name": "Detention Green Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C8",
+  "reason": "Restates C10: vegetated roof delaying peak runoff through controlled temporary storage and release.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false,
+  "resolution_note": "Chain resolved: C10 -> C8."
+ },
+ {
+  "id": "9.13",
+  "name": "Productive Green Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C13",
+  "reason": "Restates C13 (and cross-refers 8.7): edible planting, herbs and small-scale horticulture on a roof.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.14",
+  "name": "Rooftop Farm",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C14",
+  "reason": "Restates C14 at larger, managed scale; the conditional NbS test stated only here must be carried onto C14.",
+  "cooling_mechanism": "evapotranspiration, conditional on soil-based cultivation",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.15",
+  "name": "Roof Meadow",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C15",
+  "reason": "Restates C15: grasses and flowering herbaceous species rather than sedum, with pollinator and seasonal diversity value.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.16",
+  "name": "Roof Wetland",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C16",
+  "reason": "Restates C16: shallow water and wetland planting treating stormwater or greywater on a roof.",
+  "cooling_mechanism": "evaporation and evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.17",
+  "name": "Rooftop Woodland or Tree Roof",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "C17",
+  "reason": "Restates C17: intensive roof carrying multiple trees and understory; both refuse equivalence with ground-based woodland.",
+  "cooling_mechanism": "shade and evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.18",
+  "name": "Direct Ground-rooted Green Facade",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D1",
+  "reason": "Restates D1: self-clinging climbers rooted in natural ground, attached directly to the wall, no support frame.",
+  "cooling_mechanism": "shade and evapotranspiration on the wall surface",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.19",
+  "name": "Indirect Ground-rooted Green Facade",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D2",
+  "reason": "Restates D2: ground-rooted climbers on a separate support with an air gap in front of the facade.",
+  "cooling_mechanism": "shade, ventilated air layer, evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.20",
+  "name": "Cable Facade",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D2",
+  "reason": "Restates D3: tensioned cable system guiding climbers, suited to tall facades and narrow planting zones.",
+  "cooling_mechanism": "shade and evapotranspiration",
+  "needs_ruling": false,
+  "resolution_note": "Chain resolved: D3 -> D2."
+ },
+ {
+  "id": "9.21",
+  "name": "Mesh or Trellis Facade",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D2",
+  "reason": "Restates D4: rigid or semi-rigid mesh, lattice or trellis giving denser support than cables.",
+  "cooling_mechanism": "shade and evapotranspiration",
+  "needs_ruling": false,
+  "resolution_note": "Chain resolved: D4 -> D2."
+ },
+ {
+  "id": "9.22",
+  "name": "Planter-rooted Green Facade",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D5",
+  "reason": "Restates D5: climbers grown from containers at ground, intermediate floors, balconies or roof where soil is unavailable.",
+  "cooling_mechanism": "shade and evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.23",
+  "name": "Cascading Facade Planting",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D6",
+  "reason": "Restates D6: trailing plants growing downward from roof edges, balconies or facade-mounted planters.",
+  "cooling_mechanism": "shade and evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.24",
+  "name": "Modular Living Wall",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D7",
+  "reason": "Restates D7: vegetation in wall-mounted modules with integrated irrigation; same cost, failure-risk and value caveats.",
+  "cooling_mechanism": "evapotranspiration and surface shading",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.25",
+  "name": "Substrate-based Living Wall",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D8",
+  "reason": "Restates D8: plants rooted in soil-like or engineered substrate held in modules, with greater buffering than hydroponics.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.26",
+  "name": "Hydroponic Living Wall",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D9",
+  "reason": "Restates D9: soil-free wall fed by an engineered nutrient and irrigation system, highly dependent on mechanical plant.",
+  "cooling_mechanism": "evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.27",
+  "name": "Felt-pocket Living Wall",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D9",
+  "reason": "Restates D10: plants in felt pockets, explicitly a subtype rather than a high-level category (parent differs, see note).",
+  "cooling_mechanism": "evapotranspiration, limited by rooting volume",
+  "needs_ruling": false,
+  "resolution_note": "Chain resolved: D10 -> D9."
+ },
+ {
+  "id": "9.28",
+  "name": "Vegetated Screen",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "D11",
+  "reason": "Restates D11: freestanding or facade-adjacent structure carrying climbers without forming part of the envelope.",
+  "cooling_mechanism": "shade and evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.29",
+  "name": "Green Balcony",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "No individual counterpart; a distinct building open-space element with substantial permanent planting, not merely D5 or D6 planters.",
+  "cooling_mechanism": "local shade, facade cooling, evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.30",
+  "name": "Green Terrace",
+  "kind": "element",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "No individual counterpart; larger multi-layer planted terrace treated by the document as its own building open-space typology.",
+  "cooling_mechanism": "shade and evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.31",
+  "name": "Green Atrium",
+  "kind": "element",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Document says it is not automatically an urban-cooling NbS; internal space with no outdoor microclimate effect unless conditions are met.",
+  "cooling_mechanism": "none outdoors; indoor evapotranspiration only",
+  "needs_ruling": true
+ },
+ {
+  "id": "9.32",
+  "name": "Vegetated Building Courtyard",
+  "kind": "composite",
+  "decision": "merge",
+  "merge_into": "3.5",
+  "reason": "Self-declared cross-reference to 3.5 Courtyard Greening, already a tool typology; building scale adds no distinct physical form.",
+  "cooling_mechanism": "shade, evapotranspiration, thermal refuge",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.33",
+  "name": "Green Podium",
+  "kind": "composite",
+  "decision": "keep",
+  "merge_into": null,
+  "reason": "No individual counterpart; landscape over podium or parking structure with pedestrian-level, semi-public cooling unlike any roof entry.",
+  "cooling_mechanism": "shade, evapotranspiration, surface permeability",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.34",
+  "name": "Vegetated Pergola Attached to a Building",
+  "kind": "element",
+  "decision": "merge",
+  "merge_into": "E1",
+  "reason": "Cross-references E1-E2; a building-attached instance of the green pergola element, not a separate typology.",
+  "cooling_mechanism": "shade and evapotranspiration",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.35",
+  "name": "Green Building Envelope",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Self-declared coordinated building-level strategy, not a physical typology; a package of kept roof, facade, balcony and courtyard entries.",
+  "cooling_mechanism": "none in itself; inherited from component elements",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.36",
+  "name": "Building-integrated Habitat System",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Biodiversity objective bundling C5, facades and nesting features; a package of kept entries, not a discrete intervention.",
+  "cooling_mechanism": "none in itself; inherited from component elements",
+  "needs_ruling": false
+ },
+ {
+  "id": "9.37",
+  "name": "Building-integrated Water and Vegetation System",
+  "kind": "strategy",
+  "decision": "drop",
+  "merge_into": null,
+  "reason": "Water-circulation strategy linking C8/C9 roofs, facades and ground bioretention; a package of kept entries, not a typology.",
+  "cooling_mechanism": "none in itself; inherited from component elements",
+  "needs_ruling": false
+ }
+]
