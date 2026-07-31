@@ -67,7 +67,8 @@ nav:
   - UX specification: UX-SPECIFICATION.md
   - Decision log: DECISIONS.md
   - V2 vision: V2-VISION.md
-  - Phase briefs:
+  - Release briefs:
+      - v1.2 — NbS catalogue & packages: V1.2-BRIEF.md
       - Phase 3 — API service: PHASE-3-BRIEF.md
       - Phase 4 — Web application: PHASE-4-BRIEF.md
       - Phase 5 — Report export: PHASE-5-BRIEF.md
