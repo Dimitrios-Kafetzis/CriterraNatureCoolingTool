@@ -1,0 +1,2839 @@
+[
+  {
+    "id": "A1",
+    "name": "Strategic individual-tree planting",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "A2",
+    "name": "Tree cluster",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_green_area_with_trees",
+    "temp_min_c": 0.3,
+    "temp_max_c": 1.5,
+    "evidence": "high"
+  },
+  {
+    "id": "A3",
+    "name": "Tree grove",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "dense_tree_canopy",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "A4",
+    "name": "Conventional individual tree pit",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "A5",
+    "name": "Enlarged tree pit",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "A6",
+    "name": "Structural-soil tree pit",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "A7",
+    "name": "Suspended-pavement or soil-cell tree pit",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "A8",
+    "name": "Stormwater tree pit",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "bioretention",
+    "temp_min_c": 0.1,
+    "temp_max_c": 0.8,
+    "evidence": "low"
+  },
+  {
+    "id": "A9",
+    "name": "Bioretention tree pit",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "bioretention",
+    "temp_min_c": 0.1,
+    "temp_max_c": 0.8,
+    "evidence": "low"
+  },
+  {
+    "id": "A11",
+    "name": "Continuous tree trench",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "A12",
+    "name": "Continuous open planting bed for trees",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "A13",
+    "name": "Connected multi-layer planting bed",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "A14",
+    "name": "Tree island",
+    "kind": "element",
+    "bucket": "tree_based",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_green_area_with_trees",
+    "temp_min_c": 0.3,
+    "temp_max_c": 1.5,
+    "evidence": "high"
+  },
+  {
+    "id": "B1",
+    "name": "Conventional planting bed",
+    "kind": "element",
+    "bucket": "ground_level",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "non_canopy_vegetation",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "medium"
+  },
+  {
+    "id": "B2",
+    "name": "Shrub-dominated planting bed",
+    "kind": "element",
+    "bucket": "ground_level",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "non_canopy_vegetation",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "medium"
+  },
+  {
+    "id": "B3",
+    "name": "Herbaceous perennial bed",
+    "kind": "element",
+    "bucket": "ground_level",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "non_canopy_vegetation",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "medium"
+  },
+  {
+    "id": "B4",
+    "name": "Groundcover planting",
+    "kind": "element",
+    "bucket": "ground_level",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "non_canopy_vegetation",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "medium"
+  },
+  {
+    "id": "B6",
+    "name": "Pocket meadow",
+    "kind": "element",
+    "bucket": "ground_level",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "non_canopy_vegetation",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "medium"
+  },
+  {
+    "id": "B7",
+    "name": "Rain garden",
+    "kind": "element",
+    "bucket": "ground_level",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "bioretention",
+    "temp_min_c": 0.1,
+    "temp_max_c": 0.8,
+    "evidence": "low"
+  },
+  {
+    "id": "B8",
+    "name": "Bioswale",
+    "kind": "element",
+    "bucket": "ground_level",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "bioretention",
+    "temp_min_c": 0.1,
+    "temp_max_c": 0.8,
+    "evidence": "low"
+  },
+  {
+    "id": "B9",
+    "name": "Infiltration planting bed",
+    "kind": "element",
+    "bucket": "ground_level",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "bioretention",
+    "temp_min_c": 0.1,
+    "temp_max_c": 0.8,
+    "evidence": "low"
+  },
+  {
+    "id": "B10",
+    "name": "Depressed bioretention bed",
+    "kind": "element",
+    "bucket": "ground_level",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "bioretention",
+    "temp_min_c": 0.1,
+    "temp_max_c": 0.8,
+    "evidence": "low"
+  },
+  {
+    "id": "B11",
+    "name": "Vegetated planter with stormwater function",
+    "kind": "element",
+    "bucket": "ground_level",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "bioretention",
+    "temp_min_c": 0.1,
+    "temp_max_c": 0.8,
+    "evidence": "low"
+  },
+  {
+    "id": "B12",
+    "name": "Large-volume connected planters",
+    "kind": "element",
+    "bucket": "ground_level",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "bioretention",
+    "temp_min_c": 0.1,
+    "temp_max_c": 0.8,
+    "evidence": "low"
+  },
+  {
+    "id": "C1",
+    "name": "Extensive green roof",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "extensive_green_roof",
+    "temp_min_c": 0.1,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "C2",
+    "name": "Semi-intensive green roof",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "extensive_green_roof",
+    "temp_min_c": 0.1,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "C3",
+    "name": "Intensive green roof",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_green_area_with_trees",
+    "temp_min_c": 0.3,
+    "temp_max_c": 1.5,
+    "evidence": "high"
+  },
+  {
+    "id": "C5",
+    "name": "Biodiverse green roof",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "extensive_green_roof",
+    "temp_min_c": 0.1,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "C6",
+    "name": "Brown roof",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "extensive_green_roof",
+    "temp_min_c": 0.1,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "C8",
+    "name": "Blue-green roof",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "extensive_green_roof",
+    "temp_min_c": 0.1,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "C11",
+    "name": "Biosolar roof",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "extensive_green_roof",
+    "temp_min_c": 0.1,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "C13",
+    "name": "Productive green roof",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "mixed_use",
+      "other",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "productive_non_canopy",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "low"
+  },
+  {
+    "id": "C14",
+    "name": "Rooftop farm",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "industrial",
+      "mixed_use",
+      "other",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "productive_non_canopy",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "low"
+  },
+  {
+    "id": "C15",
+    "name": "Roof meadow",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "non_canopy_vegetation",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "medium"
+  },
+  {
+    "id": "C16",
+    "name": "Roof wetland",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_constructed_water",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "C17",
+    "name": "Tree roof or rooftop woodland",
+    "kind": "element",
+    "bucket": "green_roof",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "dense_tree_canopy",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "D1",
+    "name": "Direct ground-rooted green fa\u00e7ade",
+    "kind": "element",
+    "bucket": "vertical_greening",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "green_facade_living_wall",
+    "temp_min_c": 0.3,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "D2",
+    "name": "Indirect ground-rooted green fa\u00e7ade",
+    "kind": "element",
+    "bucket": "vertical_greening",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "green_facade_living_wall",
+    "temp_min_c": 0.3,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "D5",
+    "name": "Planter-rooted green fa\u00e7ade",
+    "kind": "element",
+    "bucket": "vertical_greening",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "green_facade_living_wall",
+    "temp_min_c": 0.3,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "D6",
+    "name": "Cascading fa\u00e7ade planting",
+    "kind": "element",
+    "bucket": "vertical_greening",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "green_facade_living_wall",
+    "temp_min_c": 0.3,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "D7",
+    "name": "Modular living wall",
+    "kind": "element",
+    "bucket": "vertical_greening",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "green_facade_living_wall",
+    "temp_min_c": 0.3,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "D8",
+    "name": "Substrate-based living wall",
+    "kind": "element",
+    "bucket": "vertical_greening",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "green_facade_living_wall",
+    "temp_min_c": 0.3,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "D9",
+    "name": "Hydroponic living wall",
+    "kind": "element",
+    "bucket": "vertical_greening",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "green_facade_living_wall",
+    "temp_min_c": 0.3,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "D11",
+    "name": "Vegetated screen",
+    "kind": "element",
+    "bucket": "vertical_greening",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "green_facade_living_wall",
+    "temp_min_c": 0.3,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "D12",
+    "name": "Green noise barrier",
+    "kind": "element",
+    "bucket": "vertical_greening",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "memorial",
+      "mixed_use",
+      "other",
+      "park",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "green_facade_living_wall",
+    "temp_min_c": 0.3,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "D13",
+    "name": "Vegetated retaining wall",
+    "kind": "element",
+    "bucket": "vertical_greening",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "green_facade_living_wall",
+    "temp_min_c": 0.3,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "E1",
+    "name": "Green pergola",
+    "kind": "element",
+    "bucket": "vegetated_shelter",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "vegetated_shade_structure",
+    "temp_min_c": 0.0,
+    "temp_max_c": 2.5,
+    "evidence": "low"
+  },
+  {
+    "id": "E3",
+    "name": "Vegetated arcade",
+    "kind": "element",
+    "bucket": "vegetated_shelter",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "memorial",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "continuous_shaded_corridor",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "E6",
+    "name": "Green waiting shelter",
+    "kind": "element",
+    "bucket": "vegetated_shelter",
+    "scales": [
+      "site",
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": "all",
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "vegetated_shade_structure",
+    "temp_min_c": 0.0,
+    "temp_max_c": 2.5,
+    "evidence": "low"
+  },
+  {
+    "id": "2.2",
+    "name": "Tree Avenue",
+    "kind": "composite",
+    "bucket": "street",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "memorial",
+      "mixed_use",
+      "other",
+      "park",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "2.5",
+    "name": "Green Street",
+    "kind": "composite",
+    "bucket": "street",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "mixed_use",
+      "other",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "2.9",
+    "name": "Green Median",
+    "kind": "composite",
+    "bucket": "street",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "industrial",
+      "mixed_use",
+      "other",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "non_canopy_vegetation",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "medium"
+  },
+  {
+    "id": "2.13",
+    "name": "Green Tram Corridor",
+    "kind": "composite",
+    "bucket": "street",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "commercial",
+      "mixed_use",
+      "other",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "2.15",
+    "name": "Green Pedestrian Street",
+    "kind": "composite",
+    "bucket": "street",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "continuous_shaded_corridor",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "2.16",
+    "name": "Green Alley",
+    "kind": "composite",
+    "bucket": "street",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "commercial",
+      "industrial",
+      "mixed_use",
+      "other",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "2.17",
+    "name": "Green Parking Lane",
+    "kind": "composite",
+    "bucket": "street",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "mixed_use",
+      "other",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "3.1",
+    "name": "Tree Plaza",
+    "kind": "composite",
+    "bucket": "public_space",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_green_area_with_trees",
+    "temp_min_c": 0.3,
+    "temp_max_c": 1.5,
+    "evidence": "high"
+  },
+  {
+    "id": "3.2",
+    "name": "Cooling Plaza",
+    "kind": "composite",
+    "bucket": "public_space",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "permeable_shaded_hardscape",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.5,
+    "evidence": "medium"
+  },
+  {
+    "id": "3.3",
+    "name": "Permeable Plaza",
+    "kind": "composite",
+    "bucket": "public_space",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "permeable_shaded_hardscape",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.5,
+    "evidence": "medium"
+  },
+  {
+    "id": "3.4",
+    "name": "Civic Green",
+    "kind": "composite",
+    "bucket": "public_space",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "established_park",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "high"
+  },
+  {
+    "id": "3.5",
+    "name": "Courtyard Greening",
+    "kind": "composite",
+    "bucket": "public_space",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "enclosed_courtyard",
+    "temp_min_c": 0.3,
+    "temp_max_c": 1.5,
+    "evidence": "low"
+  },
+  {
+    "id": "3.15",
+    "name": "Green Playground",
+    "kind": "composite",
+    "bucket": "public_space",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_green_area_with_trees",
+    "temp_min_c": 0.3,
+    "temp_max_c": 1.5,
+    "evidence": "high"
+  },
+  {
+    "id": "4.1",
+    "name": "Pocket Park",
+    "kind": "composite",
+    "bucket": "park",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "established_park",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "high"
+  },
+  {
+    "id": "4.2",
+    "name": "Neighbourhood Park",
+    "kind": "composite",
+    "bucket": "park",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "mixed_use",
+      "other",
+      "park",
+      "residential"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "established_park",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "high"
+  },
+  {
+    "id": "4.4",
+    "name": "District Park",
+    "kind": "composite",
+    "bucket": "park",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "other",
+      "park"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "established_park",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "high"
+  },
+  {
+    "id": "4.5",
+    "name": "Regional Park",
+    "kind": "composite",
+    "bucket": "park",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "other",
+      "park"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "established_park",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "high"
+  },
+  {
+    "id": "4.11",
+    "name": "Water Park",
+    "kind": "composite",
+    "bucket": "park",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "other",
+      "park"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "established_park",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "high"
+  },
+  {
+    "id": "4.15",
+    "name": "Naturalistic Park",
+    "kind": "composite",
+    "bucket": "park",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "memorial",
+      "other",
+      "park"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "established_park",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "high"
+  },
+  {
+    "id": "4.17",
+    "name": "Stormwater Park",
+    "kind": "composite",
+    "bucket": "park",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "industrial",
+      "other",
+      "park",
+      "residential"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "established_park",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "high"
+  },
+  {
+    "id": "4.20",
+    "name": "Linear Park",
+    "kind": "composite",
+    "bucket": "park",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "established_park",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "high"
+  },
+  {
+    "id": "4.22",
+    "name": "Coastal Park",
+    "kind": "composite",
+    "bucket": "park",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "other",
+      "park"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "established_park",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "high"
+  },
+  {
+    "id": "5.1",
+    "name": "Urban woodland (site)",
+    "kind": "composite",
+    "bucket": "woodland_forest",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "healthcare",
+      "industrial",
+      "memorial",
+      "other",
+      "park",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": false,
+    "governance": null,
+    "archetype": "dense_tree_canopy",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "5.3",
+    "name": "Microforest",
+    "kind": "composite",
+    "bucket": "woodland_forest",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "memorial",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": false,
+    "governance": null,
+    "archetype": "dense_tree_canopy",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "5.10",
+    "name": "Degraded Woodland Restoration",
+    "kind": "composite",
+    "bucket": "woodland_forest",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "healthcare",
+      "industrial",
+      "memorial",
+      "other",
+      "park",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": true,
+    "governance": null,
+    "archetype": "dense_tree_canopy",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "5.15",
+    "name": "Afforestation",
+    "kind": "composite",
+    "bucket": "woodland_forest",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "industrial",
+      "other",
+      "park"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": false,
+    "governance": null,
+    "archetype": "dense_tree_canopy",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "5.16",
+    "name": "Reforestation",
+    "kind": "composite",
+    "bucket": "woodland_forest",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "industrial",
+      "other",
+      "park"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": true,
+    "governance": null,
+    "archetype": "dense_tree_canopy",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "5.18",
+    "name": "Urban Woodland Buffer",
+    "kind": "composite",
+    "bucket": "woodland_forest",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "memorial",
+      "mixed_use",
+      "other",
+      "park",
+      "residential",
+      "school",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": false,
+    "governance": null,
+    "archetype": "dense_tree_canopy",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "6.1",
+    "name": "Constructed Wetland",
+    "kind": "composite",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "healthcare",
+      "industrial",
+      "other",
+      "park",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": "none",
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_constructed_water",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "6.2",
+    "name": "Retention Pond",
+    "kind": "composite",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "healthcare",
+      "industrial",
+      "other",
+      "park",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": "none",
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_constructed_water",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "6.3",
+    "name": "Detention Basin",
+    "kind": "composite",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "healthcare",
+      "industrial",
+      "other",
+      "park",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": "none",
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_constructed_water",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "6.4",
+    "name": "Water Square",
+    "kind": "composite",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": "none",
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_constructed_water",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "6.5",
+    "name": "Daylighted Stream",
+    "kind": "composite",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential"
+    ],
+    "requires_waterfront": [
+      "covered river"
+    ],
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "riparian_restoration",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "6.7",
+    "name": "River Restoration",
+    "kind": "composite",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "industrial",
+      "other",
+      "park"
+    ],
+    "requires_waterfront": [
+      "river",
+      "dry river"
+    ],
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "riparian_restoration",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "6.8",
+    "name": "Canal Restoration",
+    "kind": "composite",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential"
+    ],
+    "requires_waterfront": [
+      "river"
+    ],
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "riparian_restoration",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "6.10",
+    "name": "Floodplain Restoration",
+    "kind": "composite",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "industrial",
+      "other",
+      "park"
+    ],
+    "requires_waterfront": [
+      "river",
+      "dry river"
+    ],
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "riparian_restoration",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "6.11",
+    "name": "Urban Lake Restoration",
+    "kind": "composite",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "other",
+      "park",
+      "public_space"
+    ],
+    "requires_waterfront": [
+      "lake"
+    ],
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "large_water_body",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "6.12",
+    "name": "Living Shoreline",
+    "kind": "composite",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "industrial",
+      "other",
+      "park"
+    ],
+    "requires_waterfront": [
+      "sea",
+      "lake"
+    ],
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "large_water_body",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "6.13",
+    "name": "Floating Wetland",
+    "kind": "element",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": [
+      "lake",
+      "river"
+    ],
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_constructed_water",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "6.14",
+    "name": "Riparian Buffer",
+    "kind": "element",
+    "bucket": "water_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "healthcare",
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": [
+      "lake",
+      "river",
+      "dry river"
+    ],
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "riparian_restoration",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "7.1",
+    "name": "Green Corridor",
+    "kind": "composite",
+    "bucket": "ecological_network",
+    "scales": [
+      "city"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "blue_green_corridor",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "7.2",
+    "name": "Ecological Corridor",
+    "kind": "composite",
+    "bucket": "ecological_network",
+    "scales": [
+      "city"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "industrial",
+      "memorial",
+      "other",
+      "park",
+      "residential"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "blue_green_corridor",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "7.4",
+    "name": "Blue-Green Corridor",
+    "kind": "composite",
+    "bucket": "ecological_network",
+    "scales": [
+      "city"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "blue_green_corridor",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "7.5",
+    "name": "River Corridor",
+    "kind": "composite",
+    "bucket": "ecological_network",
+    "scales": [
+      "city"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential"
+    ],
+    "requires_waterfront": [
+      "river"
+    ],
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "riparian_restoration",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "7.6",
+    "name": "Railway Green Corridor",
+    "kind": "composite",
+    "bucket": "ecological_network",
+    "scales": [
+      "city"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "residential"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": true,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "7.14",
+    "name": "Coastal Ecological Corridor",
+    "kind": "composite",
+    "bucket": "ecological_network",
+    "scales": [
+      "city"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "other",
+      "park",
+      "public_space"
+    ],
+    "requires_waterfront": [
+      "sea"
+    ],
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "large_water_body",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "8.1",
+    "name": "Community Garden",
+    "kind": "composite",
+    "bucket": "productive_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": "community",
+    "archetype": "productive_non_canopy",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "low"
+  },
+  {
+    "id": "8.2",
+    "name": "Allotment Garden",
+    "kind": "composite",
+    "bucket": "productive_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "mixed_use",
+      "other",
+      "park",
+      "residential"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": "individual",
+    "archetype": "productive_non_canopy",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "low"
+  },
+  {
+    "id": "8.3",
+    "name": "Urban Orchard",
+    "kind": "composite",
+    "bucket": "productive_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": "community",
+    "archetype": "productive_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "8.4",
+    "name": "Food Forest",
+    "kind": "composite",
+    "bucket": "productive_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": "community",
+    "archetype": "productive_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "8.5",
+    "name": "Urban Farm",
+    "kind": "composite",
+    "bucket": "productive_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "industrial",
+      "other",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": "commercial",
+    "archetype": "productive_non_canopy",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "low"
+  },
+  {
+    "id": "8.9",
+    "name": "School Garden",
+    "kind": "composite",
+    "bucket": "productive_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": "institutional",
+    "archetype": "productive_non_canopy",
+    "temp_min_c": 0.0,
+    "temp_max_c": 1.5,
+    "evidence": "low"
+  },
+  {
+    "id": "8.15",
+    "name": "Agroforestry System",
+    "kind": "composite",
+    "bucket": "productive_landscape",
+    "scales": [
+      "neighbourhood",
+      "site"
+    ],
+    "conditional_at_neighbourhood": true,
+    "land_uses": [
+      "campus",
+      "other",
+      "park"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": "commercial",
+    "archetype": "productive_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "10.1",
+    "name": "Green Infrastructure Network",
+    "kind": "composite",
+    "bucket": "district",
+    "scales": [
+      "district"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "blue_green_corridor",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "10.2",
+    "name": "Blue-Green Infrastructure Network",
+    "kind": "composite",
+    "bucket": "district",
+    "scales": [
+      "district"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "industrial",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "blue_green_corridor",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "10.3",
+    "name": "Urban Cooling Network",
+    "kind": "composite",
+    "bucket": "district",
+    "scales": [
+      "district"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "dense_tree_canopy",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "10.4",
+    "name": "Green Mobility Network",
+    "kind": "composite",
+    "bucket": "district",
+    "scales": [
+      "district"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential",
+      "street_corridor"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "street_tree_canopy",
+    "temp_min_c": 0.5,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "10.10",
+    "name": "Forest District",
+    "kind": "composite",
+    "bucket": "district",
+    "scales": [
+      "district"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "mixed_use",
+      "other",
+      "park",
+      "public_space",
+      "residential"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "dense_tree_canopy",
+    "temp_min_c": 1.0,
+    "temp_max_c": 3.0,
+    "evidence": "high"
+  },
+  {
+    "id": "9.29",
+    "name": "Green Balcony",
+    "kind": "element",
+    "bucket": "building",
+    "scales": [
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "green_facade_living_wall",
+    "temp_min_c": 0.3,
+    "temp_max_c": 2.0,
+    "evidence": "low"
+  },
+  {
+    "id": "9.30",
+    "name": "Green Terrace",
+    "kind": "element",
+    "bucket": "building",
+    "scales": [
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "residential",
+      "school"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "extensive_green_roof",
+    "temp_min_c": 0.1,
+    "temp_max_c": 1.0,
+    "evidence": "medium"
+  },
+  {
+    "id": "9.33",
+    "name": "Green Podium",
+    "kind": "composite",
+    "bucket": "building",
+    "scales": [
+      "building"
+    ],
+    "conditional_at_neighbourhood": false,
+    "land_uses": [
+      "campus",
+      "commercial",
+      "healthcare",
+      "mixed_use",
+      "other",
+      "public_space",
+      "residential"
+    ],
+    "requires_waterfront": null,
+    "requires_railway": false,
+    "requires_existing_woodland": null,
+    "governance": null,
+    "archetype": "small_green_area_with_trees",
+    "temp_min_c": 0.3,
+    "temp_max_c": 1.5,
+    "evidence": "high"
+  }
+]
