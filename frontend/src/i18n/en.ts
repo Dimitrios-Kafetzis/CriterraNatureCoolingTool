@@ -37,7 +37,7 @@ export const messages = {
 
   entry: {
     heading: 'Evaluate nature-based solutions for urban cooling',
-    what: 'This tool turns a structured description of a site and a proposed nature-based intervention — street trees, an urban forest, a green roof, and eleven other typologies — into transparent, literature-grounded scores: a Heat Priority Index, a cooling opportunity score with an indicative temperature-reduction range, and energy, cost, equity, and co-benefit estimates.',
+    what: 'This tool turns a structured description of a site and one or more proposed nature-based interventions — chosen from 110 typologies, from a single tree pit to a district-wide cooling network — into transparent, literature-grounded scores: a Heat Priority Index, a cooling opportunity score with an indicative temperature-reduction range, and energy, cost, equity, and co-benefit estimates.',
     whatItAsks:
       'It asks about 45 questions across six short steps: the site, its climate and heat exposure, who uses it, the intervention, and (optionally) cost and energy figures. Around 20 are required; a complete pass takes 15–25 minutes.',
     partialAnswers:
