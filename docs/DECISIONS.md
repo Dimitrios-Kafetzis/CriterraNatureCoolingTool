@@ -370,6 +370,18 @@ Four further corrections were made to the pack's citations before they shipped, 
 
 ---
 
+## D-046 — The catalogue release shipped; the map release is scoped as v2.1 (2026-08-01)
+
+**The catalogue release shipped** as package `2.0.0` at methodology `2026.08.04`: 110 typologies over 18 cited archetypes, packages, availability gating, four availability-only questions, and explicit draft migration. Every gate passed, including a packaged-wheel smoke check that served the published 67 school-site options from an installed wheel. Implementation rulings are in D-045.
+
+**The third release of the D-038 programme is renumbered from `v1.3` to `v2.1`**, because package semver moved to 2.0.0 for the catalogue release and a `v1.3` tag after `v2.0.0` would be nonsense. Scope is unchanged: map-based site selection with parameter autofill, deliberately last so that autofill targets the questionnaire v2.0 leaves behind. Recorded in [V2.1-BRIEF.md](V2.1-BRIEF.md).
+
+**A label collision is corrected in the same change set.** [V2-VISION.md](V2-VISION.md) used `v2.0`–`v2.3` as *thematic wave* labels for the deferred vision, written when the product was v1 and "v2" meant "the future". The product now genuinely occupies that version namespace, so the same string denoted two different things — the shipped catalogue release and an unbuilt portfolio-mode wave. The vision's waves are relabelled **Horizon 1–4**, which is what they always were. No vision scope changes; only labels that had become ambiguous. Renaming the vision rather than the product is the right way round: package versions are stamped into released artefacts, results, and tags, and cannot be renamed after the fact.
+
+**Three decisions are open for v2.1 and are stated in the brief rather than pre-empted here.** The first is load-bearing: a usable basemap and the no-third-party-request rule (D-030, D-035) cannot both be had in full, and the brief sets out four options with a recommendation. It is flagged as the first deliberate exception to a rule that has held absolute for four releases, and it is the author's call, not the implementer's. The other two concern whether an autofilled value counts as *supplied* for confidence, and the Köppen–Geiger to climate-zone mapping, which is a methodology value needing a citation and a version bump.
+
+---
+
 ## D-013 — Weights are expert-calibrated and defended by sensitivity analysis (2026-07-30)
 
 Aggregation weights cannot be "derived" from literature and we do not pretend otherwise. They are declared as expert judgment following composite-indicator practice (OECD/JRC Handbook), and defended empirically via the published sensitivity analysis (see D-011/OQ-29).

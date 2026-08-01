@@ -31,12 +31,22 @@ Per-country weight calibration with local expert panels; maturity/time-discounte
 
 ## Sequencing logic
 
-| Wave | Theme | Builds on |
+| Horizon | Theme | Builds on |
 |---|---|---|
-| v2.0 | Portfolio mode + funder view | v1 comparison UX + storage |
-| v2.1 | GIS workflow + map-driven prefill | v1 GIS-ready inputs |
-| v2.2 | Institutional deployment + localisation | hosted v1 |
-| v2.3 | Planting guidance + methodology evolution | v1 evidence-base process |
+| 1 | Portfolio mode + funder view | v1 comparison UX + storage |
+| 2 | GIS workflow + city-scale hotspot mapping | v1 GIS-ready inputs |
+| 3 | Institutional deployment + localisation | hosted v1 |
+| 4 | Planting guidance + methodology evolution | v1 evidence-base process |
+
+> **Horizons are themes, not package versions** (D-046). They were labelled
+> `v2.0`–`v2.3` when the product was at v1 and "v2" meant "the future"; the
+> product now occupies that namespace for real, so the same string denoted two
+> different things. Package versions are stamped into released artefacts and
+> stored results and cannot be renamed afterwards, so the vision's labels moved
+> instead. Note also that the map-driven *prefill* of horizon 2 has since been
+> pulled forward and scoped separately as the v2.1 release
+> ([V2.1-BRIEF.md](V2.1-BRIEF.md)) — what remains here is the full GIS pipeline
+> and city-scale hotspot mapping, which stays deferred (D-002).
 
 ## Why this is investable
 
