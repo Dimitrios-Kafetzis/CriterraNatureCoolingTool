@@ -296,6 +296,34 @@ The **horizontal serif lockup** (the decided brand logo) appears in the applicat
 
 Copyright and licensing are distinct and both are stated: the **code** remains Apache-2.0 (D-004), while the Criterra name and logo are marks that the licence does not convey. A `NOTICE` file records this in the form Apache-2.0 anticipates, so the permissive licence and the brand assertion coexist without ambiguity.
 
+## D-043 — The catalogue's three-level structure, and six rulings that follow (2026-08-01, v1.2)
+
+The v1.2 review pack ([V1.2-REVIEW-PACK.md](V1.2-REVIEW-PACK.md)) curated all 243 entries of the UNEP catalogue to **110 typologies** — 88 merged, 45 dropped — and raised six structural decisions, three of which contradicted rules approved when the release was scoped. All six are approved as proposed.
+
+**The finding underneath all six.** The catalogue mixes three kinds of thing, and the tool's single `nbs_type` concept can represent only one of them:
+
+| Kind | Count | What it is |
+|---|---:|---|
+| **Element** | 105 | A discrete thing you build — a stormwater tree pit, an extensive green roof, a modular living wall. A leaf typology with its own form and cooling behaviour. |
+| **Composite** | 101 | A coherent spatial system *made of* elements — a green street, a cooling plaza, a constructed wetland, a neighbourhood park. |
+| **Strategy / context / model** | 37 | Not an intervention: a land-use context, a management objective, an umbrella category, a planning model. |
+
+The document states this about itself throughout — the park list "mixes three different bases of classification", the ecological network list "mixes several levels of organisation", an eco-district "is not itself an NbS", urban agriculture is "not one specific NbS typology". Nearly every drop is a kind-3 entry, and no capability is lost by dropping them: a land-use context is already carried by the `land_use` input, and a strategy is a *package* of kept entries.
+
+**D-043.1 — The four land-use contexts become contexts, not typologies.** Hospital landscape, campus landscape, memorial landscape, and schoolyard greening are dropped as selectable solutions. The approved building-scale gating rule ("if it is school then schoolyard greening") is realised instead by mapping the land use to the real typologies that suit it, which offers the user more rather than fewer options and puts the mapping where it belongs — in the availability matrix. Consequence, accepted knowingly: **`schoolyard_greening` is retired as a typology**, becoming a land-use-driven bundle. It carries cited values and appears in golden scenario s06, so this is a methodology change with a version bump, not a rename. The alternative — keeping a card named after the site the user has just described — was considered and rejected as asking the same question twice.
+
+**D-043.2 — City and district scales offer packages, not single interventions.** This supersedes the approved rule "for the district must be only the district scale". A strict reading of that rule left district-scale users three usable options and city-scale users six, because almost everything at those scales is a strategy the document disqualifies. The correction is not to lower the bar but to recognise that a district is not a place where one thing is installed: at these scales the assessment composes several kept typologies and scores them as a package (D-043.6). The surviving district "networks" become **named preset packages**.
+
+**D-043.3 — Productive-landscape gating asks who can deliver, not who is interested.** The approved yes/no ("is there interest to create productive landscape from individuals or communities") would have suppressed the urban farm and the agroforestry system — commercially delivered, and the highest-canopy, highest-cooling entries in the group — on a "no". Replaced by a multi-select over {community, individual, institutional, commercial}, which gates correctly at no extra cost in user effort.
+
+**D-043.4 — "Urban forest" is fixed to the site reading and renamed.** The document warns the term means either a whole-city tree system or a specific tree-dominated site, and that the two must not be mixed. The tool's existing typology is already the site reading (2 000 m² minimum), so the reading is kept and the display name disambiguated. The city-wide reading is what a city-scale package expresses (D-043.2). Display-name change only; envelope and minimum area unmoved.
+
+**D-043.5 — Street typologies are preset packages over elements.** The document requires that street-scale typologies be integrated linear systems whose composing elements are "referenced rather than redefined", and explicitly that "Street Trees" be removed as a street typology. `street_tree_planting` is therefore retained as the **element** it has always been, and the seven kept street typologies compose elements.
+
+**D-043.6 — The existing fourteen keep their identity and their cited values.** Four catalogue entries merge onto them (cooling park → `park_upgrade`, riparian forest → `riparian_restoration`, productive courtyard → `courtyard_greening`, edible streetscape → `street_tree_planting`). They are the only entries in the library with individually retrieved literature behind them; trading that for a catalogue name would exchange evidence for tidiness. A catalogue entry stays separate only where it adds a distinct behaviour rather than a distinct name.
+
+**Why packages are the structural answer, not merely a requested feature.** D-043.1, D-043.2 and D-043.5 are independent findings — a land-use context, a planning scale, and a linear spatial system — and all three resolve through the same mechanism: composing kept typologies and scoring them together under the D-038 capped-never-summed rule. Review comment 8 asked for multi-selection as a convenience; the catalogue shows it is what the domain actually requires.
+
 ## D-013 — Weights are expert-calibrated and defended by sensitivity analysis (2026-07-30)
 
 Aggregation weights cannot be "derived" from literature and we do not pretend otherwise. They are declared as expert judgment following composite-indicator practice (OECD/JRC Handbook), and defended empirically via the published sensitivity analysis (see D-011/OQ-29).
