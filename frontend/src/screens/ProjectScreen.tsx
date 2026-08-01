@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { api } from '../api/client';
 import type { AssessmentView, ProjectView } from '../api/types';
 import { messages } from '../i18n/en';
+import { stepNumber } from '../wizard/steps';
 
 /**
  * One project: its assessments (drafts and evaluated), with the OQ-15
@@ -39,7 +40,9 @@ export function ProjectScreen() {
 
   async function duplicate(assessmentId: string) {
     const created = await api.duplicateAssessment(projectId ?? '', assessmentId);
-    void navigate(`/projects/${projectId}/assessments/${created.assessment_id}/edit?step=5`);
+    void navigate(
+      `/projects/${projectId}/assessments/${created.assessment_id}/edit?step=${String(stepNumber('intervention'))}`,
+    );
   }
 
   async function removeAssessment(assessmentId: string) {

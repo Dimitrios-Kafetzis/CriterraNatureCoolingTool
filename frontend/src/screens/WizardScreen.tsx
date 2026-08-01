@@ -78,6 +78,10 @@ export function WizardScreen() {
   const [library, setLibrary] = useState<TypologyLibrary | null>(null);
   const [methodology, setMethodology] = useState<MethodologyData | null>(null);
   const [availability, setAvailability] = useState<AvailableTypologies | null>(null);
+  // Which answers the map filled in, and from which dataset (D-047.2). Held
+  // beside the draft rather than inside it: `draft` holds engine input fields
+  // and nothing else, and the engine has no concept of where a value came from.
+  const [autofilled, setAutofilled] = useState<Record<string, string>>({});
 
   // What the store currently holds, to avoid saving an unchanged draft.
   const persisted = useRef<string>('');
@@ -100,6 +104,7 @@ export function WizardScreen() {
         persisted.current = JSON.stringify(input);
         setLabel(assessment.label);
         setDraft(input);
+        setAutofilled(assessment.autofilled ?? {});
       })
       .catch(() => {
         if (!cancelled) setLoadError(messages.app.apiError);
@@ -169,13 +174,18 @@ export function WizardScreen() {
     if (serialised === persisted.current) return;
     setSaveState('saving');
     api
-      .patchAssessment(projectId, assessmentId, { input: debouncedDraft })
-      .then(() => {
+      .patchAssessment(projectId, assessmentId, { input: debouncedDraft, autofilled })
+      .then((saved) => {
         persisted.current = serialised;
+        // The service re-settles the marks against the input it just stored, so
+        // a mark for an answer the user has since changed or cleared comes back
+        // dropped. Taking its answer rather than keeping ours is what makes the
+        // interface and the report agree about provenance (D-047.2).
+        setAutofilled(saved.autofilled ?? {});
         setSaveState('saved');
       })
       .catch(() => setSaveState('error'));
-  }, [debouncedDraft, projectId, assessmentId]);
+  }, [debouncedDraft, autofilled, projectId, assessmentId]);
 
   // Inline validation + confidence preview (D-028), from the engine only.
   useEffect(() => {
@@ -206,9 +216,38 @@ export function WizardScreen() {
         }
         return next;
       });
+      // The user has answered this themselves, so it is no longer the map's
+      // answer and stops being marked as one — whether they typed a different
+      // value or the same one (D-047.2).
+      setAutofilled((previous) => {
+        if (!(field in previous)) return previous;
+        const next = { ...previous };
+        delete next[field];
+        return next;
+      });
     },
     [],
   );
+
+  /**
+   * Applies the map's answers, and only where the user has not answered
+   * already (D-047.2 — autofill never overwrites an answer already given).
+   *
+   * Batched deliberately: three fields become one state update and therefore
+   * one auto-save, rather than three racing PATCHes.
+   */
+  const applyAutofill = useCallback((values: DraftInput, sources: Record<string, string>) => {
+    setEvaluateIssues(null);
+    setDraft((previous) => ({ ...(previous ?? {}), ...values }));
+    setAutofilled((previous) => {
+      const next = { ...previous };
+      for (const field of Object.keys(values)) {
+        const source = sources[field];
+        if (source !== undefined) next[field] = source;
+      }
+      return next;
+    });
+  }, []);
 
   const errorsByField = useMemo(() => {
     const map: Partial<Record<string, string>> = {};
@@ -306,6 +345,11 @@ export function WizardScreen() {
           library={library}
           methodology={methodology}
           availability={availability}
+          autofilled={autofilled}
+          onAutofill={applyAutofill}
+          onSkipMap={() => {
+            goToStep(stepIndex + 1);
+          }}
         />
 
         {validation && validation.warnings.length > 0 ? (

@@ -47,6 +47,50 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/geo/basemap': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Basemap
+     * @description Return the bundled 1:110m country outlines the offline map draws.
+     */
+    get: operations['basemap_api_geo_basemap_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/geo/lookup': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Lookup
+     * @description Answer the three questions a map may answer about a location.
+     *
+     *     Returns suggestions, not answers. The caller applies each one only where
+     *     the user has not already answered, and marks what it applies as autofilled
+     *     (D-047.2) — an autofilled value never overwrites an answer already given.
+     */
+    post: operations['lookup_api_geo_lookup_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/meta': {
     parameters: {
       query?: never;
@@ -379,6 +423,10 @@ export interface components {
     };
     /** AssessmentCreate */
     AssessmentCreate: {
+      /** Autofilled */
+      autofilled?: {
+        [key: string]: string;
+      };
       /** Input */
       input?: {
         [key: string]: unknown;
@@ -513,6 +561,10 @@ export interface components {
     };
     /** AssessmentPatch */
     AssessmentPatch: {
+      /** Autofilled */
+      autofilled?: {
+        [key: string]: string;
+      } | null;
       /** Input */
       input?: {
         [key: string]: unknown;
@@ -571,6 +623,10 @@ export interface components {
     AssessmentView: {
       /** Assessment Id */
       assessment_id: string;
+      /** Autofilled */
+      autofilled?: {
+        [key: string]: string;
+      };
       /** Created At */
       created_at: string;
       /** Input */
@@ -891,6 +947,76 @@ export interface components {
       field: string;
       /** Message */
       message: string;
+    };
+    /**
+     * GeoClimate
+     * @description The climate zone a point resolved to, and the class it came from.
+     */
+    GeoClimate: {
+      /** Attribution */
+      attribution: string;
+      /** Koppen Class */
+      koppen_class: string | null;
+      /** Note */
+      note: string;
+      /** Resolution Caveat */
+      resolution_caveat: string;
+      /** Source Key */
+      source_key: string;
+      /** Zone */
+      zone: string | null;
+    };
+    /**
+     * GeoCountry
+     * @description The country a point resolved to, and how the lookup reached it.
+     */
+    GeoCountry: {
+      /** Attribution */
+      attribution: string;
+      /** Iso A2 */
+      iso_a2: string | null;
+      /** Iso A3 */
+      iso_a3: string | null;
+      /** Matched */
+      matched: string;
+      /** Name */
+      name: string | null;
+      /** Source Key */
+      source_key: string;
+    };
+    /**
+     * GeoLookupRequest
+     * @description ``POST /api/geo/lookup`` — what a map click can honestly answer (D-047).
+     *
+     *     ``boundary`` is the polygon the user drew, as ``[longitude, latitude]``
+     *     pairs. When it is absent the user placed a point rather than drawing a
+     *     site, and no area is returned.
+     */
+    GeoLookupRequest: {
+      /** Boundary */
+      boundary?: number[][] | null;
+      /** Latitude */
+      latitude: number;
+      /** Longitude */
+      longitude: number;
+    };
+    /**
+     * GeoLookupResponse
+     * @description ``POST /api/geo/lookup``.
+     *
+     *     Every value is a suggestion. The interface applies each one only where the
+     *     user has not already answered, marks what it applied as autofilled, and
+     *     lets any of them be overridden (D-047.2).
+     */
+    GeoLookupResponse: {
+      climate: components['schemas']['GeoClimate'];
+      country: components['schemas']['GeoCountry'];
+      /** Latitude */
+      latitude: number;
+      /** Longitude */
+      longitude: number;
+      /** Site Area M2 */
+      site_area_m2: number | null;
     };
     /**
      * GhgBlock
@@ -1445,6 +1571,61 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ValidateResponse'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  basemap_api_geo_basemap_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
+            [key: string]: unknown;
+          };
+        };
+      };
+    };
+  };
+  lookup_api_geo_lookup_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GeoLookupRequest'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['GeoLookupResponse'];
         };
       };
       /** @description Validation Error */

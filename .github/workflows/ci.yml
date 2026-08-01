@@ -66,6 +66,11 @@ jobs:
         run: npm run typecheck
       - name: Tests (vitest)
         run: npm test
+      - name: Build
+        run: npm run build
+      - name: The default build makes no third-party request (D-030, D-047.1)
+        working-directory: .
+        run: tools/check_no_third_party_requests.sh frontend/dist
 
   package:
     name: Packaged app (wheel · smoke · container)
@@ -100,6 +105,29 @@ jobs:
           curl -fsS http://127.0.0.1:8123/ | grep -q 'id="root"'
           curl -fsS http://127.0.0.1:8123/projects/deep-link | grep -q 'id="root"'
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8123/api/nonexistent)" = 404
+          # The map works offline from data inside the wheel (D-047.1), so the
+          # installed package — not the checkout — is where that is proved.
+          curl -fsS http://127.0.0.1:8123/api/geo/basemap | python -c "import json,sys; d=json.load(sys.stdin); assert len(d['countries']) > 150, len(d['countries'])"
+          curl -fsS -X POST http://127.0.0.1:8123/api/geo/lookup \
+            -H 'Content-Type: application/json' \
+            -d '{"latitude": 37.9838, "longitude": 23.7275}' > /tmp/lookup.json
+          python -c "import json; d = json.load(open('/tmp/lookup.json')); assert d['country']['iso_a2'] == 'GR', d; assert d['climate']['zone'] == 'temperate', d"
+      - name: Bundled datasets ship with the licences that permit them
+        run: |
+          # Two datasets now travel inside the wheel and one of them requires
+          # attribution as a condition of its licence. The backend suite checks
+          # the repository; this checks the artefact that is actually shipped.
+          site_packages="$(/tmp/smoke/bin/python -c 'import nature_cooling, pathlib; print(pathlib.Path(nature_cooling.__file__).parent)')"
+          geo="$site_packages/_bundled/data/geo"
+          for required in countries.json.z basemap.json koppen_geiger.json \
+                          koppen_geiger_1991_2020_0p1.bin.z ATTRIBUTION.md \
+                          LICENCE-naturalearth.txt LICENCE-koppen-CC-BY-4.0.txt; do
+            test -s "$geo/$required" || { echo "missing from the wheel: $required"; exit 1; }
+          done
+          grep -q 'Creative Commons Attribution 4.0 International Public License' \
+            "$geo/LICENCE-koppen-CC-BY-4.0.txt"
+          grep -q '10.1038/s41597-023-02549-6' "$geo/ATTRIBUTION.md"
+          echo "OK: bundled datasets ship with their licences and attribution"
       - name: Container image builds from the wheel
         run: docker build -t nature-cooling:ci .
 
@@ -117,9 +145,7 @@ jobs:
           pip install -r docs/requirements.txt
           mkdocs build --strict
       - name: The published site makes no third-party requests (D-035)
-        run: |
-          if grep -rE 'src="https?://' site --include='*.html'; then exit 1; fi
-          if grep -rE '<link[^>]*rel="(stylesheet|preload)"[^>]*href="https?://' site --include='*.html'; then exit 1; fi
+        run: tools/check_no_third_party_requests.sh site
       - name: Upload the site for GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3

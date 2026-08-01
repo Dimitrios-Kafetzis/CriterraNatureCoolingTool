@@ -16,14 +16,28 @@
 import { messages } from '../i18n/en';
 import type { AssessmentInput, InputField } from '../api/types';
 
-export type StepId = 'project' | 'site' | 'climate' | 'vulnerability' | 'intervention' | 'cost';
+export type StepId =
+  'map' | 'project' | 'site' | 'climate' | 'vulnerability' | 'intervention' | 'cost';
 
 export interface Step {
   id: StepId;
+  /**
+   * The questionnaire fields this step asks. The map step asks none: it offers
+   * answers to three fields that other steps ask, and every one of them stays
+   * editable where it is asked (D-047). Leaving it empty is what keeps the
+   * confidence panel's step references pointing at the step that owns each
+   * question rather than at the map.
+   */
   fields: InputField[];
 }
 
 export const STEPS: Step[] = [
+  {
+    // First, and skippable in one action. The questionnaire must remain fully
+    // usable without ever opening a map (v2.1 brief, scope item 1).
+    id: 'map',
+    fields: [],
+  },
   {
     id: 'project',
     fields: ['project_name', 'assessment_scale', 'country'],
@@ -96,6 +110,17 @@ export const STEPS: Step[] = [
 
 export function stepTitle(id: StepId): string {
   return messages.wizard.steps[id].title;
+}
+
+/**
+ * The 1-based `?step=` number for a step id.
+ *
+ * Deep links use this rather than a literal. Three screens jumped straight to
+ * `?step=5` for the intervention step, which was correct until v2.1 put a map
+ * step in front of it and silently made them all land on vulnerability.
+ */
+export function stepNumber(id: StepId): number {
+  return STEPS.findIndex((step) => step.id === id) + 1;
 }
 
 /** The step a field is asked in, for the confidence panel's step references. */

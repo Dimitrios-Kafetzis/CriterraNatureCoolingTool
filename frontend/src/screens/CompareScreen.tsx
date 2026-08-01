@@ -13,6 +13,7 @@ import { api } from '../api/client';
 import { storedResult } from '../api/types';
 import type { AssessmentResult, AssessmentView, ProjectView } from '../api/types';
 import { messages, optionLabel } from '../i18n/en';
+import { stepNumber } from '../wizard/steps';
 
 const t = messages.compare;
 
@@ -156,7 +157,9 @@ export function CompareScreen() {
     const source = options[0] ?? evaluated[0];
     if (!source) return;
     const created = await api.duplicateAssessment(projectId ?? '', source.assessment.assessment_id);
-    void navigate(`/projects/${projectId}/assessments/${created.assessment_id}/edit?step=5`);
+    void navigate(
+      `/projects/${projectId}/assessments/${created.assessment_id}/edit?step=${String(stepNumber('intervention'))}`,
+    );
   }
 
   return (

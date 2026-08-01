@@ -107,13 +107,13 @@ koppen_to_zone:
   # entitled to both facts and to the class that was actually looked up.
   disclosure:
     autofill_note: >
-      Climate zone classified from the Koppen-Geiger class at this location
-      (Beck et al. 2023, 1991-2020), mapped to the tool's zones by the
+      Climate zone classified from the Köppen–Geiger class at this location
+      (Beck et al. 2023, 1991–2020), mapped to the tool's zones by the
       methodology's documented table.
     resolution_caveat: >
       The bundled classification grid is 0.1 degrees, roughly 11 km. It is
       reliable for the city a site sits in and is not a statement about the
-      site itself - which is the resolution at which climate zone enters this
+      site itself — which is the resolution at which climate zone enters this
       methodology in any case, since it selects a row of an adjustment matrix
       rather than a temperature.
 
@@ -125,7 +125,7 @@ country_lookup:
   source_dataset: naturalearth
   sources:
     - key: naturalearth
-      finding: "Admin 0 country boundaries at 1:110m scale, release v5.1.2, in the public domain."
+      finding: "Admin 0 country boundaries, release v5.1.2, in the public domain. The lookup reads the 1:50m layer, because at 1:110m every country below roughly a thousand square kilometres is absent; the offline basemap draws the 1:110m layer, which is what world zoom needs."
   omitted_territories: >
     Northern Cyprus, Somaliland, Kosovo and the Siachen Glacier carry no ISO
     3166-1 code in the source. They are not assigned to the state that claims

@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { LevelField, MultiSelectField, NumberField, TextField } from '../components/FieldControls';
 import { messages } from '../i18n/en';
 import { OPTIONS, type StepId } from './steps';
+import { MapStep } from './MapStep';
 import { TypologyPicker } from './TypologyPicker';
 import type {
   AssessmentInput,
@@ -27,10 +28,25 @@ export interface StepFormProps {
   methodology: MethodologyData | null;
   /** What the service offers for this site, or null while unknown (D-043). */
   availability: AvailableTypologies | null;
+  /** Which answers the map filled in, and from which dataset (D-047.2). */
+  autofilled: Record<string, string>;
+  /** Applies a set of map-derived answers at once, with their provenance. */
+  onAutofill: (values: DraftInput, sources: Record<string, string>) => void;
+  /** Leaves the map step for the first question (v2.1 scope item 1). */
+  onSkipMap: () => void;
 }
 
 export function StepForm(props: StepFormProps) {
   switch (props.step) {
+    case 'map':
+      return (
+        <MapStep
+          draft={props.draft}
+          autofilled={props.autofilled}
+          onAutofill={props.onAutofill}
+          onSkip={props.onSkipMap}
+        />
+      );
     case 'project':
       return <ProjectStep {...props} />;
     case 'site':
@@ -46,7 +62,7 @@ export function StepForm(props: StepFormProps) {
   }
 }
 
-function ProjectStep({ draft, errors, setField }: StepFormProps) {
+function ProjectStep({ draft, errors, setField, autofilled }: StepFormProps) {
   return (
     <fieldset>
       <TextField
@@ -70,13 +86,14 @@ function ProjectStep({ draft, errors, setField }: StepFormProps) {
         field="country"
         value={draft.country}
         error={errors.country}
+        autofilled={autofilled.country !== undefined}
         onChange={(value) => setField('country', value)}
       />
     </fieldset>
   );
 }
 
-function SiteStep({ draft, errors, setField }: StepFormProps) {
+function SiteStep({ draft, errors, setField, autofilled }: StepFormProps) {
   return (
     <fieldset>
       <NumberField
@@ -84,6 +101,7 @@ function SiteStep({ draft, errors, setField }: StepFormProps) {
         required
         value={draft.site_area_m2}
         error={errors.site_area_m2}
+        autofilled={autofilled.site_area_m2 !== undefined}
         onChange={(value) => setField('site_area_m2', value as number)}
       />
       <NumberField
@@ -192,7 +210,7 @@ function SiteStep({ draft, errors, setField }: StepFormProps) {
   );
 }
 
-function ClimateStep({ draft, errors, setField }: StepFormProps) {
+function ClimateStep({ draft, errors, setField, autofilled }: StepFormProps) {
   return (
     <fieldset>
       <LevelField
@@ -202,6 +220,7 @@ function ClimateStep({ draft, errors, setField }: StepFormProps) {
         options={OPTIONS.climate_zone}
         withUnknown={false}
         error={errors.climate_zone}
+        autofilled={autofilled.climate_zone !== undefined}
         onChange={(value) =>
           setField('climate_zone', value as AssessmentInput['climate_zone'] | undefined)
         }

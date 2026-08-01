@@ -17,6 +17,7 @@ import type {
   ConfidenceLevel,
 } from '../api/types';
 import { messages, optionLabel } from '../i18n/en';
+import { stepNumber } from '../wizard/steps';
 
 const t = messages.results;
 
@@ -77,7 +78,9 @@ export function ResultsScreen() {
 
   async function compareAnother() {
     const created = await api.duplicateAssessment(projectId ?? '', assessmentId ?? '');
-    void navigate(`/projects/${projectId}/assessments/${created.assessment_id}/edit?step=5`);
+    void navigate(
+      `/projects/${projectId}/assessments/${created.assessment_id}/edit?step=${String(stepNumber('intervention'))}`,
+    );
   }
 
   const confidence = result.confidence;

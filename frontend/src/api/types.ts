@@ -23,6 +23,8 @@ export type PackageBlock = Schemas['PackageBlock'];
 export type ProjectSummary = Schemas['ProjectSummary'];
 export type ProjectView = Schemas['ProjectView'];
 export type AssessmentView = Schemas['AssessmentView'];
+export type GeoLookupResponse = Schemas['GeoLookupResponse'];
+export type GeoLookupRequest = Schemas['GeoLookupRequest'];
 export type ConfidenceLevel = BlockConfidencePreview['level'];
 
 /** The five element families and the composite families, exactly as served. */
@@ -60,6 +62,33 @@ export type AvailableTypologies = components['schemas']['AvailableTypologies'];
 export type DraftInput = Partial<AssessmentInput>;
 
 export type InputField = keyof AssessmentInput;
+
+/**
+ * Which of a draft's answers the map filled in, and from which dataset
+ * (D-047.2). Kept beside the draft rather than inside it, because the engine's
+ * input fields hold answers and the engine has no concept of where one came
+ * from — nor should it, since an autofilled value counts as supplied exactly
+ * as a typed one does. The provenance exists for the reader of the report.
+ */
+export type AutofillSources = Record<string, string>;
+
+/**
+ * `GET /api/geo/basemap` returns the bundled outlines verbatim — the browser
+ * draws them and interprets nothing, so the endpoint is typed as the raw
+ * document rather than as a model.
+ */
+export interface BasemapOutline {
+  iso_a2: string;
+  polygons: number[][][][];
+}
+
+export interface BasemapDocument {
+  scale: string;
+  licence: string;
+  attribution: string;
+  countries: BasemapOutline[];
+  unassigned: { polygons: number[][][][] }[];
+}
 
 /**
  * The stored result of an evaluated assessment.

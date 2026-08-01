@@ -8,9 +8,13 @@ import type {
   AssessmentInput,
   AssessmentResult,
   AssessmentView,
+  AutofillSources,
   AvailabilityQuery,
   AvailableTypologies,
+  BasemapDocument,
   DraftInput,
+  GeoLookupRequest,
+  GeoLookupResponse,
   MetaResponse,
   MethodologyData,
   ProjectSummary,
@@ -94,6 +98,17 @@ export const api = {
 
   methodology: () => request<MethodologyData>('/api/methodology'),
 
+  /** The bundled country outlines the offline map draws (D-047.1). */
+  basemap: () => request<BasemapDocument>('/api/geo/basemap'),
+
+  /**
+   * The three inputs a location can honestly answer (D-047).
+   *
+   * Returns suggestions, not answers: the caller applies each only where the
+   * user has not already answered, and marks what it applies as autofilled.
+   */
+  geoLookup: (body: GeoLookupRequest) => request<GeoLookupResponse>('/api/geo/lookup', json(body)),
+
   /** Dry-run validation of a partial questionnaire state (D-028). */
   validate: (draft: DraftInput) =>
     request<ValidateResponse>('/api/assessments/validate', json(draft)),
@@ -124,7 +139,7 @@ export const api = {
   patchAssessment: (
     projectId: string,
     assessmentId: string,
-    body: { label?: string; input?: DraftInput },
+    body: { label?: string; input?: DraftInput; autofilled?: AutofillSources },
   ) =>
     request<AssessmentView>(`/api/projects/${projectId}/assessments/${assessmentId}`, patch(body)),
 

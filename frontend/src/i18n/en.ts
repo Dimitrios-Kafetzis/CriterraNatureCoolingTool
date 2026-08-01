@@ -115,7 +115,15 @@ export const messages = {
     evaluateInvalid: 'Some answers are missing or invalid. The steps concerned are marked above.',
     frozenNotice:
       'This assessment has been evaluated, so its answers are frozen. Duplicate it to explore a change.',
+    autofilledBadge: 'from the map',
+    autofilledHint:
+      'Filled in from the location you chose. Change it and this note disappears — your answer always wins.',
     steps: {
+      map: {
+        title: 'Find the site on a map',
+        intro:
+          'Optional, and skippable in one action — the questionnaire works perfectly well without it. Placing or drawing the site fills in three answers for you: its area, its country, and its climate zone. Nothing else is derived from a map.',
+      },
       project: {
         title: 'Project information',
         intro: 'Who and where this assessment is for. The shortest step.',
@@ -143,6 +151,54 @@ export const messages = {
           'Entirely optional. Without figures the tool reports costs as “not estimated” — it ships no default cost values.',
       },
     },
+  },
+
+  /**
+   * The map step (v2.1, D-047). The wording carries a fair amount of weight
+   * here: the step has to say what it fills in, say plainly what it does not,
+   * and never suggest that skipping it costs the user anything.
+   */
+  map: {
+    intro:
+      'Place a point or draw the site boundary, and the tool fills in its area, country and climate zone. Everything else is yours to answer.',
+    skip: 'Skip the map',
+    basemapUnavailable:
+      'The map could not be loaded, so this step is unavailable. Nothing is lost: every answer it would have filled in can be typed on the next steps.',
+    drawingOff: 'Draw the site boundary',
+    drawingOn: 'Drawing — click to add corners',
+    clearBoundary: 'Clear the boundary',
+    placingHint: 'Click the map to place the site. Zoom in first for a more exact location.',
+    drawingHint:
+      'Click each corner of the site in turn. Three corners are enough for an area; the shape closes itself.',
+    canvasLabelPlacing: 'World map. Click to place the site.',
+    canvasLabelDrawing: 'World map. Click to add a corner of the site boundary.',
+    panNorth: 'North',
+    panSouth: 'South',
+    panEast: 'East',
+    panWest: 'West',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    looking: 'Looking up this location…',
+    foundHeading: 'What this location tells us',
+    foundNothing:
+      'Nothing could be identified here — the point is at sea, or in a territory the boundary data carries no country code for. Type the answers instead.',
+    alreadyAnswered: 'you have answered this',
+    applyEmpty: 'Use these answers',
+    applyReplacing: (count: number) =>
+      count === 1
+        ? 'Use these and replace my 1 existing answer'
+        : `Use these and replace my ${String(count)} existing answers`,
+    appliedNote: (count: number) =>
+      count === 1
+        ? '1 answer was filled in from the map. It is marked wherever it appears, including in the report, and you can change it at any time.'
+        : `${String(count)} answers were filled in from the map. They are marked wherever they appear, including in the report, and you can change them at any time.`,
+    tilesSummary: 'Use an external map service for detailed imagery (off by default)',
+    tilesExplanation:
+      'This application makes no third-party requests. The map above is drawn from country outlines bundled inside the tool, which is enough to identify a city but not to trace a site boundary accurately. If you need that and your network permits it, you can name a tile service and switch it on here. Your browser will then request map images directly from that service, which will see your IP address and the areas you look at. Nothing is sent to it about your assessment, and the setting is not saved — it lasts for this visit only.',
+    tilesLabel: 'Tile URL template, using {z}, {x} and {y}',
+    tilesEnable: 'Enable this tile service',
+    tilesDisable: 'Turn tiles off',
+    tilesEnabled: (template: string) => `Requesting tiles from ${template}`,
   },
 
   confidence: {

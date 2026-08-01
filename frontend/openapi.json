@@ -187,6 +187,13 @@
       "AssessmentCreate": {
         "additionalProperties": false,
         "properties": {
+          "autofilled": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Autofilled",
+            "type": "object"
+          },
           "input": {
             "additionalProperties": true,
             "title": "Input",
@@ -913,6 +920,20 @@
       "AssessmentPatch": {
         "additionalProperties": false,
         "properties": {
+          "autofilled": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Autofilled"
+          },
           "input": {
             "anyOf": [
               {
@@ -1062,6 +1083,13 @@
           "assessment_id": {
             "title": "Assessment Id",
             "type": "string"
+          },
+          "autofilled": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Autofilled",
+            "type": "object"
           },
           "created_at": {
             "title": "Created At",
@@ -1867,6 +1895,202 @@
           "message"
         ],
         "title": "FieldIssue",
+        "type": "object"
+      },
+      "GeoClimate": {
+        "additionalProperties": false,
+        "description": "The climate zone a point resolved to, and the class it came from.",
+        "properties": {
+          "attribution": {
+            "title": "Attribution",
+            "type": "string"
+          },
+          "koppen_class": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Koppen Class"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "resolution_caveat": {
+            "title": "Resolution Caveat",
+            "type": "string"
+          },
+          "source_key": {
+            "title": "Source Key",
+            "type": "string"
+          },
+          "zone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Zone"
+          }
+        },
+        "required": [
+          "zone",
+          "koppen_class",
+          "source_key",
+          "attribution",
+          "note",
+          "resolution_caveat"
+        ],
+        "title": "GeoClimate",
+        "type": "object"
+      },
+      "GeoCountry": {
+        "additionalProperties": false,
+        "description": "The country a point resolved to, and how the lookup reached it.",
+        "properties": {
+          "attribution": {
+            "title": "Attribution",
+            "type": "string"
+          },
+          "iso_a2": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iso A2"
+          },
+          "iso_a3": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iso A3"
+          },
+          "matched": {
+            "title": "Matched",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "source_key": {
+            "title": "Source Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "iso_a2",
+          "iso_a3",
+          "name",
+          "matched",
+          "source_key",
+          "attribution"
+        ],
+        "title": "GeoCountry",
+        "type": "object"
+      },
+      "GeoLookupRequest": {
+        "additionalProperties": false,
+        "description": "``POST /api/geo/lookup`` — what a map click can honestly answer (D-047).\n\n``boundary`` is the polygon the user drew, as ``[longitude, latitude]``\npairs. When it is absent the user placed a point rather than drawing a\nsite, and no area is returned.",
+        "properties": {
+          "boundary": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "number"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Boundary"
+          },
+          "latitude": {
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Latitude",
+            "type": "number"
+          },
+          "longitude": {
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Longitude",
+            "type": "number"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude"
+        ],
+        "title": "GeoLookupRequest",
+        "type": "object"
+      },
+      "GeoLookupResponse": {
+        "additionalProperties": false,
+        "description": "``POST /api/geo/lookup``.\n\nEvery value is a suggestion. The interface applies each one only where the\nuser has not already answered, marks what it applied as autofilled, and\nlets any of them be overridden (D-047.2).",
+        "properties": {
+          "climate": {
+            "$ref": "#/components/schemas/GeoClimate"
+          },
+          "country": {
+            "$ref": "#/components/schemas/GeoCountry"
+          },
+          "latitude": {
+            "title": "Latitude",
+            "type": "number"
+          },
+          "longitude": {
+            "title": "Longitude",
+            "type": "number"
+          },
+          "site_area_m2": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Site Area M2"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude",
+          "site_area_m2",
+          "country",
+          "climate"
+        ],
+        "title": "GeoLookupResponse",
         "type": "object"
       },
       "GhgBlock": {
@@ -3072,6 +3296,72 @@
         "summary": "Validate",
         "tags": [
           "assessments"
+        ]
+      }
+    },
+    "/api/geo/basemap": {
+      "get": {
+        "description": "Return the bundled 1:110m country outlines the offline map draws.",
+        "operationId": "basemap_api_geo_basemap_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Basemap Api Geo Basemap Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Basemap",
+        "tags": [
+          "geo"
+        ]
+      }
+    },
+    "/api/geo/lookup": {
+      "post": {
+        "description": "Answer the three questions a map may answer about a location.\n\nReturns suggestions, not answers. The caller applies each one only where\nthe user has not already answered, and marks what it applies as autofilled\n(D-047.2) — an autofilled value never overwrites an answer already given.",
+        "operationId": "lookup_api_geo_lookup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GeoLookupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeoLookupResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Lookup",
+        "tags": [
+          "geo"
         ]
       }
     },

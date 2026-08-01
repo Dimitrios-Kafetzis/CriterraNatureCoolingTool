@@ -18,6 +18,8 @@ import validateCapped from './fixtures/validate-capped.json';
 import validateEmpty from './fixtures/validate-empty.json';
 import validatePartial from './fixtures/validate-partial.json';
 
+import { stepNumber, type StepId } from '../wizard/steps';
+
 const draftUrl = `/projects/${project.project_id}/assessments/${assessmentDraft.assessment_id}/edit`;
 
 function baseRoutes(
@@ -43,6 +45,17 @@ function baseRoutes(
   ];
 }
 
+/**
+ * The URL of one step, by id.
+ *
+ * These tests used to name steps by number, which was correct until v2.1 put a
+ * map step in front of them and turned every `?step=5` into a different
+ * question. Naming the step is the fix that keeps working.
+ */
+function stepUrl(id: StepId): string {
+  return `${draftUrl}?step=${String(stepNumber(id))}`;
+}
+
 function renderWizard(url = draftUrl, extraRoutes: React.ReactNode = null) {
   return renderAt(
     url,
@@ -56,13 +69,13 @@ function renderWizard(url = draftUrl, extraRoutes: React.ReactNode = null) {
 describe('WizardScreen', () => {
   it('filters validation errors to the active step and blocks Continue (OQ-08)', async () => {
     installFetchMock(baseRoutes(validateEmpty));
-    renderWizard();
+    renderWizard(stepUrl('project'));
 
     expect(
       await screen.findByRole('heading', { name: messages.wizard.steps.project.title }),
     ).toBeInTheDocument();
-    // validate-empty carries four required-field errors; only step 1's
-    // (assessment_scale) may appear here.
+    // validate-empty carries four required-field errors; only the project
+    // step's (assessment_scale) may appear here.
     const alerts = await screen.findAllByRole('alert');
     expect(alerts).toHaveLength(1);
     expect(screen.getByRole('button', { name: messages.wizard.continue })).toBeDisabled();
@@ -81,7 +94,7 @@ describe('WizardScreen', () => {
 
   it('auto-saves the draft with a debounced PATCH (D-020)', async () => {
     const { calls } = installFetchMock(baseRoutes(validateEmpty));
-    renderWizard();
+    renderWizard(stepUrl('project'));
 
     const user = userEvent.setup();
     // Scoped to the control: the field's explanation button (D-041) also
@@ -125,7 +138,7 @@ describe('WizardScreen', () => {
 
   it('renders every catalogue entry on the intervention step (D-019, D-043)', async () => {
     installFetchMock(baseRoutes(validatePartial));
-    renderWizard(`${draftUrl}?step=5`);
+    renderWizard(stepUrl('intervention'));
 
     expect(
       await screen.findByRole('heading', { name: messages.wizard.steps.intervention.title }),
@@ -140,7 +153,7 @@ describe('WizardScreen', () => {
     // The duplicate carries the site: scale, land use, and the four gating
     // answers, which are exactly what the availability query is built from.
     const { calls } = installFetchMock(baseRoutes(validatePartial, assessmentDuplicate));
-    renderWizard(`${draftUrl}?step=5`);
+    renderWizard(stepUrl('intervention'));
 
     await screen.findByRole('heading', { name: messages.wizard.steps.intervention.title });
     await waitFor(() => {
@@ -166,7 +179,7 @@ describe('WizardScreen', () => {
   it('asks nothing while the scale is unanswered, and offers every entry', async () => {
     // The bare draft has no assessment_scale, so there is nothing to ask.
     const { calls } = installFetchMock(baseRoutes(validatePartial));
-    renderWizard(`${draftUrl}?step=5`);
+    renderWizard(stepUrl('intervention'));
 
     await screen.findByRole('heading', { name: messages.wizard.steps.intervention.title });
     await screen.findAllByRole('button', { pressed: false });
@@ -178,7 +191,7 @@ describe('WizardScreen', () => {
 
   it('saves a multi-component package as an ordered list (D-038)', async () => {
     const { calls } = installFetchMock(baseRoutes(validatePartial, assessmentDuplicate));
-    renderWizard(`${draftUrl}?step=5`);
+    renderWizard(stepUrl('intervention'));
 
     await screen.findByRole('heading', { name: messages.wizard.steps.intervention.title });
     const user = userEvent.setup();
@@ -207,7 +220,7 @@ describe('WizardScreen', () => {
 
   it('asks the four availability questions on the site step, each stated as feeding no score (D-044.1)', async () => {
     installFetchMock(baseRoutes(validatePartial));
-    renderWizard(`${draftUrl}?step=2`);
+    renderWizard(stepUrl('site'));
 
     await screen.findByRole('heading', { name: messages.wizard.steps.site.title });
     for (const field of [
@@ -225,7 +238,7 @@ describe('WizardScreen', () => {
 
   it('records a multi-select answer as a list, and an empty one as unanswered (D-043.3)', async () => {
     const { calls } = installFetchMock(baseRoutes(validatePartial));
-    renderWizard(`${draftUrl}?step=2`);
+    renderWizard(stepUrl('site'));
 
     await screen.findByRole('heading', { name: messages.wizard.steps.site.title });
     const user = userEvent.setup();
@@ -278,7 +291,7 @@ describe('WizardScreen', () => {
       },
     ]);
     renderWizard(
-      `${draftUrl}?step=6`,
+      stepUrl('cost'),
       <Route
         path="projects/:projectId/assessments/:assessmentId/results"
         element={<div>results-probe</div>}

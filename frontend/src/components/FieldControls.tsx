@@ -17,6 +17,12 @@ interface CommonProps {
   field: string;
   error?: string | undefined;
   required?: boolean;
+  /**
+   * True when the map filled this answer in (D-047.2). Shown as a badge and
+   * announced through `aria-describedby`, not by colour alone: the marking is
+   * a disclosure, so it has to reach a screen reader too.
+   */
+  autofilled?: boolean;
 }
 
 /** The display name for one option of a field, falling back to the level list. */
@@ -39,10 +45,18 @@ function FieldShell(props: CommonProps & { inputId: string; children: React.Reac
           )}
         </label>
         <FieldExplainer field={props.field} />
+        {props.autofilled === true ? (
+          <span className="badge badge--accent">{messages.wizard.autofilledBadge}</span>
+        ) : null}
       </div>
       {help ? (
         <p className="field__help" id={`${props.inputId}-help`}>
           {help}
+        </p>
+      ) : null}
+      {props.autofilled === true ? (
+        <p className="field__help field__help--autofilled" id={`${props.inputId}-autofilled`}>
+          {messages.wizard.autofilledHint}
         </p>
       ) : null}
       {props.children}
@@ -55,8 +69,17 @@ function FieldShell(props: CommonProps & { inputId: string; children: React.Reac
   );
 }
 
-function describedBy(inputId: string, hasHelp: boolean, hasError: boolean): string | undefined {
-  const ids = [...(hasHelp ? [`${inputId}-help`] : []), ...(hasError ? [`${inputId}-error`] : [])];
+function describedBy(
+  inputId: string,
+  hasHelp: boolean,
+  hasError: boolean,
+  isAutofilled = false,
+): string | undefined {
+  const ids = [
+    ...(hasHelp ? [`${inputId}-help`] : []),
+    ...(isAutofilled ? [`${inputId}-autofilled`] : []),
+    ...(hasError ? [`${inputId}-error`] : []),
+  ];
   return ids.length > 0 ? ids.join(' ') : undefined;
 }
 
@@ -76,7 +99,12 @@ export function LevelField(
         id={inputId}
         value={props.value ?? ''}
         aria-invalid={props.error ? true : undefined}
-        aria-describedby={describedBy(inputId, Boolean(meta?.help), Boolean(props.error))}
+        aria-describedby={describedBy(
+          inputId,
+          Boolean(meta?.help),
+          Boolean(props.error),
+          props.autofilled,
+        )}
         onChange={(event) =>
           props.onChange(event.target.value === '' ? undefined : event.target.value)
         }
@@ -189,7 +217,12 @@ export function NumberField(
           step="any"
           value={props.value ?? ''}
           aria-invalid={props.error ? true : undefined}
-          aria-describedby={describedBy(inputId, Boolean(meta?.help), Boolean(props.error))}
+          aria-describedby={describedBy(
+            inputId,
+            Boolean(meta?.help),
+            Boolean(props.error),
+            props.autofilled,
+          )}
           onChange={(event) => {
             const raw = event.target.value;
             props.onChange(raw === '' ? undefined : Number(raw));
@@ -216,7 +249,12 @@ export function TextField(
         type="text"
         value={props.value ?? ''}
         aria-invalid={props.error ? true : undefined}
-        aria-describedby={describedBy(inputId, Boolean(meta?.help), Boolean(props.error))}
+        aria-describedby={describedBy(
+          inputId,
+          Boolean(meta?.help),
+          Boolean(props.error),
+          props.autofilled,
+        )}
         onChange={(event) => {
           const raw = event.target.value;
           props.onChange(raw === '' ? undefined : raw);
