@@ -1,0 +1,144 @@
+# Koppen-Geiger class -> tool climate zone
+#
+# THIS FILE IS A METHODOLOGY VALUE, NOT A DATA FILE. The classification it
+# reads from is cited (beck2023); the mapping it declares is not in that source
+# and is this methodology's own judgement. Mapping thirty Koppen classes onto
+# six zones changes which row of the climate adjustment matrix a site selects,
+# and therefore changes results - so it carries a rationale per branch, an
+# evidence-table entry, and a methodology version of its own (D-047.3).
+#
+# It is used ONLY to autofill climate_zone from a location the user pointed at
+# on the map. A user who disagrees overrides the value in one field, and the
+# autofill marking disappears with it. Nothing here fires unless a map was
+# opened; the questionnaire is fully usable without one.
+#
+# Derivation: docs/methodology/EVIDENCE-TABLES.md (climate classification)
+# Rulings: D-047.3, D-048
+# Dataset: data/geo/koppen_geiger.json (Beck et al. 2023, CC BY 4.0, 1991-2020)
+
+version: "2026.08.05"
+
+koppen_to_zone:
+  source_dataset: beck2023
+  sources:
+    - key: beck2023
+      finding: "Thirty Koppen-Geiger classes, present-day period 1991-2020, published at 1 km and coarser resolutions under CC BY 4.0."
+    - key: keravec2026
+      finding: "Solution type alone explains 12% of variance in cooling effectiveness; adding climate zone raises this to 30% and adding Koppen-Geiger subzone to 78%. Street trees deliver 4.0 +/- 1.6 C in tropical (A) versus 1.7 +/- 1.4 C in arid (B) climates."
+
+  # THE RULE, stated before the table it produces. Every one of the thirty
+  # assignments below follows from one of these four branches; none is an
+  # individual judgement about an individual class. That is deliberate - a
+  # thirty-row table of separate opinions could not be reviewed, and a reviewer
+  # disagreeing with the mapping should be able to disagree with a principle.
+  rule:
+    tropical: >
+      Koppen group A splits on its dry season, which is the same split the
+      tool's two tropical zones name: rainforest (Af) and monsoon (Am) have no
+      dry season or a brief one and map to tropical_wet; savannah (Aw) has a
+      pronounced dry season and maps to tropical_dry. No interpretation is
+      added - the tool's zone names and Koppen's subdivisions describe the same
+      distinction.
+    arid: >
+      Koppen group B splits on desert (BW) versus steppe (BS), and the tool
+      splits on arid versus semi_arid. These are the same axis. The mapping
+      deliberately ignores the hot/cold third letter (h/k), because the tool's
+      arid downgrade encodes WATER LIMITATION constraining evapotranspiration -
+      see adjustment_factors.yaml climate_condition - and not temperature. A
+      cold desert limits evapotranspiration as a hot one does.
+    warm_season: >
+      Groups C and D map to temperate when their third letter is a or b - a hot
+      or warm summer. This is where the mid-latitude cooling literature was
+      measured: the studies behind the temperate row are overwhelmingly from
+      Cfa, Cfb, Dfa and Dfb cities. Group D is NOT sent to `other` wholesale;
+      doing so would discard Chicago (Dfa), Beijing (Dwa) and Moscow (Dfb),
+      which have real urban heat problems and are squarely inside the evidence
+      base.
+    no_warm_season: >
+      Groups C and D map to `other` when their third letter is c or d, and
+      group E maps to `other` entirely. The defining property of these classes
+      is fewer than four months above 10 C, or no month above 10 C at all -
+      there is no warm season for the cooling literature to describe, and no
+      source in this bibliography measures a cooling intervention in one.
+      `other` resolves to the neutral adjustment factor 1.0, so such a site
+      receives neither a boost nor a penalty (D-047.3). Forcing these classes
+      into temperate was rejected: it would assert that a tundra site cools
+      like a temperate one, which no source supports, and an uncited claim
+      introduced through a lookup table is still an uncited claim.
+
+  # Class indices are the published legend's, reproduced in
+  # data/geo/koppen_geiger.json. `branch` names which rule above produced each
+  # assignment, so the table can be checked against the principle rather than
+  # taken on trust.
+  classes:
+    Af:  {index: 1,  zone: tropical_wet, branch: tropical}
+    Am:  {index: 2,  zone: tropical_wet, branch: tropical}
+    Aw:  {index: 3,  zone: tropical_dry, branch: tropical}
+    BWh: {index: 4,  zone: arid,         branch: arid}
+    BWk: {index: 5,  zone: arid,         branch: arid}
+    BSh: {index: 6,  zone: semi_arid,    branch: arid}
+    BSk: {index: 7,  zone: semi_arid,    branch: arid}
+    Csa: {index: 8,  zone: temperate,    branch: warm_season}
+    Csb: {index: 9,  zone: temperate,    branch: warm_season}
+    Csc: {index: 10, zone: other,        branch: no_warm_season}
+    Cwa: {index: 11, zone: temperate,    branch: warm_season}
+    Cwb: {index: 12, zone: temperate,    branch: warm_season}
+    Cwc: {index: 13, zone: other,        branch: no_warm_season}
+    Cfa: {index: 14, zone: temperate,    branch: warm_season}
+    Cfb: {index: 15, zone: temperate,    branch: warm_season}
+    Cfc: {index: 16, zone: other,        branch: no_warm_season}
+    Dsa: {index: 17, zone: temperate,    branch: warm_season}
+    Dsb: {index: 18, zone: temperate,    branch: warm_season}
+    Dsc: {index: 19, zone: other,        branch: no_warm_season}
+    Dsd: {index: 20, zone: other,        branch: no_warm_season}
+    Dwa: {index: 21, zone: temperate,    branch: warm_season}
+    Dwb: {index: 22, zone: temperate,    branch: warm_season}
+    Dwc: {index: 23, zone: other,        branch: no_warm_season}
+    Dwd: {index: 24, zone: other,        branch: no_warm_season}
+    Dfa: {index: 25, zone: temperate,    branch: warm_season}
+    Dfb: {index: 26, zone: temperate,    branch: warm_season}
+    Dfc: {index: 27, zone: other,        branch: no_warm_season}
+    Dfd: {index: 28, zone: other,        branch: no_warm_season}
+    ET:  {index: 29, zone: other,        branch: no_warm_season}
+    EF:  {index: 30, zone: other,        branch: no_warm_season}
+
+  # What the tool must say when it applies this table, in the interface and in
+  # the report. The classification is cited; the mapping is ours; the reader is
+  # entitled to both facts and to the class that was actually looked up.
+  disclosure:
+    autofill_note: >
+      Climate zone classified from the Koppen-Geiger class at this location
+      (Beck et al. 2023, 1991-2020), mapped to the tool's zones by the
+      methodology's documented table.
+    resolution_caveat: >
+      The bundled classification grid is 0.1 degrees, roughly 11 km. It is
+      reliable for the city a site sits in and is not a statement about the
+      site itself - which is the resolution at which climate zone enters this
+      methodology in any case, since it selects a row of an adjustment matrix
+      rather than a temperature.
+
+country_lookup:
+  # Not a methodology value: a point-in-polygon test against a public-domain
+  # boundary set, feeding only the emission-factor and currency defaults. It is
+  # recorded here so that both map-derived inputs are documented in one place,
+  # and because the omissions below are a decision rather than a data gap.
+  source_dataset: naturalearth
+  sources:
+    - key: naturalearth
+      finding: "Admin 0 country boundaries at 1:110m scale, release v5.1.2, in the public domain."
+  omitted_territories: >
+    Northern Cyprus, Somaliland, Kosovo and the Siachen Glacier carry no ISO
+    3166-1 code in the source. They are not assigned to the state that claims
+    them, and their outlines are kept as explicit exclusion zones rather than
+    deleted, so that a site inside one returns no country definitively instead
+    of being handed to a neighbour by the coastal tolerance below. The user
+    supplies the code they consider correct.
+  coastal_tolerance_m: 25000
+  coastal_tolerance_rationale: >
+    A point inside no boundary is attributed to the nearest country within 25
+    km. A generalised 1:50m coastline is drawn inland of the real one, so
+    waterfront sites in Beirut, Nicosia, Manama, Kingston, Monaco and Hong Kong
+    fall in the sea by a few kilometres. The tolerance is far narrower than any
+    open-water distance, never runs when the point is inside a boundary, and so
+    can neither override a containment match nor choose between neighbours at a
+    land border. Which of the two ways the answer was reached is recorded.

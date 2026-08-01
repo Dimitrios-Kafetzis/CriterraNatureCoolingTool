@@ -9,7 +9,7 @@
 # Methodology Report section 5.9 documents the effective weights, including the
 # deliberate equity-forward double contribution of vulnerability.
 
-version: "2026.08.04"
+version: "2026.08.05"
 
 heat_exposure:
   # Data-rich path only (used when a land surface temperature anomaly is given).

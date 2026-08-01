@@ -1,10 +1,17 @@
-"""Explicit storage migration, v1 → v2 (D-029, D-044.2).
+"""Explicit storage migration (D-029, D-044.2).
 
 D-029 forbids silent migration, so the contract under test is not merely "the
 old file still opens". It is that every change to a user's saved work is
 itemised in words they can read, that stored *results* are never touched, that
 a retired typology is preserved and reported rather than substituted, and that
 a version this build does not understand is refused rather than guessed at.
+
+Two migrations exist. v1 → v2 reshaped ``nbs_type`` into a list when an
+assessment gained the ability to propose a package. v2 → v3 added the autofill
+provenance record when v2.1 added the map picker. Tests about one reshape
+migrate to that version explicitly rather than to whatever the current version
+happens to be, so that adding a third migration cannot silently change what
+they are asserting — which is exactly what adding the second one did.
 """
 
 from __future__ import annotations
@@ -24,6 +31,11 @@ from nature_cooling.api.migration import (
 )
 from nature_cooling.api.schemas import STORAGE_SCHEMA_VERSION
 from nature_cooling.api.storage import ProjectStore
+
+# The version at which ``nbs_type`` became a list. Tests about that reshape
+# target it directly, so that a later migration appending its own notes cannot
+# quietly change what they assert.
+_RESHAPE = 2
 
 _PROJECT_ID = "11111111-1111-4111-8111-111111111111"
 _ASSESSMENT_ID = "22222222-2222-4222-8222-222222222222"
@@ -75,7 +87,7 @@ def test_a_v1_string_nbs_type_becomes_a_single_element_list() -> None:
 
 
 def test_the_notes_itemise_the_change_in_words_a_user_can_read() -> None:
-    _, notes = migrate_document(_v1_document(nbs_type="tree_avenue"), STORAGE_SCHEMA_VERSION)
+    _, notes = migrate_document(_v1_document(nbs_type="tree_avenue"), _RESHAPE)
     (note,) = notes
     # The note names the assessment it applies to, the value it changed, and why.
     assert note.startswith("Option A: ")
@@ -102,16 +114,16 @@ def test_a_draft_without_an_nbs_type_migrates_without_a_note() -> None:
     """An untouched draft produces no note: the notes describe changes, not files."""
     document = _v1_document()
     del document["assessments"][0]["input"]["nbs_type"]
-    migrated, notes = migrate_document(document, STORAGE_SCHEMA_VERSION)
+    migrated, notes = migrate_document(document, _RESHAPE)
     assert notes == []
-    assert migrated["schema_version"] == STORAGE_SCHEMA_VERSION
+    assert migrated["schema_version"] == _RESHAPE
 
 
 def test_an_nbs_type_that_is_already_a_list_is_left_alone() -> None:
     """The reshape is idempotent, so a document that already carries the new
     shape is neither double-wrapped nor reported as changed."""
     document = _v1_document(nbs_type=["tree_avenue", "pocket_park"])
-    migrated, notes = migrate_document(document, STORAGE_SCHEMA_VERSION)
+    migrated, notes = migrate_document(document, _RESHAPE)
     assert migrated["assessments"][0]["input"]["nbs_type"] == ["tree_avenue", "pocket_park"]
     assert notes == []
 
@@ -120,7 +132,7 @@ def test_a_draft_that_is_not_an_object_is_left_alone() -> None:
     """Migration reshapes what it recognises and never invents structure."""
     document = _v1_document()
     document["assessments"][0]["input"] = "corrupted"
-    _, notes = migrate_document(document, STORAGE_SCHEMA_VERSION)
+    _, notes = migrate_document(document, _RESHAPE)
     assert notes == []
 
 
@@ -148,9 +160,7 @@ def test_a_withdrawn_slug_is_preserved_and_the_note_says_it_must_be_reselected()
     the assessment means without them saying so, so the migration preserves the
     slug and says plainly that it must be re-selected.
     """
-    migrated, notes = migrate_document(
-        _v1_document(nbs_type="schoolyard_greening"), STORAGE_SCHEMA_VERSION
-    )
+    migrated, notes = migrate_document(_v1_document(nbs_type="schoolyard_greening"), _RESHAPE)
     assert migrated["assessments"][0]["input"]["nbs_type"] == ["schoolyard_greening"]
 
     retirement = notes[-1]
@@ -161,7 +171,7 @@ def test_a_withdrawn_slug_is_preserved_and_the_note_says_it_must_be_reselected()
 
 def test_the_package_slug_points_at_selecting_the_components_themselves() -> None:
     """``mixed_nbs_package`` is replaced by real multi-intervention packages (D-038)."""
-    _, notes = migrate_document(_v1_document(nbs_type="mixed_nbs_package"), STORAGE_SCHEMA_VERSION)
+    _, notes = migrate_document(_v1_document(nbs_type="mixed_nbs_package"), _RESHAPE)
     assert "select the components" in notes[-1]
     assert "re-select an intervention" in notes[-1]
 
@@ -169,9 +179,7 @@ def test_the_package_slug_points_at_selecting_the_components_themselves() -> Non
 def test_a_retired_slug_names_the_evidence_class_its_values_moved_to() -> None:
     """The mapping is *reported*, never applied: a migration reshapes data, it
     never substitutes methodology (D-044)."""
-    migrated, notes = migrate_document(
-        _v1_document(nbs_type="street_tree_planting"), STORAGE_SCHEMA_VERSION
-    )
+    migrated, notes = migrate_document(_v1_document(nbs_type="street_tree_planting"), _RESHAPE)
     assert migrated["assessments"][0]["input"]["nbs_type"] == ["street_tree_planting"]
 
     retirement = notes[-1]
@@ -182,7 +190,7 @@ def test_a_retired_slug_names_the_evidence_class_its_values_moved_to() -> None:
 
 @pytest.mark.parametrize("slug", sorted(RETIRED_TYPOLOGIES))
 def test_every_retired_slug_is_reported_and_never_substituted(slug: str) -> None:
-    migrated, notes = migrate_document(_v1_document(nbs_type=slug), STORAGE_SCHEMA_VERSION)
+    migrated, notes = migrate_document(_v1_document(nbs_type=slug), _RESHAPE)
     assert migrated["assessments"][0]["input"]["nbs_type"] == [slug]
     assert len(notes) == 2
     assert RETIRED_TYPOLOGIES[slug] in notes[-1]
@@ -197,7 +205,7 @@ def test_a_slug_that_is_still_selectable_is_not_told_to_re_select(slug: str) -> 
     what actually happened: the draft still evaluates, and the numbers behind it
     may differ because the entry now inherits a different cited evidence class.
     """
-    migrated, notes = migrate_document(_v1_document(nbs_type=slug), STORAGE_SCHEMA_VERSION)
+    migrated, notes = migrate_document(_v1_document(nbs_type=slug), _RESHAPE)
     assert migrated["assessments"][0]["input"]["nbs_type"] == [slug]
     note = notes[-1]
     assert MOVED_EVIDENCE_CLASS[slug] in note
@@ -306,9 +314,12 @@ def test_the_api_surfaces_the_migration_notes_on_the_project(
     assert body["schema_version"] == STORAGE_SCHEMA_VERSION
     assert body["assessments"][0]["input"]["nbs_type"] == ["schoolyard_greening"]
     notes = body["migrated_notes"]
-    assert len(notes) == 2
+    # Both reshapes are itemised: the v1 -> v2 list wrap, the retirement it
+    # revealed, and the v2 -> v3 provenance record.
+    assert len(notes) == 3
     assert any("single-element list" in note for note in notes)
     assert any("re-select an intervention" in note for note in notes)
+    assert any("answered without the map" in note for note in notes)
 
 
 def test_a_project_written_by_this_build_carries_no_notes(client: TestClient) -> None:
@@ -368,3 +379,56 @@ def test_a_migrated_draft_naming_a_current_typology_evaluates(
     result = response.json()["result"]
     assert result["typology"]["nbs_type"] == "pocket_park"
     assert result["package"]["component_count"] == 1
+
+
+# --- v2 → v3: the autofill provenance record ---------------------------------
+
+
+def _v2_document(**assessment: Any) -> dict[str, Any]:
+    """A stored project document as the v2.0 build wrote it."""
+    document = _v1_document(nbs_type=["tree_avenue"])
+    document["schema_version"] = 2
+    document["assessments"][0].update(assessment)
+    return document
+
+
+def test_v3_records_every_existing_answer_as_the_users_own() -> None:
+    """An empty provenance record is not a default standing in for an unknown.
+
+    Every assessment written before v2.1 was answered by hand, because there
+    was no map to answer it any other way. So the empty record is the complete
+    and correct provenance of those drafts, not a guess about them.
+    """
+    migrated, notes = migrate_document(_v2_document(), STORAGE_SCHEMA_VERSION)
+    assert migrated["schema_version"] == 3
+    assert migrated["assessments"][0]["autofilled"] == {}
+    (note,) = notes
+    assert "answered without the map" in note
+    assert "no answer, and no result, was changed" in note
+
+
+def test_v3_changes_no_answer_and_no_result() -> None:
+    """The migration adds a record about the answers; it does not touch them."""
+    result = {"engine_version": "2.0.1", "methodology_version": "2026.08.04", "opportunity": {}}
+    document = _v2_document(result=result)
+    before = json.loads(json.dumps(document["assessments"][0]["input"]))
+    migrated, _ = migrate_document(document, STORAGE_SCHEMA_VERSION)
+
+    assert migrated["assessments"][0]["input"] == before
+    assert migrated["assessments"][0]["result"] == result
+
+
+def test_v3_leaves_an_existing_provenance_record_alone() -> None:
+    """The migration is idempotent: a document that already carries the record
+    is neither emptied nor reported as changed a second time."""
+    document = _v2_document(autofilled={"climate_zone": "beck2023"})
+    migrated, _ = migrate_document(document, STORAGE_SCHEMA_VERSION)
+    assert migrated["assessments"][0]["autofilled"] == {"climate_zone": "beck2023"}
+
+
+def test_v3_says_nothing_about_a_project_with_no_assessments() -> None:
+    """The notes describe changes to saved work, so an empty project is silent."""
+    document = _v2_document()
+    document["assessments"] = []
+    _, notes = migrate_document(document, STORAGE_SCHEMA_VERSION)
+    assert notes == []

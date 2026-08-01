@@ -9,6 +9,7 @@ from nature_cooling.report.catalog import (
     FIELD_LABELS,
     INPUT_FIELD_ORDER,
     OPTION_LABELS,
+    SOURCE_LABELS,
     STATUS_TEXTS,
     STRINGS,
 )
@@ -146,6 +147,58 @@ def test_input_rows_mark_explicit_unknowns_and_nulls(render_args: Any) -> None:
     assert by_field["soil_availability"].marker == STRINGS["answered_unknown_marker"]
     assert by_field["land_use"].value == STRINGS["not_answered"]
     assert by_field["land_use"].marker == STRINGS["not_supplied_marker"]
+
+
+def test_the_inputs_sheet_distinguishes_supplied_autofilled_and_defaulted(
+    render_args: Any,
+) -> None:
+    """Scope item 4 of the v2.1 brief, and the whole of D-047.2's disclosure.
+
+    A value the tool derived must not be indistinguishable from one the
+    reader's colleague typed. Three states, three markers.
+    """
+    args = render_args("s05_minimal_input_pocket_park")
+    content = build_content(
+        **args,
+        autofilled={"climate_zone": "beck2023", "site_area_m2": "drawn_polygon"},
+    )
+    by_field = {row.field: row for row in content.inputs}
+
+    # Autofilled: named as such, and the dataset behind it is named too.
+    climate = by_field["climate_zone"]
+    assert "filled from the map" in climate.marker
+    assert SOURCE_LABELS["beck2023"] in climate.marker
+    assert "Beck" in climate.marker
+    assert climate.value == OPTION_LABELS[args["inp"]["climate_zone"]], "the value is unchanged"
+    assert SOURCE_LABELS["drawn_polygon"] in by_field["site_area_m2"].marker
+
+    # User-supplied: no marker at all, which is the common case and reads as one.
+    assert by_field["assessment_scale"].marker == ""
+
+    # Not supplied: the methodology fallback, exactly as before.
+    assert by_field["existing_tree_canopy_percent"].marker == STRINGS["not_supplied_marker"]
+
+
+def test_an_unrecognised_provenance_key_is_shown_rather_than_hidden(
+    render_args: Any,
+) -> None:
+    """A provenance record the report cannot name is a fact the reader still
+    needs; falling through to the raw key beats dropping the marker."""
+    content = build_content(
+        **render_args("s05_minimal_input_pocket_park"),
+        autofilled={"climate_zone": "some_later_dataset"},
+    )
+    marker = {row.field: row for row in content.inputs}["climate_zone"].marker
+    assert "some_later_dataset" in marker
+
+
+def test_a_report_with_no_autofill_is_unchanged(render_args: Any) -> None:
+    """The overwhelmingly common case: no map was ever opened."""
+    args = render_args("s05_minimal_input_pocket_park")
+    without = build_content(**args)
+    explicit_empty = build_content(**args, autofilled={})
+    assert without.inputs == explicit_empty.inputs
+    assert all("filled from the map" not in row.marker for row in without.inputs)
 
 
 def test_input_rows_render_fields_this_catalog_does_not_know(render_args: Any) -> None:

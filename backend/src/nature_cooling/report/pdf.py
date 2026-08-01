@@ -361,10 +361,16 @@ def build_pdf_report(
     created_at: str,
     inp: dict[str, Any],
     result: dict[str, Any],
+    autofilled: dict[str, str] | None = None,
 ) -> bytes:
     """Render one stored, evaluated assessment as 2-page PDF bytes."""
     content = build_content(
-        project_name=project_name, label=label, created_at=created_at, inp=inp, result=result
+        project_name=project_name,
+        label=label,
+        created_at=created_at,
+        inp=inp,
+        result=result,
+        autofilled=autofilled,
     )
     pdf = _ReportPDF()
     pdf.set_title(f"{STRINGS['app_title']} {STRINGS['report_title']} — {project_name} · {label}")

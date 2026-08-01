@@ -3,8 +3,10 @@
 #
 # The wheel must carry everything an installed package needs and a checkout
 # provides implicitly: the production frontend build (served at `/`), the
-# methodology configuration, and the bibliography its citation check reads.
-# All three are staged into src/nature_cooling/_bundled — gitignored, admitted
+# methodology configuration, the bibliography its citation check reads, and the
+# two bundled geographic datasets the map picker looks sites up in — with their
+# attribution notices, which their licences require to travel with them (D-047.1).
+# All four are staged into src/nature_cooling/_bundled — gitignored, admitted
 # into the wheel by the hatchling `artifacts` setting, and removed again on
 # exit so a checkout never shadows the live repository files.
 #
@@ -30,6 +32,7 @@ rm -rf "$bundled"
 mkdir -p "$bundled"
 cp -r "$root/config" "$bundled/config"
 cp "$root/docs/methodology/BIBLIOGRAPHY.md" "$bundled/BIBLIOGRAPHY.md"
+cp -r "$root/data" "$bundled/data"
 cp -r "$root/frontend/dist" "$bundled/webapp"
 
 # 3. Build the wheel.

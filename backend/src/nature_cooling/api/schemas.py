@@ -22,9 +22,18 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from nature_cooling.engine.config import ConfidenceLevel
 from nature_cooling.engine.models import AssessmentInput
 
-STORAGE_SCHEMA_VERSION = 2
+STORAGE_SCHEMA_VERSION = 3
 
 INPUT_FIELDS = frozenset(AssessmentInput.model_fields)
+
+# The only three inputs a map may fill in (D-047, v2.1 brief). The set is
+# closed on purpose and enforced on the way in: everything else the
+# questionnaire asks about the site — canopy, imperviousness, LST anomaly, land
+# use — needs satellite or census data, which is the GIS workflow deferred by
+# D-002. Filling those in from imagery would demo well and would generate the
+# tool's most decision-relevant inputs from an unvalidated pipeline with no
+# evidence table behind it, which is the defect D-016 refused for cost defaults.
+AUTOFILLABLE_FIELDS = frozenset({"site_area_m2", "country", "climate_zone"})
 
 # The questionnaire groups blanked by the duplicate-assessment operation
 # (D-021, D-028): the intervention itself, its co-benefit overrides (overrides
@@ -153,6 +162,69 @@ class AvailableTypologies(_RequestModel):
     nbs_types: list[str]
 
 
+class GeoLookupRequest(_RequestModel):
+    """``POST /api/geo/lookup`` — what a map click can honestly answer (D-047).
+
+    ``boundary`` is the polygon the user drew, as ``[longitude, latitude]``
+    pairs. When it is absent the user placed a point rather than drawing a
+    site, and no area is returned.
+    """
+
+    latitude: float = Field(ge=-90.0, le=90.0)
+    longitude: float = Field(ge=-180.0, le=180.0)
+    boundary: list[list[float]] | None = None
+
+    @field_validator("boundary")
+    @classmethod
+    def _boundary_points(cls, value: list[list[float]] | None) -> list[list[float]] | None:
+        if value is None:
+            return None
+        for point in value:
+            if len(point) != 2:
+                raise ValueError("each boundary point must be a [longitude, latitude] pair")
+            longitude, latitude = point
+            if not (-180.0 <= longitude <= 180.0 and -90.0 <= latitude <= 90.0):
+                raise ValueError("boundary point out of range")
+        return value
+
+
+class GeoCountry(_RequestModel):
+    """The country a point resolved to, and how the lookup reached it."""
+
+    iso_a2: str | None
+    iso_a3: str | None
+    name: str | None
+    matched: str
+    source_key: str
+    attribution: str
+
+
+class GeoClimate(_RequestModel):
+    """The climate zone a point resolved to, and the class it came from."""
+
+    zone: str | None
+    koppen_class: str | None
+    source_key: str
+    attribution: str
+    note: str
+    resolution_caveat: str
+
+
+class GeoLookupResponse(_RequestModel):
+    """``POST /api/geo/lookup``.
+
+    Every value is a suggestion. The interface applies each one only where the
+    user has not already answered, marks what it applied as autofilled, and
+    lets any of them be overridden (D-047.2).
+    """
+
+    latitude: float
+    longitude: float
+    site_area_m2: float | None
+    country: GeoCountry
+    climate: GeoClimate
+
+
 class ProjectCreate(_RequestModel):
     name: str = Field(min_length=1)
     site: dict[str, Any] = Field(default_factory=dict)
@@ -175,19 +247,42 @@ class ProjectPatch(_RequestModel):
         return _known_keys_only(value, SITE_DESCRIPTION_FIELDS, "site description")
 
 
+def _autofilled_keys_only(value: dict[str, str], label: str) -> dict[str, str]:
+    """Reject a provenance record naming a field a map may not fill in.
+
+    The closed set is enforced here, at the boundary, rather than trusted from
+    the client: it is the mechanism by which "only these three inputs autofill"
+    stays true as the questionnaire grows (D-047, D-048).
+    """
+    unknown = sorted(set(value) - AUTOFILLABLE_FIELDS)
+    if unknown:
+        raise ValueError(
+            f"unknown {label} field(s): {unknown}; only "
+            f"{sorted(AUTOFILLABLE_FIELDS)} may be autofilled"
+        )
+    return value
+
+
 class AssessmentCreate(_RequestModel):
     label: str = Field(min_length=1)
     input: dict[str, Any] = Field(default_factory=dict)
+    autofilled: dict[str, str] = Field(default_factory=dict)
 
     @field_validator("input")
     @classmethod
     def _input_keys(cls, value: dict[str, Any]) -> dict[str, Any]:
         return _known_keys_only(value, INPUT_FIELDS, "assessment input")
 
+    @field_validator("autofilled")
+    @classmethod
+    def _autofilled_keys(cls, value: dict[str, str]) -> dict[str, str]:
+        return _autofilled_keys_only(value, "autofill provenance")
+
 
 class AssessmentPatch(_RequestModel):
     label: str | None = Field(default=None, min_length=1)
     input: dict[str, Any] | None = None
+    autofilled: dict[str, str] | None = None
 
     @field_validator("input")
     @classmethod
@@ -195,6 +290,13 @@ class AssessmentPatch(_RequestModel):
         if value is None:
             return None
         return _known_keys_only(value, INPUT_FIELDS, "assessment input")
+
+    @field_validator("autofilled")
+    @classmethod
+    def _autofilled_keys(cls, value: dict[str, str] | None) -> dict[str, str] | None:
+        if value is None:
+            return None
+        return _autofilled_keys_only(value, "autofill provenance")
 
 
 class AssessmentDuplicate(_RequestModel):
@@ -209,6 +311,15 @@ class StoredAssessment(BaseModel):
     only when the user explicitly evaluates. ``result`` is the engine's full
     ``AssessmentResult`` (including ``methodology_version`` and
     ``engine_version``) or ``None`` while the assessment is a draft.
+
+    ``autofilled`` records which of the three map-derivable inputs the map
+    filled in, and from which dataset (D-047.2). It is a sibling of ``input``
+    rather than a key inside it because ``input`` holds engine fields and
+    nothing else — the engine has no concept of where a value came from, and
+    correctly does not want one: an autofilled value counts as supplied for
+    confidence exactly as a typed one does. The provenance is for the reader of
+    the report, not for the scoring. It is dropped for any field the user
+    subsequently answers themselves, so the mark disappears with the override.
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -217,6 +328,7 @@ class StoredAssessment(BaseModel):
     label: str
     created_at: str
     input: dict[str, Any]
+    autofilled: dict[str, str] = Field(default_factory=dict)
     result: dict[str, Any] | None = None
 
 

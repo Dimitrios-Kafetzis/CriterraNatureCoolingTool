@@ -7,7 +7,7 @@
 # Adjustment scales the 0-100 Cooling Potential Score. It may reduce the reported
 # temperature range below the typology envelope but never above it (D-008).
 
-version: "2026.08.04"
+version: "2026.08.05"
 
 condition_factors:
   poor: 0.5

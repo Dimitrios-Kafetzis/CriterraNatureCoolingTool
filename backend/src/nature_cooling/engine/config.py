@@ -360,6 +360,7 @@ class MethodologyConfig(BaseModel):
     recommendation_templates: dict[str, Any]
     derived_scores: dict[str, Any]
     availability: dict[str, Any]
+    climate_classification: dict[str, Any]
 
 
 _CONFIG_FILES = {
@@ -371,6 +372,7 @@ _CONFIG_FILES = {
     "recommendation_templates": "recommendation_templates.yaml",
     "derived_scores": "derived_scores.yaml",
     "availability": "availability.yaml",
+    "climate_classification": "climate_classification.yaml",
 }
 
 
@@ -383,9 +385,10 @@ def bundled_data_dir() -> Path:
     """Return the wheel's embedded data directory (D-035).
 
     The distributable wheel embeds the methodology configuration, the
-    bibliography, and the production frontend build under
-    ``nature_cooling/_bundled`` (staged by ``tools/build_wheel.sh``; never
-    committed). In a repository checkout the directory does not exist.
+    bibliography, the bundled geographic datasets, and the production frontend
+    build under ``nature_cooling/_bundled`` (staged by
+    ``tools/build_wheel.sh``; never committed). In a repository checkout the
+    directory does not exist.
     """
     return Path(__file__).resolve().parents[1] / "_bundled"
 
@@ -399,6 +402,18 @@ def default_config_dir() -> Path:
     """
     repo_config = repo_root() / "config"
     return repo_config if repo_config.is_dir() else bundled_data_dir() / "config"
+
+
+def default_geo_data_dir() -> Path:
+    """Return the bundled geographic datasets: the repository's, else the wheel's.
+
+    Holds the Natural Earth country boundaries and the Köppen–Geiger
+    classification grid the map picker looks sites up in, together with the
+    attribution notices their licences require to travel with them. Staged into
+    the wheel exactly as ``config/`` and the bibliography are (D-036, D-047.1).
+    """
+    repo_geo = repo_root() / "data" / "geo"
+    return repo_geo if repo_geo.is_dir() else bundled_data_dir() / "data" / "geo"
 
 
 def default_bibliography_path() -> Path:

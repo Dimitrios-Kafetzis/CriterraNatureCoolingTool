@@ -19,7 +19,7 @@
 # belong to the lower band, matching the Methodology Report's "0-30 / 31-60"
 # reading.
 
-version: "2026.08.04"
+version: "2026.08.05"
 
 suitability_sub_indicators:
   # NbS Suitability Score = 0.30 space + 0.25 soil + 0.20 water

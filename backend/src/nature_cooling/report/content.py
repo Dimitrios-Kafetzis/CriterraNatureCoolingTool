@@ -25,6 +25,7 @@ from nature_cooling.report.catalog import (
     INPUT_FIELD_ORDER,
     OPTION_LABELS,
     PATH_LABELS,
+    SOURCE_LABELS,
     STATUS_TEXTS,
     STRINGS,
 )
@@ -417,14 +418,22 @@ def _input_value(field: str, value: Any) -> str:
     return _option(str(value))
 
 
-def _input_rows(inp: dict[str, Any]) -> tuple[InputRow, ...]:
+def _input_rows(
+    inp: dict[str, Any], autofilled: dict[str, str] | None = None
+) -> tuple[InputRow, ...]:
     """The stored draft input, field by field, in questionnaire order.
 
-    The marker states only what the stored input shows: a field that was not
-    supplied (absent, ``None``, or an explicit ``unknown``) falls back to the
-    methodology's documented rules; the defaults the engine *actually* applied
-    are itemised verbatim on the Assumptions & Warnings sheet.
+    The marker distinguishes the three ways a value can have got here (D-047.2,
+    scope item 4). A field that was not supplied — absent, ``None``, or an
+    explicit ``unknown`` — falls back to the methodology's documented rules; the
+    defaults the engine *actually* applied are itemised verbatim on the
+    Assumptions & Warnings sheet. A field the map filled in is named as such,
+    with the dataset it came from, because a value the tool derived should not
+    be indistinguishable from one the reader's colleague typed. Everything else
+    is the user's own answer and carries no marker, which is the common case
+    and reads as one.
     """
+    marks = autofilled or {}
     rows = []
     extras = sorted(set(inp) - set(INPUT_FIELD_ORDER))
     for field in [*INPUT_FIELD_ORDER, *extras]:
@@ -440,6 +449,17 @@ def _input_rows(inp: dict[str, Any]) -> tuple[InputRow, ...]:
             rows.append(
                 InputRow(
                     field, display_label, _option("unknown"), STRINGS["answered_unknown_marker"]
+                )
+            )
+        elif field in marks:
+            rows.append(
+                InputRow(
+                    field,
+                    display_label,
+                    _input_value(field, value),
+                    STRINGS["autofilled_marker"].format(
+                        source=SOURCE_LABELS.get(marks[field], marks[field])
+                    ),
                 )
             )
         else:
@@ -499,6 +519,7 @@ def build_content(
     created_at: str,
     inp: dict[str, Any],
     result: dict[str, Any],
+    autofilled: dict[str, str] | None = None,
 ) -> ReportContent:
     """Shape one stored, evaluated assessment for rendering."""
     components, excluded_line = _components(result)
@@ -532,5 +553,5 @@ def build_content(
         assumptions=tuple(str(item) for item in result["assumptions_applied"]),
         warnings=tuple(str(item) for item in result["warnings"]),
         method_note=str(result["method_note"]),
-        inputs=_input_rows(inp),
+        inputs=_input_rows(inp, autofilled),
     )

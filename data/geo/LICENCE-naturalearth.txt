@@ -1,0 +1,51 @@
+Natural Earth — Terms of Use
+============================
+
+Applies to: countries.json, derived from Natural Earth's Admin 0 - Countries
+layer at 1:110m scale, release v5.1.2.
+
+Source: https://www.naturalearthdata.com/about/terms-of-use/
+
+
+Terms, as published by Natural Earth
+------------------------------------
+
+    All versions of Natural Earth raster + vector map data found on this
+    website are in the public domain. You may use the maps in any manner,
+    including modifying the content and design, electronic dissemination, and
+    offset printing. The primary authors, Tom Patterson and Nathaniel Vaughn
+    Kelso, and all other contributors renounce all financial claim to the
+    maps and invite you to use them for personal, educational, and commercial
+    purposes.
+
+    No permission is needed to use Natural Earth. Crediting the authors is
+    unnecessary.
+
+    However, if you wish to cite the map data, simply use one of the
+    following.
+
+    Short text: Made with Natural Earth.
+
+    Long text: Made with Natural Earth. Free vector and raster map data @
+    naturalearthdata.com.
+
+
+Disclaimer, as published by Natural Earth
+-----------------------------------------
+
+    Natural Earth is a volunteer effort. The authors provide Natural Earth as
+    a public service and are not responsible for any problems relating to
+    accuracy, content, design, and how it is used.
+
+
+Note on this redistribution
+---------------------------
+
+Attribution is not required by these terms. It is given anyway, in NOTICE and
+in data/geo/ATTRIBUTION.md, because a reader of an assessment is entitled to
+know the provenance of a boundary the tool used to identify their country.
+
+The bundled file is not the publisher's original. Its derivation — which
+attributes were kept, what coordinate precision was retained, and which three
+entries were omitted for want of an ISO code — is recorded in
+data/geo/ATTRIBUTION.md and performed by tools/build_datasets.py.

@@ -15,7 +15,7 @@
 # Derivation: docs/methodology/EVIDENCE-TABLES.md (availability section)
 # Rulings: D-043.1, D-043.2, D-043.3, D-044.1
 
-version: "2026.08.04"
+version: "2026.08.05"
 
 conditions:
   # Three of the four conditions describe a PHYSICAL FACT about the site, and

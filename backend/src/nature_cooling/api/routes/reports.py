@@ -65,6 +65,7 @@ def report_pdf(project_id: UUID, assessment_id: UUID, request: Request) -> Respo
         created_at=stored.created_at,
         inp=stored.input,
         result=stored.result or {},
+        autofilled=stored.autofilled,
     )
     return _download(payload, "application/pdf", _filename(project, stored, "pdf"))
 
@@ -84,6 +85,7 @@ def report_xlsx(project_id: UUID, assessment_id: UUID, request: Request) -> Resp
         created_at=stored.created_at,
         inp=stored.input,
         result=stored.result or {},
+        autofilled=stored.autofilled,
     )
     return _download(
         payload,

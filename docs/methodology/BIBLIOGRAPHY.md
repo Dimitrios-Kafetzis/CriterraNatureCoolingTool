@@ -198,6 +198,20 @@ The two water archetypes are separate bodies of study, not two points on one cur
 
 ---
 
+## Climate and geographic classification
+
+**`beck2023`** — Beck, H.E., McVicar, T.R., Vergopolan, N., Berg, A., Lutsko, N.J., Dufour, A., Zeng, Z., Jiang, X., van Dijk, A.I.J.M., Miralles, D.G. (2023). High-resolution (1 km) Köppen-Geiger maps for 1901–2099 based on constrained CMIP6 projections. *Scientific Data*, 10, 724. DOI: [10.1038/s41597-023-02549-6](https://doi.org/10.1038/s41597-023-02549-6)
+*Use:* the classification of a mapped location into one of the **30 Köppen–Geiger classes**, which `config/climate_classification.yaml` resolves to one of this tool's six climate zones. The bundled layer is the **present-day period, 1991–2020, at 0.1°** — the coarsest published layer that still reproduces the 1 km layer's six-zone answer for the cities this tool is used on (71 of 75 tested, against 69 at 0.5°). Released under **CC BY 4.0**, which permits redistribution inside an Apache-2.0 tool with attribution — the same basis on which `ember` already ships (D-036).
+*Verified:* Full (open access at Nature *Scientific Data*; licence, period, resolution and the 30-class legend confirmed against the published archive, whose checksum is recorded in `tools/build_datasets.py`).
+*Role in this methodology:* supplies the classification only. **It does not supply the mapping onto the tool's six zones**, which is this methodology's own judgement, declared in `config/climate_classification.yaml`, derived in the evidence tables, and ruled in D-047.3.
+
+**`naturalearth`** — Natural Earth (2022). *Admin 0 – Countries*, 1:110m scale, release v5.1.2. <https://www.naturalearthdata.com/>
+*Use:* point-in-polygon identification of the country a mapped site falls in, which feeds only the electricity-grid emission-factor and currency defaults, and the country outlines the offline basemap draws. **Public domain**; its terms state that no permission is needed and that crediting the authors is unnecessary. Attribution is recorded anyway, in `NOTICE` and `data/geo/ATTRIBUTION.md`.
+*Verified:* Full (terms of use and release v5.1.2 confirmed at source; SHA-256 of the retrieved file recorded in `tools/build_datasets.py`).
+*Caveats recorded:* three entries in the source carry no ISO 3166-1 code — Northern Cyprus, Somaliland and Kosovo — and are **omitted** rather than folded into the state that claims them. A site inside one of them returns no country and the user supplies the code, which the tool prefers to asserting a sovereignty question it has no business answering.
+
+---
+
 ## Prioritisation frameworks and indicator methodology
 
 **`norton2015`** — Norton, B.A., Coutts, A.M., Livesley, S.J., Harris, R.J., Hunter, A.M., Williams, N.S.G. (2015). Planning for cooler cities: A framework to prioritise green infrastructure to mitigate high temperatures in urban landscapes. *Landscape and Urban Planning*, 134, 127–138. DOI: [10.1016/j.landurbplan.2014.10.018](https://doi.org/10.1016/j.landurbplan.2014.10.018)

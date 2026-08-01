@@ -130,16 +130,19 @@ STRINGS: Final[dict[str, str]] = {
     "sheet_assumptions": "Assumptions & Warnings",
     "inputs_field": "Field",
     "inputs_value": "Supplied value",
-    "inputs_marker": "Applied default",
+    "inputs_marker": "Provenance",
     "inputs_note": (
-        "Fields marked as not supplied fall back to the methodology's documented "
-        "rules; every default the engine actually applied is itemised on the "
-        "Assumptions & Warnings sheet."
+        "An unmarked value was supplied by the user. Fields marked as not supplied "
+        "fall back to the methodology's documented rules, and every default the "
+        "engine actually applied is itemised on the Assumptions & Warnings sheet. "
+        "Fields marked as filled from the map were derived from a location the user "
+        "chose, and were overridable at every point."
     ),
     "not_answered": "(not answered)",
     "none_selected": "(none selected)",
     "not_supplied_marker": "not supplied — methodology fallback applies",
     "answered_unknown_marker": "answered “unknown” — counts as not supplied",
+    "autofilled_marker": "filled from the map ({source})",
     "results_block": "Block",
     "results_item": "Item",
     "results_value": "Value",
@@ -339,3 +342,14 @@ FIELD_UNITS: Final[dict[str, str]] = {
 # The questionnaire order (models.AssessmentInput declaration order), used by
 # the workbook's Inputs sheet.
 INPUT_FIELD_ORDER: Final[tuple[str, ...]] = tuple(FIELD_LABELS)
+
+# How the Inputs sheet names the dataset behind an autofilled value. Keyed by
+# the bibliography key the lookup recorded, so the report cites the same source
+# the methodology does; an unrecognised key falls through to itself rather than
+# being hidden, because a provenance record the report cannot name is a fact
+# the reader still needs.
+SOURCE_LABELS: Final[dict[str, str]] = {
+    "beck2023": "Köppen–Geiger classification, Beck et al. 2023",
+    "naturalearth": "Natural Earth country boundaries",
+    "drawn_polygon": "measured from the drawn boundary",
+}

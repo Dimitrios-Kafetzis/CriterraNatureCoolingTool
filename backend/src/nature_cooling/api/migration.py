@@ -120,7 +120,36 @@ def _v1_to_v2(document: dict[str, Any]) -> list[str]:
     return notes
 
 
-_MIGRATIONS = {1: _v1_to_v2}
+def _v2_to_v3(document: dict[str, Any]) -> list[str]:
+    """Give every stored assessment an empty autofill-provenance record.
+
+    v2.1 added the map picker, and with it a record of which of the three
+    map-derivable inputs were filled in from a location rather than typed
+    (D-047.2). Every assessment written before this version was answered by
+    hand, so an empty record is not a default standing in for an unknown — it
+    is the correct and complete provenance of a questionnaire filled in without
+    a map, which is what every one of them was.
+
+    That makes this migration a genuinely uninteresting one, and the note says
+    so rather than implying something changed in the user's answers. Nothing in
+    the draft input is touched, no value moves, and no result is affected: a
+    reader who evaluates a migrated draft gets the number they got before.
+    """
+    assessments = document.get("assessments", [])
+    for assessment in assessments:
+        assessment.setdefault("autofilled", {})
+    document["schema_version"] = 3
+    if not assessments:
+        return []
+    return [
+        f"{len(assessments)} assessment(s) recorded as answered without the map: v2.1 added "
+        "map-based autofill and notes which inputs came from a location rather than "
+        "being typed. Every existing answer is marked as your own, because it is; "
+        "no answer, and no result, was changed"
+    ]
+
+
+_MIGRATIONS = {1: _v1_to_v2, 2: _v2_to_v3}
 
 
 def migrate_document(document: dict[str, Any], target: int) -> tuple[dict[str, Any], list[str]]:

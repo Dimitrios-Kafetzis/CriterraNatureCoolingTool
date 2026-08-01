@@ -16,6 +16,7 @@ Domain rules enforced here, not in storage:
 
 from __future__ import annotations
 
+from typing import Any
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, HTTPException, Request, Response
@@ -70,6 +71,18 @@ def _assessment(project: Project, assessment_id: UUID) -> StoredAssessment:
 
 def _view(request: Request, stored: StoredAssessment) -> AssessmentView:
     return AssessmentView.of(stored, _config(request).version)
+
+
+def _settled_autofill(autofilled: dict[str, str], draft: dict[str, Any]) -> dict[str, str]:
+    """Keep only marks that still describe a value present in the draft.
+
+    A field the user cleared, or that never made it into the input, cannot
+    honestly be described as autofilled — the mark would outlive the value it
+    describes and the report would itemise provenance for an answer that is not
+    there. Dropping it here means the invariant holds for every write path,
+    including a client that keeps sending a stale mark (D-047.2).
+    """
+    return {field: source for field, source in autofilled.items() if draft.get(field) is not None}
 
 
 @router.get("")
@@ -128,6 +141,7 @@ def create_assessment(project_id: UUID, body: AssessmentCreate, request: Request
         label=body.label,
         created_at=utc_now_iso(),
         input=body.input,
+        autofilled=_settled_autofill(body.autofilled, body.input),
         result=None,
     )
     project.assessments.append(stored)
@@ -157,6 +171,17 @@ def update_assessment(
         stored.label = body.label
     if body.input is not None:
         stored.input = body.input
+        # The provenance record is re-settled against whatever the input now
+        # holds, whether or not the caller sent one. A field the user has since
+        # cleared or answered themselves loses its mark here even if a stale
+        # client keeps sending it — the marking follows the data, not the
+        # client's memory of it (D-047.2).
+        stored.autofilled = _settled_autofill(
+            body.autofilled if body.autofilled is not None else stored.autofilled,
+            body.input,
+        )
+    elif body.autofilled is not None:
+        stored.autofilled = _settled_autofill(body.autofilled, stored.input)
     project.updated_at = utc_now_iso()
     _store(request).save(project)
     return _view(request, stored)
@@ -216,15 +241,19 @@ def duplicate_assessment(
     project = _load(request, project_id)
     source = _assessment(project, assessment_id)
     label = f"{source.label} (copy)" if body is None or body.label is None else body.label
+    carried = {
+        field: value for field, value in source.input.items() if field in SITE_DESCRIPTION_FIELDS
+    }
     duplicate = StoredAssessment(
         assessment_id=str(uuid4()),
         label=label,
         created_at=utc_now_iso(),
-        input={
-            field: value
-            for field, value in source.input.items()
-            if field in SITE_DESCRIPTION_FIELDS
-        },
+        input=carried,
+        # All three autofillable fields describe the site, so they survive
+        # duplication — and their provenance must survive with them. A copy
+        # whose climate zone came from the map is still a copy whose climate
+        # zone came from the map, and the comparison's report says so.
+        autofilled=_settled_autofill(source.autofilled, carried),
         result=None,
     )
     project.assessments.append(duplicate)
