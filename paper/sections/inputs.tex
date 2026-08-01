@@ -9,6 +9,12 @@ intervention; and cost and energy parameters. The full field reference, with
 required or optional status and the normalisation applied to each field, is
 reproduced in \Cref{app:fields}.
 
+Two structural changes arrive at version \methver{}. The intervention field
+\fieldname{nbs_type} is now a \emph{list}: an assessment may propose a package
+of simultaneously available entries, scored under \Cref{sec:packages}. And the
+site-characteristics group gains four questions that decide which interventions
+are offered and feed no score at all (\Cref{sec:availability}).
+
 Every input is either \emph{required}, in which case the assessment cannot
 proceed without it, or \emph{optional}, in which case its absence reduces
 confidence but never blocks the assessment. The interaction design anticipates
@@ -168,6 +174,96 @@ methodology rests on --- that surface UHI substantially exceeds canopy-layer
 UHI --- is corroborated conceptually by \textcite{oke1976}, and the tool's use
 of the finding is qualitative (treat LST as relative only) rather than
 numerical, so no tool output depends on the precise sixfold ratio.
+
+\subsection{The four availability questions: inputs that gate but never score}
+\label{sec:availability}
+
+Version \methver{} adds four site-characteristic questions. They are unlike
+every other input in this section, and the difference is the point of this
+subsection.
+
+\begin{table}[H]
+\centering
+\caption[The four availability questions]{The four availability questions added
+at version \methver{}. Each decides which of the \num{110} catalogue entries
+the tool offers for this site. None of them appears in any formula in
+\Cref{sec:formulas}, in any confidence block of \Cref{sec:confidence}, or in
+any aggregation.}
+\label{tab:availability}
+\small
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}X
+                               >{\raggedright\arraybackslash}p{34mm}@{}}
+\toprule
+\textbf{Field} & \textbf{Answers} & \textbf{Gates} \\
+\midrule
+\fieldname{includes_railway} & yes / no &
+Exactly one entry, the railway green corridor \\
+\fieldname{existing_woodland} & yes / no &
+Woodland \emph{restoration} entries only \\
+\fieldname{waterfront_type} &
+lake / river / dry river / covered river / sea &
+Twelve water-landscape and ecological-network entries, by category \\
+\fieldname{productive_governance} &
+multi-select over community / individual / institutional / commercial &
+The seven productive entries, by who delivers them \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{keynote}
+\noindent\textbf{Gating is not scoring.} These four fields decide which
+interventions the tool \emph{offers}, and they feed no score.
+
+Making a gating answer a scoring input would need its own justification and
+would move every existing result. The engine's test suite asserts the
+separation as a property --- the same site scored with all four answered and
+with none answered produces byte-identical output --- so the distinction cannot
+erode quietly through a later edit. The fields are recorded in the input schema
+and disclosed as availability-only in \Cref{tab:app-fields}.
+\end{keynote}
+
+\paragraph{What an unanswered question means differs by kind, deliberately.}
+Three of the four describe a \emph{physical fact} about the site, and they gate
+on positive confirmation: an entry that acts on an existing river is not
+offered until the user says there is a river, because offering it would be
+offering an intervention that cannot be built there. The fourth describes
+\emph{who could deliver} the intervention, and it subtracts nothing until it is
+answered.
+
+That asymmetry is deliberate. The question originally specified for productive
+landscapes was a yes/no --- is there interest in creating productive landscape
+from individuals or communities --- which on a ``no'' would have suppressed the
+urban farm and the agroforestry system: the highest-canopy, highest-cooling
+entries in the group, and the ones a municipality is most likely to deliver. A
+multi-select over four delivery models gates correctly at no extra cost in user
+effort, and an \emph{empty} selection is not evidence that no delivery model
+exists. The tool does not assert a negative from absent information, here as in
+the soil--water pair of \Cref{sec:adjustment} and the suitability rules of
+\Cref{tab:suitability-rules}.
+
+Two consequences follow from the same principle and are worth stating because
+both run against intuition. \textbf{Woodland \emph{creation} entries are
+ungated}: urban woodland, microforest, afforestation, and the woodland buffer
+are offered whatever the answer, because creating woodland does not require
+woodland to be there already --- only restoration does. And \textbf{the four
+constructed water features carry no waterfront condition at all}: a constructed
+wetland, retention pond, detention basin, or water square needs no existing
+water body, so gating them on one would withhold exactly the interventions
+available to a site that has no water.
+
+\paragraph{Land use maps to interventions rather than naming one.} The same
+mechanism carries the retirement of \Cref{sec:retirements}. \num{72} of the
+\num{110} entries name \emph{school} in their land-use list, \num{93} name
+\emph{campus}, \num{76} \emph{healthcare}, and \num{41} \emph{memorial};
+the assessment scale then narrows the menu further, so a school \emph{site}
+is offered \num{67}. All four land-use totals and the nine published
+situation counts are asserted by the test suite, so a land use silently losing
+its interventions fails the build. Memorial is deliberately the sparsest: tree groves, meadows, woodland,
+and quiet permeable planting are in; plazas, playgrounds, tram corridors,
+living walls, and productive landscapes are out. All four counts are computed
+with the governance question unanswered, which is the governance-agnostic
+reading; answering it reduces them, and both readings are correct because they
+answer different questions.
 
 \subsection{Where the tool has no LST}
 

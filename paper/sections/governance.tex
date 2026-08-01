@@ -21,9 +21,19 @@ Existing assessments are never to be silently recomputed: a result retains the
 version that produced it, the interface indicates when a newer methodology
 version is available, leaving the decision to re-run with the user, and
 comparisons between results produced under differing versions raise a warning.
-None of this is yet exercised, since no assessment result exists at version
-\methver{} (\Cref{sec:implementation-status}); it is the behaviour the engine
-is specified to have.
+
+Version \methver{} is the first release to exercise this properly, because it
+is the first to break something. The intervention field became a list and the
+input schema gained four fields, so stored \emph{drafts} cannot be read
+unchanged. They are migrated \textbf{explicitly} rather than silently: the
+single intervention is wrapped into a one-element list, the four new fields are
+left absent rather than defaulted, and the migration is itemised for the user.
+The migration notes distinguish two cases that would otherwise be confused ---
+a slug that no longer names any selectable entry, whose draft must be
+re-chosen, and a slug that still names a catalogue entry but whose inherited
+evidence class changed, which needs no re-selection. Telling a user to
+re-select an intervention that is still there would be a false alarm about
+their own saved work. Stored \emph{results} are not touched in either case.
 
 \subsection{The public change process}
 
@@ -35,6 +45,21 @@ verification standard is the one described in \Cref{app:verification}:
 bibliographic details checked against the publisher record, an institutional
 repository, or an indexing service, with the verification level recorded
 honestly rather than overstated.
+
+\begin{keynote}
+\noindent\textbf{A design may be approved; a citation is only settled once it
+has been read.} Version \methver{} supplies the case that makes this concrete.
+An envelope floor was approved on the strength of a figure attributed to
+\textcite{yao2023a}; verification before the value entered configuration found
+that the paper reports no such figure and in fact measures an order of
+magnitude less by day, and the floor moved (\Cref{sec:water-body}). Four
+further citation corrections were made in the same pass without moving a value.
+
+The process rule that follows is stated here rather than left as folklore:
+\textbf{approval of a design is not approval of the citations inside it}, and
+verification runs after approval and before configuration, with the authority
+to change the approved value.
+\end{keynote}
 
 Because the methodology lives in configuration rather than in code, the diff of
 such a proposal is legible to a domain expert who does not read the
@@ -49,7 +74,7 @@ inconvenience to be managed. The route is to open an issue in the repository
 at \url{\repourl}, referencing the section number of this document and, where
 possible, the literature supporting the alternative position.
 
-Four areas are in particular need of external scrutiny, and are listed in
+Six areas are in particular need of external scrutiny, and are listed in
 descending order of how much a change would affect the tool's outputs.
 
 \begin{enumerate}
@@ -61,15 +86,31 @@ descending order of how much a change would affect the tool's outputs.
   influence: rank orderings prove substantially stable under single-weight
   perturbation, which bounds --- but does not settle --- the dispute.
 
-  \item \textbf{The green fa\c{c}ade and rain garden / bioswale envelopes}
+  \item \textbf{The green fa\c{c}ade and bioretention envelopes}
   (\Cref{sec:weak-points}). For green fa\c{c}ades the sources conflict outright
   and the tool adopts a conservative resolution based on a hypothesis about
-  measurement position that neither source states. For rain gardens and
-  bioswales no source quantifies air-temperature cooling at all, and the
-  adopted range is reasoned from adjacent evidence. Both are candidates for
-  replacement by better evidence, and both would benefit from a reviewer who
-  knows this literature better than the derivation in
-  \Cref{app:typologies} demonstrates.
+  measurement position that neither source states; eleven catalogue entries
+  inherit the result. For rain gardens and bioswales no source quantifies
+  air-temperature cooling at all, and the adopted range is reasoned from
+  adjacent evidence. Both are candidates for replacement by better evidence,
+  and both would benefit from a reviewer who knows this literature better than
+  the derivation in \Cref{app:typologies} demonstrates.
+
+  \item \textbf{The two derived productive archetypes, and the width of the
+  large water body envelope} (\Cref{sec:derived-archetypes,sec:water-body}).
+  The productive classes are bounded from adjacent evidence rather than
+  measured, and the tool can cite the absence \parencite{kumar2024} but cannot
+  fill it. The water envelope spans a factor of thirty because remote sensing
+  and field measurement disagree by an order of magnitude; a reviewer who can
+  resolve that disagreement on air temperature would narrow the widest range in
+  the library.
+
+  \item \textbf{The non-adoption of \textcite{kumar2024}'s higher figures}
+  (\Cref{sec:non-adoption,sec:limit-non-adoption}). Adopting them selectively
+  would break internal consistency and adopting them wholesale is a full
+  recalibration with its own sensitivity analysis. This is a live disagreement
+  with a recent review, held open deliberately, and an argument for closing it
+  either way is welcome.
 
   \item \textbf{The transferability of the energy sensitivity}
   (\Cref{sec:energy}). The \SIrange{2}{4}{\percent} per \si{\degreeCelsius}

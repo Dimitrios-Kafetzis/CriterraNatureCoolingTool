@@ -161,12 +161,32 @@ def test_evaluate_rejects_an_unknown_typology(
     client: TestClient, full_draft: dict[str, Any]
 ) -> None:
     project_id = _project(client)
-    created = _assessment(client, project_id, input={**full_draft, "nbs_type": "not_a_typology"})
+    created = _assessment(client, project_id, input={**full_draft, "nbs_type": ["not_a_typology"]})
     response = client.post(
         f"/api/projects/{project_id}/assessments/{created['assessment_id']}/evaluate"
     )
     assert response.status_code == 422
     assert response.json() == {"detail": "unknown nbs_type: 'not_a_typology'"}
+
+
+def test_evaluate_stores_a_package_with_its_component_itemisation(
+    client: TestClient, config: MethodologyConfig, package_draft: dict[str, Any]
+) -> None:
+    """D-044.2: a stored result carries every component, not only the headline."""
+    project_id = _project(client)
+    created = _assessment(client, project_id, input=package_draft)
+    response = client.post(
+        f"/api/projects/{project_id}/assessments/{created['assessment_id']}/evaluate"
+    )
+    assert response.status_code == 200
+    expected = run_assessment(AssessmentInput.model_validate(package_draft), config)
+    assert response.json()["result"] == expected.model_dump(mode="json")
+
+    stored = client.get(f"/api/projects/{project_id}").json()["assessments"][0]["result"]
+    assert [item["typology"]["nbs_type"] for item in stored["components"]] == (
+        package_draft["nbs_type"]
+    )
+    assert stored["package"]["component_count"] == 3
 
 
 def test_duplicate_carries_the_site_and_blanks_the_intervention_and_cost_groups(

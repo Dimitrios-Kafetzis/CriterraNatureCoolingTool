@@ -256,9 +256,39 @@ export interface paths {
     };
     /**
      * Typologies
-     * @description The NbS typology library, including suitability conditions and citations.
+     * @description The full library: 18 cited archetypes and the 110 entries inheriting them.
+     *
+     *     ``resolved`` carries each entry merged with its archetype — the flat view
+     *     the picker renders and the engine scores — while ``archetypes`` carries the
+     *     citations, so the interface can show which evidence class a card's numbers
+     *     came from without inferring anything.
      */
     get: operations['typologies_api_typologies_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/typologies/available': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Available
+     * @description The entries offered for this site (D-043, D-044.1).
+     *
+     *     Availability guides selection and never blocks it (D-019): an entry absent
+     *     from this list stays fully selectable, and the engine scores it with the
+     *     honest suitability flags of D-009. This endpoint answers "what should the
+     *     picker show first", not "what is permitted".
+     */
+    get: operations['available_api_typologies_available_get'];
     put?: never;
     post?: never;
     delete?: never;
@@ -297,6 +327,55 @@ export interface components {
        * @enum {string}
        */
       level: 'poor' | 'moderate' | 'good' | 'excellent' | 'unknown';
+    };
+    /**
+     * Archetype
+     * @description One cited cooling evidence class (D-044).
+     *
+     *     Every performance value in the library lives here, with the citations that
+     *     support it. The 110 catalogue entries carry no performance value of their
+     *     own; each inherits exactly one archetype and the report names the evidence
+     *     class it inherited from.
+     */
+    Archetype: {
+      /** Archetype */
+      archetype: string;
+      /** Base Cooling Score */
+      base_cooling_score: number;
+      /** Building Energy Applicable */
+      building_energy_applicable: boolean;
+      /**
+       * Category
+       * @enum {string}
+       */
+      category: 'green' | 'building' | 'blue_green' | 'hybrid';
+      /** Co Benefit Defaults */
+      co_benefit_defaults: {
+        [key: string]: string;
+      };
+      /** Display Name */
+      display_name: string;
+      /**
+       * Evidence Confidence
+       * @enum {string}
+       */
+      evidence_confidence: 'low' | 'medium' | 'high';
+      /** Notes */
+      notes?: string | null;
+      /** Output Caveats */
+      output_caveats?: string[];
+      /**
+       * Provenance
+       * @enum {string}
+       */
+      provenance: 'existing' | 'new' | 'derived';
+      /** Sources */
+      sources: components['schemas']['Source'][];
+      suitability: components['schemas']['Suitability'];
+      /** Temp Reduction Max C */
+      temp_reduction_max_c: number;
+      /** Temp Reduction Min C */
+      temp_reduction_min_c: number;
     };
     /** AssessmentCreate */
     AssessmentCreate: {
@@ -363,6 +442,8 @@ export interface components {
       existing_green_cover_percent?: number | null;
       /** Existing Tree Canopy Percent */
       existing_tree_canopy_percent?: number | null;
+      /** Existing Woodland */
+      existing_woodland?: ('yes' | 'no' | 'unknown') | null;
       /** Expected Maturity Period Years */
       expected_maturity_period_years?: number | null;
       /** Grid Emission Factor Kgco2E Per Kwh */
@@ -375,6 +456,8 @@ export interface components {
       impervious_surface_percent?: number | null;
       /** Implementation Complexity */
       implementation_complexity?: ('low' | 'medium' | 'high' | 'unknown') | null;
+      /** Includes Railway */
+      includes_railway?: ('yes' | 'no' | 'unknown') | null;
       /** Intervention Area M2 */
       intervention_area_m2?: number | null;
       /** Irrigation Availability */
@@ -401,13 +484,16 @@ export interface components {
       /** Maintenance Intensity */
       maintenance_intensity?: ('low' | 'medium' | 'high' | 'unknown') | null;
       /** Nbs Type */
-      nbs_type: string;
+      nbs_type: string[];
       /** Nearby Building Cooling Demand Relevant */
       nearby_building_cooling_demand_relevant?: ('yes' | 'no' | 'unknown') | null;
       /** New Canopy Area At Maturity M2 */
       new_canopy_area_at_maturity_m2?: number | null;
       /** Population Density */
       population_density?: ('low' | 'medium' | 'high' | 'very_high' | 'unknown') | null;
+      /** Productive Governance */
+      productive_governance?:
+        ('community' | 'individual' | 'institutional' | 'commercial')[] | null;
       /** Project Name */
       project_name?: string | null;
       /** Public Accessibility */
@@ -422,6 +508,8 @@ export interface components {
       solar_exposure?: ('low' | 'medium' | 'high' | 'very_high' | 'unknown') | null;
       /** Vulnerable Population Presence */
       vulnerable_population_presence?: ('low' | 'medium' | 'high' | 'very_high' | 'unknown') | null;
+      /** Waterfront Type */
+      waterfront_type?: ('lake' | 'river' | 'dry_river' | 'covered_river' | 'sea') | null;
     };
     /** AssessmentPatch */
     AssessmentPatch: {
@@ -435,12 +523,18 @@ export interface components {
     /**
      * AssessmentResult
      * @description Everything the engine reports for one assessment run.
+     *
+     *     The top-level blocks are the PACKAGE's outputs. A single-intervention
+     *     assessment is a package of one, so every top-level block equals its only
+     *     component's and nothing about the single case changed shape.
      */
     AssessmentResult: {
       adjustment: components['schemas']['AdjustmentBlock'];
       /** Assumptions Applied */
       assumptions_applied: string[];
       co_benefits: components['schemas']['CoBenefitsBlock'];
+      /** Components */
+      components: components['schemas']['ComponentBlock'][];
       confidence: components['schemas']['ConfidenceBlock'];
       cooling: components['schemas']['CoolingBlock'];
       costs: components['schemas']['CostsBlock'];
@@ -456,6 +550,7 @@ export interface components {
       /** Methodology Version */
       methodology_version: string;
       opportunity: components['schemas']['OpportunityBlock'];
+      package: components['schemas']['PackageBlock'];
       /** Recommendation */
       recommendation: string;
       suitability: components['schemas']['SuitabilityBlock'];
@@ -492,6 +587,63 @@ export interface components {
       } | null;
     };
     /**
+     * Availability
+     * @description When an entry is offered to the user (D-043, D-044.1).
+     *
+     *     Availability gates *selection*; it feeds no score. A condition that is
+     *     ``None``/``False`` is ungated — notably the four constructed water features,
+     *     which need no existing water body, and the woodland *creation* types, which
+     *     need no existing woodland.
+     */
+    Availability: {
+      /** Land Uses */
+      land_uses: string[] | 'all';
+      /**
+       * Requires Existing Woodland
+       * @default false
+       */
+      requires_existing_woodland: boolean;
+      /** Requires Governance */
+      requires_governance?: ('community' | 'individual' | 'institutional' | 'commercial') | null;
+      /**
+       * Requires Railway
+       * @default false
+       */
+      requires_railway: boolean;
+      /** Requires Waterfront */
+      requires_waterfront?: ('lake' | 'river' | 'dry_river' | 'covered_river' | 'sea')[] | null;
+      /** Scales */
+      scales: ('city' | 'district' | 'neighbourhood' | 'site' | 'building')[];
+    };
+    /**
+     * AvailableTypologies
+     * @description ``GET /api/typologies/available`` (D-043, D-044.1).
+     *
+     *     A declared response model rather than a bare mapping, so the shape is part
+     *     of the OpenAPI schema and the frontend's generated types can check it —
+     *     the same contract every other endpoint offers (D-030).
+     *
+     *     ``nbs_types`` lists what the matrix offers, in library order. It is not a
+     *     permission list: an entry absent from it stays fully selectable (D-019),
+     *     and the engine scores it with the honest suitability flags of D-009.
+     */
+    AvailableTypologies: {
+      /** Assessment Scale */
+      assessment_scale: string;
+      /** Composes Packages */
+      composes_packages: boolean;
+      /** Count */
+      count: number;
+      /** Land Use */
+      land_use: string | null;
+      /** Nbs Types */
+      nbs_types: string[];
+      /** Version */
+      version: string;
+      /** Warn Above Components */
+      warn_above_components: number;
+    };
+    /**
      * BlockConfidencePreview
      * @description Live confidence for one output block (UX specification section 4).
      */
@@ -522,6 +674,24 @@ export interface components {
       stormwater: number;
       /** Urban Quality */
       urban_quality: number;
+    };
+    /**
+     * ComponentBlock
+     * @description One package component, scored individually (D-038).
+     *
+     *     Every component is scored on its own values and reported on its own terms:
+     *     its adjustment, its suitability and flags, its cooling range. Nothing here
+     *     is averaged with a sibling — the package-level blocks are derived from
+     *     these by the stated combination rules, never the other way round.
+     */
+    ComponentBlock: {
+      adjustment: components['schemas']['AdjustmentBlock'];
+      co_benefits: components['schemas']['CoBenefitsBlock'];
+      cooling: components['schemas']['CoolingBlock'];
+      /** Is Representative */
+      is_representative: boolean;
+      suitability: components['schemas']['SuitabilityBlock'];
+      typology: components['schemas']['TypologySummary'];
     };
     /**
      * ConfidenceBlock
@@ -815,6 +985,49 @@ export interface components {
       /** Score */
       score: number;
     };
+    /**
+     * PackageBlock
+     * @description How the package's headline outputs were combined (D-038, D-044.4).
+     *
+     *     The combination rules, and why each is what it is:
+     *
+     *     * **Temperature is capped at the best-evidenced component, never summed.**
+     *       No retrieved source quantifies super-additive cooling from combining
+     *       measures (D-014), so a package is reported at its representative
+     *       component's adjusted range. Note that ``min(max_i t_i, t_representative)``
+     *       and ``t_representative`` are the same number, since the representative's
+     *       ceiling can never exceed the maximum over components — the cap and the
+     *       selection are one rule, not two.
+     *     * **Co-benefits take the union**: the maximum per dimension across
+     *       components, each still carrying its own component's citation.
+     *     * **Suitability takes the minimum.** A package is no more deliverable here
+     *       than its least suitable component; averaging would let a well-fitting
+     *       component conceal one that cannot be built on this site, which is what
+     *       D-009 exists to prevent.
+     *     * **Energy follows the best-evidenced component that is building-energy
+     *       applicable**, so the derivation still traces to exactly one component and
+     *       is never summed.
+     *     * **Costs sum**, which is the user's single ``capital_cost`` entered for the
+     *       whole package (see the field reference).
+     */
+    PackageBlock: {
+      /** Co Benefit Rule */
+      co_benefit_rule: string;
+      /** Component Count */
+      component_count: number;
+      /** Cooling Rule */
+      cooling_rule: string;
+      /** Cost Rule */
+      cost_rule: string;
+      /** Energy Component Nbs Type */
+      energy_component_nbs_type: string | null;
+      /** Representative Nbs Type */
+      representative_nbs_type: string;
+      /** Representative Reason */
+      representative_reason: string;
+      /** Suitability Rule */
+      suitability_rule: string;
+    };
     /** ProjectCreate */
     ProjectCreate: {
       /** Name */
@@ -852,6 +1065,10 @@ export interface components {
     /**
      * ProjectView
      * @description A project document plus the current methodology version, for OQ-15.
+     *
+     *     ``migrated_notes`` itemises any storage migration applied when this
+     *     document was read, so a user whose saved drafts were reshaped is told what
+     *     changed rather than discovering it (D-029, D-044.2).
      */
     ProjectView: {
       /** Assessments */
@@ -860,6 +1077,8 @@ export interface components {
       created_at: string;
       /** Current Methodology Version */
       current_methodology_version: string;
+      /** Migrated Notes */
+      migrated_notes?: string[];
       /** Name */
       name: string;
       /** Project Id */
@@ -943,10 +1162,36 @@ export interface components {
       message: string;
     };
     /**
+     * SuitabilityOverride
+     * @description A per-entry departure from the archetype's suitability conditions.
+     *
+     *     Permitted only where the catalogue's own description of the entry makes an
+     *     inherited value plainly wrong (D-044.3); every replacement value is one
+     *     already present in the cited v1.1 library, so no new number enters the
+     *     methodology through an override.
+     */
+    SuitabilityOverride: {
+      /** Minimum Site Area M2 */
+      minimum_site_area_m2?: number | null;
+      /** Requires Irrigation */
+      requires_irrigation?: ('none' | 'occasional' | 'reliable') | null;
+      /** Requires Soil */
+      requires_soil?: ('none' | 'limited' | 'moderate' | 'high') | null;
+    };
+    /**
      * Typology
-     * @description One NbS typology and its literature-grounded performance assumptions.
+     * @description One catalogue entry resolved against its archetype.
+     *
+     *     This is the flat view every scoring module consumes, and the shape the API
+     *     serves. ``archetype`` and ``evidence_provenance`` are reported so a result
+     *     can always name the evidence class its numbers came from.
      */
     Typology: {
+      /** Archetype */
+      archetype: string;
+      /** Archetype Display Name */
+      archetype_display_name: string;
+      availability: components['schemas']['Availability'];
       /** Base Cooling Score */
       base_cooling_score: number;
       /** Building Energy Applicable */
@@ -967,6 +1212,18 @@ export interface components {
        * @enum {string}
        */
       evidence_confidence: 'low' | 'medium' | 'high';
+      /**
+       * Evidence Provenance
+       * @enum {string}
+       */
+      evidence_provenance: 'existing' | 'new' | 'derived';
+      /** Family */
+      family: string;
+      /**
+       * Kind
+       * @enum {string}
+       */
+      kind: 'element' | 'composite';
       /** Nbs Id */
       nbs_id: string;
       /** Nbs Type */
@@ -980,6 +1237,8 @@ export interface components {
       /** Sources */
       sources: components['schemas']['Source'][];
       suitability: components['schemas']['Suitability'];
+      /** Suitability Inherited */
+      suitability_inherited: boolean;
       /** Temp Reduction Max C */
       temp_reduction_max_c: number;
       /** Temp Reduction Min C */
@@ -988,22 +1247,68 @@ export interface components {
       typical_use_context: string[];
     };
     /**
+     * TypologyEntry
+     * @description One catalogue entry, as written in ``nbs_typologies.yaml``.
+     */
+    TypologyEntry: {
+      /** Archetype */
+      archetype: string;
+      availability: components['schemas']['Availability'];
+      /** Display Name */
+      display_name: string;
+      /** Family */
+      family: string;
+      /**
+       * Kind
+       * @enum {string}
+       */
+      kind: 'element' | 'composite';
+      /** Nbs Id */
+      nbs_id: string;
+      /** Nbs Type */
+      nbs_type: string;
+      /** Notes */
+      notes?: string | null;
+      /** Primary Cooling Mechanism */
+      primary_cooling_mechanism: string;
+      suitability_overrides?: components['schemas']['SuitabilityOverride'] | null;
+    };
+    /**
      * TypologyLibrary
      * @description The complete typology library, as loaded from ``nbs_typologies.yaml``.
+     *
+     *     ``archetypes`` and ``typologies`` are the file as written; ``resolved`` is
+     *     the flat scoring view, computed once at load.
      */
     TypologyLibrary: {
+      /** Archetypes */
+      archetypes: components['schemas']['Archetype'][];
+      /** Resolved */
+      resolved?: components['schemas']['Typology'][];
       /** Typologies */
-      typologies: components['schemas']['Typology'][];
+      typologies: components['schemas']['TypologyEntry'][];
       /** Version */
       version: string;
     };
     /**
      * TypologySummary
-     * @description The library values the assessment was computed against.
+     * @description The library values one component was computed against.
+     *
+     *     ``archetype`` and ``evidence_provenance`` are reported alongside the
+     *     values, because under the archetype model (D-044) an entry inherits a
+     *     *cited* envelope and the result must name the evidence class it inherited
+     *     from — a Miyawaki forest reports its cooling on the dense-canopy evidence,
+     *     and says so.
      */
     TypologySummary: {
+      /** Archetype */
+      archetype: string;
+      /** Archetype Display Name */
+      archetype_display_name: string;
       /** Base Cooling Score */
       base_cooling_score: number;
+      /** Building Energy Applicable */
+      building_energy_applicable: boolean;
       /**
        * Category
        * @enum {string}
@@ -1016,10 +1321,24 @@ export interface components {
        * @enum {string}
        */
       evidence_confidence: 'low' | 'medium' | 'high';
+      /**
+       * Evidence Provenance
+       * @enum {string}
+       */
+      evidence_provenance: 'existing' | 'new' | 'derived';
+      /** Family */
+      family: string;
+      /**
+       * Kind
+       * @enum {string}
+       */
+      kind: 'element' | 'composite';
       /** Nbs Id */
       nbs_id: string;
       /** Nbs Type */
       nbs_type: string;
+      /** Suitability Inherited */
+      suitability_inherited: boolean;
       /** Temp Reduction Max C */
       temp_reduction_max_c: number;
       /** Temp Reduction Min C */
@@ -1610,6 +1929,43 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['TypologyLibrary'];
+        };
+      };
+    };
+  };
+  available_api_typologies_available_get: {
+    parameters: {
+      query: {
+        assessment_scale: 'city' | 'district' | 'neighbourhood' | 'site' | 'building';
+        land_use?: string | null;
+        waterfront_type?: ('lake' | 'river' | 'dry_river' | 'covered_river' | 'sea') | null;
+        includes_railway?: boolean | null;
+        existing_woodland?: boolean | null;
+        productive_governance?:
+          ('community' | 'individual' | 'institutional' | 'commercial')[] | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AvailableTypologies'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
         };
       };
     };

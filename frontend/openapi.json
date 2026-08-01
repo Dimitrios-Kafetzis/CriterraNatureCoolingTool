@@ -70,6 +70,120 @@
         "title": "AdjustmentCondition",
         "type": "object"
       },
+      "Archetype": {
+        "additionalProperties": false,
+        "description": "One cited cooling evidence class (D-044).\n\nEvery performance value in the library lives here, with the citations that\nsupport it. The 110 catalogue entries carry no performance value of their\nown; each inherits exactly one archetype and the report names the evidence\nclass it inherited from.",
+        "properties": {
+          "archetype": {
+            "title": "Archetype",
+            "type": "string"
+          },
+          "base_cooling_score": {
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Base Cooling Score",
+            "type": "number"
+          },
+          "building_energy_applicable": {
+            "title": "Building Energy Applicable",
+            "type": "boolean"
+          },
+          "category": {
+            "enum": [
+              "green",
+              "building",
+              "blue_green",
+              "hybrid"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "co_benefit_defaults": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Co Benefit Defaults",
+            "type": "object"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "evidence_confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Evidence Confidence",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "output_caveats": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Output Caveats",
+            "type": "array"
+          },
+          "provenance": {
+            "enum": [
+              "existing",
+              "new",
+              "derived"
+            ],
+            "title": "Provenance",
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "minItems": 1,
+            "title": "Sources",
+            "type": "array"
+          },
+          "suitability": {
+            "$ref": "#/components/schemas/Suitability"
+          },
+          "temp_reduction_max_c": {
+            "minimum": 0.0,
+            "title": "Temp Reduction Max C",
+            "type": "number"
+          },
+          "temp_reduction_min_c": {
+            "minimum": 0.0,
+            "title": "Temp Reduction Min C",
+            "type": "number"
+          }
+        },
+        "required": [
+          "archetype",
+          "display_name",
+          "provenance",
+          "category",
+          "base_cooling_score",
+          "temp_reduction_min_c",
+          "temp_reduction_max_c",
+          "evidence_confidence",
+          "building_energy_applicable",
+          "suitability",
+          "co_benefit_defaults",
+          "sources"
+        ],
+        "title": "Archetype",
+        "type": "object"
+      },
       "AssessmentCreate": {
         "additionalProperties": false,
         "properties": {
@@ -384,6 +498,22 @@
             ],
             "title": "Existing Tree Canopy Percent"
           },
+          "existing_woodland": {
+            "anyOf": [
+              {
+                "enum": [
+                  "yes",
+                  "no",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Existing Woodland"
+          },
           "expected_maturity_period_years": {
             "anyOf": [
               {
@@ -474,6 +604,22 @@
             ],
             "title": "Implementation Complexity"
           },
+          "includes_railway": {
+            "anyOf": [
+              {
+                "enum": [
+                  "yes",
+                  "no",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Includes Railway"
+          },
           "intervention_area_m2": {
             "anyOf": [
               {
@@ -557,8 +703,12 @@
             "title": "Maintenance Intensity"
           },
           "nbs_type": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
             "title": "Nbs Type",
-            "type": "string"
+            "type": "array"
           },
           "nearby_building_cooling_demand_relevant": {
             "anyOf": [
@@ -605,6 +755,26 @@
               }
             ],
             "title": "Population Density"
+          },
+          "productive_governance": {
+            "anyOf": [
+              {
+                "items": {
+                  "enum": [
+                    "community",
+                    "individual",
+                    "institutional",
+                    "commercial"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Productive Governance"
           },
           "project_name": {
             "anyOf": [
@@ -711,6 +881,24 @@
               }
             ],
             "title": "Vulnerable Population Presence"
+          },
+          "waterfront_type": {
+            "anyOf": [
+              {
+                "enum": [
+                  "lake",
+                  "river",
+                  "dry_river",
+                  "covered_river",
+                  "sea"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Waterfront Type"
           }
         },
         "required": [
@@ -755,7 +943,7 @@
       },
       "AssessmentResult": {
         "additionalProperties": false,
-        "description": "Everything the engine reports for one assessment run.",
+        "description": "Everything the engine reports for one assessment run.\n\nThe top-level blocks are the PACKAGE's outputs. A single-intervention\nassessment is a package of one, so every top-level block equals its only\ncomponent's and nothing about the single case changed shape.",
         "properties": {
           "adjustment": {
             "$ref": "#/components/schemas/AdjustmentBlock"
@@ -769,6 +957,13 @@
           },
           "co_benefits": {
             "$ref": "#/components/schemas/CoBenefitsBlock"
+          },
+          "components": {
+            "items": {
+              "$ref": "#/components/schemas/ComponentBlock"
+            },
+            "title": "Components",
+            "type": "array"
           },
           "confidence": {
             "$ref": "#/components/schemas/ConfidenceBlock"
@@ -809,6 +1004,9 @@
           "opportunity": {
             "$ref": "#/components/schemas/OpportunityBlock"
           },
+          "package": {
+            "$ref": "#/components/schemas/PackageBlock"
+          },
           "recommendation": {
             "title": "Recommendation",
             "type": "string"
@@ -834,6 +1032,8 @@
           "engine_version",
           "methodology_version",
           "typology",
+          "components",
+          "package",
           "heat_exposure",
           "vulnerability",
           "heat_priority",
@@ -901,6 +1101,151 @@
           "methodology_update_available"
         ],
         "title": "AssessmentView",
+        "type": "object"
+      },
+      "Availability": {
+        "additionalProperties": false,
+        "description": "When an entry is offered to the user (D-043, D-044.1).\n\nAvailability gates *selection*; it feeds no score. A condition that is\n``None``/``False`` is ungated — notably the four constructed water features,\nwhich need no existing water body, and the woodland *creation* types, which\nneed no existing woodland.",
+        "properties": {
+          "land_uses": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "const": "all",
+                "type": "string"
+              }
+            ],
+            "title": "Land Uses"
+          },
+          "requires_existing_woodland": {
+            "default": false,
+            "title": "Requires Existing Woodland",
+            "type": "boolean"
+          },
+          "requires_governance": {
+            "anyOf": [
+              {
+                "enum": [
+                  "community",
+                  "individual",
+                  "institutional",
+                  "commercial"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requires Governance"
+          },
+          "requires_railway": {
+            "default": false,
+            "title": "Requires Railway",
+            "type": "boolean"
+          },
+          "requires_waterfront": {
+            "anyOf": [
+              {
+                "items": {
+                  "enum": [
+                    "lake",
+                    "river",
+                    "dry_river",
+                    "covered_river",
+                    "sea"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requires Waterfront"
+          },
+          "scales": {
+            "items": {
+              "enum": [
+                "city",
+                "district",
+                "neighbourhood",
+                "site",
+                "building"
+              ],
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Scales",
+            "type": "array"
+          }
+        },
+        "required": [
+          "scales",
+          "land_uses"
+        ],
+        "title": "Availability",
+        "type": "object"
+      },
+      "AvailableTypologies": {
+        "additionalProperties": false,
+        "description": "``GET /api/typologies/available`` (D-043, D-044.1).\n\nA declared response model rather than a bare mapping, so the shape is part\nof the OpenAPI schema and the frontend's generated types can check it —\nthe same contract every other endpoint offers (D-030).\n\n``nbs_types`` lists what the matrix offers, in library order. It is not a\npermission list: an entry absent from it stays fully selectable (D-019),\nand the engine scores it with the honest suitability flags of D-009.",
+        "properties": {
+          "assessment_scale": {
+            "title": "Assessment Scale",
+            "type": "string"
+          },
+          "composes_packages": {
+            "title": "Composes Packages",
+            "type": "boolean"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "land_use": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Land Use"
+          },
+          "nbs_types": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Nbs Types",
+            "type": "array"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          },
+          "warn_above_components": {
+            "title": "Warn Above Components",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version",
+          "assessment_scale",
+          "land_use",
+          "composes_packages",
+          "warn_above_components",
+          "count",
+          "nbs_types"
+        ],
+        "title": "AvailableTypologies",
         "type": "object"
       },
       "BlockConfidencePreview": {
@@ -977,6 +1322,41 @@
           "urban_quality"
         ],
         "title": "CoBenefitsBlock",
+        "type": "object"
+      },
+      "ComponentBlock": {
+        "additionalProperties": false,
+        "description": "One package component, scored individually (D-038).\n\nEvery component is scored on its own values and reported on its own terms:\nits adjustment, its suitability and flags, its cooling range. Nothing here\nis averaged with a sibling — the package-level blocks are derived from\nthese by the stated combination rules, never the other way round.",
+        "properties": {
+          "adjustment": {
+            "$ref": "#/components/schemas/AdjustmentBlock"
+          },
+          "co_benefits": {
+            "$ref": "#/components/schemas/CoBenefitsBlock"
+          },
+          "cooling": {
+            "$ref": "#/components/schemas/CoolingBlock"
+          },
+          "is_representative": {
+            "title": "Is Representative",
+            "type": "boolean"
+          },
+          "suitability": {
+            "$ref": "#/components/schemas/SuitabilityBlock"
+          },
+          "typology": {
+            "$ref": "#/components/schemas/TypologySummary"
+          }
+        },
+        "required": [
+          "typology",
+          "adjustment",
+          "suitability",
+          "cooling",
+          "co_benefits",
+          "is_representative"
+        ],
+        "title": "ComponentBlock",
         "type": "object"
       },
       "ConfidenceBlock": {
@@ -1721,6 +2101,63 @@
         "title": "OpportunityComponent",
         "type": "object"
       },
+      "PackageBlock": {
+        "additionalProperties": false,
+        "description": "How the package's headline outputs were combined (D-038, D-044.4).\n\nThe combination rules, and why each is what it is:\n\n* **Temperature is capped at the best-evidenced component, never summed.**\n  No retrieved source quantifies super-additive cooling from combining\n  measures (D-014), so a package is reported at its representative\n  component's adjusted range. Note that ``min(max_i t_i, t_representative)``\n  and ``t_representative`` are the same number, since the representative's\n  ceiling can never exceed the maximum over components — the cap and the\n  selection are one rule, not two.\n* **Co-benefits take the union**: the maximum per dimension across\n  components, each still carrying its own component's citation.\n* **Suitability takes the minimum.** A package is no more deliverable here\n  than its least suitable component; averaging would let a well-fitting\n  component conceal one that cannot be built on this site, which is what\n  D-009 exists to prevent.\n* **Energy follows the best-evidenced component that is building-energy\n  applicable**, so the derivation still traces to exactly one component and\n  is never summed.\n* **Costs sum**, which is the user's single ``capital_cost`` entered for the\n  whole package (see the field reference).",
+        "properties": {
+          "co_benefit_rule": {
+            "title": "Co Benefit Rule",
+            "type": "string"
+          },
+          "component_count": {
+            "title": "Component Count",
+            "type": "integer"
+          },
+          "cooling_rule": {
+            "title": "Cooling Rule",
+            "type": "string"
+          },
+          "cost_rule": {
+            "title": "Cost Rule",
+            "type": "string"
+          },
+          "energy_component_nbs_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Energy Component Nbs Type"
+          },
+          "representative_nbs_type": {
+            "title": "Representative Nbs Type",
+            "type": "string"
+          },
+          "representative_reason": {
+            "title": "Representative Reason",
+            "type": "string"
+          },
+          "suitability_rule": {
+            "title": "Suitability Rule",
+            "type": "string"
+          }
+        },
+        "required": [
+          "component_count",
+          "representative_nbs_type",
+          "representative_reason",
+          "cooling_rule",
+          "co_benefit_rule",
+          "suitability_rule",
+          "cost_rule",
+          "energy_component_nbs_type"
+        ],
+        "title": "PackageBlock",
+        "type": "object"
+      },
       "ProjectCreate": {
         "additionalProperties": false,
         "properties": {
@@ -1809,7 +2246,7 @@
       },
       "ProjectView": {
         "additionalProperties": false,
-        "description": "A project document plus the current methodology version, for OQ-15.",
+        "description": "A project document plus the current methodology version, for OQ-15.\n\n``migrated_notes`` itemises any storage migration applied when this\ndocument was read, so a user whose saved drafts were reshaped is told what\nchanged rather than discovering it (D-029, D-044.2).",
         "properties": {
           "assessments": {
             "items": {
@@ -1825,6 +2262,13 @@
           "current_methodology_version": {
             "title": "Current Methodology Version",
             "type": "string"
+          },
+          "migrated_notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Migrated Notes",
+            "type": "array"
           },
           "name": {
             "title": "Name",
@@ -2006,10 +2450,74 @@
         "title": "SuitabilityFlag",
         "type": "object"
       },
+      "SuitabilityOverride": {
+        "additionalProperties": false,
+        "description": "A per-entry departure from the archetype's suitability conditions.\n\nPermitted only where the catalogue's own description of the entry makes an\ninherited value plainly wrong (D-044.3); every replacement value is one\nalready present in the cited v1.1 library, so no new number enters the\nmethodology through an override.",
+        "properties": {
+          "minimum_site_area_m2": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minimum Site Area M2"
+          },
+          "requires_irrigation": {
+            "anyOf": [
+              {
+                "enum": [
+                  "none",
+                  "occasional",
+                  "reliable"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requires Irrigation"
+          },
+          "requires_soil": {
+            "anyOf": [
+              {
+                "enum": [
+                  "none",
+                  "limited",
+                  "moderate",
+                  "high"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requires Soil"
+          }
+        },
+        "title": "SuitabilityOverride",
+        "type": "object"
+      },
       "Typology": {
         "additionalProperties": false,
-        "description": "One NbS typology and its literature-grounded performance assumptions.",
+        "description": "One catalogue entry resolved against its archetype.\n\nThis is the flat view every scoring module consumes, and the shape the API\nserves. ``archetype`` and ``evidence_provenance`` are reported so a result\ncan always name the evidence class its numbers came from.",
         "properties": {
+          "archetype": {
+            "title": "Archetype",
+            "type": "string"
+          },
+          "archetype_display_name": {
+            "title": "Archetype Display Name",
+            "type": "string"
+          },
+          "availability": {
+            "$ref": "#/components/schemas/Availability"
+          },
           "base_cooling_score": {
             "maximum": 100.0,
             "minimum": 0.0,
@@ -2048,6 +2556,27 @@
               "high"
             ],
             "title": "Evidence Confidence",
+            "type": "string"
+          },
+          "evidence_provenance": {
+            "enum": [
+              "existing",
+              "new",
+              "derived"
+            ],
+            "title": "Evidence Provenance",
+            "type": "string"
+          },
+          "family": {
+            "title": "Family",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "element",
+              "composite"
+            ],
+            "title": "Kind",
             "type": "string"
           },
           "nbs_id": {
@@ -2091,6 +2620,10 @@
           "suitability": {
             "$ref": "#/components/schemas/Suitability"
           },
+          "suitability_inherited": {
+            "title": "Suitability Inherited",
+            "type": "boolean"
+          },
           "temp_reduction_max_c": {
             "minimum": 0.0,
             "title": "Temp Reduction Max C",
@@ -2113,6 +2646,11 @@
           "nbs_id",
           "nbs_type",
           "display_name",
+          "family",
+          "kind",
+          "archetype",
+          "archetype_display_name",
+          "evidence_provenance",
           "category",
           "base_cooling_score",
           "temp_reduction_min_c",
@@ -2121,20 +2659,111 @@
           "primary_cooling_mechanism",
           "building_energy_applicable",
           "typical_use_context",
+          "availability",
           "suitability",
+          "suitability_inherited",
           "co_benefit_defaults",
           "sources"
         ],
         "title": "Typology",
         "type": "object"
       },
+      "TypologyEntry": {
+        "additionalProperties": false,
+        "description": "One catalogue entry, as written in ``nbs_typologies.yaml``.",
+        "properties": {
+          "archetype": {
+            "title": "Archetype",
+            "type": "string"
+          },
+          "availability": {
+            "$ref": "#/components/schemas/Availability"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "family": {
+            "title": "Family",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "element",
+              "composite"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "nbs_id": {
+            "title": "Nbs Id",
+            "type": "string"
+          },
+          "nbs_type": {
+            "title": "Nbs Type",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "primary_cooling_mechanism": {
+            "title": "Primary Cooling Mechanism",
+            "type": "string"
+          },
+          "suitability_overrides": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuitabilityOverride"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "nbs_id",
+          "nbs_type",
+          "display_name",
+          "archetype",
+          "family",
+          "kind",
+          "primary_cooling_mechanism",
+          "availability"
+        ],
+        "title": "TypologyEntry",
+        "type": "object"
+      },
       "TypologyLibrary": {
         "additionalProperties": false,
-        "description": "The complete typology library, as loaded from ``nbs_typologies.yaml``.",
+        "description": "The complete typology library, as loaded from ``nbs_typologies.yaml``.\n\n``archetypes`` and ``typologies`` are the file as written; ``resolved`` is\nthe flat scoring view, computed once at load.",
         "properties": {
-          "typologies": {
+          "archetypes": {
+            "items": {
+              "$ref": "#/components/schemas/Archetype"
+            },
+            "minItems": 1,
+            "title": "Archetypes",
+            "type": "array"
+          },
+          "resolved": {
             "items": {
               "$ref": "#/components/schemas/Typology"
+            },
+            "title": "Resolved",
+            "type": "array"
+          },
+          "typologies": {
+            "items": {
+              "$ref": "#/components/schemas/TypologyEntry"
             },
             "minItems": 1,
             "title": "Typologies",
@@ -2147,6 +2776,7 @@
         },
         "required": [
           "version",
+          "archetypes",
           "typologies"
         ],
         "title": "TypologyLibrary",
@@ -2154,11 +2784,23 @@
       },
       "TypologySummary": {
         "additionalProperties": false,
-        "description": "The library values the assessment was computed against.",
+        "description": "The library values one component was computed against.\n\n``archetype`` and ``evidence_provenance`` are reported alongside the\nvalues, because under the archetype model (D-044) an entry inherits a\n*cited* envelope and the result must name the evidence class it inherited\nfrom — a Miyawaki forest reports its cooling on the dense-canopy evidence,\nand says so.",
         "properties": {
+          "archetype": {
+            "title": "Archetype",
+            "type": "string"
+          },
+          "archetype_display_name": {
+            "title": "Archetype Display Name",
+            "type": "string"
+          },
           "base_cooling_score": {
             "title": "Base Cooling Score",
             "type": "number"
+          },
+          "building_energy_applicable": {
+            "title": "Building Energy Applicable",
+            "type": "boolean"
           },
           "category": {
             "enum": [
@@ -2183,6 +2825,27 @@
             "title": "Evidence Confidence",
             "type": "string"
           },
+          "evidence_provenance": {
+            "enum": [
+              "existing",
+              "new",
+              "derived"
+            ],
+            "title": "Evidence Provenance",
+            "type": "string"
+          },
+          "family": {
+            "title": "Family",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "element",
+              "composite"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
           "nbs_id": {
             "title": "Nbs Id",
             "type": "string"
@@ -2190,6 +2853,10 @@
           "nbs_type": {
             "title": "Nbs Type",
             "type": "string"
+          },
+          "suitability_inherited": {
+            "title": "Suitability Inherited",
+            "type": "boolean"
           },
           "temp_reduction_max_c": {
             "title": "Temp Reduction Max C",
@@ -2204,11 +2871,18 @@
           "nbs_id",
           "nbs_type",
           "display_name",
+          "family",
+          "kind",
+          "archetype",
+          "archetype_display_name",
+          "evidence_provenance",
           "category",
           "evidence_confidence",
           "base_cooling_score",
           "temp_reduction_min_c",
-          "temp_reduction_max_c"
+          "temp_reduction_max_c",
+          "building_energy_applicable",
+          "suitability_inherited"
         ],
         "title": "TypologySummary",
         "type": "object"
@@ -2311,7 +2985,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0"
     },
     "title": "Nature for Cooling Rapid Assessment Tool",
-    "version": "1.1.0"
+    "version": "2.0.0"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -3078,7 +3752,7 @@
     },
     "/api/typologies": {
       "get": {
-        "description": "The NbS typology library, including suitability conditions and citations.",
+        "description": "The full library: 18 cited archetypes and the 110 entries inheriting them.\n\n``resolved`` carries each entry merged with its archetype — the flat view\nthe picker renders and the engine scores — while ``archetypes`` carries the\ncitations, so the interface can show which evidence class a card's numbers\ncame from without inferring anything.",
         "operationId": "typologies_api_typologies_get",
         "responses": {
           "200": {
@@ -3093,6 +3767,152 @@
           }
         },
         "summary": "Typologies",
+        "tags": [
+          "methodology"
+        ]
+      }
+    },
+    "/api/typologies/available": {
+      "get": {
+        "description": "The entries offered for this site (D-043, D-044.1).\n\nAvailability guides selection and never blocks it (D-019): an entry absent\nfrom this list stays fully selectable, and the engine scores it with the\nhonest suitability flags of D-009. This endpoint answers \"what should the\npicker show first\", not \"what is permitted\".",
+        "operationId": "available_api_typologies_available_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "assessment_scale",
+            "required": true,
+            "schema": {
+              "enum": [
+                "city",
+                "district",
+                "neighbourhood",
+                "site",
+                "building"
+              ],
+              "title": "Assessment Scale",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "land_use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Land Use"
+            }
+          },
+          {
+            "in": "query",
+            "name": "waterfront_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "lake",
+                    "river",
+                    "dry_river",
+                    "covered_river",
+                    "sea"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Waterfront Type"
+            }
+          },
+          {
+            "in": "query",
+            "name": "includes_railway",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Includes Railway"
+            }
+          },
+          {
+            "in": "query",
+            "name": "existing_woodland",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Existing Woodland"
+            }
+          },
+          {
+            "in": "query",
+            "name": "productive_governance",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "enum": [
+                      "community",
+                      "individual",
+                      "institutional",
+                      "commercial"
+                    ],
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Productive Governance"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailableTypologies"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Available",
         "tags": [
           "methodology"
         ]

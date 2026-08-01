@@ -1,9 +1,11 @@
 # Nature for Cooling Rapid Assessment Tool — Methodology Report
 
-**Version:** 2026.08.03 (methodology configuration version `2026.08.03`)
-**Status:** Version 1 methodology, released for expert review; calculation engine implemented (Phase 2)
+**Version:** 2026.08.04 (methodology configuration version `2026.08.04`)
+**Status:** Version 2 methodology, released for expert review; calculation engine implemented
 
-Version `2026.08.01` discharged the specification gaps disclosed at `2026.07.30`: the sub-indicator derivation rules (§5.10), the cost-feasibility brackets and combination rule (§5.8), the confidence field-to-block mapping (§6.2), and the published sensitivity analysis (§7). Version `2026.08.02` corrects an incentive defect in the soil–water condition found during engine implementation (§5.4, D-026): reliable irrigation now maps to *excellent*, and a condition pair containing an unknown is capped at the neutral factor — so complete favourable data strictly dominates leaving the question blank. Version `2026.08.03` makes two additive changes arising from the v1 review (D-039, D-040): the cooling access deficit becomes one dimension measured by two indicators, indoor and outdoor, at its existing 0.20 weight (§5.2); and the land-use enumeration gains *campus* and *memorial*, with the affected typology context lists extended (§4.4, §5.10). **No typology value, cooling envelope, or aggregation weight has changed since `2026.07.30`**, and every golden-scenario output is unchanged at `2026.08.03` — the new indicator is strictly additive, so the sensitivity analysis of §7 remains valid as published.
+**Version `2026.08.04` is the largest methodology change since the tool was first calibrated.** The fourteen-typology library is replaced by the **110 curated entries** of the UNEP *Nature for Cooling* catalogue, each inheriting one of **18 cited cooling archetypes** (§4, D-043, D-044); an assessment may now propose a **package** of interventions, scored individually and combined under rules that never sum a temperature (§4.5); four new site questions **gate which interventions are offered and feed no score** (§3.4, D-044.1); and two typologies are retired — schoolyard greening, because a schoolyard is a land-use context rather than an intervention, and the mixed NbS package, because packages are now real. Twelve archetypes carry the v1.1 typologies' values unchanged, so **no previously published cooling envelope moved**, with one exception recorded in §4.6 and D-045: the newly retrieved `large_water_body` floor was set at 0.1 °C rather than the 0.5 °C proposed at design time, because source verification showed the field evidence did not support the higher floor. The sensitivity analysis of §7 is **regenerated, not carried forward** — unlike `2026.08.03`, this release genuinely changes the library.
+
+Version `2026.08.01` discharged the specification gaps disclosed at `2026.07.30`: the sub-indicator derivation rules (§5.10), the cost-feasibility brackets and combination rule (§5.8), the confidence field-to-block mapping (§6.2), and the published sensitivity analysis (§7). Version `2026.08.02` corrects an incentive defect in the soil–water condition found during engine implementation (§5.4, D-026): reliable irrigation now maps to *excellent*, and a condition pair containing an unknown is capped at the neutral factor — so complete favourable data strictly dominates leaving the question blank. Version `2026.08.03` makes two additive changes arising from the v1 review (D-039, D-040): the cooling access deficit becomes one dimension measured by two indicators, indoor and outdoor, at its existing 0.20 weight (§5.2); and the land-use enumeration gains *campus* and *memorial*, with the affected typology context lists extended (§4.4, §5.10). No typology value, cooling envelope, or aggregation weight changed between `2026.07.30` and `2026.08.03`, and every golden-scenario output was unchanged at `2026.08.03`.
 **Prepared by:** Criterra
 **Licence:** Apache-2.0. Source code, configuration, and this document are public.
 
@@ -119,48 +121,112 @@ Where a user supplies a land-surface-temperature anomaly (°C above the city mea
 
 This proxy is used with a stated caution. `venter2021` reports that satellite-derived surface urban heat island magnitudes substantially exceed air-temperature (canopy-layer) values — a mean surface UHI of 1.45 °C against a canopy-layer UHI of 0.26 °C, an approximately sixfold difference — reflecting the distinction between surface, canopy-layer, and boundary-layer heat islands established by `oke1976`. The tool therefore treats LST **only as a relative indicator of which parts of a city are hotter**, never as an air-temperature prediction, and never converts it into a °C outcome. The 10 °C ceiling is consistent with observed intra-urban surface anomaly ranges while keeping the normalisation interpretable.
 
+### 3.4 The four availability questions — inputs that gate but never score
+
+Version `2026.08.04` adds four site-characteristic questions:
+
+| Field | Answers | Gates |
+|---|---|---|
+| `includes_railway` | yes / no | one entry, the railway green corridor |
+| `existing_woodland` | yes / no | woodland **restoration** types only |
+| `waterfront_type` | lake / river / dry river / covered river / sea | twelve water-landscape and network entries, by category |
+| `productive_governance` | multi-select over community / individual / institutional / commercial | the seven productive entries, by who delivers them |
+
+**They decide which interventions the tool offers, and they feed no score** (D-044.1). They appear in no formula, in no confidence block, and in no aggregation. Gating is not scoring: making a gating answer a scoring input would need its own justification and would move every existing result. The engine's test suite asserts this as a property — the same site scored with all four answered and with none answered produces byte-identical output — so the separation cannot erode quietly. The fields are recorded in the input schema and disclosed as availability-only in the field reference, in the manner §6.3 and D-031 established for `heat_index_concern`.
+
+**What an unanswered question means differs by kind, deliberately.** Three of the four describe a *physical fact* about the site and gate on positive confirmation: an entry that acts on an existing river is not offered until the user says there is a river, because offering it would be offering an intervention that cannot be built there. The fourth describes *who could deliver* the intervention, and subtracts nothing until it is answered.
+
+That asymmetry is the substance of D-043.3. The originally approved question was a yes/no — "is there interest to create productive landscape from individuals or communities" — which on a "no" would have suppressed the urban farm and the agroforestry system: the highest-canopy, highest-cooling entries in the group, and the ones a municipality is most likely to deliver. A multi-select over four delivery models gates correctly at no extra cost in user effort, and an empty selection is not evidence that no delivery model exists. The tool does not assert a negative from absent information, here as in §5.4 and §5.10.
+
+Two rulings follow from the same principle and are worth stating because both run against intuition. **Woodland creation types are ungated**: urban woodland, microforest, afforestation and the woodland buffer are offered whatever the answer, because creating woodland does not require woodland to be there already — only *restoration* does. And **the four constructed water features carry no waterfront condition at all**: a constructed wetland, retention pond, detention basin or water square needs no existing water body, so gating them on one would withhold exactly the interventions available to a site that has no water.
+
 ---
 
 ## 4. The NbS typology library
 
-### 4.1 Structure
+### 4.1 Structure: archetypes and entries
 
-Fourteen typologies are supported, in four families: green (street tree planting, shaded pedestrian corridor, pocket park, urban forest, park upgrade, schoolyard greening), building (green roof, green façade), blue-green (rain garden/bioswale, blue-green corridor, riparian restoration), and hybrid (permeable shaded plaza, courtyard greening, mixed NbS package).
+From version `2026.08.04` the library has **two levels**. An **archetype** is a cited cooling evidence class carrying every performance value — base cooling score, temperature envelope, evidence confidence, suitability conditions, co-benefit defaults, and the citations behind them. A **typology** is one of the **110 curated entries** of the UNEP *Nature for Cooling* catalogue: it carries identity, family, availability, and the one archetype it inherits, and **no performance value of its own**.
 
-Each typology carries: a base cooling score (0–100), a temperature reduction envelope (min–max °C), its primary cooling mechanism, suitability conditions, an evidence confidence rating, and its source citations.
+The reason is worth stating without euphemism: **solution-specific cooling literature does not exist for 110 typologies.** Nobody has separately measured a felt-pocket living wall, a suspended-pavement tree pit and a green parking lane. The alternative to archetypes was inventing 110 envelopes, which would have manufactured precision the catalogue does not contain and would have broken the evidence rule the tool exists to honour — that no performance value ships without a citation (D-017).
 
-### 4.2 Adopted values
+Under the archetype model an entry inherits a **cited** envelope, and every result **names the evidence class it inherited from**. A Miyawaki forest reports its cooling on the dense-canopy evidence, and says so, rather than implying a measurement of Miyawaki forests that does not exist.
+
+The 243 catalogue entries were curated to 110 — 88 merged, 45 dropped — on the source document's own classification notes (D-043). Nearly every drop is an entry the document itself disqualifies as not an intervention: a land-use context, a management objective, an umbrella category, a planning model. Nothing is lost by dropping them. A land-use context is already carried by the `land_use` input; a strategy is a *package* of kept entries, which §4.5 makes expressible for the first time.
+
+### 4.2 The 18 archetypes
 
 All values are **daytime, pedestrian-level air temperature reductions**. Derivations are in [EVIDENCE-TABLES.md](EVIDENCE-TABLES.md).
 
-| ID | Typology | Family | Base score | Envelope (°C) | Confidence |
-|---|---|---|---:|---|---|
-| 01 | Street tree planting | Green | 75 | 0.5 – 3.0 | High |
-| 02 | Shaded pedestrian corridor | Green | 80 | 0.5 – 3.0 | Medium |
-| 03 | Pocket park | Green | 65 | 0.3 – 1.5 | High |
-| 04 | Urban forest / dense canopy | Green | 90 | 1.0 – 3.0 | High |
-| 05 | Park upgrade | Green | 70 | 0.5 – 2.0 | High |
-| 06 | Schoolyard greening | Green | 75 | 0.5 – 2.0 | Medium |
-| 07 | Green roof | Building | 45 | 0.1 – 1.0 | Medium |
-| 08 | Green façade | Building | 50 | 0.3 – 2.0 | Low |
-| 09 | Rain garden / bioswale | Blue-Green | 55 | 0.1 – 0.8 | Low |
-| 10 | Blue-green corridor | Blue-Green | 85 | 1.0 – 3.0 | Medium |
-| 11 | Riparian restoration | Blue-Green | 85 | 1.0 – 3.0 | Medium |
-| 12 | Permeable shaded plaza | Hybrid | 70 | 0.5 – 2.5 | Medium |
-| 13 | Courtyard greening | Hybrid | 60 | 0.3 – 1.5 | Low |
-| 14 | Mixed NbS package | Hybrid | 80 | 1.0 – 3.0 | Medium |
+| Archetype | Family | Base score | Envelope (°C) | Confidence | Provenance | Entries |
+|---|---|---:|---|---|---|---:|
+| `street_tree_canopy` | Green | 75 | 0.5 – 3.0 | High | v1.1 | 15 |
+| `continuous_shaded_corridor` | Green | 80 | 0.5 – 3.0 | Medium | v1.1 | 2 |
+| `small_green_area_with_trees` | Green | 65 | 0.3 – 1.5 | High | v1.1 | 6 |
+| `dense_tree_canopy` | Green | 90 | 1.0 – 3.0 | High | v1.1 | 10 |
+| `established_park` | Green | 70 | 0.5 – 2.0 | High | v1.1 | 10 |
+| `non_canopy_vegetation` | Green | 50 | 0.0 – 1.5 | Medium | **new** | 7 |
+| `productive_canopy` | Green | 60 | 0.5 – 2.0 | Low | **derived** | 3 |
+| `productive_non_canopy` | Green | 45 | 0.0 – 1.5 | Low | **derived** | 6 |
+| `extensive_green_roof` | Building | 45 | 0.1 – 1.0 | Medium | v1.1 | 7 |
+| `green_facade_living_wall` | Building | 50 | 0.3 – 2.0 | Low | v1.1 | 11 |
+| `bioretention` | Blue-Green | 55 | 0.1 – 0.8 | Low | v1.1 | 8 |
+| `blue_green_corridor` | Blue-Green | 85 | 1.0 – 3.0 | Medium | v1.1 | 5 |
+| `riparian_restoration` | Blue-Green | 85 | 1.0 – 3.0 | Medium | v1.1 | 6 |
+| `large_water_body` | Blue-Green | 75 | 0.1 – 3.0 | Medium | **new** | 3 |
+| `small_constructed_water` | Blue-Green | 40 | 0.0 – 1.0 | Medium | **new** | 6 |
+| `permeable_shaded_hardscape` | Hybrid | 70 | 0.5 – 2.5 | Medium | v1.1 | 2 |
+| `enclosed_courtyard` | Hybrid | 60 | 0.3 – 1.5 | Low | v1.1 | 1 |
+| `vegetated_shade_structure` | Hybrid | 55 | 0.0 – 2.5 | Low | **new** | 2 |
 
-### 4.3 Three calibration decisions worth reviewer attention
+**Twelve archetypes are the v1.1 typologies unchanged** — same envelopes, same base scores, same evidence ratings, same citations (D-043.6). They are the only entries in the library with individually retrieved literature behind them, and this release keeps that evidence rather than trading it for catalogue names.
+
+### 4.3 Two retirements
+
+**`schoolyard_greening` is retired as a typology** (D-043.1). The source document is explicit that a schoolyard is a *land-use context*, not an intervention. Keeping it would have meant asking "what is the land use here?" and then offering, as an intervention, the land use just described. A school site is instead offered the 72 real interventions that suit it, through the availability matrix of §3.4. This is a methodology change, not a rename: the typology carried cited values and appeared in a golden scenario.
+
+**`mixed_nbs_package` is retired** in favour of real packages (§4.5). The finding it encoded — that no source quantifies super-additive cooling — has not changed and is not re-argued; what changed is that the tool no longer needs an opaque averaged card to express it.
+
+### 4.4 Three calibration decisions worth reviewer attention
 
 **Modelling bias is corrected downward.** `keravec2026` synthesises 64 systematic reviews, many dominated by simulation studies, which systematically report larger effects than field measurement. The comparison is visible within our own sources: for parks, the modelling-inclusive synthesis gives 1.3 °C while `bowler2010`, restricted to empirical studies, gives 0.94 °C. Adopted upper bounds therefore sit at or below synthesis central estimates rather than above them.
 
-**The mixed package does not claim super-additivity.** The draft methodology proposed a 3.5 °C ceiling for combined interventions. No retrieved source quantifies super-additive cooling from combining measures; `gunawardena2017` describes synergy qualitatively but does not quantify it. The envelope is therefore capped at 3.0 °C, the best-evidenced single-measure ceiling. The package's advantage is represented in co-benefit breadth and robustness, not in additional degrees.
+**Green roofs and green façades remain the weakest points in the library, and are labelled as such.** For green roofs, `santamouris2014` reports 0.3–3 K ambient reduction, but explicitly for *city-scale deployment in simulation studies* — not for one roof on one building, which is what a site-level assessment evaluates; `zolch2016` finds pedestrian-level effects negligible. For green façades, sources conflict outright: `keravec2026` ranks green walls near the top on air temperature (3.0 °C, with a fivefold spread across climate subzones) while `zolch2016` ranks them below trees on thermal comfort, a discrepancy plausibly explained by near-wall measurement position. Both receive conservative envelopes, reduced confidence, and explicit caveats in the tool's output.
 
-**Green roofs and green façades are the weakest points in the library, and are labelled as such.** For green roofs, `santamouris2014` reports 0.3–3 K ambient reduction, but explicitly for *city-scale deployment in simulation studies* — not for one roof on one building, which is what a site-level assessment evaluates; `zolch2016` finds pedestrian-level effects negligible. For green façades, sources conflict outright: `keravec2026` ranks green walls near the top on air temperature (3.0 °C, with a fivefold spread across climate subzones) while `zolch2016` ranks them below trees on thermal comfort, a discrepancy plausibly explained by near-wall measurement position. Both typologies receive conservative envelopes, reduced confidence, and explicit caveats in the tool's output.
+**Newer, broader evidence is deliberately not adopted wholesale.** `kumar2024` (51 infrastructure types, 202 publications) post-dates the v1.1 calibration and reports street trees at up to 2.8 °C in situ — inside the tool's existing envelope, which validates the conservative calibration. The same review reports green walls at 4.1 ± 4.2 °C, vegetated balconies at 3.8 ± 2.7 °C and botanical gardens at 5.0 ± 3.5 °C. These are **not** adopted: taking them selectively would break internal consistency (balconies would outscore street trees), and adopting them wholesale is a full library recalibration requiring its own sensitivity analysis. It is recorded as a candidate for a future methodology review, not smuggled into this one.
 
-### 4.4 Suitability conditions
+### 4.5 Multi-intervention packages
 
-Each typology declares conditions under which it is unsuitable — minimum viable site area, soil requirement, irrigation requirement, and unsuitable climate zones. When a disqualifying condition is met, the tool computes the assessment transparently but attaches a prominent **"not suitable for this site"** flag naming the reason, and the recommendation text states it. Silently returning a merely lower score for a physically implausible intervention would misrepresent the finding.
+An assessment may propose several simultaneously available entries. Each is **scored individually and reported individually**; the package's headline outputs are then combined under rules that add nothing the evidence does not support:
+
+| Output | Rule | Why |
+|---|---|---|
+| Temperature | **the best-evidenced component's adjusted range; never summed** | No retrieved source quantifies super-additive cooling from combining measures. Note that `min(max_i ΔT_i, ΔT_representative)` and `ΔT_representative` are the same number, so the cap and the selection are one rule, not two |
+| Co-benefits | union — the maximum per dimension | A package delivers each dimension at least as well as its best component; this is where a package's real advantage lies |
+| Suitability | the **minimum** across components | A package is no more deliverable on a site than its least suitable member; averaging would let a well-fitting component conceal one that cannot be built here, which is what §4.7's flags exist to prevent |
+| Energy | derived from the best-evidenced **building-energy-applicable** component | Energy is a function of one cooling estimate (§5.6); restricting rather than summing keeps the derivation traceable to exactly one component |
+| Capital cost | entered once for the whole package | The tool ships no unit costs (§5.8), so there is nothing to apportion; the field reference states that the figure covers every selected component |
+| Flags | per component, all surfaced, each naming its entry | The user must see *which* part of the package is the problem |
+
+The component carrying the temperature is chosen by **evidence rating first, envelope width second**. A low-evidence component with a higher ceiling therefore does not speak for the package — otherwise the least certain estimate in a selection would set its headline number.
+
+**Package size is unbounded but warned above five components** (D-044.4). Under the capped-never-summed rule a large package's headline is carried by its strongest member while the remainder add co-benefit breadth, so a hard cap would forbid something harmless. Above five, the tool states plainly that adding a further component will not raise the temperature estimate. That is the information a refusal would have conveyed only by refusing.
+
+### 4.6 One envelope moved at implementation
+
+The `large_water_body` archetype ships at **0.1 – 3.0 °C**, not the 0.5 – 3.0 °C proposed when the release was designed.
+
+The design attributed a cooling magnitude near 2 °C to `yao2023a`. Source verification during implementation established that the paper reports no such figure: it measures a **0.1–0.6 °C** daytime cool island at urban lakes in two cities, an order of magnitude below the attributed value. Holding the floor at 0.5 °C would have made the tool claim more than its most direct field evidence supports — the inflation §5.5's clipping rule exists to prevent — so the floor was lowered to the measured minimum and the correction recorded as D-045.
+
+The resulting envelope is wide, and the width is the finding rather than a defect. A remote-sensing-inclusive meta-analysis (`volker2013`, 2.5 K pooled) and direct field measurement of actual urban lakes disagree by an order of magnitude, and `ampatzidis2020` identifies remote sensing as the overestimating mode. A narrower envelope would have to pick a side that the evidence does not support picking, so the tool reports the disagreement and says so in its output.
+
+**The two water archetypes are never interpolated between by area.** `small_constructed_water` (0.0–1.0 °C) and `large_water_body` (0.1–3.0 °C) are separate bodies of study, not two points on a dose–response curve: the size-threshold literature is land-surface-temperature only. An area-based interpolation would look reasonable and would be unsourced, so the engine does not perform one and the test suite asserts its absence.
+
+### 4.7 Suitability conditions
+
+Each entry declares conditions under which it is unsuitable — minimum viable site area, soil requirement, irrigation requirement, and unsuitable climate zones. These are **inherited from the archetype**, with per-entry overrides only where the catalogue's own description makes an inherited value plainly wrong (D-044.3) — 21 entries of 110, each listed with its reason in the evidence tables, and every replacement value drawn from the cited v1.1 library so that no new number enters the methodology through an override.
+
+When a disqualifying condition is met, the tool computes the assessment transparently but attaches a prominent **"not suitable for this site"** flag naming the reason, and the recommendation text states it. Silently returning a merely lower score for a physically implausible intervention would misrepresent the finding.
 
 The humidity caveat from `gunawardena2017` — poorly designed blue space may exacerbate heat stress under humid conditions — is encoded as a climate-suitability penalty for blue typologies in tropical-wet zones rather than left as prose.
 
@@ -383,7 +449,7 @@ A single confidence rating would obscure the common case where a site has good p
 | 40–70% | Medium |
 | > 70% | High |
 
-Two additional constraints apply. Evidence confidence propagates: a typology rated low-confidence in the library (green façade, rain garden/bioswale, courtyard greening) caps the cooling-block confidence at medium regardless of input completeness, because complete inputs cannot compensate for thin underlying evidence. And a high score with low confidence is presented as a flag for further investigation, never as a verdict.
+Two additional constraints apply. Evidence confidence propagates: an archetype rated low-confidence in the library (green façade / living wall, bioretention, enclosed courtyard, vegetated shade structure, and both productive classes) caps the cooling-block confidence at medium regardless of input completeness, because complete inputs cannot compensate for thin underlying evidence. And a high score with low confidence is presented as a flag for further investigation, never as a verdict.
 
 **The field-to-block mapping, fixed at 2026.08.01 (D-024), extended at 2026.08.03 (D-039).** The fields counted for each block are enumerated in `derived_scores.yaml`: ten slots for cooling (canopy, green cover, imperviousness, soil, irrigation, shade level, one heat-signal slot filled by *either* the LST anomaly *or* the qualitative heat exposure level, solar exposure, new canopy at maturity, maturity period); three for energy (relevance confirmation, demand, energy price); four for economic (capital cost, energy price, implementation complexity, maintenance intensity); six for equity (population density, vulnerable presence, one cooling-refuge access slot filled by *either* the indoor *or* the outdoor indicator, safety concern, public accessibility, community participation). A field answered *unknown* counts as **not supplied** — an explicit unknown carries no more information than a skipped question. Completeness is the share of supplied slots; the thresholds of the table above apply with exact boundaries: below 40% low, 40–70% (inclusive) medium, above 70% high.
 
@@ -401,20 +467,26 @@ Required inputs must be present; the assessment does not proceed without them. O
 
 The tool's published sensitivity analysis varies each aggregation weight by **±25%** (renormalising the remainder) across the golden-scenario set and reports rank stability, score displacement, category migration, and an influence ranking. It is implemented in [`tools/sensitivity_analysis.py`](../../tools/sensitivity_analysis.py), its full output is committed at [SENSITIVITY-ANALYSIS.md](SENSITIVITY-ANALYSIS.md), and it must be regenerated whenever any aggregation weight changes.
 
-### 7.1 Results at version 2026.08.03
+### 7.1 Results at version 2026.08.04
 
-The analysis was executed against the 20 hand-verified golden scenarios (190 scenario pairs), re-scoring the full set under each of the 12 perturbations (6 weights × ±25%). The figures below were produced at `2026.08.01` and re-confirmed unchanged at `2026.08.03`: no aggregation weight has moved, and no golden-scenario output changed under D-039 or D-040.
+**Regenerated, not carried forward.** At `2026.08.03` the figures below were re-confirmed unchanged because no typology value had moved. That is not true of this release: the library changed from 14 typologies to 110 entries over 18 archetypes, the scenario set grew from 20 to 24, and the analysis was therefore re-executed in full. The aggregation weights themselves are **unchanged** — what moved is the population of scenarios they are applied to.
 
-1. **Rank stability.** Worst case **0.9737** (under the −25% Heat Priority Index perturbation: 5 of 190 pairs reorder); 9 of 12 perturbations preserve at least 98.4% of pair orderings. Reordering occurs only between scenarios whose baseline scores differ by less than about 2 points — pairs that the methodology itself would describe as materially equivalent.
-2. **Score displacement.** Pooled across all 240 scenario-perturbation combinations: mean **0.42** points, median 0.32, 75th percentile 0.59, maximum **2.01** points (on a 0–100 scale).
-3. **Category migration.** **3 of 240** combinations cross a band boundary, and each involves a baseline score within ~1.3 points of the boundary (59.58 → 60.3/60.39 across the Moderate–Strong line; 80.92 → 79.63 across the Strong–High-priority line). No scenario moves by more than one band, and no scenario far from a boundary migrates.
-4. **Influence ranking.** Cooling Potential (mean displacement 0.58) and the Heat Priority Index (0.53) are the most influential weights, followed by Vulnerability (0.49), Suitability (0.45), Co-benefits (0.31), and Cost Feasibility (0.17). Cost feasibility ranks last partly by construction: it is excluded and redistributed in the 15 of 20 scenarios that supply no cost data, so its weight only binds where economic evidence exists.
+The analysis re-scores the **24 golden scenarios** (276 scenario pairs) under each of the 12 perturbations (6 weights × ±25%).
+
+1. **Rank stability.** Worst case **0.9529** (under the −25% Heat Priority Index perturbation); **10 of 12** perturbations preserve at least 98% of pairwise orderings, the two exceptions being that perturbation and the +25% Cooling Potential one at 0.9601. Reordering still occurs only between scenarios whose baseline scores differ by around 2 points or less.
+2. **Score displacement.** Pooled across all **288** scenario-perturbation combinations: mean **0.47** points, median 0.34, 75th percentile 0.67, maximum **2.05** points on a 0–100 scale.
+3. **Category migration.** **8 of 288** combinations cross a band boundary. Six of the eight involve two scenarios sitting almost exactly on the Moderate–Strong line at 59.58 and 59.89 — within half a point of the boundary — and the remaining two are a Strong–High-priority crossing at 80.92 and a second crossing of the same near-boundary scenario. No scenario moves by more than one band, and no scenario far from a boundary migrates.
+4. **Influence ranking.** Cooling Potential (mean displacement 0.74) and the Heat Priority Index (0.61) remain the most influential weights, followed by Suitability (0.51), Vulnerability (0.48), Co-benefits (0.33) and Cost Feasibility (0.14). Cost feasibility ranks last partly by construction: it is excluded and redistributed in every scenario supplying no cost data, so its weight binds only where economic evidence exists.
+
+**What moved, and why.** Every headline figure is slightly worse than at `2026.08.03`: worst-case rank stability 0.9737 → 0.9529, mean displacement 0.42 → 0.47, migrations 3/240 → 8/288 (1.25% → 2.8%). This is a property of the **scenario set**, not a degradation of the methodology, and the cause is visible in the migration table: four of the eight migrations are one new scenario, `s24_productive_landscape_evidence_gap`, whose baseline score of 59.89 sits 0.11 points below a band boundary. A scenario that close to a boundary will cross it under almost any perturbation. The new scenarios were chosen to exercise this release's *evidence* edge cases — the small-water envelope, the pergola-scale ceiling, the package cap, the productive evidence gap — and not to sit comfortably inside bands; one of them landing on a boundary is a coincidence of that choice, and reporting it as though the tool had become less stable would be the wrong reading.
 
 ### 7.2 Interpretation
 
-Under ±25% perturbation of any single aggregation weight, the tool's priority ordering is substantially stable: at least 97.4% of pairwise orderings survive every perturbation, absolute scores move by well under half a point on average, and category changes occur only for sites already sitting on a band boundary. The disclosed equity-forward stance (§5.9) therefore changes fewer decisions than its prominence might suggest — a deployment that disagrees with the weights can expect a materially similar priority list unless two options were near-tied to begin with.
+Under ±25% perturbation of any single aggregation weight, the tool's priority ordering is substantially stable: at least **95.3%** of pairwise orderings survive every perturbation, absolute scores move by well under half a point on average, and category changes occur only for sites already sitting on a band boundary. The disclosed equity-forward stance (§5.9) therefore changes fewer decisions than its prominence might suggest — a deployment that disagrees with the weights can expect a materially similar priority list unless two options were near-tied to begin with.
 
-Two honest qualifications. First, the analysis perturbs one weight at a time; simultaneous perturbation of several weights would produce larger displacements, and the published figures should not be quoted as bounds for arbitrary re-weightings. Second, the golden-scenario set is designed to span the methodology's behaviour (climates, typologies, data completeness, cost availability), not to be a probability sample of real assessments; stability figures are properties of this set. Both caveats argue for the standing rule that near-boundary results be read as ranges, not verdicts — which the confidence mechanism already enforces at the point of use.
+A third qualification is now visible in the numbers. The migration count is dominated by where the scenarios happen to sit relative to band boundaries, so it is a weak statistic on a set of 24: a single near-boundary scenario contributes half the migrations. The rank-stability and displacement figures are the ones to read; the migration count is best read as "which scenarios sit on a boundary", which is what §7.1 states directly.
+
+Two further honest qualifications. First, the analysis perturbs one weight at a time; simultaneous perturbation of several weights would produce larger displacements, and the published figures should not be quoted as bounds for arbitrary re-weightings. Second, the golden-scenario set is designed to span the methodology's behaviour (climates, typologies, data completeness, cost availability), not to be a probability sample of real assessments; stability figures are properties of this set. Both caveats argue for the standing rule that near-boundary results be read as ranges, not verdicts — which the confidence mechanism already enforces at the point of use.
 
 ---
 
@@ -440,7 +512,7 @@ Two honest qualifications. First, the analysis perturbs one weight at a time; si
 
 ## 9. Methodology governance
 
-**Versioning.** The methodology version (`2026.08.03`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
+**Versioning.** The methodology version (`2026.08.04`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
 
 **Change process.** Methodology changes are proposed as public pull requests with their evidence. Existing assessments are never silently recomputed: results retain the version that produced them, and the interface indicates when a newer methodology version is available.
 

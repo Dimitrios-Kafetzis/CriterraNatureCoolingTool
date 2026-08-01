@@ -179,7 +179,7 @@ Opportunity Score.}
 \subsection{Derived site adjustment factor}
 \label{sec:adjustment}
 
-Four site conditions modulate typology performance. Each condition resolves to
+Four site conditions modulate archetype performance. Each condition resolves to
 a level, and each level maps to a multiplicative factor:
 
 \begin{center}
@@ -236,7 +236,7 @@ level, and the \emph{more limiting} of the two is taken. The mapping is
 When exactly one of the two is known, the condition is capped at \emph{good}:
 a pair containing an unknown may never exceed the neutral factor, so declaring
 reliable irrigation is never worse --- and with high soil strictly better ---
-than skipping the question (D-026, version \methver{}). \\
+than skipping the question (D-026, version 2026.08.02). \\
 \addlinespace
 Scale &
 From the declared assessment scale:
@@ -245,7 +245,7 @@ From the declared assessment scale:
 \emph{site}, \emph{building}\,$\rightarrow$\,moderate. \\
 \addlinespace
 Climate &
-A lookup of typology family against climate zone
+A lookup of archetype family against climate zone
 (\Cref{tab:climate-matrix}). \\
 \bottomrule
 \end{tabularx}
@@ -269,10 +269,10 @@ would discard the largest single explanatory term in the available evidence.
 \begin{table}[htbp]
 \centering
 \caption[Climate suitability matrix]{Climate suitability matrix: the condition
-level assigned to each typology family in each supported climate zone, resolved
+level assigned to each archetype family in each supported climate zone, resolved
 to a factor through the condition-level table above. Vegetation-based
-typologies are downgraded in arid and semi-arid zones where water limitation
-constrains evapotranspiration; blue-green typologies are downgraded in
+archetypes are downgraded in arid and semi-arid zones where water limitation
+constrains evapotranspiration; blue-green archetypes are downgraded in
 tropical-wet zones following the humidity caveat of
 \textcite{gunawardena2017}, and upgraded in tropical-dry zones. An
 unrecognised zone yields \emph{unknown}, whose factor is the neutral 1.0.}
@@ -296,15 +296,18 @@ Other        & Unknown  & Unknown  & Unknown   & Unknown \\
 \subsection{Cooling Potential Score and temperature reduction}
 \label{sec:cooling}
 
-The Cooling Potential Score scales the typology's base cooling score by the
-site adjustment factor:
+The Cooling Potential Score scales the base cooling score of the archetype the
+selected entry inherits by the site adjustment factor:
 
 \begin{equation}
 \label{eq:cps}
 S_{\mathrm{cool}} \;=\; \clamp{B \times A},
 \end{equation}
 
-where $B$ is the base cooling score from \Cref{tab:typologies}.
+where $B$ is the base cooling score from \Cref{tab:typologies}. Every
+quantity in this subsection is a property of the \emph{archetype}, not of the
+catalogue entry, and the result names the archetype it was computed against
+(\Cref{sec:archetypes}).
 
 The reported temperature reduction range is computed differently, and the
 difference is the point of this subsection:
@@ -316,7 +319,7 @@ difference is the point of this subsection:
 \dT_{\max} &= \clip{\tau_{\max} \times A}{\tau_{\min}}{\tau_{\max}},
 \end{align}
 
-where $[\tau_{\min}, \tau_{\max}]$ is the typology's literature envelope from
+where $[\tau_{\min}, \tau_{\max}]$ is the archetype's literature envelope from
 \Cref{tab:typologies}.
 
 \begin{keynote}
@@ -385,6 +388,98 @@ immediately: under one year \emph{immediate}, one to three years
 \emph{long-term} (half-open brackets). Absent a maturity period the output is
 \emph{not estimated}.
 
+\subsection{Multi-intervention packages}
+\label{sec:packages}
+
+An assessment may propose several simultaneously available catalogue entries.
+Each component is \textbf{scored individually by the formulas above and
+reported individually}; only the package's headline outputs are combined, and
+they are combined under rules that add nothing the evidence does not support.
+No rule below computes a new methodology value: each either selects among the
+component results or takes an extremum of them.
+
+\begin{table}[H]
+\centering
+\caption[Package combination rules]{How a package's headline outputs are
+combined from its components. Every rule is a selection or an extremum; none
+introduces a value that is not already a component result.}
+\label{tab:package-rules}
+\small
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Output} & \textbf{Rule, and why} \\
+\midrule
+Temperature &
+\textbf{The best-evidenced component's adjusted range; never summed.} No
+retrieved source quantifies super-additive cooling from combining measures
+(\Cref{sec:super-additivity}). Note that
+$\min\bigl(\max_i \dT_{\max,i},\, \dT_{\max,\mathrm{rep}}\bigr)$ and
+$\dT_{\max,\mathrm{rep}}$ are the same number, so the cap and the selection are
+one rule, not two. \\
+\addlinespace
+Co-benefits &
+\textbf{Union: the maximum per dimension}, then re-weighted by
+\Cref{eq:cobenefit}. A package delivers each dimension at least as well as its
+best component does, and this is where a package's real advantage lies. \\
+\addlinespace
+Suitability &
+\textbf{The minimum across components.} A package is no more deliverable on a
+site than its least suitable member; averaging would let a well-fitting
+component conceal one that cannot be built here, which is exactly what the
+flags of \Cref{sec:suitability} exist to prevent. \\
+\addlinespace
+Energy &
+Derived from the best-evidenced \textbf{building-energy-applicable} component.
+Energy is a function of one cooling estimate (\Cref{eq:energy}); restricting
+rather than summing keeps the derivation traceable to exactly one component. If
+no component is building-energy applicable, the energy status is
+\texttt{typology\_not\_applicable}. \\
+\addlinespace
+Capital cost &
+\textbf{Entered once for the whole package.} The tool ships no unit costs
+(\Cref{sec:costs}), so there is nothing to apportion; \Cref{tab:app-fields}
+states that the figure covers every selected component. \\
+\addlinespace
+Flags &
+Per component, all surfaced, each naming its entry. The user must be able to
+see \emph{which} part of the package is the problem. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Which component speaks for the package.} The component carrying the
+temperature is chosen by \textbf{evidence rating first, adjusted envelope width
+second}, with ties falling to the user's own selection order so that the choice
+is deterministic. A low-evidence component with a higher ceiling therefore does
+not speak for the package --- otherwise the least certain estimate in a
+selection would set its headline number.
+
+\begin{keynote}
+\noindent\textbf{Package size is unbounded, but warned above five components.}
+
+Under the capped-never-summed rule a large package's headline temperature is
+carried by its strongest member while the remainder add co-benefit breadth and
+capital cost, so a hard cap would forbid something harmless. Above five
+components the tool states plainly that adding a further component will not
+raise the temperature estimate. That is the information a refusal would have
+conveyed only by refusing.
+\end{keynote}
+
+\paragraph{A worked instance from the regression suite.} Golden scenario
+\texttt{s23} selects five components on one temperate neighbourhood site: a
+tree avenue (\SIrange{0.5}{3.0}{\degreeCelsius}, high evidence), a green median
+(\SIrange{0.0}{1.5}{\degreeCelsius}, medium), a blue-green corridor
+(\SIrange{1.0}{3.0}{\degreeCelsius}, medium), a pocket park
+(\SIrange{0.5}{2.0}{\degreeCelsius}, high), and courtyard greening
+(\SIrange{0.3}{1.5}{\degreeCelsius}, low). The reported range is the tree
+avenue's alone --- \SIrange{0.5}{3.0}{\degreeCelsius} at an adjustment factor of
+\num{1.0} --- because it is the best-evidenced component and, among the two
+high-evidence components, the one with the wider envelope. The sum of the five
+ceilings would be \qty{11.0}{\degreeCelsius}, and the tool does not claim it.
+The co-benefit score, unioned, is \num{71.25}; the suitability score is the
+weakest component's \num{86.25}; and the Opportunity Score is \num{76.10}. The
+scenario exists to make a regression in any one of these rules fail the build.
+
 \subsection{NbS Suitability, co-benefit, and equity scores}
 \label{sec:composite-subscores}
 
@@ -406,10 +501,11 @@ S_{\mathrm{equity}} &= \clampop\bigl(
 + 0.20\,S_{\mathrm{particip}}\bigr).
 \end{align}
 
-The co-benefit sub-indicators take per-typology default levels, each cited in
-the typology library (\Cref{app:typologies}), which the user may override.
+The co-benefit sub-indicators take per-archetype default levels, each cited in
+the library (\Cref{app:typologies}), which the user may override. In a package
+they are unioned across components before weighting (\Cref{tab:package-rules}).
 
-\paragraph{The sub-indicator rules, fixed at version \methver{}.} An earlier
+\paragraph{The sub-indicator rules, fixed at version 2026.08.01.} An earlier
 version of this document disclosed that the rules mapping user inputs to the
 individual sub-indicator scores were unspecified and would be fixed alongside
 the engine implementation. They are now fixed, live in
@@ -432,12 +528,12 @@ never asserted from absent information.}
 \textbf{Sub-indicator} & \textbf{Rule} \\
 \midrule
 Space &
-$r = \text{site area} / \text{typology minimum viable area}$:
+$r = \text{site area} / \text{minimum viable area}$:
 $r < 1$ $\rightarrow$ 25 \emph{and the flag}; $1 \le r < 2$ $\rightarrow$ 50;
 $2 \le r < 5$ $\rightarrow$ 75; $r \ge 5$ $\rightarrow$ 100. \\
 \addlinespace
 Soil &
-Availability against the typology requirement on the ordinal scale
+Availability against the entry's requirement on the ordinal scale
 \emph{none} $<$ \emph{limited} $<$ \emph{moderate} $<$ \emph{high}:
 requirement \emph{none} $\rightarrow$ 100; availability unknown $\rightarrow$
 50; below requirement $\rightarrow$ 25 \emph{and the flag}; meets exactly
@@ -452,7 +548,7 @@ Declared maintenance intensity through the inverted scale: low $\rightarrow$
 100, medium $\rightarrow$ 50, high $\rightarrow$ 25, unknown $\rightarrow$ 50. \\
 \addlinespace
 Urban context &
-Site land use inside the typology's typical-use contexts $\rightarrow$ 100;
+Site land use inside the entry's own land-use list $\rightarrow$ 100;
 outside them $\rightarrow$ 25 (a caution, not a disqualification); unknown
 $\rightarrow$ 50. \\
 \bottomrule
@@ -469,7 +565,7 @@ scale, because a site with greater safety and comfort problems stands to gain
 more from a well-designed intervention.
 
 Two disclosures carry over unchanged from the previous version. The co-benefit
-weights include a \emph{social inclusion} term for which the typology library
+weights include a \emph{social inclusion} term for which the library
 supplies no default; absent a user override it falls to the neutral default of
 \Cref{sec:unknown} and is itemised as an applied assumption. And the Equity
 Score of \Cref{eq:equity} is computed and reported as an output block with its
@@ -518,8 +614,10 @@ separate parameter to maintain.
 \paragraph{Preconditions.} Energy savings are calculated only when all three of
 the following hold: the user confirms that nearby building cooling demand is
 relevant to the intervention; an annual cooling energy demand is supplied; and
-the selected typology is flagged as capable of affecting adjacent building
-loads. Otherwise the result carries an explicit status, checked in a fixed order ---
+the archetype the selected entry inherits is flagged as capable of affecting
+adjacent building loads. In a package the derivation follows one
+building-energy-applicable component (\Cref{tab:package-rules}).
+Otherwise the result carries an explicit status, checked in a fixed order ---
 \texttt{typology\_not\_applicable} (the intervention cannot affect building
 loads, whatever the user supplied), \texttt{not\_applicable} (the user states
 demand is not relevant), \texttt{relevance\_not\_confirmed} (the relevance
@@ -581,7 +679,7 @@ at \qty{2}{\USD\per\cubic\metre} in Bangladesh against
 \qty{59}{\USD\per\cubic\metre} in the United Kingdom, roughly a thirtyfold
 difference for the same operation --- and that urban implementation costs
 typically exceed rural ones. No source was found offering globally applicable
-unit costs for the typologies in this library.
+unit costs for the interventions in this library.
 
 The tool therefore ships \textbf{no default cost values} in version 1. Where a
 user supplies a capital cost, the tool computes cost outputs; where they do
@@ -622,7 +720,7 @@ S_{\mathrm{cost}} \;=\; f\bigl(\text{payback bracket},\;
 
 with short payback, low complexity, and low maintenance yielding high
 feasibility. The bracket boundaries and combination rule, fixed at version
-\methver{} (decision D-023), are as follows. Because the energy saving is an
+2026.08.01 (decision D-023), are as follows. Because the energy saving is an
 interval spanning an order of magnitude, the payback bracket is applied to the
 payback computed from the \emph{central} energy estimate --- the midpoint of
 the savings range --- while the reported payback interval still carries both

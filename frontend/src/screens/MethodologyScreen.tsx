@@ -163,12 +163,30 @@ function effectiveWeights(weights: Record<string, unknown>): EffectiveWeightRow[
   return rows;
 }
 
+/** The library grouped by family, in the catalogue's own order (D-043). */
+function familyGroups(entries: Typology[]): [string, Typology[]][] {
+  const byFamily = new Map<string, Typology[]>();
+  for (const entry of entries) {
+    const bucket = byFamily.get(entry.family);
+    if (bucket) bucket.push(entry);
+    else byFamily.set(entry.family, [entry]);
+  }
+  const ordered = [...messages.families.order].filter((family) => byFamily.has(family));
+  const extra = [...byFamily.keys()].filter((family) => !ordered.includes(family));
+  return [...ordered, ...extra].map((family) => [family, byFamily.get(family) ?? []]);
+}
+
 function TypologyCard({ typology }: { typology: Typology }) {
   const s = typology.suitability;
   return (
     <div className="typology-detail">
       <h3 id={`typology-${typology.nbs_type}`}>{typology.display_name}</h3>
       <dl className="kv small">
+        {/* D-044: every performance value below is the archetype's, and the
+            page names the evidence class rather than implying the entry was
+            measured on its own. */}
+        <dt>{t.archetypeLabel}</dt>
+        <dd>{typology.archetype_display_name}</dd>
         <dt>{t.typology.baseScore}</dt>
         <dd>{typology.base_cooling_score} / 100</dd>
         <dt>{t.typology.envelope}</dt>
@@ -184,7 +202,10 @@ function TypologyCard({ typology }: { typology: Typology }) {
         <dt>{t.typology.context}</dt>
         <dd>{typology.typical_use_context.join(', ')}</dd>
         <dt>{t.suitability.minArea}</dt>
-        <dd>{s.minimum_site_area_m2.toLocaleString()} m²</dd>
+        <dd>
+          {s.minimum_site_area_m2.toLocaleString()} m²
+          {typology.suitability_inherited ? ` — ${t.inheritedSuitability}` : ''}
+        </dd>
         <dt>{t.suitability.soil}</dt>
         <dd>{s.requires_soil === 'none' ? t.suitability.none : s.requires_soil}</dd>
         <dt>{t.suitability.irrigation}</dt>
@@ -349,8 +370,19 @@ export function MethodologyScreen() {
 
         <section id="typologies" aria-label={t.sections.typologies}>
           <h2>{t.sections.typologies}</h2>
-          {library.typologies.map((typology) => (
-            <TypologyCard key={typology.nbs_type} typology={typology} />
+          {/* `resolved` is the flat scoring view the engine consumes and the
+              only one carrying performance values; 110 entries are grouped by
+              family so the page stays navigable (D-043). */}
+          {familyGroups(library.resolved ?? []).map(([family, entries]) => (
+            <details className="collapsible" key={family}>
+              <summary>
+                {messages.families.labels[family] ?? family}{' '}
+                <span className="muted small">· {t.familyCount(entries.length)}</span>
+              </summary>
+              {entries.map((typology) => (
+                <TypologyCard key={typology.nbs_type} typology={typology} />
+              ))}
+            </details>
           ))}
         </section>
 

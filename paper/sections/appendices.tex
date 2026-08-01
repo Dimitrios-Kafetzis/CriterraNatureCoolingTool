@@ -1,125 +1,151 @@
-\section{The complete NbS typology library}
+\section{The library: archetypes, entries, and their evidence}
 \label{app:typologies}
 
-This appendix reproduces the full typology library at methodology version
+This appendix reproduces the full library at methodology version
 \methver{}, as it appears in \texttt{config/nbs\_typologies.yaml}. All
 temperature values are daytime, pedestrian-level \emph{air} temperature
 reductions in degrees Celsius, relative to an equivalent unimproved site.
 
-\subsection{Adopted values and suitability conditions}
+The library has two levels (\Cref{sec:archetypes}). \Cref{tab:app-archetypes,%
+tab:app-cobenefits,tab:app-citations,tab:app-notes} give the \num{18} cooling
+archetypes, which carry every performance value and every citation.
+\Cref{tab:app-entries} lists the \num{110} catalogue entries and the archetype
+each one inherits; an entry carries no performance value of its own.
+\Cref{tab:app-overrides} lists the \num{21} per-entry suitability overrides.
+
+\subsection{Archetype values and inherited suitability conditions}
 
 {\small
 \setlength{\tabcolsep}{4pt}
-\begin{longtable}{@{}llrcccrl@{}}
-\caption[Complete typology library]{Adopted values and suitability conditions
-for all fourteen typologies. \emph{Bldg.\ energy} indicates whether the
-typology is flagged as capable of affecting adjacent building cooling loads, a
-precondition for the energy derivation of \Cref{sec:energy}.}
-\label{tab:app-typologies}\\
+\begin{longtable}{@{}lrcccrl@{}}
+\caption[Archetype values and suitability conditions]{Adopted values and
+suitability conditions for all \num{18} cooling archetypes. \emph{Bldg.\
+energy} indicates whether the archetype is flagged as capable of affecting
+adjacent building cooling loads, a precondition for the energy derivation of
+\Cref{sec:energy}. The minimum area and the soil and irrigation requirements
+are inherited by every catalogue entry resolving to the archetype, subject to
+the overrides of \Cref{tab:app-overrides}.}
+\label{tab:app-archetypes}\\
 \toprule
-\textbf{ID} & \textbf{Typology} & \textbf{Base} & \textbf{Envelope} &
+\textbf{Archetype} & \textbf{Base} & \textbf{Envelope} &
 \textbf{Conf.} & \textbf{Bldg.} & \textbf{Min.\ area} & \textbf{Soil / water} \\
-& & \textbf{score} & (\si{\degreeCelsius}) & & \textbf{energy} &
+& \textbf{score} & (\si{\degreeCelsius}) & & \textbf{energy} &
 (\si{\metre\squared}) & \textbf{required} \\
 \midrule
 \endfirsthead
-\multicolumn{8}{@{}l}{\small\itshape \Cref{tab:app-typologies} continued from
+\multicolumn{7}{@{}l}{\small\itshape \Cref{tab:app-archetypes} continued from
 previous page}\\
 \toprule
-\textbf{ID} & \textbf{Typology} & \textbf{Base} & \textbf{Envelope} &
+\textbf{Archetype} & \textbf{Base} & \textbf{Envelope} &
 \textbf{Conf.} & \textbf{Bldg.} & \textbf{Min.\ area} & \textbf{Soil / water} \\
 \midrule
 \endhead
 \midrule
-\multicolumn{8}{r@{}}{\small\itshape continued on next page}\\
+\multicolumn{7}{r@{}}{\small\itshape continued on next page}\\
 \endfoot
 \bottomrule
 \endlastfoot
-\multicolumn{8}{@{}l}{\textit{Green}}\\
-01 & Street tree planting        & 75 & 0.5--3.0 & High   & Yes & 100  & Limited / occas. \\
-02 & Shaded pedestrian corridor  & 80 & 0.5--3.0 & Medium & No  & 200  & Limited / occas. \\
-03 & Pocket park                 & 65 & 0.3--1.5 & High   & No  & 200  & Limited / occas. \\
-04 & Urban forest / dense canopy & 90 & 1.0--3.0 & High   & Yes & 2000 & Moderate / occas. \\
-05 & Park upgrade                & 70 & 0.5--2.0 & High   & No  & 500  & Limited / occas. \\
-06 & Schoolyard greening         & 75 & 0.5--2.0 & Medium & Yes & 300  & Limited / occas. \\
+\multicolumn{7}{@{}l}{\textit{Green}}\\
+Street tree canopy & 75 & 0.5--3.0 & High & Yes & 100 & Limited / occas. \\
+Continuous shaded corridor & 80 & 0.5--3.0 & Medium & No & 200 & Limited / occas. \\
+Small green area with trees & 65 & 0.3--1.5 & High & No & 200 & Limited / occas. \\
+Dense tree canopy & 90 & 1.0--3.0 & High & Yes & 2000 & Moderate / occas. \\
+Established park & 70 & 0.5--2.0 & High & No & 500 & Limited / occas. \\
+Non-canopy vegetation & 50 & 0.0--1.5 & Medium & No & 50 & Limited / occas. \\
+Productive tree canopy & 60 & 0.5--2.0 & Low & No & 500 & Moderate / reliable \\
+Productive ground-level planting & 45 & 0.0--1.5 & Low & No & 200 & Moderate / reliable \\
 \addlinespace
-\multicolumn{8}{@{}l}{\textit{Building}}\\
-07 & Green roof                  & 45 & 0.1--1.0 & Medium & Yes & 50   & None / occas. \\
-08 & Green fa\c{c}ade            & 50 & 0.3--2.0 & Low    & Yes & 20   & None / reliable \\
+\multicolumn{7}{@{}l}{\textit{Building}}\\
+Extensive green roof & 45 & 0.1--1.0 & Medium & Yes & 50 & None / occas. \\
+Green facade or living wall & 50 & 0.3--2.0 & Low & Yes & 20 & None / reliable \\
 \addlinespace
-\multicolumn{8}{@{}l}{\textit{Blue-green}}\\
-09 & Rain garden / bioswale      & 55 & 0.1--0.8 & Low    & No  & 50   & Moderate / none \\
-10 & Blue-green corridor         & 85 & 1.0--3.0 & Medium & No  & 1000 & Moderate / none \\
-11 & Riparian restoration        & 85 & 1.0--3.0 & Medium & No  & 1000 & Moderate / none \\
+\multicolumn{7}{@{}l}{\textit{Blue-green}}\\
+Bioretention and drainage planting & 55 & 0.1--0.8 & Low & No & 50 & Moderate / none \\
+Blue-green corridor & 85 & 1.0--3.0 & Medium & No & 1000 & Moderate / none \\
+Riparian restoration & 85 & 1.0--3.0 & Medium & No & 1000 & Moderate / none \\
+Large open water body & 75 & 0.1--3.0 & Medium & No & 1000 & Moderate / none \\
+Small constructed water feature & 40 & 0.0--1.0 & Medium & No & 50 & Moderate / none \\
 \addlinespace
-\multicolumn{8}{@{}l}{\textit{Hybrid}}\\
-12 & Permeable shaded plaza      & 70 & 0.5--2.5 & Medium & No  & 200  & Limited / occas. \\
-13 & Courtyard greening          & 60 & 0.3--1.5 & Low    & Yes & 50   & Limited / occas. \\
-14 & Mixed NbS package           & 80 & 1.0--3.0 & Medium & Yes & 500  & Limited / occas. \\
+\multicolumn{7}{@{}l}{\textit{Hybrid}}\\
+Permeable shaded hardscape & 70 & 0.5--2.5 & Medium & No & 200 & Limited / occas. \\
+Enclosed courtyard greening & 60 & 0.3--1.5 & Low & Yes & 50 & Limited / occas. \\
+Vegetated shade structure & 55 & 0.0--2.5 & Low & No & 20 & None / reliable \\
+\addlinespace
 \end{longtable}
 }
 
-No typology declares an unsuitable climate zone at version \methver{}. Climate
+No archetype declares an unsuitable climate zone at version \methver{}. Climate
 influences performance through the adjustment matrix of
 \Cref{tab:climate-matrix} rather than through outright disqualification.
 
-\subsection{Primary cooling mechanisms and co-benefit defaults}
+\subsection{Co-benefit defaults}
 
-\begin{longtable}{@{}l>{\raggedright\arraybackslash}p{52mm}cccc@{}}
-\caption[Cooling mechanisms and co-benefit defaults]{Primary cooling mechanism
-and default co-benefit levels per typology. The library supplies no default for
-the \emph{social inclusion} sub-indicator of \Cref{eq:cobenefit}; absent a user
-override it falls to the neutral \emph{unknown} value and is itemised as an
-applied assumption.}
+The primary cooling mechanism is declared \emph{per catalogue entry} rather
+than per archetype, because it is the one descriptive attribute the source
+catalogue supplies at entry resolution; it is reported in the result and enters
+no formula. The co-benefit defaults below are archetype properties, inherited
+by every entry, and are unioned across components in a package
+(\Cref{tab:package-rules}).
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{62mm}cccc@{}}
+\caption[Co-benefit defaults]{Default co-benefit levels per archetype. The
+library supplies no default for the \emph{social inclusion} sub-indicator of
+\Cref{eq:cobenefit}; absent a user override it falls to the neutral
+\emph{unknown} value and is itemised as an applied assumption.}
 \label{tab:app-cobenefits}\\
 \toprule
-\textbf{ID} & \textbf{Primary cooling mechanism} & \textbf{Biodiv.} &
+\textbf{Archetype} & \textbf{Biodiv.} &
 \textbf{Storm.} & \textbf{Health} & \textbf{Urban q.} \\
 \midrule
 \endfirsthead
 \toprule
-\textbf{ID} & \textbf{Primary cooling mechanism} & \textbf{Biodiv.} &
+\textbf{Archetype} & \textbf{Biodiv.} &
 \textbf{Storm.} & \textbf{Health} & \textbf{Urban q.} \\
 \midrule
 \endhead
 \bottomrule
 \endlastfoot
-01 & Shade and evapotranspiration & Med & Med & High & High \\
-02 & Continuous shade and evapotranspiration & Med & Low & High & High \\
-03 & Evapotranspiration and shade & Med & Med & High & High \\
-04 & Dense shade and evapotranspiration & High & High & High & High \\
-05 & Increased canopy and evapotranspiration & High & Med & High & High \\
-06 & Shade and evapotranspiration & Med & Med & High & High \\
-07 & Roof surface cooling and evapotranspiration & Med & High & Low & Med \\
-08 & Wall shading and evapotranspiration & Low & Low & Low & Med \\
-09 & Evapotranspiration and infiltration & Med & High & Low & Med \\
-10 & Evaporation from water surfaces and canopy shade & High & High & High & High \\
-11 & Evaporation from water surfaces and riparian canopy & High & High & Med & High \\
-12 & Shade, surface permeability and evaporation & Low & High & Med & High \\
-13 & Shade and evapotranspiration in enclosed space & Med & Med & Med & High \\
-14 & Combined shade, evapotranspiration and evaporation & High & High & High & High \\
+Street tree canopy & Med & Med & High & High \\
+Continuous shaded corridor & Med & Low & High & High \\
+Small green area with trees & Med & Med & High & High \\
+Dense tree canopy & High & High & High & High \\
+Established park & High & Med & High & High \\
+Extensive green roof & Med & High & Low & Med \\
+Green facade or living wall & Low & Low & Low & Med \\
+Bioretention and drainage planting & Med & High & Low & Med \\
+Blue-green corridor & High & High & High & High \\
+Riparian restoration & High & High & Med & High \\
+Permeable shaded hardscape & Low & High & Med & High \\
+Enclosed courtyard greening & Med & Med & Med & High \\
+Large open water body & High & High & Med & High \\
+Small constructed water feature & Med & High & Low & Med \\
+Non-canopy vegetation & Med & Med & Low & Med \\
+Vegetated shade structure & Low & Low & Med & Med \\
+Productive tree canopy & Med & Med & High & High \\
+Productive ground-level planting & Med & Low & High & Med \\
 \end{longtable}
 
 \subsection{Citations and the findings they support}
 
 Every performance value in the library carries at least one citation, and each
 citation records the specific finding it supports. Configuration loading fails
-if a typology is uncited or if a citation names a source absent from the
+if a resolved entry is uncited or if a citation names a source absent from the
 bibliography (\Cref{sec:evidence-rules}). The findings below are reproduced
 from the configuration.
 
-\begin{longtable}{@{}l l >{\raggedright\arraybackslash}p{95mm}@{}}
-\caption[Typology citations and findings]{Citations supporting each typology's
-adopted values, with the finding each citation supports. Metrics are stated
-where a source reports something other than air temperature.}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{30mm} l
+                    >{\raggedright\arraybackslash}p{72mm}@{}}
+\caption[Archetype citations and findings]{Citations supporting each
+archetype's adopted values, with the finding each citation supports. Metrics
+are stated where a source reports something other than air temperature.}
 \label{tab:app-citations}\\
 \toprule
-\textbf{ID} & \textbf{Source} & \textbf{Finding relied upon} \\
+\textbf{Archetype} & \textbf{Source} & \textbf{Finding relied upon} \\
 \midrule
 \endfirsthead
 \multicolumn{3}{@{}l}{\small\itshape \Cref{tab:app-citations} continued}\\
 \toprule
-\textbf{ID} & \textbf{Source} & \textbf{Finding relied upon} \\
+\textbf{Archetype} & \textbf{Source} & \textbf{Finding relied upon} \\
 \midrule
 \endhead
 \midrule
@@ -127,137 +153,149 @@ where a source reports something other than air temperature.}
 \endfoot
 \bottomrule
 \endlastfoot
-
-01 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Street trees \qty{1.5}{\degreeCelsius} central estimate for pedestrian-level
-daytime air temperature; \qty{4.0(16)}{\degreeCelsius} in tropical (A) and
-\qty{1.7(14)}{\degreeCelsius} in arid (B) climates. \\
-   & \citeauthor{ziter2019}\,\citeyear{ziter2019} &
-Air temperature decreases nonlinearly with canopy cover, greatest cooling above
-about \SI{40}{\percent} cover; peak effect at \SIrange{60}{90}{\metre} scale. \\
-   & \citeauthor{bowler2010}\,\citeyear{bowler2010} &
+Street tree canopy & \texttt{keravec2026} &
+Street trees: 1.5\,\si{\degreeCelsius} central estimate for pedestrian-level daytime air temperature; 4.0 $\pm$ 1.6\,\si{\degreeCelsius} in tropical (A) and 1.7 $\pm$ 1.4\,\si{\degreeCelsius} in arid (B) climates. \\
+ & \texttt{ziter2019} &
+Air temperature decreases nonlinearly with canopy cover, greatest cooling above $\sim$40\% cover; peak effect at 60--90 m scale. \\
+ & \texttt{bowler2010} &
 Empirical studies broadly support cooler air beneath tree canopy. \\
-   & \citeauthor{rahman2020}\,\citeyear{rahman2020} &
+ & \texttt{rahman2020} &
 Species and leaf area index materially change delivered cooling. \\
+ & \texttt{kumar2024} &
+Street trees measured at up to 2.8\,\si{\degreeCelsius} by in-situ monitoring, inside this envelope: newer and broader evidence supports the conservative calibration rather than overturning it. \\
 \addlinespace
-02 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Street trees \qty{1.5}{\degreeCelsius} and shading devices
-\qty{2.0}{\degreeCelsius} pedestrian-level daytime air temperature reduction. \\
-   & \citeauthor{zolch2016}\,\citeyear{zolch2016} &
-Shade placement in heat-exposed locations outperforms maximising total green
-cover; trees \SI{-13}{\percent} PET \emph{(comfort index)}. \\
+Continuous shaded corridor & \texttt{keravec2026} &
+Street trees 1.5\,\si{\degreeCelsius} and shading devices 2.0\,\si{\degreeCelsius} pedestrian-level daytime air temperature reduction. \\
+ & \texttt{zolch2016} &
+Shade placement in heat-exposed locations outperforms maximising total green cover; trees -13\% PET. \\
 \addlinespace
-03 & \citeauthor{bowler2010}\,\citeyear{bowler2010} &
-Meta-analysis: park on average \qty{0.94}{\degreeCelsius} cooler by day; larger
-parks and those with trees cooler. \\
-   & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Parks \qty{1.3}{\degreeCelsius} pedestrian-level daytime air temperature
-reduction. \\
+Small green area with trees & \texttt{bowler2010} &
+Meta-analysis: park on average 0.94\,\si{\degreeCelsius} cooler by day; the review reports that larger parks and parks containing trees tended to be cooler, stated qualitatively. \\
+ & \texttt{keravec2026} &
+Parks 1.3\,\si{\degreeCelsius} pedestrian-level daytime air temperature reduction. \\
 \addlinespace
-04 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Urban forests \qty{2.1}{\degreeCelsius}, among the highest-performing green
-measures. \\
-   & \citeauthor{ziter2019}\,\citeyear{ziter2019} &
-Greatest cooling where canopy cover exceeds \SI{40}{\percent}; effect grows
-with patch scale to \SIrange{60}{90}{\metre}. \\
-   & \citeauthor{bowler2010}\,\citeyear{bowler2010} &
+Dense tree canopy & \texttt{keravec2026} &
+Urban forests 2.1\,\si{\degreeCelsius} pedestrian-level daytime air temperature reduction, among the highest-performing green measures. \\
+ & \texttt{ziter2019} &
+Greatest cooling where canopy cover exceeds 40\%; effect grows with patch scale to 60--90 m. \\
+ & \texttt{bowler2010} &
 Larger, tree-rich green sites cooler during the day. \\
 \addlinespace
-05 & \citeauthor{bowler2010}\,\citeyear{bowler2010} &
-Park mean \qty{0.94}{\degreeCelsius} daytime cooling; parks with trees cooler
-than open turf. \\
-   & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Parks \qty{1.3}{\degreeCelsius}, green areas \qty{2.0}{\degreeCelsius}. \\
+Established park & \texttt{bowler2010} &
+Park mean 0.94\,\si{\degreeCelsius} daytime cooling; parks with trees reported cooler than open turf. \\
+ & \texttt{keravec2026} &
+Parks 1.3\,\si{\degreeCelsius}, green areas 2.0\,\si{\degreeCelsius} pedestrian-level daytime air temperature reduction. \\
+ & \texttt{kraemer2022} &
+Under 2018--2019 drought and heat, maximum spatially averaged park-to-built cooling was 1.1\,\si{\degreeCelsius} in the morning, falling below 1\,\si{\degreeCelsius} in the afternoon and confined to shaded areas. \\
 \addlinespace
-06 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Green areas \qty{2.0}{\degreeCelsius} and street trees
-\qty{1.5}{\degreeCelsius}. \\
-   & \citeauthor{ziter2019}\,\citeyear{ziter2019} &
-Cooling maximised at city-block scale (\SIrange{60}{90}{\metre}), comparable to
-a schoolyard footprint. \\
-   & \citeauthor{bowler2010}\,\citeyear{bowler2010} &
-Tree-containing green sites outperform open green space. \\
+Extensive green roof & \texttt{keravec2026} &
+Green roofs 1.1\,\si{\degreeCelsius} pedestrian-level daytime air temperature reduction, lowest-performing green measure in the synthesis. \\
+ & \texttt{zolch2016} &
+Green roof effects at pedestrian level negligible. \\
+ & \texttt{santamouris2014} &
+0.3--3\,\si{\kelvin} average urban ambient reduction, but only for city-scale deployment in simulation studies, not single-building installation. \\
 \addlinespace
-07 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Green roofs \qty{1.1}{\degreeCelsius}, the lowest-performing green measure in
-the synthesis. \\
-   & \citeauthor{zolch2016}\,\citeyear{zolch2016} &
-Green roof effects at pedestrian level negligible \emph{(PET)}. \\
-   & \citeauthor{santamouris2014}\,\citeyear{santamouris2014} &
-\SIrange{0.3}{3}{\kelvin} average urban ambient reduction, but \emph{only for
-city-scale deployment in simulation studies}, not single-building
-installation. \\
+Green facade or living wall & \texttt{keravec2026} &
+Green walls 3.0\,\si{\degreeCelsius} central, with fivefold spread across climate subzones (Cwa 5.7, BWh 5.5, Csa 2.9, Cfa/Cfb 1.3, Af 1.0\,\si{\degreeCelsius}). \\
+ & \texttt{zolch2016} &
+Green facades -5\% to -10\% PET, below trees at -13\%. \\
 \addlinespace
-08 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Green walls \qty{3.0}{\degreeCelsius} central, with fivefold spread across
-climate subzones (Cwa 5.7, BWh 5.5, Csa 2.9, Cfa/Cfb 1.3, Af
-\qty{1.0}{\degreeCelsius}). \\
-   & \citeauthor{zolch2016}\,\citeyear{zolch2016} &
-Green fa\c{c}ades \SIrange{-5}{-10}{\percent} PET, below trees at
-\SI{-13}{\percent} \emph{(comfort index)}. \\
+Bioretention and drainage planting & \texttt{keravec2026} &
+No bioswale-specific estimate available; neighbouring categories (green areas 2.0\,\si{\degreeCelsius}, water bodies 2.1\,\si{\degreeCelsius}) are not transferable to small drainage features. \\
+ & \texttt{gunawardena2017} &
+Tree-dominated greenspace delivers heat-stress relief; small blue features are not identified as significant coolers. \\
 \addlinespace
-09 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-No bioswale-specific estimate available; neighbouring categories (green areas
-\qty{2.0}{\degreeCelsius}, water bodies \qty{2.1}{\degreeCelsius}) are not
-transferable to small drainage features. \\
-   & \citeauthor{gunawardena2017}\,\citeyear{gunawardena2017} &
-Tree-dominated greenspace delivers heat-stress relief; small blue features are
-not identified as significant coolers. \\
+Blue-green corridor & \texttt{keravec2026} &
+Water bodies 2.1\,\si{\degreeCelsius} and urban forests 2.1\,\si{\degreeCelsius} pedestrian-level daytime air temperature reduction; water bodies and parks reported as largely climate-independent. \\
+ & \texttt{gunawardena2017} &
+Green and blue features together offer synergistic benefits; poorly designed bluespace may exacerbate heat stress in humid conditions. \\
 \addlinespace
-10 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Water bodies \qty{2.1}{\degreeCelsius} and urban forests
-\qty{2.1}{\degreeCelsius}; water bodies and parks reported as largely
-climate-independent. \\
-   & \citeauthor{gunawardena2017}\,\citeyear{gunawardena2017} &
-Green and blue features together offer synergistic benefits; poorly designed
-bluespace may exacerbate heat stress in humid conditions. \\
-\addlinespace
-11 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Water bodies \qty{2.1}{\degreeCelsius}, climate-robust; urban forests
-\qty{2.1}{\degreeCelsius}. \\
-   & \citeauthor{gunawardena2017}\,\citeyear{gunawardena2017} &
+Riparian restoration & \texttt{keravec2026} &
+Water bodies 2.1\,\si{\degreeCelsius}, climate-robust; urban forests 2.1\,\si{\degreeCelsius} pedestrian-level daytime air temperature reduction. \\
+ & \texttt{gunawardena2017} &
 Bluespace cooling mechanisms; humid-condition heat-stress caveat. \\
 \addlinespace
-12 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Permeable pavements \qty{2.9}{\degreeCelsius}, cool pavements
-\qty{2.0}{\degreeCelsius}, shading devices \qty{2.0}{\degreeCelsius}. \\
-   & \citeauthor{zolch2016}\,\citeyear{zolch2016} &
+Permeable shaded hardscape & \texttt{keravec2026} &
+Permeable pavements 2.9\,\si{\degreeCelsius}, cool pavements 2.0\,\si{\degreeCelsius}, shading devices 2.0\,\si{\degreeCelsius} pedestrian-level daytime air temperature reduction. \\
+ & \texttt{zolch2016} &
 Shade positioned in heat-exposed locations is the decisive design factor. \\
 \addlinespace
-13 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Green areas \qty{2.0}{\degreeCelsius} and green walls
-\qty{3.0}{\degreeCelsius}; enclosed-courtyard geometry not separately
-resolved. \\
-   & \citeauthor{ziter2019}\,\citeyear{ziter2019} &
-Cooling scales with patch size; courtyards fall below the
-\SIrange{60}{90}{\metre} optimum. \\
-   & \citeauthor{zolch2016}\,\citeyear{zolch2016} &
-Micro-scale greening in dense residential fabric reduces PET; placement
-dominates quantity \emph{(comfort index)}. \\
+Enclosed courtyard greening & \texttt{keravec2026} &
+Green areas 2.0\,\si{\degreeCelsius} and green walls 3.0\,\si{\degreeCelsius}; enclosed-courtyard geometry not separately resolved. \\
+ & \texttt{ziter2019} &
+Cooling scales with patch size; courtyards fall below the 60--90 m optimum. \\
+ & \texttt{zolch2016} &
+Micro-scale greening in dense residential fabric reduces PET; placement dominates quantity. \\
 \addlinespace
-14 & \citeauthor{keravec2026}\,\citeyear{keravec2026} &
-Best-performing individual NbS measures cluster at
-\SIrange{2.0}{3.0}{\degreeCelsius}; no synthesis estimate exists for combined
-packages. \\
-   & \citeauthor{gunawardena2017}\,\citeyear{gunawardena2017} &
-Combined green and blue features offer synergistic ecosystem benefits, stated
-qualitatively and not quantified. \\
+Large open water body & \texttt{keravec2026} &
+Water bodies 2.1\,\si{\degreeCelsius} pedestrian-level daytime air temperature reduction, reported as largely climate-independent. \\
+ & \texttt{volker2013} &
+Meta-analysis of 27 studies: pooled cooling of 2.5\,\si{\kelvin} (95\% CI 1.9--3.2\,\si{\kelvin}) in the warmest months, attributed to urban blue sites WHEN REMOTE-SENSING DATA ARE INCLUDED. A single pooled estimate across ponds, lakes and rivers together; it does not differentiate cooling by water-body size. \\
+ & \texttt{yao2023a} &
+Year-long field measurement of urban lakes in Nanjing and Guangzhou: weak daytime urban cool island intensity of 0.1--0.6\,\si{\degreeCelsius}, against a 1.2--1.3\,\si{\degreeCelsius} heat island intensity at night in the warm months. \\
+ & \texttt{ampatzidis2020} &
+A clear disparity exists between cooling potentials reported by remote sensing and those from field measurement or numerical simulation; at night blue spaces may exacerbate the urban heat island. \\
+\addlinespace
+Small constructed water feature & \texttt{jacobs2020} &
+Sixteen simulated urban water bodies: afternoon air temperature in surrounding spaces reduced by typically 0.2\,\si{\degreeCelsius}, maximum 0.6\,\si{\degreeCelsius}. Of 20 papers synthesised for water bodies without fountains, 14 (70\%) report an air-temperature effect of 1\,\si{\degreeCelsius} or less; local thermal effects of small water bodies can be considered negligible in design practice. \\
+ & \texttt{yao2023b} &
+Field measurement of an urban pond: moderate daytime cooling of 0.6\,\si{\degreeCelsius} against a reference soil site, and a pronounced nocturnal warming effect of 1.8\,\si{\degreeCelsius}. \\
+ & \texttt{ampatzidis2020} &
+Blue-space cooling varies with time of day, season and location; at night blue spaces may exacerbate the urban heat island, and sensible cooling can be offset by increased water-vapour content. \\
+\addlinespace
+Non-canopy vegetation & \texttt{armson2012} &
+Measured on the same plots: grass reduced maximum SURFACE temperature by up to 24\,\si{\degreeCelsius} but had little effect upon GLOBE temperature, while shading reduced globe temperature by 5--7\,\si{\degreeCelsius}. Grass has little effect on local air or globe temperature; tree shade provides effective local cooling. \\
+ & \texttt{gill2013} &
+Modelled: grass cooling can be reduced or lost in summer droughts when soils dry out, an effect projected to become more pronounced under climate change. \\
+ & \texttt{kraemer2022} &
+Field measurement under drought: the grass-dominated park was the hottest area during the daytime, while the tree-dominated park was consistently cooler. \\
+ & \texttt{bowler2010} &
+Parks containing trees reported cooler than open turf, stated qualitatively. \\
+ & \texttt{kumar2024} &
+Typology-resolved review placing grass and herbaceous systems well below canopy systems for air-temperature cooling. \\
+\addlinespace
+Vegetated shade structure & \texttt{chafer2020} &
+The only measured comparison of a vine-covered pergola against an identical bare support: maximum daytime air temperature difference 2.5\,\si{\degreeCelsius} (45.3\,\si{\degreeCelsius} over the bare ropes against 42.9\,\si{\degreeCelsius} under the greenery), west-oriented pergolas, Mediterranean climate. \\
+ & \texttt{ouyang2024} &
+Field measurement of shading structures on both axes: air temperature reduced 1.42\,\si{\degreeCelsius} (natural) and 1.31\,\si{\degreeCelsius} (artificial), while mean radiant temperature was reduced 15.93\,\si{\degreeCelsius} and 13.71\,\si{\degreeCelsius} respectively --- an order of magnitude apart. \\
+ & \texttt{colter2019} &
+Sparse and open canopies group with solid constructed shade structures rather than with dense canopy: PET relief under Parkinsonia, Prosopis and ramadas was 2.9--4.3\,\si{\degreeCelsius} worse than under dense-canopy species. \\
+\addlinespace
+Productive tree canopy & \texttt{kumar2024} &
+Review of 51 green-blue infrastructure types across 202 publications: allotments and city farms are among the least-studied categories, with insufficient data to quantify their cooling. \\
+ & \texttt{ziter2019} &
+Cooling strengthens above approximately 40\% canopy cover; orchard and agroforestry canopies are deliberately kept open for access and yield, so they sit below that inflection. \\
+ & \texttt{colter2019} &
+Sparse canopies perform no better than solid artificial shade, which bounds an open production canopy below a closed woodland canopy. \\
+ & \texttt{cheung2022} &
+Irrigation sustains rather than raises performance: measured agricultural cooling was 0.09--0.43\,\si{\degreeCelsius} against modelled potentials of 2.1--2.5\,\si{\degreeCelsius}, and irrigation increases the daily minimum air temperature as stored heat is released at night. \\
+\addlinespace
+Productive ground-level planting & \texttt{kumar2024} &
+Allotments and city farms are among the least-studied of 51 green-blue infrastructure types, with insufficient data to quantify their cooling. \\
+ & \texttt{rost2020} &
+The best available allotment-garden measurement: 13 Berlin complexes averaged 2.7\,\si{\kelvin} cooler than built-up areas AT NIGHT. Nocturnal only by design, so it cannot support a daytime value. \\
+ & \texttt{armson2012} &
+Ground-level vegetation cuts surface temperature substantially while barely affecting globe temperature, which is the basis of the inherited envelope. \\
+ & \texttt{cheung2022} &
+Measured agricultural cooling 0.09--0.43\,\si{\degreeCelsius} against modelled potentials of 2.1--2.5\,\si{\degreeCelsius}; irrigation raises the daily minimum air temperature at night. \\
+\addlinespace
 \end{longtable}
 
 \subsection{Calibration notes recorded in configuration}
 
-\begin{longtable}{@{}l>{\raggedright\arraybackslash}p{115mm}@{}}
-\caption[Typology calibration notes]{Calibration notes carried in the typology
-library, explaining why an adopted value departs from a naive reading of its
-sources. Typologies 04, 10, and 11 carry no note; their values follow directly
-from converging sources.}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{30mm}
+                    >{\raggedright\arraybackslash}p{95mm}@{}}
+\caption[Archetype calibration notes]{Calibration notes carried in the library,
+explaining why an adopted value departs from a naive reading of its sources.
+The dense tree canopy, blue-green corridor, and riparian restoration carry no
+note; their values follow directly from converging sources.}
 \label{tab:app-notes}\\
 \toprule
-\textbf{ID} & \textbf{Note} \\
+\textbf{Archetype} & \textbf{Note} \\
 \midrule
 \endfirsthead
 \toprule
-\textbf{ID} & \textbf{Note} \\
+\textbf{Archetype} & \textbf{Note} \\
 \midrule
 \endhead
 \midrule
@@ -265,41 +303,302 @@ from converging sources.}
 \endfoot
 \bottomrule
 \endlastfoot
-01 & Upper bound capped at \qty{3.0}{\degreeCelsius} rather than the tropical
-central estimate of \qty{4.0}{\degreeCelsius}, which carries a
-$\pm\,$\qty{1.6}{\degreeCelsius} interval and reflects favourable
-conditions. \\
-02 & Scored above street trees because shade is placed where exposure occurs.
-The narrow-street effect reported in the synthesis is an urban-form effect, not
-an NbS intervention, and is deliberately not inherited. \\
-03 & Explicitly the small end of the park distribution, bounded below the
-general park estimate by the size relationship reported in
-\textcite{bowler2010}. \\
-05 & Represents added cooling over an already partly green baseline, so the
-achievable increment is bounded below new-forest values. \\
-06 & No schoolyard-specific synthesis found; values inherited from small green
-areas with trees at matching spatial scale. The typology's distinct value is
-exposure of a vulnerable group, expressed through vulnerability and equity
-scoring rather than through inflated cooling. \\
-07 & Benefits are concentrated at roof level and inside the building beneath.
-The tool states in its output that green-roof benefits are principally
-building-level rather than street-level. \\
-08 & Sources conflict outright: the synthesis ranks green walls near the top on
-air temperature while the micro-scale comparison ranks them below trees on
-comfort, plausibly explained by near-wall measurement position. Low confidence,
-conservative envelope, explicit caveat in tool output. \\
-09 & No source quantifies air-temperature cooling for rain gardens or bioswales
-specifically. Value is a reasoned lower bound from adjacent evidence. Primary
-benefits are stormwater and biodiversity, not cooling. \\
-12 & The permeable-pavement estimate rests on a narrower evidence base than the
-vegetation figures, so the adopted upper bound is set below it. \\
-13 & Small, enclosed, often sheltered from ventilation. Bounded by scale
-limitation; no courtyard-specific synthesis exists. \\
-14 & The draft methodology's \qty{3.5}{\degreeCelsius} upper bound was
-rejected: no retrieved source quantifies super-additive cooling from combining
-measures. Capped at the best-evidenced single-measure ceiling. The package's
-advantage is expressed as co-benefit breadth and robustness, not additional
-degrees. \\
+Street tree canopy &
+Upper bound capped at 3.0\,\si{\degreeCelsius} rather than the tropical central estimate of 4.0\,\si{\degreeCelsius}, which carries a $\pm$1.6\,\si{\degreeCelsius} interval and reflects favourable conditions. \\
+\addlinespace
+Continuous shaded corridor &
+Scored above street trees because shade is placed where exposure occurs. The narrow-street effect reported by \texttt{keravec2026} is an urban-form effect, not an NbS intervention, and is deliberately not inherited. \\
+\addlinespace
+Small green area with trees &
+Explicitly the small end of the park distribution, bounded below the general park estimate by the size relationship reported in \texttt{bowler2010}. That relationship is qualitative and hedged in the source, and is worded here to match (corrected at 2026.08.04). \\
+\addlinespace
+Established park &
+Represents added cooling over an already partly green baseline, so the achievable increment is bounded below new-forest values. \\
+\addlinespace
+Extensive green roof &
+Benefits are concentrated at roof level and inside the building beneath. The tool states in its output that green-roof benefits are principally building-level rather than street-level. \\
+\addlinespace
+Green facade or living wall &
+Sources conflict outright: the synthesis ranks green walls near the top on air temperature while the micro-scale comparison ranks them below trees on comfort, plausibly explained by near-wall measurement position. Low confidence, conservative envelope, explicit caveat in tool output. \texttt{kumar2024} reports green walls at 4.1 $\pm$ 4.2\,\si{\degreeCelsius}, which is deliberately not adopted (D-044): its own standard deviation exceeds its mean, and adopting it selectively would rate a wall above measured tree canopy. \\
+\addlinespace
+Bioretention and drainage planting &
+No source quantifies air-temperature cooling for rain gardens or bioswales specifically. Value is a reasoned lower bound from adjacent evidence. Primary benefits are stormwater and biodiversity, not cooling. \\
+\addlinespace
+Blue-green corridor &
+The corridor combines an open water body with continuous canopy, which is why it sits above the water-only archetype: its envelope rests on the canopy evidence as much as on the water evidence. \\
+\addlinespace
+Riparian restoration &
+As with the blue-green corridor, the envelope rests on the combination of flowing water and riparian canopy, not on the water surface alone. \\
+\addlinespace
+Permeable shaded hardscape &
+The permeable-pavement estimate rests on a narrower evidence base than the vegetation figures, so the adopted upper bound is set below it. The \texttt{keravec2026} shading-devices figure is admissible HERE, at plaza scale, because that category aggregates area-scale shading; it is deliberately not inherited by the pergola-scale archetype below. \\
+\addlinespace
+Enclosed courtyard greening &
+Small, enclosed, often sheltered from ventilation. Bounded by scale limitation; no courtyard-specific synthesis exists. \\
+\addlinespace
+Large open water body &
+The envelope floor is 0.1\,\si{\degreeCelsius}, not the 0.5\,\si{\degreeCelsius} proposed in the v1.2 review pack. The pack attributed a cooling magnitude near 2\,\si{\degreeCelsius} to \texttt{yao2023a}; retrieval at implementation established that the paper reports no such figure and instead measures 0.1--0.6\,\si{\degreeCelsius} by day. Holding the floor at 0.5 would have made the tool claim more than its most direct field evidence supports, which is exactly the inflation D-008 exists to prevent. The ceiling stays at 3.0\,\si{\degreeCelsius} on \texttt{keravec2026} and the \texttt{volker2013} confidence interval. The width of the envelope is real and is the finding: the remote-sensing-inclusive meta-analysis and the direct field measurements disagree by an order of magnitude, and \texttt{ampatzidis2020} names remote sensing as the overestimating mode. See D-045. \\
+\addlinespace
+Small constructed water feature &
+THIS ARCHETYPE MUST NEVER BE INTERPOLATED WITH \texttt{large\_water\_body} BY AREA. The two are separate bodies of study, not two points on a dose--response curve: the size-threshold literature is land-surface-temperature only, and no published curve connects them on air temperature. Without this split, constructed wetlands, retention ponds, detention basins and water squares would have inherited \texttt{blue\_green\_corridor} at 1.0--3.0\,\si{\degreeCelsius} on family resemblance and been overstated roughly threefold. The floor is a genuine zero because \texttt{jacobs2020} concludes the daytime effect is negligible in design practice. \\
+\addlinespace
+Non-canopy vegetation &
+\texttt{armson2012} is decisive because it measures both metrics on the same plots and so isolates the surface/air conflation that inflates most published grass figures: cutting surface temperature by 24\,\si{\degreeCelsius} while barely moving globe temperature is the whole finding. The floor is a genuine zero for dry or dormant planting, on \texttt{gill2013} and \texttt{kraemer2022}. \\
+\addlinespace
+Vegetated shade structure &
+THE \texttt{keravec2026} "SHADING DEVICES 2.0\,\si{\degreeCelsius}" FIGURE IS DELIBERATELY NOT USED HERE. That category aggregates area-scale shading, where the cooled air volume persists against advection; a pergola shades roughly \qty{10}{\metre\squared}. Applying it would rate a pergola above measured tree canopy, which \texttt{ouyang2024} measures at 1.42\,\si{\degreeCelsius}. The same figure IS used by the \texttt{permeable\_shaded\_hardscape} archetype, where the scale matches. Low confidence, with $n=1$ for the actual intervention. The ceiling of 2.5\,\si{\degreeCelsius} is \texttt{chafer2020}'s measured peak; note that paper's abstract headlines "up to 5\,\si{\degreeCelsius}", which is greenery against UNSHADED conditions rather than against the bare pergola, and is not the like-for-like contrast this envelope needs. \\
+\addlinespace
+Productive tree canopy &
+Derived, not retrieved: bounded below \texttt{dense\_tree\_canopy} on the \texttt{ziter2019} canopy-cover inflection and the \texttt{colter2019} sparse-canopy finding, and given the same envelope as \texttt{established\_park} with a lower evidence rating. Irrigation is NOT credited as extra degrees --- the \texttt{cheung2022} contrast is specific to agricultural fields, and the same paper measures \SIrange{-2}{-1}{\degreeCelsius} in irrigated urban parks, so no general claim that models overstate irrigation cooling is made here. \\
+\addlinespace
+Productive ground-level planting &
+Derived: inherits the \texttt{non\_canopy\_vegetation} envelope, because cultivated ground-level planting is ground-level vegetation whose cover is periodically broken between crops. Rated low rather than medium because the inheritance is an argument rather than a measurement of this class. The evidence gap is CITABLE (\texttt{kumar2024}) rather than merely unfilled, which is a stronger position than the rain-garden precedent where no source was found at all. \\
+\addlinespace
+\end{longtable}
+
+\subsection{The \texorpdfstring{\num{110}}{110} catalogue entries and the
+archetype each inherits}
+
+Entries are grouped by the source catalogue's own families, with its
+element/composite classification reproduced. Neither the family nor the
+classification enters a formula. The identifier is the entry's identifier in
+the source catalogue.
+
+{\small
+\begin{longtable}{@{}l>{\raggedright\arraybackslash}p{52mm}
+                    >{\raggedright\arraybackslash}p{42mm}l@{}}
+\caption[The 110 catalogue entries]{The \num{110} curated catalogue entries,
+the cooling archetype each inherits, and the source catalogue's
+element/composite classification. An entry carries identity, family,
+availability, and its primary cooling mechanism; every performance value comes
+from the archetype named here.}
+\label{tab:app-entries}\\
+\toprule
+\textbf{ID} & \textbf{Entry} & \textbf{Archetype inherited} & \textbf{Kind} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\itshape \Cref{tab:app-entries} continued}\\
+\toprule
+\textbf{ID} & \textbf{Entry} & \textbf{Archetype inherited} & \textbf{Kind} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r@{}}{\small\itshape continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\multicolumn{4}{@{}l}{\textit{Tree-based} (13)}\\
+A1 & Strategic individual-tree planting & Street tree canopy & element \\
+A2 & Tree cluster & Small green area with trees & element \\
+A3 & Tree grove & Dense tree canopy & element \\
+A4 & Conventional individual tree pit & Street tree canopy & element \\
+A5 & Enlarged tree pit & Street tree canopy & element \\
+A6 & Structural-soil tree pit & Street tree canopy & element \\
+A7 & Suspended-pavement or soil-cell tree pit & Street tree canopy & element \\
+A8 & Stormwater tree pit & Bioretention and drainage planting & element \\
+A9 & Bioretention tree pit & Bioretention and drainage planting & element \\
+A11 & Continuous tree trench & Street tree canopy & element \\
+A12 & Continuous open planting bed for trees & Street tree canopy & element \\
+A13 & Connected multi-layer planting bed & Street tree canopy & element \\
+A14 & Tree island & Small green area with trees & element \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Street} (7)}\\
+2.2 & Tree Avenue & Street tree canopy & composite \\
+2.5 & Green Street & Street tree canopy & composite \\
+2.9 & Green Median & Non-canopy vegetation & composite \\
+2.13 & Green Tram Corridor & Street tree canopy & composite \\
+2.15 & Green Pedestrian Street & Continuous shaded corridor & composite \\
+2.16 & Green Alley & Street tree canopy & composite \\
+2.17 & Green Parking Lane & Street tree canopy & composite \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Park} (9)}\\
+4.1 & Pocket Park & Established park & composite \\
+4.2 & Neighbourhood Park & Established park & composite \\
+4.4 & District Park & Established park & composite \\
+4.5 & Regional Park & Established park & composite \\
+4.11 & Water Park & Established park & composite \\
+4.15 & Naturalistic Park & Established park & composite \\
+4.17 & Stormwater Park & Established park & composite \\
+4.20 & Linear Park & Established park & composite \\
+4.22 & Coastal Park & Established park & composite \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Public space} (6)}\\
+3.1 & Tree Plaza & Small green area with trees & composite \\
+3.2 & Cooling Plaza & Permeable shaded hardscape & composite \\
+3.3 & Permeable Plaza & Permeable shaded hardscape & composite \\
+3.4 & Civic Green & Established park & composite \\
+3.5 & Courtyard Greening & Enclosed courtyard greening & composite \\
+3.15 & Green Playground & Small green area with trees & composite \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Woodland and forest} (6)}\\
+5.1 & Urban woodland (site) & Dense tree canopy & composite \\
+5.3 & Microforest & Dense tree canopy & composite \\
+5.10 & Degraded Woodland Restoration & Dense tree canopy & composite \\
+5.15 & Afforestation & Dense tree canopy & composite \\
+5.16 & Reforestation & Dense tree canopy & composite \\
+5.18 & Urban Woodland Buffer & Dense tree canopy & composite \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Ground level} (11)}\\
+B1 & Conventional planting bed & Non-canopy vegetation & element \\
+B2 & Shrub-dominated planting bed & Non-canopy vegetation & element \\
+B3 & Herbaceous perennial bed & Non-canopy vegetation & element \\
+B4 & Groundcover planting & Non-canopy vegetation & element \\
+B6 & Pocket meadow & Non-canopy vegetation & element \\
+B7 & Rain garden & Bioretention and drainage planting & element \\
+B8 & Bioswale & Bioretention and drainage planting & element \\
+B9 & Infiltration planting bed & Bioretention and drainage planting & element \\
+B10 & Depressed bioretention bed & Bioretention and drainage planting & element \\
+B11 & Vegetated planter with stormwater function & Bioretention and drainage planting & element \\
+B12 & Large-volume connected planters & Bioretention and drainage planting & element \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Water landscape} (12)}\\
+6.1 & Constructed Wetland & Small constructed water feature & composite \\
+6.2 & Retention Pond & Small constructed water feature & composite \\
+6.3 & Detention Basin & Small constructed water feature & composite \\
+6.4 & Water Square & Small constructed water feature & composite \\
+6.5 & Daylighted Stream & Riparian restoration & composite \\
+6.7 & River Restoration & Riparian restoration & composite \\
+6.8 & Canal Restoration & Riparian restoration & composite \\
+6.10 & Floodplain Restoration & Riparian restoration & composite \\
+6.11 & Urban Lake Restoration & Large open water body & composite \\
+6.12 & Living Shoreline & Large open water body & composite \\
+6.13 & Floating Wetland & Small constructed water feature & element \\
+6.14 & Riparian Buffer & Riparian restoration & element \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Ecological network} (6)}\\
+7.1 & Green Corridor & Blue-green corridor & composite \\
+7.2 & Ecological Corridor & Blue-green corridor & composite \\
+7.4 & Blue-Green Corridor & Blue-green corridor & composite \\
+7.5 & River Corridor & Riparian restoration & composite \\
+7.6 & Railway Green Corridor & Street tree canopy & composite \\
+7.14 & Coastal Ecological Corridor & Large open water body & composite \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{District} (5)}\\
+10.1 & Green Infrastructure Network & Blue-green corridor & composite \\
+10.2 & Blue-Green Infrastructure Network & Blue-green corridor & composite \\
+10.3 & Urban Cooling Network & Dense tree canopy & composite \\
+10.4 & Green Mobility Network & Street tree canopy & composite \\
+10.10 & Forest District & Dense tree canopy & composite \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Green roof} (12)}\\
+C1 & Extensive green roof & Extensive green roof & element \\
+C2 & Semi-intensive green roof & Extensive green roof & element \\
+C3 & Intensive green roof & Small green area with trees & element \\
+C5 & Biodiverse green roof & Extensive green roof & element \\
+C6 & Brown roof & Extensive green roof & element \\
+C8 & Blue-green roof & Extensive green roof & element \\
+C11 & Biosolar roof & Extensive green roof & element \\
+C13 & Productive green roof & Productive ground-level planting & element \\
+C14 & Rooftop farm & Productive ground-level planting & element \\
+C15 & Roof meadow & Non-canopy vegetation & element \\
+C16 & Roof wetland & Small constructed water feature & element \\
+C17 & Tree roof or rooftop woodland & Dense tree canopy & element \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Vertical greening} (10)}\\
+D1 & Direct ground-rooted green façade & Green facade or living wall & element \\
+D2 & Indirect ground-rooted green façade & Green facade or living wall & element \\
+D5 & Planter-rooted green façade & Green facade or living wall & element \\
+D6 & Cascading façade planting & Green facade or living wall & element \\
+D7 & Modular living wall & Green facade or living wall & element \\
+D8 & Substrate-based living wall & Green facade or living wall & element \\
+D9 & Hydroponic living wall & Green facade or living wall & element \\
+D11 & Vegetated screen & Green facade or living wall & element \\
+D12 & Green noise barrier & Green facade or living wall & element \\
+D13 & Vegetated retaining wall & Green facade or living wall & element \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Building} (3)}\\
+9.29 & Green Balcony & Green facade or living wall & element \\
+9.30 & Green Terrace & Extensive green roof & element \\
+9.33 & Green Podium & Small green area with trees & composite \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Vegetated shelter} (3)}\\
+E1 & Green pergola & Vegetated shade structure & element \\
+E3 & Vegetated arcade & Continuous shaded corridor & element \\
+E6 & Green waiting shelter & Vegetated shade structure & element \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Productive landscape} (7)}\\
+8.1 & Community Garden & Productive ground-level planting & composite \\
+8.2 & Allotment Garden & Productive ground-level planting & composite \\
+8.3 & Urban Orchard & Productive tree canopy & composite \\
+8.4 & Food Forest & Productive tree canopy & composite \\
+8.5 & Urban Farm & Productive ground-level planting & composite \\
+8.9 & School Garden & Productive ground-level planting & composite \\
+8.15 & Agroforestry System & Productive tree canopy & composite \\
+\addlinespace
+\end{longtable}
+}
+
+\subsection{The twenty-one suitability overrides}
+
+An entry overrides an inherited suitability condition only where the source
+catalogue's own description of the entry makes the inherited value plainly
+wrong (\Cref{sec:suitability}). No new number enters the methodology through an
+override: every replacement value is one already present in the cited library.
+A test fails if this list grows past \num{25} entries.
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{52mm}
+                    >{\raggedright\arraybackslash}p{26mm}
+                    >{\raggedright\arraybackslash}p{50mm}@{}}
+\caption[Per-entry suitability overrides]{The \num{21} per-entry suitability
+overrides, with the reason the inherited value is wrong.}
+\label{tab:app-overrides}\\
+\toprule
+\textbf{Entries} & \textbf{Override} & \textbf{Why the inherited value is
+wrong} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Entries} & \textbf{Override} & \textbf{Why the inherited value is
+wrong} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+Tree grove, microforest, rooftop woodland &
+area $\rightarrow$ \qty{200}{\metre\squared} &
+The dense tree canopy's \qty{2000}{\metre\squared} describes the woodland its
+\emph{cooling evidence} comes from, not the footprint of a site element. The
+catalogue defines a microforest as a small dense patch on a constrained
+site. \\
+\addlinespace
+Intensive green roof, productive green roof, roof meadow, roof wetland
+(\qty{50}{\metre\squared}); rooftop farm, rooftop woodland
+(\qty{200}{\metre\squared}) &
+area, and soil $\rightarrow$ none &
+A roof's growing medium is \emph{built}, not ground. Requiring ground soil on a
+roof would flag every roof entry whose archetype happens to be a ground-level
+class. \\
+\addlinespace
+Green podium, water square, floating wetland &
+soil $\rightarrow$ none &
+Built structure or open water, likewise. The water square is additionally set
+to \qty{200}{\metre\squared}, at plaza scale. \\
+\addlinespace
+Direct and indirect ground-rooted green fa\c{c}ades, green noise barrier,
+vegetated retaining wall &
+soil $\rightarrow$ limited &
+The catalogue defines these as rooted in \emph{natural ground}, which the
+containerised living-wall archetype does not require. This override makes the
+tool \emph{stricter}, not more permissive. \\
+\addlinespace
+Pocket park &
+area $\rightarrow$ \qty{200}{\metre\squared} &
+This entry \emph{is} the tool's own cited pocket park; its minimum area is the
+one the previous library established. \\
+\addlinespace
+Riparian buffer &
+area $\rightarrow$ \qty{200}{\metre\squared} &
+The catalogue distinguishes a discrete vegetated strip from the restored
+corridor the archetype describes. \\
+\addlinespace
+Railway green corridor, green mobility network &
+area $\rightarrow$ \qty{1000}{\metre\squared} &
+Corridor- and district-scale systems inheriting an element archetype. \\
+\addlinespace
+Urban farm (\qty{500}{\metre\squared}), agroforestry system
+(\qty{1000}{\metre\squared}) &
+area &
+The catalogue distinguishes field-scale production from garden scale. \\
 \end{longtable}
 
 \clearpage
@@ -405,7 +704,7 @@ Urban context & 0.10 & Urban quality    & 0.15 &                         &      
 \end{center}
 
 \noindent The rules mapping user inputs to these individual sub-indicator
-scores are fixed at version \methver{} in
+scores were fixed at version 2026.08.01 in
 \texttt{config/derived\_scores.yaml} and reproduced in
 \Cref{tab:suitability-rules}. The Equity Score does not enter the final
 aggregation (\Cref{sec:composite-subscores}). The derived cost feasibility
@@ -462,7 +761,8 @@ perturbation parameter is $\pm\,\SI{25}{\percent}$
 
 \begin{keynote}
 \noindent The definitive enumeration is fixed by the implemented input schema
-(\texttt{nature\_cooling.engine.models.AssessmentInput}). Fields marked
+(\texttt{nature\_cooling.\allowbreak engine.\allowbreak models.\allowbreak
+ AssessmentInput}). Fields marked
 \emph{Required} are exactly those without which a documented formula cannot be
 evaluated at all; every other field is \emph{Optional}, and its absence is
 handled through a disclosed default or an explicit \emph{not calculated}
@@ -500,8 +800,8 @@ Canopy condition derivation (\Cref{tab:derivation}). \\
 Vegetation deficit, $\clamp{100-g}$ (\Cref{eq:vegdef}). \\
 \fieldname{impervious_surface_percent} & Optional &
 Percentage used directly as a \numrange{0}{100} score in
-\Cref{eq:heat-exposure-rich}; declared in configuration at version
-\methver{}. \\
+\Cref{eq:heat-exposure-rich}; the identity mapping is declared in
+configuration. \\
 \fieldname{soil_availability} & Optional &
 none 25 / limited 50 / moderate 75 / high 100; unknown 50. Also feeds the
 soil--water condition. \\
@@ -512,11 +812,36 @@ condition. \\
 very low 25 / low 50 / medium 75 / high 100; unknown 50. Counts toward
 cooling-block completeness; enters no formula at version \methver{}. \\
 \fieldname{land_use} & Optional &
-Urban-context suitability sub-indicator: in the typology's typical-use
-contexts 100, outside 25, unknown 50 (\Cref{tab:suitability-rules}).
-\emph{campus} and \emph{memorial} added at version \methver{}, with the
-affected typology context lists extended in the same change so that neither
-new setting scores out-of-context by construction. \\
+Urban-context suitability sub-indicator: in the entry's own land-use list 100,
+outside it 25, unknown 50 (\Cref{tab:suitability-rules}). That list is the
+availability matrix's list, so an entry is in context exactly where it is
+offered (\Cref{sec:availability}). \emph{campus} and \emph{memorial} were
+added at version 2026.08.03. \\
+\addlinespace
+
+\multicolumn{3}{@{}l}{\textit{Availability conditions --- these gate which
+interventions are offered and feed \textbf{no} score}}\\
+\fieldname{includes_railway} & Optional &
+yes / no. Gates exactly one entry, the railway green corridor. Unanswered
+withholds it. \textbf{Availability only}: enters no formula, no confidence
+block, and no aggregation (\Cref{sec:availability}). New at version
+\methver{}. \\
+\fieldname{existing_woodland} & Optional &
+yes / no. Gates woodland \emph{restoration} entries only; woodland
+\emph{creation} entries are ungated. Unanswered withholds the restoration
+entries. \textbf{Availability only}. New at version \methver{}. \\
+\fieldname{waterfront_type} & Optional &
+lake / river / dry river / covered river / sea. Gates twelve water-landscape
+and ecological-network entries by category; the four \emph{constructed} water
+features carry no waterfront condition. Unanswered withholds the gated
+entries. \textbf{Availability only}. New at version \methver{}. \\
+\fieldname{productive_governance} & Optional &
+Multi-select over community / individual / institutional / commercial. Filters
+the seven productive entries by who delivers them; an \emph{empty or
+unanswered} selection suppresses nothing, because absence of an answer is not
+evidence that no delivery model exists. Canonicalised on input so that two
+selections of the same models produce byte-identical results.
+\textbf{Availability only}. New at version \methver{}. \\
 \addlinespace
 
 \multicolumn{3}{@{}l}{\textit{Project information}}\\
@@ -551,19 +876,23 @@ path. \\
 \fieldname{access_to_cool_outdoor_refuge} & Optional &
 \textbf{Inverted} levels, as above. Second indicator of the same cooling
 access deficit dimension; the two are averaged over those supplied and share
-one confidence slot. New at version \methver{}. \\
+one confidence slot. New at version 2026.08.03. \\
 \fieldname{safety_concern} & Optional &
 Standard levels; equity safety-and-comfort sub-indicator (deficit reading). \\
 \fieldname{public_accessibility} & Optional &
-Standard levels; equity sub-indicator. New at version \methver{}. \\
+Standard levels; equity sub-indicator. New at version 2026.08.01. \\
 \fieldname{community_participation} & Optional &
 Standard levels; equity participation-relevance sub-indicator. New at version
-\methver{}. \\
+2026.08.01. \\
 \addlinespace
 
 \multicolumn{3}{@{}l}{\textit{NbS intervention}}\\
 \fieldname{nbs_type} & Required &
-Selects the typology and its climate-family row. \\
+A \emph{list} since version \methver{}: one or more catalogue entries.
+Selects each entry, the archetype it inherits, and that archetype's
+climate-family row. Duplicates are rejected; selection order is preserved in
+the itemised component results and changes no output. More than five
+components raises a warning, not an error (\Cref{sec:packages}). \\
 \fieldname{new_canopy_area_at_maturity_m2} & Optional &
 Canopy condition and shade potential. \\
 \fieldname{expected_maturity_period_years} & Optional &
@@ -587,8 +916,10 @@ $D$ in \Cref{eq:energy}. Absent: \texttt{missing\_energy\_demand}. \\
 \fieldname{energy_price_per_kwh} & Optional &
 $p$ in \Cref{eq:annual-savings}. Absent: cost savings not calculated. \\
 \fieldname{capital_cost} & Optional &
-$C_{\mathrm{capital}}$ in \Cref{eq:payback}. Absent: capital cost, payback,
-cost feasibility, and investment readiness all \emph{not estimated}. \\
+$C_{\mathrm{capital}}$ in \Cref{eq:payback}. Entered \textbf{once for the
+whole package}: it covers every selected component and is not apportioned
+(\Cref{tab:package-rules}). Absent: capital cost, payback, cost feasibility,
+and investment readiness all \emph{not estimated}. \\
 \fieldname{currency} & Optional &
 ISO 4217 code, echoed with cost outputs; never used in scoring. \\
 \fieldname{grid_emission_factor_kgco2e_per_kwh} & Optional &
@@ -606,9 +937,22 @@ country table and is itemised as an applied assumption. \\
 at pedestrian level. The quantity this methodology reports. Distinct from land
 surface temperature and from thermal comfort indices.
 
-\item[Base cooling score] A \numrange{0}{100} index expressing a typology's
+\item[Archetype (cooling archetype)] A cited evidence class carrying every
+performance value --- envelope, base score, evidence rating, suitability
+conditions, co-benefit defaults --- and the citations behind them. There are
+\num{18} (\Cref{sec:archetypes}).
+
+\item[Availability] Which catalogue entries the tool \emph{offers} for a
+given site, decided by scale, land use, and the four gating questions of
+\Cref{sec:availability}. Availability feeds no score.
+
+\item[Base cooling score] A \numrange{0}{100} index expressing an archetype's
 relative expected cooling performance before site adjustment. Not a
 temperature.
+
+\item[Catalogue entry (typology)] One of the \num{110} curated entries of the
+source catalogue. It carries identity, family, availability, and the one
+archetype it inherits, and no performance value of its own.
 
 \item[Block confidence] A property of an \emph{assessment}: how completely the
 user supplied the inputs a given output block depends on
@@ -636,13 +980,14 @@ several sub-indicators. Construction here follows \textcite{nardo2008}.
 cooling score scaled by the site adjustment factor (\Cref{eq:cps}).
 
 \item[Envelope] The literature-supported interval of temperature reduction for
-a typology. Its lower bound represents a poorly performing instance, its upper
-bound a well-executed instance under favourable conditions. Not a prediction
-and not a confidence interval.
+an archetype. Its lower bound represents a poorly performing instance, its
+upper bound a well-executed instance under favourable conditions. Not a
+prediction and not a confidence interval.
 
-\item[Evidence confidence] A property of a \emph{typology}: how well grounded
-its adopted values are (high, medium, low). Propagates into an assessment by
-capping cooling-block confidence (\Cref{sec:evidence-propagation}).
+\item[Evidence confidence] A property of an \emph{archetype}: how well
+grounded its adopted values are (high, medium, low). Inherited by every entry
+resolving to it, and propagates into an assessment by capping cooling-block
+confidence (\Cref{sec:evidence-propagation}).
 
 \item[Golden scenario] A stored input case with a hand-verified expected
 output, used as regression armour against unintended methodology drift and as
@@ -669,6 +1014,11 @@ and sites.
 \item[Nature-based solutions (NbS)] Interventions using vegetation, water, and
 natural processes to deliver benefits --- here, urban cooling.
 
+\item[Package] An assessment proposing more than one catalogue entry. Each
+component is scored and reported individually; the headline outputs are
+combined under \Cref{tab:package-rules}, which caps temperature at the
+best-evidenced component and never sums it.
+
 \item[PET (physiologically equivalent temperature)] A thermal comfort index
 representing perceived thermal conditions. \textbf{Not} air temperature; used
 in this methodology only for relative ranking and caveats.
@@ -683,7 +1033,8 @@ derived from canopy, soil--water, scale, and climate conditions
 
 \item[Super-additivity] The hypothesis that combined interventions cool more
 than their strongest component. Not adopted, because no retrieved source
-quantifies it (\Cref{sec:super-additivity}).
+quantifies it (\Cref{sec:super-additivity}). A package's advantage is expressed
+as co-benefit breadth instead.
 
 \item[Surface urban heat island (SUHI)] The heat island measured in surface
 temperatures. Reported at roughly six times the canopy-layer magnitude by
@@ -799,6 +1150,72 @@ OECD/JRC descriptions. \\
 World Bank plain-text document retrieved directly. The documented
 justification for shipping no global default unit costs. \\
 \addlinespace
+\texttt{jacobs2020} & Full &
+Open publisher PDF via the Wageningen repository, read directly. The primary
+source for the small constructed water archetype, and the reason constructed
+wetlands, ponds, basins, and water squares are not allowed to inherit the
+corridor envelope on family resemblance. \\
+\addlinespace
+\texttt{volker2013} & Full &
+Open-access publisher PDF, read directly. \emph{Caveats recorded:} a single
+pooled estimate across ponds, lakes, and rivers together, so it cannot justify
+a size-dependent gradient; and its magnitude depends on the inclusion of
+remote-sensing data, which \texttt{ampatzidis2020} identifies as the
+overestimating mode. \\
+\addlinespace
+\texttt{ampatzidis2020} & Full \emph{(remote-sensing statement: metadata +
+finding, secondary)} &
+Publisher abstract read in full via the University of Bath research portal for
+the diurnal-variability and nocturnal findings; the compact ``remote sensing
+overestimates'' phrasing appears in the article highlights via an indexing
+service. Governs how the two water archetypes are read. \\
+\addlinespace
+\texttt{armson2012} & Full &
+University of Manchester Research Explorer record, complete abstract. The
+decisive source for the non-canopy vegetation archetype, because it measures
+surface and globe temperature on the same plots and so isolates the
+surface/air conflation. \\
+\addlinespace
+\texttt{kraemer2022} & Full &
+Open access, Frontiers, read directly. \emph{Note:} an earlier draft of the
+review pack cited this source in connection with allotment gardens. It is a
+study of two Leipzig \emph{parks} under drought and is cited as such
+(\Cref{sec:water-body}). \\
+\addlinespace
+\texttt{chafer2020} & Full &
+Publisher PDF retrieved and read; the author list was independently confirmed
+against the Crossref record after the review pack recorded it wrongly.
+\emph{Caveat recorded:} the paper's abstract headlines ``up to
+\qty{5}{\degreeCelsius}'', which is greenery against \emph{unshaded}
+conditions; the adopted \qty{2.5}{\degreeCelsius} is the like-for-like contrast
+against an identical bare pergola. \\
+\addlinespace
+\texttt{colter2019} & Full &
+Arizona State University Elsevier Pure record, complete abstract.
+\emph{Caveat:} PET is a comfort index, used here only for the ordering it
+establishes, under narrow conditions --- hot summer midday, desert climate, six
+tree taxa. \\
+\addlinespace
+\texttt{rost2020} & Full &
+Publisher-deposited abstract retrieved verbatim. \emph{Critical caveat:} the
+study is \textbf{nocturnal only}, by title, abstract, and design, so it cannot
+support a daytime value and is not used for one
+(\Cref{sec:derived-archetypes}). \\
+\addlinespace
+\texttt{cheung2022} & Full &
+Open access, IOPscience, read directly. \emph{Caveat recorded:} the
+measured-against-modelled gap is specific to agricultural field studies; the
+same paper measures \SIrange{-2}{-1}{\degreeCelsius} in irrigated urban parks.
+The methodology therefore does not claim that models overstate irrigation
+cooling in general. \\
+\addlinespace
+\texttt{kumar2024} & Full &
+PMC open access record, PMC10909648. Two roles: a \emph{validation} of the
+inherited calibration (street trees up to \qty{2.8}{\degreeCelsius} in situ,
+inside the adopted envelope), and a \emph{citable evidence gap} for productive
+landscapes. Its higher figures for other types are deliberately not adopted
+(\Cref{sec:non-adoption}). \\
+\addlinespace
 \texttt{bowler2010} & Metadata + finding (secondary) &
 Metadata from the Bangor University repository; the \qty{0.94}{\degreeCelsius}
 finding from the publisher abstract description. Elsevier full text blocked. \\
@@ -818,6 +1235,31 @@ Multiple indexing records and an LBNL institutional listing. Basis for
 \emph{deriving} cooling-energy savings from estimated air temperature
 reduction, replacing unsourced per-typology energy factors. \\
 \addlinespace
+\texttt{yao2023a} & Metadata + finding (secondary) &
+Arizona State University Elsevier Pure institutional record, full abstract;
+Elsevier full text blocked. The most direct field evidence for large water
+bodies, and the reason that archetype's floor was lowered from the
+\qty{0.5}{\degreeCelsius} of the approved design to \qty{0.1}{\degreeCelsius}
+at implementation (\Cref{sec:water-body}). \\
+\addlinespace
+\texttt{yao2023b} & Metadata + finding (secondary) &
+Arizona State University Elsevier Pure record, full abstract; Elsevier full
+text blocked. Independent field corroboration of \texttt{jacobs2020}'s
+magnitudes for small water features, and one half of the nocturnal-warming
+caveat. \\
+\addlinespace
+\texttt{gill2013} & Metadata + finding (secondary) &
+Crossref record for bibliographic details; abstract via indexing services;
+Elsevier full text blocked. \emph{Caveat recorded:} this is a \emph{modelling}
+study, cited for the direction and mechanism of drought sensitivity and never
+for a numeric cooling value. \\
+\addlinespace
+\texttt{ouyang2024} & Metadata + finding (secondary) &
+Crossref and NASA ADS for bibliographic details; the quantitative findings from
+two independent renderings of the publisher abstract; ScienceDirect blocked.
+Separates the comfort axis from the air-temperature axis for shade
+structures. \\
+\addlinespace
 \texttt{norton2015} & Metadata + framework description (secondary) &
 Metadata from the Monash University research portal; framework description
 secondary. The closest published antecedent to this tool. No numeric value is
@@ -834,17 +1276,26 @@ boundary-layer, and surface urban heat islands, not for a numeric value. \\
 
 \subsection*{Which tool values depend on non-full verification}
 
-Three dependencies are worth naming explicitly.
+Four dependencies are worth naming explicitly.
 
 The \textbf{energy derivation} of \Cref{sec:energy} rests entirely on
 \texttt{akbari2001}, verified at \emph{metadata + finding (secondary)}. The
 \SIrange{2}{4}{\percent} per \si{\degreeCelsius} sensitivity is the sole input
 to every energy and greenhouse-gas figure the tool produces.
 
-The \textbf{pocket park and park upgrade envelopes} depend on
+The \textbf{small green area and established park envelopes} depend on
 \texttt{bowler2010}'s \qty{0.94}{\degreeCelsius} mean, verified at the same
 level, which is also the empirical anchor for the modelling-bias correction of
 \Cref{sec:modelling-bias}.
+
+The \textbf{large water body floor} of \qty{0.1}{\degreeCelsius} rests on
+\texttt{yao2023a}, also at \emph{metadata + finding (secondary)} --- the
+publisher blocks full text, and the
+\SIrange{0.1}{0.6}{\degreeCelsius} figure was confirmed from the institutional
+record's full abstract. That level of verification was nonetheless sufficient
+to establish that the approved design had attributed to this paper a figure it
+does not contain, and to move the value (\Cref{sec:water-body}). The episode is
+the clearest illustration of what this register is for.
 
 The \textbf{LST proxy restriction} of \Cref{sec:lst} rests on
 \texttt{venter2021}, again at the same level --- though here the tool's use is

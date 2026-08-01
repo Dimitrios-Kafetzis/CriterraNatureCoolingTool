@@ -78,6 +78,23 @@ class InputRow:
 
 
 @dataclass(frozen=True)
+class PackageRow:
+    """One package component as both formats render it (D-038).
+
+    Every field is displayed: an earlier shape overloaded one slot to carry
+    either the representative marker or the suitability score, which meant the
+    representative component's suitability was never shown anywhere.
+    """
+
+    name: str
+    archetype: str
+    evidence: str
+    cooling_range: str
+    suitability: str
+    is_representative: bool
+
+
+@dataclass(frozen=True)
 class ReportContent:
     """Everything the PDF and the workbook render, in results-page order."""
 
@@ -93,6 +110,8 @@ class ReportContent:
     blocks: tuple[Block, ...]
     components: tuple[tuple[str, str, str, str], ...]
     components_excluded: str | None
+    package_rows: tuple[PackageRow, ...]
+    package_note: str
     assumptions: tuple[str, ...]
     warnings: tuple[str, ...]
     method_note: str
@@ -388,6 +407,13 @@ def _input_value(field: str, value: Any) -> str:
     if isinstance(value, int | float):
         unit = FIELD_UNITS.get(field)
         return f"{fmt(value)} {unit}" if unit else fmt(value)
+    if isinstance(value, list):
+        # A package's components, and the governance multi-select. An empty
+        # list is a real answer meaning "none selected", distinct from absence,
+        # so it renders as such rather than falling through to the blank row.
+        return (
+            ", ".join(_option(str(item)) for item in value) if value else STRINGS["none_selected"]
+        )
     return _option(str(value))
 
 
@@ -421,6 +447,51 @@ def _input_rows(inp: dict[str, Any]) -> tuple[InputRow, ...]:
     return tuple(rows)
 
 
+def _package_rows(result: dict[str, Any]) -> tuple[PackageRow, ...]:
+    """One row per package component, each scored on its own values (D-038).
+
+    Reads the stored result's itemisation verbatim. Nothing is recomputed and
+    nothing is averaged here: the component figures are the engine's own, and
+    the representative marker is how the report shows which component the
+    headline temperature belongs to.
+    """
+    return tuple(
+        PackageRow(
+            name=str(component["typology"]["display_name"]),
+            archetype=str(component["typology"]["archetype_display_name"]),
+            evidence=_option(str(component["typology"]["evidence_confidence"])),
+            cooling_range=(
+                f"{fmt(component['cooling']['delta_t_min_c'])}–"
+                f"{fmt(component['cooling']['delta_t_max_c'])} °C"
+            ),
+            suitability=fmt(component["suitability"]["score"]),
+            is_representative=bool(component["is_representative"]),
+        )
+        for component in result.get("components", [])
+    )
+
+
+# The page-one identity line is a title, not an itemisation: the itemisation
+# is the package table on page two and the Results sheet in the workbook. A
+# package can name dozens of components, so the line names a few and counts the
+# rest rather than growing without bound and pushing page one over.
+_HEADING_COMPONENTS = 3
+
+
+def _package_heading(result: dict[str, Any]) -> str:
+    """The identity line: one intervention, or a package naming its components."""
+    components = result.get("components", [])
+    if len(components) <= 1:
+        return str(result["typology"]["display_name"])
+    names = [str(item["typology"]["display_name"]) for item in components]
+    if len(names) <= _HEADING_COMPONENTS:
+        return f"{', '.join(names[:-1])} and {names[-1]}"
+    shown = names[:_HEADING_COMPONENTS]
+    return STRINGS["package_heading_more"].format(
+        components=", ".join(shown), count=len(names) - len(shown)
+    )
+
+
 def build_content(
     *,
     project_name: str,
@@ -431,10 +502,11 @@ def build_content(
 ) -> ReportContent:
     """Shape one stored, evaluated assessment for rendering."""
     components, excluded_line = _components(result)
+    package_components = result.get("components", [])
     return ReportContent(
         project_name=project_name,
         label=label,
-        typology=str(result["typology"]["display_name"]),
+        typology=_package_heading(result),
         created_date=created_at[:10],
         version_line=STRINGS["versions"].format(
             methodology=result["methodology_version"], engine=result["engine_version"]
@@ -453,6 +525,10 @@ def build_content(
         ),
         components=components,
         components_excluded=excluded_line,
+        package_rows=_package_rows(result),
+        package_note=(
+            STRINGS["package_rule"] if len(package_components) > 1 else STRINGS["package_single"]
+        ),
         assumptions=tuple(str(item) for item in result["assumptions_applied"]),
         warnings=tuple(str(item) for item in result["warnings"]),
         method_note=str(result["method_note"]),

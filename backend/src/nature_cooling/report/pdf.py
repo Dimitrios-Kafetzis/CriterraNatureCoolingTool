@@ -37,6 +37,27 @@ _CONTENT_WIDTH = _PAGE_WIDTH - 2 * _MARGIN
 _COLUMN_GAP = 6.0
 _COLUMN_WIDTH = (_CONTENT_WIDTH - _COLUMN_GAP) / 2
 
+# The two-page contract (D-034) meets deliberately unbounded package size
+# (D-044.4). Two of page two's sections grow with the input — the package
+# itemisation and the assumptions list — so they are rendered against a
+# measured space budget rather than a guessed line count: itemisation stops
+# when the cursor reaches _ITEMS_BOTTOM_MM, and whatever did not fit is
+# COUNTED, never silently dropped. The workbook has no page limit and always
+# carries every line.
+#
+# The reserve below the limit holds the warnings (never truncated — they are
+# safety information) and the method note with its version stamp.
+_PAGE_HEIGHT_MM = 297.0
+# What must always fit below the itemised lists: the method note, its heading
+# and the version stamp. Warnings sit there too, but they vary in length, so
+# their height is measured per report rather than assumed (see _items_bottom).
+# Measured against the worst case in the test suite (a package naming every
+# street, park, public-space and tree-based entry) with headroom, rather than
+# derived: multi_cell wrapping is not predictable from character counts alone.
+_CLOSING_RESERVE_MM = 58.0
+# Characters per line at the 7.2 pt itemisation size across the content width.
+_CHARS_PER_LINE = 150
+
 _INK = (22, 35, 28)
 _MUTED = (95, 106, 99)
 _GREEN = (46, 106, 78)
@@ -155,6 +176,37 @@ def _flag_box(pdf: FPDF, text: str) -> None:
     pdf.set_y(end + 1.4)
 
 
+def _items_bottom(content: ReportContent) -> float:
+    """The lowest y at which an itemised line may start on page two.
+
+    Warnings are never truncated — they are safety information — and the method
+    note always renders, so the space both need is reserved before the growing
+    lists are allowed to use any. The warnings' height is estimated from their
+    own text rather than assumed, because the package-size warning alone runs
+    to several lines.
+    """
+    reserve = _CLOSING_RESERVE_MM
+    if content.warnings:
+        lines = sum(max(1, -(-len(warning) // _CHARS_PER_LINE)) for warning in content.warnings)
+        reserve += _line_height(7.2) * lines + 6.0
+    return _PAGE_HEIGHT_MM - _MARGIN - reserve
+
+
+def _bounded_items(pdf: FPDF, lines: list[str], bottom: float, *, size: float = 7.2) -> int:
+    """Render lines until the page-two space budget runs out; return how many.
+
+    The caller states what was left out. Stopping is measured against the
+    cursor rather than a line count, because a line's height depends on how it
+    wraps: two components with long names cost more than three with short ones,
+    and a fixed count cannot know that.
+    """
+    for index, line in enumerate(lines):
+        if pdf.get_y() > bottom:
+            return index
+        _text(pdf, line, size=size)
+    return len(lines)
+
+
 def _page_one(pdf: FPDF, content: ReportContent) -> None:
     pdf.add_page()
     # The Criterra lockup, as vector paths, above the product name (D-042).
@@ -248,6 +300,7 @@ def _page_two(pdf: FPDF, content: ReportContent) -> None:
     pdf.ln(2.0)
     top = pdf.get_y()
 
+    bottom = _items_bottom(content)
     cooling, energy, ghg, costs, co_benefits, equity = content.blocks
     left_y = top
     for block in (cooling, co_benefits):
@@ -258,12 +311,35 @@ def _page_two(pdf: FPDF, content: ReportContent) -> None:
         right_y = _block(pdf, block, right_x, right_y)
     pdf.set_y(max(left_y, right_y))
 
+    # Package itemisation renders only for an actual package: a single
+    # intervention would gain a table restating the card above it, and the
+    # two-page contract has no room to spend on that.
+    if len(content.package_rows) > 1:
+        _heading(pdf, STRINGS["package_heading"])
+        shown = _bounded_items(
+            pdf,
+            [
+                f"–  {component.name}: {component.cooling_range}, {component.evidence} "
+                f"({component.archetype}), {STRINGS['package_suitability'].lower()} "
+                f"{component.suitability}"
+                + (f" — {STRINGS['package_representative']}" if component.is_representative else "")
+                for component in content.package_rows
+            ],
+            bottom,
+        )
+        remaining = len(content.package_rows) - shown
+        if remaining:
+            _text(pdf, STRINGS["package_truncated"].format(count=remaining), size=7.2)
+        _text(pdf, content.package_note, size=7.0, color=_MUTED)
+
     _heading(pdf, STRINGS["assumptions_heading"])
     if content.assumptions:
         _text(pdf, STRINGS["assumptions_intro"], size=7.4, color=_MUTED)
         pdf.ln(0.6)
-        for assumption in content.assumptions:
-            _text(pdf, f"–  {assumption}", size=7.2)
+        shown = _bounded_items(pdf, [f"–  {item}" for item in content.assumptions], bottom)
+        remaining = len(content.assumptions) - shown
+        if remaining:
+            _text(pdf, STRINGS["assumptions_truncated"].format(count=remaining), size=7.2)
     else:
         _text(pdf, STRINGS["assumptions_none"], size=7.2)
 

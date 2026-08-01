@@ -1,0 +1,142 @@
+# Availability gating rules
+#
+# Which catalogue entries are OFFERED for a given site. Availability decides
+# what the picker shows; it feeds no score and enters no formula (D-044.1).
+# Gating is not scoring: the four site questions below change the menu and
+# nothing else, and a user who deliberately selects an entry the matrix did not
+# offer is never blocked (D-019) - the engine scores it and the suitability
+# flags of D-009 do the honest talking.
+#
+# The per-entry side of the matrix (which scales, which land uses, which
+# condition) lives with each entry in nbs_typologies.yaml. This file holds the
+# POLICY: what each condition means, and - the part that needs stating - what
+# an UNANSWERED condition means.
+#
+# Derivation: docs/methodology/EVIDENCE-TABLES.md (availability section)
+# Rulings: D-043.1, D-043.2, D-043.3, D-044.1
+
+version: "2026.08.04"
+
+conditions:
+  # Three of the four conditions describe a PHYSICAL FACT about the site, and
+  # they gate on positive confirmation: an entry that acts on an existing river
+  # is not offered until the user says there is a river, because offering it
+  # would be offering an intervention that cannot be built here. The fourth
+  # describes who could DELIVER the intervention, and it subtracts nothing
+  # until it is answered - which is the whole point of D-043.3, where a plain
+  # "no" would have suppressed the urban farm and the agroforestry system, the
+  # highest-cooling entries in their group and the ones a municipality is most
+  # likely to deliver.
+  #
+  # unanswered_behaviour:
+  #   gates  - an entry carrying this condition is withheld until confirmed
+  #   offers - an unanswered condition suppresses nothing
+
+  waterfront:
+    field: waterfront_type
+    entry_key: requires_waterfront
+    unanswered_behaviour: gates
+    values: [lake, river, dry_river, covered_river, sea]
+    rationale: >
+      Twelve water-landscape and ecological-network entries act on an existing
+      water body and are gated by its category. The four CONSTRUCTED features -
+      constructed wetland, retention pond, detention basin, water square - carry
+      no waterfront condition at all and are offered everywhere, because a
+      constructed feature needs no existing water body (D-038, restated in the
+      part 4 rules).
+
+  railway:
+    field: includes_railway
+    entry_key: requires_railway
+    unanswered_behaviour: gates
+    rationale: >
+      Gates exactly one entry, the railway green corridor, whose physical
+      context is an existing active or former rail alignment.
+
+  existing_woodland:
+    field: existing_woodland
+    entry_key: requires_existing_woodland
+    unanswered_behaviour: gates
+    rationale: >
+      Gates only RESTORATION types - degraded woodland restoration and
+      reforestation - which act on woodland that is already there. The CREATION
+      types (urban woodland, microforest, afforestation, woodland buffer) carry
+      no woodland condition and are offered regardless, per the approved rule.
+
+  productive_governance:
+    field: productive_governance
+    entry_key: requires_governance
+    unanswered_behaviour: offers
+    values: [community, individual, institutional, commercial]
+    rationale: >
+      D-043.3 replaced a yes/no about community interest with a multi-select
+      over who could deliver, precisely because a "no" suppressed the
+      commercially delivered entries. The multi-select therefore FILTERS when
+      answered and suppresses nothing when left empty: an unanswered question is
+      not evidence that no delivery model exists, and the tool never asserts a
+      negative from absent information (the principle of D-022 and D-026,
+      applied to availability). This is also why the worked situation counts in
+      the review pack are governance-agnostic.
+
+scales:
+  # What each assessment scale offers. Encoded per entry as `availability.scales`;
+  # restated here so the methodology browser can explain the menu it renders.
+  city:
+    offers: Ecological-network entries, composed as a package
+    composes_packages: true
+  district:
+    offers: District-network entries, composed as a package
+    composes_packages: true
+  neighbourhood:
+    offers: >
+      Street, public-space and park entries always; woodland, water-landscape
+      and productive entries when their condition is met
+    composes_packages: false
+  site:
+    offers: >
+      The neighbourhood-scale entries applicable to the land use, plus all
+      element entries
+    composes_packages: false
+  building:
+    offers: >
+      Building-scale entries, element entries for the surrounding plot, and the
+      entries the land use maps to
+    composes_packages: false
+  rationale: >
+    City and district scales offer packages rather than single interventions
+    (D-043.2). A strict "only the district scale" reading left those users three
+    and five options, because almost everything at those scales is a strategy the
+    source document disqualifies as not itself an NbS. The correction is not to
+    lower the evidence bar but to recognise that a district is not a place where
+    one thing is installed: at these scales the assessment composes several kept
+    entries and scores them as a package. Small menus are therefore correct by
+    construction at those scales, not a defect.
+
+packages:
+  # Multi-intervention selection (D-038 semantics, D-044.4 bound).
+  warn_above_components: 5
+  maximum_components: null
+  rationale: >
+    No hard cap. Under the capped-never-summed rule a package's headline
+    temperature is carried by its best-evidenced component and the remainder add
+    co-benefit breadth, so forbidding a sixth component would forbid something
+    harmless. Above five the tool says plainly that adding another component will
+    not raise the temperature estimate, which is the honest thing a cap would
+    have communicated only by refusal.
+
+land_use_mapping:
+  # D-043.1: hospital, campus, memorial and schoolyard landscapes are land-use
+  # CONTEXTS, not typologies. A land use is not offered as an intervention named
+  # after the site the user has just described; it maps instead to the real
+  # entries that suit it, through each entry's own land-use list. The counts
+  # below are properties of that mapping and are asserted by the test suite, so
+  # a land use silently losing its interventions fails the build.
+  applicable_entry_counts:
+    campus: 93
+    healthcare: 76
+    school: 72
+    memorial: 41
+  rationale: >
+    Memorial is deliberately the sparsest: tree groves, meadows, woodland and
+    quiet permeable planting are in; plazas, playgrounds, tram corridors, living
+    walls and productive landscapes are out.

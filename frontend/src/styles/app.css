@@ -856,3 +856,125 @@ details.collapsible summary {
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
+
+/* ---- multi-select checkbox group (D-043.3) ---- */
+
+.field__group {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.checkbox-group {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.3rem;
+}
+
+.checkbox-group__option {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  cursor: pointer;
+}
+
+.checkbox-group__option input {
+  accent-color: var(--accent);
+}
+
+/* ---- catalogue picker (D-043, D-044) ---- */
+
+.picker-shell {
+  display: grid;
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+}
+
+.picker__section-heading {
+  font-family: var(--font-serif);
+  margin: 0.5rem 0 0.25rem;
+}
+
+.picker__selection {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  background: var(--paper-raised);
+}
+
+.picker__selection-list {
+  margin: 0.3rem 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.picker__selection-list li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.picker__filter {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.picker__filter input[type='search'] {
+  flex: 1 1 14rem;
+  font: inherit;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.picker__family > .picker {
+  margin: 0.75rem 0 0.5rem;
+}
+
+/* Not offered here: de-emphasised, never disabled (D-019). */
+.picker__withheld {
+  border-top: 1px solid var(--line);
+  padding-top: 0.75rem;
+}
+
+.picker__card--withheld {
+  background: transparent;
+  border-style: dashed;
+}
+
+.picker__card--withheld .picker__name {
+  color: var(--ink-soft);
+}
+
+/* ---- results: the package (D-038) ---- */
+
+.package__components {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.75rem 0 1.25rem;
+  padding-left: 1.2rem;
+}
+
+.package__component {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+}
+
+.package__component--representative {
+  border-color: var(--accent);
+}
+
+.package__component-head {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+}

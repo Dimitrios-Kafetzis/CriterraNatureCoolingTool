@@ -2,9 +2,11 @@
 \label{sec:conclusion}
 
 This paper has specified, in full, the methodology of \tool{} at methodology
-version \methver{}: every input and its normalisation, the fourteen-typology
-evidence library and the derivations behind it, every scoring formula and every
-weight, the treatment of uncertainty and missing data, the design of the
+version \methver{}: every input and its normalisation, the two-level evidence
+library of \num{110} catalogue entries over \num{18} cited cooling archetypes
+and the derivations behind them, the rules by which a package of interventions
+is combined, every scoring formula and every weight, the treatment of
+uncertainty and missing data, the design and the executed results of the
 sensitivity analysis, and the engineering arrangement that keeps the software
 in correspondence with the specification.
 
@@ -23,16 +25,30 @@ Several of the methodology's choices lower its apparent authority, and they
 were the substance of the work rather than concessions to it. Adopted cooling
 envelopes sit at or below synthesis central estimates because much of the
 underlying evidence is modelling-derived and modelling reports larger effects
-than measurement. The mixed intervention package is capped at the
-best-evidenced single-measure ceiling because no retrieved source quantifies
-super-additive cooling. Reported temperature ranges are clipped to the
-literature envelope, so that a favourable site raises a relative score but never
-a physical claim. Per-typology energy factors that no source supported were
-deleted and replaced by a derivation from a published sensitivity. No default
-unit costs ship, so the tool declines to produce the payback figure that would
-otherwise be its most quotable output. Green fa\c{c}ades, rain gardens, and
-courtyard greening are labelled low confidence and their confidence caps
-propagate into results.
+than measurement. A multi-intervention package reports the temperature of its
+best-evidenced component and never the sum, because no retrieved source
+quantifies super-additive cooling. Reported temperature ranges are clipped to
+the literature envelope, so that a favourable site raises a relative score but
+never a physical claim. Per-typology energy factors that no source supported
+were deleted and replaced by a derivation from a published sensitivity. No
+default unit costs ship, so the tool declines to produce the payback figure
+that would otherwise be its most quotable output. Six of the eighteen
+archetypes --- the green fa\c{c}ade, bioretention, the enclosed courtyard, the
+vegetated shade structure, and both productive classes --- are labelled low
+confidence, and their confidence caps propagate into results.
+
+The library's structure carries the same discipline. \num{110} catalogue
+entries are served by \num{18} cited evidence classes rather than by \num{110}
+invented envelopes, because solution-specific cooling literature does not exist
+at that resolution; every result names the class it inherited from, so the
+resolution of a claim is visible in the output rather than inferred. Where a
+retrieval found that an entry would have been overstated by inheriting a
+neighbouring class, a separate archetype was retrieved rather than the
+resemblance accepted --- which is why small constructed water sits at
+\SIrange{0.0}{1.0}{\degreeCelsius} and not at the corridor's
+\SIrange{1.0}{3.0}{\degreeCelsius}. And one approved envelope moved during
+implementation, downward, because verification found the citation behind it did
+not say what the design claimed it said.
 
 The limitations are correspondingly explicit. All values are daytime, and
 nighttime heat --- the more consequential quantity for health outcomes --- is
@@ -43,18 +59,32 @@ base is skewed toward temperate and subtropical Northern Hemisphere cities, and
 the confidence model does not yet measure that skew. The aggregation weights are
 expert judgment, including a disclosed equity-forward stance that gives
 vulnerability an effective weight of \num{0.25} against heat exposure at
-\num{0.15}. The sensitivity analysis of \Cref{sec:sensitivity-results} finds the ranking
-substantially stable under \SI{\pm 25}{\percent} single-weight perturbation ---
-worst-case pairwise stability \num{0.9737}, with three near-boundary category
-changes in 240 scenario-perturbation combinations --- which bounds how much the
-contestable weights actually move decisions.
+\num{0.15}. A further limitation arrives with the archetype model itself: an
+entry's cooling range is its class's, so the tool does not discriminate between
+two entries that inherit the same evidence.
+
+The sensitivity analysis of \Cref{sec:sensitivity-results}, regenerated for
+this version rather than carried forward, finds the ranking substantially
+stable under \SI{\pm 25}{\percent} single-weight perturbation --- worst-case
+pairwise stability \num[group-digits=none]{0.9529}, pooled mean displacement \num{0.47} points,
+and \num{8} near-boundary category changes in \num{288}
+scenario-perturbation combinations --- which bounds how much the contestable
+weights actually move decisions. Every one of those headline figures is
+slightly worse than at version \prevver{}, and the reason is stated rather than
+smoothed: four of the eight migrations are one new scenario sitting
+\num{0.11} points below a band boundary, and the new scenarios were chosen to
+exercise this release's evidence edge cases rather than to sit comfortably
+inside bands.
 
 The methodology was first offered for review with its gaps disclosed rather
 than closed, because the values most in need of scrutiny are settled most
 cheaply before an engine, a user base, and a set of published assessments have
-accumulated around them. Version \methver{} closes the disclosed specification
+accumulated around them. Version 2026.08.01 closed the disclosed specification
 gaps --- the sub-indicator rules, the cost-feasibility derivation, and the
-confidence field mapping --- without altering any evidence-derived value. The tool, its complete configuration, and this
+confidence field mapping --- without altering any evidence-derived value, and
+version \methver{} replaces the library without moving a single previously
+published envelope, save the one that verification required.
+The tool, its complete configuration, and this
 document are public under the Apache License 2.0. Every value it applies names
 its source; \Cref{app:verification} states what was actually verified about
 each of those sources, including where publisher restrictions meant a finding

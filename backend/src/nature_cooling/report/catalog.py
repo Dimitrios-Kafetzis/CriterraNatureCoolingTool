@@ -110,6 +110,10 @@ STRINGS: Final[dict[str, str]] = {
     "score": "Score",
     "assumptions_heading": "Assumptions applied",
     "assumptions_intro": "Every default the engine used in place of an answer:",
+    "assumptions_truncated": (
+        "… and {count} further assumption(s), itemised in full on the workbook's "
+        "Assumptions & Warnings sheet."
+    ),
     "assumptions_none": (
         "No defaults were applied: every input the formulas used came from the answers."
     ),
@@ -133,12 +137,37 @@ STRINGS: Final[dict[str, str]] = {
         "Assumptions & Warnings sheet."
     ),
     "not_answered": "(not answered)",
+    "none_selected": "(none selected)",
     "not_supplied_marker": "not supplied — methodology fallback applies",
     "answered_unknown_marker": "answered “unknown” — counts as not supplied",
     "results_block": "Block",
     "results_item": "Item",
     "results_value": "Value",
     "heading_identity": "Assessed under",
+    # --- Package reporting (D-038, D-044.4) ---------------------------------
+    "package_heading": "Package components, scored individually",
+    "package_component": "Component",
+    "package_archetype": "Evidence class",
+    "package_evidence": "Evidence",
+    "package_range": "Cooling range",
+    "package_suitability": "Suitability",
+    "package_representative": "carries the package estimate",
+    "package_rule": (
+        "The package's temperature estimate is the best-evidenced component's and is "
+        "never the sum of its parts: no retrieved source quantifies super-additive "
+        "cooling from combining measures. Co-benefits take the union across "
+        "components, suitability takes the lowest, and capital cost is entered once "
+        "for the whole package."
+    ),
+    "package_heading_more": "{components} and {count} further component(s)",
+    "package_single": "Single intervention — this assessment has one component.",
+    "package_truncated": (
+        "… and {count} further component(s), itemised in full on the workbook's Results sheet."
+    ),
+    "evidence_class_note": (
+        "Cooling values are inherited from the {archetype} evidence class "
+        "({provenance}); see the Methodology Report evidence tables."
+    ),
 }
 
 # --- Status texts (mirroring the frontend's ``results.statuses`` catalog) ----
@@ -255,6 +284,13 @@ FIELD_LABELS: Final[dict[str, str]] = {
     "irrigation_availability": "Irrigation availability",
     "current_shade_level": "Current shade level",
     "land_use": "Land use",
+    # Availability-only: these four decide which interventions are offered and
+    # feed no score (D-044.1). Labelled as such on the Inputs sheet so a reader
+    # never looks for their contribution to a number.
+    "includes_railway": "Site includes a railway (availability only)",
+    "existing_woodland": "Existing woodland or forest (availability only)",
+    "waterfront_type": "Waterfront type (availability only)",
+    "productive_governance": "Productive-landscape governance (availability only)",
     "climate_zone": "Climate zone",
     "lst_anomaly_c": "Land surface temperature anomaly",
     "heat_exposure_level": "Heat exposure level",
@@ -267,7 +303,7 @@ FIELD_LABELS: Final[dict[str, str]] = {
     "safety_concern": "Safety and comfort concern",
     "public_accessibility": "Public accessibility",
     "community_participation": "Community participation",
-    "nbs_type": "Intervention typology",
+    "nbs_type": "Intervention typologies",
     "intervention_area_m2": "Intervention area",
     "new_canopy_area_at_maturity_m2": "New canopy area at maturity",
     "expected_maturity_period_years": "Expected maturity period",

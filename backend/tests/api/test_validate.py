@@ -92,12 +92,76 @@ def test_unknown_fields_are_errors(client: TestClient, minimal_input: dict[str, 
 
 
 def test_unknown_typology_is_an_error(client: TestClient, minimal_input: dict[str, Any]) -> None:
-    body = _validate(client, {**minimal_input, "nbs_type": "not_a_typology"})
+    # The error is addressed to the offending list position (D-044.2), so a
+    # package whose third component is a typo says which one it is.
+    body = _validate(client, {**minimal_input, "nbs_type": ["not_a_typology"]})
     assert body["valid"] is False
     assert body["errors"] == [
-        {"field": "nbs_type", "message": "unknown nbs_type: 'not_a_typology'"}
+        {"field": "nbs_type.0", "message": "unknown nbs_type: 'not_a_typology'"}
     ]
     assert body["confidence"]["cooling_capped_by_evidence"] is False
+
+
+def test_each_unknown_package_component_is_reported_at_its_own_position(
+    client: TestClient, minimal_input: dict[str, Any]
+) -> None:
+    """A package reports every unresolvable component, never just the first."""
+    body = _validate(
+        client, {**minimal_input, "nbs_type": ["tree_avenue", "not_a_typology", "also_not_one"]}
+    )
+    assert body["valid"] is False
+    assert body["errors"] == [
+        {"field": "nbs_type.1", "message": "unknown nbs_type: 'not_a_typology'"},
+        {"field": "nbs_type.2", "message": "unknown nbs_type: 'also_not_one'"},
+    ]
+
+
+def test_a_package_of_several_known_typologies_is_valid(
+    client: TestClient, package_draft: dict[str, Any]
+) -> None:
+    """D-044.2: several simultaneously available entries are a valid selection."""
+    body = _validate(client, package_draft)
+    assert body["valid"] is True
+    assert body["errors"] == []
+
+
+def test_a_duplicated_package_component_is_an_error(
+    client: TestClient, minimal_input: dict[str, Any]
+) -> None:
+    """The same entry twice is not a package of two; it is a mistake."""
+    body = _validate(client, {**minimal_input, "nbs_type": ["tree_avenue", "tree_avenue"]})
+    assert body["valid"] is False
+    assert _error_fields(body) == {"nbs_type"}
+    assert "duplicate package components" in body["errors"][0]["message"]
+
+
+def test_an_empty_package_is_an_error(client: TestClient, minimal_input: dict[str, Any]) -> None:
+    """An assessment always proposes at least one intervention (min_length=1)."""
+    body = _validate(client, {**minimal_input, "nbs_type": []})
+    assert body["valid"] is False
+    assert _error_fields(body) == {"nbs_type"}
+
+
+def test_the_availability_answers_feed_no_confidence_block(
+    client: TestClient, minimal_input: dict[str, Any]
+) -> None:
+    """D-044.1: the four gating answers change the menu and nothing else.
+
+    They appear in no formula, in no confidence block, and in no aggregation,
+    so supplying all four must leave every completeness figure untouched.
+    """
+    bare = _validate(client, minimal_input)["confidence"]
+    gated = _validate(
+        client,
+        {
+            **minimal_input,
+            "includes_railway": "yes",
+            "existing_woodland": "no",
+            "waterfront_type": "river",
+            "productive_governance": ["community", "commercial"],
+        },
+    )["confidence"]
+    assert gated == bare
 
 
 def test_engine_warning_rules_cover_sum_and_intervention_area(
@@ -133,7 +197,7 @@ def test_preview_matches_the_engine_confidence_module(
     body = _validate(client, payload)
     expected = confidence_module.compute(
         AssessmentInput.model_validate(payload),
-        config.typologies.by_type("street_tree_planting"),
+        config.typologies.by_type("tree_avenue"),
         config,
     )
     for block in ("cooling", "energy", "economic", "equity"):
@@ -230,9 +294,11 @@ def test_evidence_cap_binds_the_preview_and_the_hint(
     # Eight of ten cooling groups supplied (80%, raw high) on a low-evidence
     # typology: the level is capped at medium (Methodology Report 6.2), and no
     # completion can raise it, so the hint falls back with no promised raise.
+    # `indirect_ground_rooted_green_facade` inherits the green_facade_living_wall
+    # archetype, the evidence class the retired `green_facade` typology carried.
     payload = {
         **minimal_input,
-        "nbs_type": "green_facade",
+        "nbs_type": ["indirect_ground_rooted_green_facade"],
         **_SIX_COOLING_FIELDS,
         "lst_anomaly_c": 4.0,
         "solar_exposure": "high",
@@ -244,6 +310,50 @@ def test_evidence_cap_binds_the_preview_and_the_hint(
         "fields": ["new_canopy_area_at_maturity_m2"],
         "raises_level_to": None,
     }
+
+
+def test_the_evidence_cap_follows_the_component_that_carries_the_estimate(
+    client: TestClient, minimal_input: dict[str, Any]
+) -> None:
+    """A package is capped by the component the engine would report from.
+
+    The preview follows the same choice the engine makes — best evidence, then
+    widest envelope — so adding a well-evidenced component to a thinly
+    evidenced one lifts the cap, exactly as the package's own cooling estimate
+    would come from that component (D-044.4).
+    """
+    thin = {
+        **minimal_input,
+        "nbs_type": ["indirect_ground_rooted_green_facade"],
+        **_SIX_COOLING_FIELDS,
+        "lst_anomaly_c": 4.0,
+        "solar_exposure": "high",
+    }
+    assert _validate(client, thin)["confidence"]["cooling_capped_by_evidence"] is True
+
+    package = {**thin, "nbs_type": ["indirect_ground_rooted_green_facade", "tree_avenue"]}
+    body = _validate(client, package)
+    assert body["valid"] is True
+    assert body["confidence"]["cooling_capped_by_evidence"] is False
+    assert body["confidence"]["cooling"]["level"] == "high"
+
+
+def test_an_unresolvable_component_never_asserts_a_cap(
+    client: TestClient, minimal_input: dict[str, Any]
+) -> None:
+    """D-029: a promise about confidence never rests on a typology we cannot find."""
+    body = _validate(
+        client,
+        {
+            **minimal_input,
+            "nbs_type": ["not_a_typology"],
+            **_SIX_COOLING_FIELDS,
+            "lst_anomaly_c": 4.0,
+            "solar_exposure": "high",
+        },
+    )
+    assert body["valid"] is False
+    assert body["confidence"]["cooling_capped_by_evidence"] is False
 
 
 def test_non_object_bodies_are_rejected(client: TestClient) -> None:

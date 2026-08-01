@@ -1,5 +1,5 @@
 /**
- * The three form controls of the questionnaire.
+ * The four form controls of the questionnaire.
  *
  * Every optional qualitative field offers the explicit "Unknown / not sure"
  * level as well as "(not answered)" — the methodology distinguishes an
@@ -17,6 +17,13 @@ interface CommonProps {
   field: string;
   error?: string | undefined;
   required?: boolean;
+}
+
+/** The display name for one option of a field, falling back to the level list. */
+function labelFor(field: string, option: string): string {
+  const perField = messages.options[field as keyof typeof messages.options] as
+    Record<string, string> | undefined;
+  return perField?.[option] ?? optionLabel(option);
 }
 
 function FieldShell(props: CommonProps & { inputId: string; children: React.ReactNode }) {
@@ -77,14 +84,7 @@ export function LevelField(
         <option value="">{messages.wizard.unansweredOption}</option>
         {props.options.map((option) => (
           <option key={option} value={option}>
-            {messages.options[props.field as keyof typeof messages.options] !== undefined
-              ? ((
-                  messages.options[props.field as keyof typeof messages.options] as Record<
-                    string,
-                    string
-                  >
-                )[option] ?? optionLabel(option))
-              : optionLabel(option)}
+            {labelFor(props.field, option)}
           </option>
         ))}
         {(props.withUnknown ?? true) ? (
@@ -92,6 +92,82 @@ export function LevelField(
         ) : null}
       </select>
     </FieldShell>
+  );
+}
+
+/**
+ * A multi-select over a fixed option list, rendered as a checkbox group.
+ *
+ * `productive_governance` is the first field where several answers are
+ * simultaneously true (D-043.3: who *could* deliver, not who is interested),
+ * and a `<select multiple>` is a poor keyboard and screen-reader target for
+ * that. A native checkbox group is reachable by Tab and Space, each box owns
+ * its own label, and the group is named by its legend. An empty selection is
+ * an unanswered field, not an empty list: the field is deleted from the draft.
+ */
+export function MultiSelectField(
+  props: CommonProps & {
+    value: readonly string[] | null | undefined;
+    options: readonly string[];
+    onChange: (value: string[] | undefined) => void;
+  },
+) {
+  const groupId = useId();
+  const meta = messages.fields[props.field];
+  const selected = props.value ?? [];
+
+  function toggle(option: string) {
+    const next = selected.includes(option)
+      ? selected.filter((candidate) => candidate !== option)
+      : // Selection order follows the option list, so the stored value does
+        // not depend on the order the user happened to tick the boxes.
+        props.options.filter((candidate) => candidate === option || selected.includes(candidate));
+    props.onChange(next.length > 0 ? [...next] : undefined);
+  }
+
+  return (
+    <div className="field">
+      <fieldset
+        className="field__group"
+        aria-describedby={describedBy(groupId, Boolean(meta?.help), Boolean(props.error))}
+      >
+        {/* The legend must be the fieldset's first child, or it does not name
+            the group for assistive technology. The explainer sits inside it
+            for that reason, and contributes to the group's name exactly as it
+            does to every other field's (D-041). */}
+        <legend className="field__label field__label-row">
+          <span>
+            {meta?.label ?? props.field}
+            {!props.required && (
+              <span className="muted small"> — {messages.wizard.optionalHint}</span>
+            )}
+          </span>
+          <FieldExplainer field={props.field} />
+        </legend>
+        {meta?.help ? (
+          <p className="field__help" id={`${groupId}-help`}>
+            {meta.help}
+          </p>
+        ) : null}
+        <div className="checkbox-group">
+          {props.options.map((option) => (
+            <label className="checkbox-group__option" key={option}>
+              <input
+                type="checkbox"
+                checked={selected.includes(option)}
+                onChange={() => toggle(option)}
+              />
+              <span>{labelFor(props.field, option)}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      {props.error ? (
+        <p className="error-text" id={`${groupId}-error`} role="alert">
+          {props.error}
+        </p>
+      ) : null}
+    </div>
   );
 }
 

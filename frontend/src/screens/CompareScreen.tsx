@@ -34,7 +34,18 @@ interface Row {
 function buildRows(options: Option[]): Row[] {
   const results = options.map((option) => option.result);
   return [
-    { label: t.row.typology, values: results.map((r) => r.typology.display_name) },
+    {
+      // A package lists its components; a package of one reads exactly as it
+      // always has (D-038).
+      label: t.row.typology,
+      values: results.map((r) =>
+        r.components.map((component) => component.typology.display_name).join(' + '),
+      ),
+    },
+    {
+      label: t.row.components,
+      values: results.map((r) => messages.picker.selectionCount(r.package.component_count)),
+    },
     {
       label: t.row.opportunity,
       values: results.map(
@@ -74,8 +85,13 @@ function buildRows(options: Option[]): Row[] {
       values: results.map((r) => optionLabel(r.confidence.overall)),
     },
     {
+      // The evidence class the headline estimate was inherited from, named
+      // alongside its confidence (D-044).
       label: t.row.evidence,
-      values: results.map((r) => optionLabel(r.typology.evidence_confidence)),
+      values: results.map(
+        (r) =>
+          `${optionLabel(r.typology.evidence_confidence)} (${r.typology.archetype_display_name})`,
+      ),
     },
     {
       label: t.row.flags,

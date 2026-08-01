@@ -9,6 +9,7 @@ import { renderAt } from './render';
 import assessmentDuplicate from './fixtures/assessment-duplicate.json';
 import meta from './fixtures/meta.json';
 import project from './fixtures/project.json';
+import projectMigrated from './fixtures/project-migrated.json';
 
 const projectUrl = `/projects/${project.project_id}`;
 
@@ -23,11 +24,46 @@ describe('ProjectScreen', () => {
     expect(await screen.findByRole('heading', { name: project.name })).toBeInTheDocument();
     expect(screen.getByText('Option A')).toBeInTheDocument();
     expect(screen.getByText('Option C')).toBeInTheDocument();
-    // Two evaluated (A, B) and one draft (C), as recorded.
-    expect(screen.getAllByText(messages.project.evaluated)).toHaveLength(2);
-    expect(screen.getAllByText(messages.project.draft)).toHaveLength(1);
-    // Two evaluated options: comparison is offered.
+    // Three evaluated (A, B, and the package D) and one draft (C), as recorded.
+    const evaluated = project.assessments.filter((a) => a.result != null).length;
+    expect(screen.getAllByText(messages.project.evaluated)).toHaveLength(evaluated);
+    expect(screen.getAllByText(messages.project.draft)).toHaveLength(
+      project.assessments.length - evaluated,
+    );
+    // More than one evaluated option: comparison is offered.
     expect(screen.getByRole('link', { name: messages.project.compare })).toBeInTheDocument();
+  });
+
+  it('surfaces what a storage migration changed, itemised (D-029, D-044.2)', async () => {
+    installFetchMock([
+      { method: 'GET', path: '/api/meta', response: meta },
+      {
+        method: 'GET',
+        path: `/api/projects/${projectMigrated.project_id}`,
+        response: projectMigrated,
+      },
+    ]);
+    renderAt(
+      `/projects/${projectMigrated.project_id}`,
+      <Route path="projects/:projectId" element={<ProjectScreen />} />,
+    );
+
+    expect(await screen.findByText(messages.project.migratedHeading)).toBeInTheDocument();
+    expect(projectMigrated.migrated_notes.length).toBeGreaterThan(0);
+    for (const note of projectMigrated.migrated_notes) {
+      expect(screen.getByText(note)).toBeInTheDocument();
+    }
+  });
+
+  it('says nothing about migration when a project was not migrated', async () => {
+    installFetchMock([
+      { method: 'GET', path: '/api/meta', response: meta },
+      { method: 'GET', path: `/api/projects/${project.project_id}`, response: project },
+    ]);
+    renderAt(projectUrl, <Route path="projects/:projectId" element={<ProjectScreen />} />);
+
+    await screen.findByRole('heading', { name: project.name });
+    expect(screen.queryByText(messages.project.migratedHeading)).not.toBeInTheDocument();
   });
 
   it('duplicates an assessment (D-021) and opens the wizard at the intervention step', async () => {

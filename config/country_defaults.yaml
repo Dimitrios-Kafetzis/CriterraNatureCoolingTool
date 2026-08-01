@@ -16,7 +16,7 @@
 # are retrieved and verified; a country with no verified factor reports GHG as
 # not calculated rather than substituting a global average.
 
-version: "2026.08.03"
+version: "2026.08.04"
 
 emission_factor_source:
   key: ember

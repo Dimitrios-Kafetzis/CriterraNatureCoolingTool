@@ -10,7 +10,12 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { api } from '../api/client';
 import { storedResult } from '../api/types';
-import type { AssessmentResult, AssessmentView, ConfidenceLevel } from '../api/types';
+import type {
+  AssessmentResult,
+  AssessmentView,
+  ComponentBlock,
+  ConfidenceLevel,
+} from '../api/types';
 import { messages, optionLabel } from '../i18n/en';
 
 const t = messages.results;
@@ -94,7 +99,10 @@ export function ResultsScreen() {
     <div className="results">
       <div>
         <p className="muted small">
-          {assessment.label} · {result.typology.display_name}
+          {assessment.label} ·{' '}
+          {result.package.component_count > 1
+            ? result.components.map((component) => component.typology.display_name).join(' + ')
+            : result.typology.display_name}
         </p>
         <h1>{t.heading}</h1>
         {assessment.methodology_update_available ? (
@@ -182,6 +190,10 @@ export function ResultsScreen() {
         <p className="recommendation">{result.recommendation}</p>
       </section>
 
+      {/* 3b — the package, itemised (D-038). A single-intervention
+          assessment is a package of one and renders nothing here. */}
+      <PackageSection result={result} />
+
       {/* 4 — the output blocks */}
       <section className="card">
         <div className="result-block__head">
@@ -189,6 +201,9 @@ export function ResultsScreen() {
           <ConfidenceBadge level={confidence.cooling} />
           <FormulaLink anchor="typologies" />
         </div>
+        <p className="muted small">
+          {t.packageSection.inheritedNote(result.typology.archetype_display_name)}
+        </p>
         <dl className="kv">
           <dt>{t.cooling.potential}</dt>
           <dd>{fmt(result.cooling.potential_score)} / 100</dd>
@@ -403,6 +418,106 @@ export function ResultsScreen() {
         </Link>
       </div>
     </div>
+  );
+}
+
+/**
+ * The package, component by component (D-038, D-044.4).
+ *
+ * Every component carries its own cooling range, evidence class, suitability
+ * and flags, because each was scored on its own values and nothing here is an
+ * average of a sibling. The combination rules are the engine's own sentences,
+ * served in the `package` block and rendered verbatim — restating them in the
+ * interface's words is exactly how the two would drift apart.
+ *
+ * A package of one renders nothing: a single-intervention assessment looks as
+ * it always has.
+ */
+function PackageSection({ result }: { result: AssessmentResult }) {
+  const pkg = result.package;
+  if (pkg.component_count <= 1) return null;
+  const p = t.packageSection;
+
+  const rules: { key: string; label: string; text: string }[] = [
+    { key: 'cooling', label: p.rules.cooling, text: pkg.cooling_rule },
+    { key: 'co_benefits', label: p.rules.coBenefits, text: pkg.co_benefit_rule },
+    { key: 'suitability', label: p.rules.suitability, text: pkg.suitability_rule },
+    { key: 'cost', label: p.rules.cost, text: pkg.cost_rule },
+    {
+      key: 'energy',
+      label: p.rules.energy,
+      text: pkg.energy_component_nbs_type
+        ? p.energyComponent(
+            result.components.find(
+              (component) => component.typology.nbs_type === pkg.energy_component_nbs_type,
+            )?.typology.display_name ?? pkg.energy_component_nbs_type,
+          )
+        : p.energyNoComponent,
+    },
+  ];
+
+  return (
+    <section className="card" aria-label={p.heading}>
+      <h2>{p.heading}</h2>
+      <p className="muted">{p.intro(pkg.component_count)}</p>
+
+      <ol className="package__components">
+        {result.components.map((component) => (
+          <ComponentCard key={component.typology.nbs_type} component={component} />
+        ))}
+      </ol>
+
+      <h3>{p.rulesHeading}</h3>
+      <dl className="kv small">
+        {rules.map((rule) => (
+          <FragmentRow key={rule.key} label={rule.label} value={rule.text} />
+        ))}
+      </dl>
+      <p className="muted small">
+        {p.representativeWhy}: {pkg.representative_reason}
+      </p>
+      <FormulaLink anchor="typologies" />
+    </section>
+  );
+}
+
+function ComponentCard({ component }: { component: ComponentBlock }) {
+  const p = t.packageSection;
+  const typology = component.typology;
+  return (
+    <li
+      className={`package__component${component.is_representative ? ' package__component--representative' : ''}`}
+    >
+      <div className="package__component-head">
+        <strong>{typology.display_name}</strong>
+        {component.is_representative ? (
+          <span className="badge badge--accent">{p.representative}</span>
+        ) : null}
+        {component.suitability.suitable ? null : (
+          <span className="badge badge--error">{t.flagsHeading}</span>
+        )}
+      </div>
+      <dl className="kv small">
+        <FragmentRow
+          label={p.cooling}
+          value={`${fmt(component.cooling.delta_t_min_c)}–${fmt(component.cooling.delta_t_max_c)} °C`}
+        />
+        <FragmentRow label={p.evidenceClass} value={typology.archetype_display_name} />
+        <FragmentRow
+          label={p.evidenceConfidence}
+          value={optionLabel(typology.evidence_confidence)}
+        />
+        <FragmentRow label={p.suitability} value={`${fmt(component.suitability.score)} / 100`} />
+        <FragmentRow
+          label={p.flags}
+          value={
+            component.suitability.flags.length > 0
+              ? component.suitability.flags.map((flag) => flag.message).join(' · ')
+              : p.noFlags
+          }
+        />
+      </dl>
+    </li>
   );
 }
 

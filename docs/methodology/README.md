@@ -19,7 +19,7 @@ Structure:
 1. **Purpose, scope, and positioning** — screening-level instrument; what it is and is not; intended use and users.
 2. **Conceptual framework** — three-layer structure (baseline → NbS performance → impact & feasibility); relation to published prioritisation frameworks (e.g., Norton et al. 2015) and composite-indicator practice (OECD/JRC Handbook).
 3. **Indicators and scoring** — every input, its normalisation, and every formula: heat exposure (data-rich and data-poor paths), vulnerability, Heat Priority Index, suitability, adjustment factors, cooling potential, energy/GHG, costs and payback, co-benefits, gender & equity, final aggregation. Includes the **effective-weights table** (declaring the deliberate equity-forward weighting, decision D-007).
-4. **The NbS typology library** — the 14 typologies with their evidence tables (see below); derivation of every cooling range, energy factor, and cost default; the suitability matrix (D-009).
+4. **The NbS typology library** — the 18 cooling archetypes with their evidence tables (see below) and the 110 catalogue typologies inheriting them; derivation of every cooling range, energy factor, and cost default; the suitability matrix (D-009); the package combination rules.
 5. **Uncertainty and confidence** — ranges-not-points principle; the °C literature-envelope clipping rule (D-008); branched confidence model; treatment of missing data and defaults.
 6. **Sensitivity analysis** — weight variation (±25%) and ranking stability across the golden scenarios (D-013).
 7. **Limitations and responsible use** — explicit boundary with microclimate simulation and detailed design; misuse cases.
@@ -27,7 +27,7 @@ Structure:
 
 ## Evidence tables (`EVIDENCE-TABLES.md`) — delivered 2026-07-30
 
-For each of the 14 typologies: evidence consulted (with the metric each source measures) → adopted value → the reasoning connecting them → applicability caveats. Where studies conflict, the conservative range is adopted and the conflict is documented rather than smoothed over. These tables are the direct source for the `sources:` arrays in [`config/nbs_typologies.yaml`](../../config/nbs_typologies.yaml).
+For each of the 18 cooling archetypes: evidence consulted (with the metric each source measures) → adopted value → the reasoning connecting them → applicability caveats. Every one of the 110 catalogue typologies inherits exactly one archetype, and every result names the evidence class its numbers came from. Where studies conflict, the conservative range is adopted and the conflict is documented rather than smoothed over. These tables are the direct source for the `sources:` arrays in [`config/nbs_typologies.yaml`](../../config/nbs_typologies.yaml).
 
 Delivered as a single consolidated document rather than 14 separate files: the tables are short, they are read comparatively, and the per-value citations live in configuration anyway.
 

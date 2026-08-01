@@ -1,25 +1,55 @@
 \section{The NbS typology library}
 \label{sec:typologies}
 
-\subsection{Structure}
+\subsection{Two levels: cooling archetypes and catalogue entries}
+\label{sec:archetypes}
 
-Fourteen intervention typologies are supported, in four families:
+From version \methver{} the library has \textbf{two levels}, and the separation
+between them is the central design decision of this release.
 
-\begin{description}[leftmargin=1.5em, style=sameline, font=\normalfont\itshape]
-  \item[Green] street tree planting, shaded pedestrian corridor, pocket park,
-  urban forest / dense canopy planting, park upgrade, schoolyard greening.
-  \item[Building] green roof, green fa\c{c}ade.
-  \item[Blue-green] rain garden / bioswale, blue-green corridor, riparian
-  restoration.
-  \item[Hybrid] permeable shaded plaza, courtyard greening, mixed NbS package.
-\end{description}
+A \textbf{cooling archetype} is a cited evidence class. It carries every
+performance value --- base cooling score, temperature reduction envelope,
+evidence confidence rating, suitability conditions, default co-benefit levels
+--- together with the citations behind them. There are \num{18}.
 
-Each typology carries a base cooling score on a \numrange{0}{100} scale, a
-temperature reduction envelope expressed as a minimum and a maximum in degrees
-Celsius, its primary cooling mechanism, a set of suitability conditions, an
-evidence confidence rating, default co-benefit levels, and its source
-citations. The complete library, including every citation and the specific
-finding each citation supports, is reproduced in \Cref{app:typologies}.
+A \textbf{typology} is one of the \num{110} curated entries of the UNEP
+\emph{Nature for Cooling} catalogue. It carries identity, family, availability,
+the primary cooling mechanism the catalogue ascribes to it, and the one
+archetype it inherits. It carries \textbf{no performance value of its own}.
+
+\begin{keynote}
+\noindent\textbf{The reason is worth stating without euphemism: solution-specific
+cooling literature does not exist for \num{110} typologies.} Nobody has
+separately measured a felt-pocket living wall, a suspended-pavement tree pit,
+and a green parking lane.
+
+The alternative to archetypes was inventing \num{110} envelopes. That would have
+manufactured precision the source catalogue does not contain, and it would have
+broken the evidence rule the tool exists to honour --- that no performance value
+ships without a citation (\Cref{sec:evidence-rules}).
+
+Under the archetype model an entry inherits a \emph{cited} envelope, and every
+result \textbf{names the evidence class it inherited from}. A Miyawaki forest
+reports its cooling on the dense-canopy evidence, and says so, rather than
+implying a measurement of Miyawaki forests that does not exist.
+\end{keynote}
+
+The catalogue's \num{243} entries were curated to \num{110} --- \num{88} merged,
+\num{45} dropped --- on the source document's own classification notes. Nearly
+every drop is an entry the document itself disqualifies as not an intervention:
+a land-use context, a management objective, an umbrella category, a planning
+model. Nothing is lost by dropping them. A land-use context is already carried
+by the \fieldname{land_use} input, and a strategy is a \emph{package} of kept
+entries, which \Cref{sec:packages} makes expressible for the first time.
+
+The \num{110} entries fall into fourteen catalogue families --- tree-based,
+street, park, public space, woodland and forest, ground level, water landscape,
+ecological network, district, green roof, vertical greening, building,
+vegetated shelter, and productive landscape --- and are classified by the source
+document as \num{53} \emph{elements} (a discrete thing that is built) and
+\num{57} \emph{composites} (a coherent spatial system made of elements). Neither
+classification enters a formula; both are reported, because a reader comparing
+the tool's menu with the catalogue needs to see which is which.
 
 \subsection{The metric, stated once and enforced throughout}
 \label{sec:metric}
@@ -51,58 +81,130 @@ equivalent. A decision-maker reading ``\qty{3}{\degreeCelsius} of cooling''
 assumes air temperature. The methodology gives them air temperature, and where
 it cannot, it says so.
 
+Two of the archetypes retrieved for this version exist \emph{because} a source
+measured both quantities on the same plots and the two diverged by an order of
+magnitude (\Cref{sec:non-canopy,sec:shade-structure}). The discipline is
+therefore not only a presentational rule; it changed the library.
+
 A direct consequence is that the tool systematically \emph{understates} the
 benefit of shade-dominant interventions, because radiant load reduction --- the
 mechanism through which shade most improves human thermal comfort --- does not
 appear in an air-temperature figure. This is recorded as a limitation in
 \Cref{sec:limit-airtemp} rather than corrected by an unsourced adjustment.
 
-\subsection{Adopted values}
+\subsection{The eighteen archetypes}
 \label{sec:adopted}
 
-\Cref{tab:typologies} gives the adopted values for all fourteen typologies.
-Derivations are summarised in \Cref{sec:derivation} and reproduced in full,
-with citations, in \Cref{app:typologies}.
+\Cref{tab:typologies} gives the adopted values for all eighteen cooling
+archetypes and the number of catalogue entries that inherit each. Derivations
+are summarised in \Cref{sec:derivation} and reproduced in full, with citations,
+in \Cref{app:typologies}.
 
 \begin{table}[htbp]
 \centering
-\caption[Adopted typology values]{The fourteen NbS typologies with their
+\caption[Adopted archetype values]{The eighteen cooling archetypes with their
 adopted values at methodology version \methver{}. All temperature envelopes are
 daytime, pedestrian-level \emph{air} temperature reductions in degrees Celsius.
 The base cooling score is a \numrange{0}{100} index expressing relative
 expected cooling performance before site adjustment; it is not a temperature.
-Evidence confidence is the rating defined in \Cref{sec:confidence-levels}.}
+Evidence confidence is the rating defined in \Cref{sec:confidence-levels}.
+\emph{Provenance} records where the archetype's values come from: \emph{v1.1}
+means the value is the previously published typology value, unchanged;
+\emph{new} means the evidence was retrieved for this version; \emph{derived}
+means no class-specific evidence exists and the envelope is bounded from an
+adjacent class with the bounding argument stated. \emph{Entries} is the number
+of the \num{110} catalogue entries inheriting that archetype.}
 \label{tab:typologies}
 \small
-\begin{tabular}{@{}llrcl@{}}
+\begin{tabular}{@{}llrclr@{}}
 \toprule
-\textbf{ID} & \textbf{Typology} & \textbf{Base score} &
-\textbf{Envelope (\si{\degreeCelsius})} & \textbf{Confidence} \\
+\textbf{Archetype} & \textbf{Provenance} & \textbf{Base score} &
+\textbf{Envelope (\si{\degreeCelsius})} & \textbf{Confidence} &
+\textbf{Entries} \\
 \midrule
-\multicolumn{5}{@{}l}{\textit{Green}}\\
-01 & Street tree planting              & 75 & 0.5\,--\,3.0 & High \\
-02 & Shaded pedestrian corridor        & 80 & 0.5\,--\,3.0 & Medium \\
-03 & Pocket park                       & 65 & 0.3\,--\,1.5 & High \\
-04 & Urban forest / dense canopy       & 90 & 1.0\,--\,3.0 & High \\
-05 & Park upgrade                      & 70 & 0.5\,--\,2.0 & High \\
-06 & Schoolyard greening               & 75 & 0.5\,--\,2.0 & Medium \\
+\multicolumn{6}{@{}l}{\textit{Green}}\\
+Street tree canopy            & v1.1    & 75 & 0.5\,--\,3.0 & High   & 15 \\
+Continuous shaded corridor    & v1.1    & 80 & 0.5\,--\,3.0 & Medium &  2 \\
+Small green area with trees   & v1.1    & 65 & 0.3\,--\,1.5 & High   &  6 \\
+Dense tree canopy             & v1.1    & 90 & 1.0\,--\,3.0 & High   & 10 \\
+Established park              & v1.1    & 70 & 0.5\,--\,2.0 & High   & 10 \\
+Non-canopy vegetation         & new     & 50 & 0.0\,--\,1.5 & Medium &  7 \\
+Productive tree canopy        & derived & 60 & 0.5\,--\,2.0 & Low    &  3 \\
+Productive ground planting    & derived & 45 & 0.0\,--\,1.5 & Low    &  6 \\
 \addlinespace
-\multicolumn{5}{@{}l}{\textit{Building}}\\
-07 & Green roof                        & 45 & 0.1\,--\,1.0 & Medium \\
-08 & Green fa\c{c}ade                  & 50 & 0.3\,--\,2.0 & Low \\
+\multicolumn{6}{@{}l}{\textit{Building}}\\
+Extensive green roof          & v1.1    & 45 & 0.1\,--\,1.0 & Medium &  7 \\
+Green fa\c{c}ade / living wall & v1.1   & 50 & 0.3\,--\,2.0 & Low    & 11 \\
 \addlinespace
-\multicolumn{5}{@{}l}{\textit{Blue-green}}\\
-09 & Rain garden / bioswale            & 55 & 0.1\,--\,0.8 & Low \\
-10 & Blue-green corridor               & 85 & 1.0\,--\,3.0 & Medium \\
-11 & Riparian restoration              & 85 & 1.0\,--\,3.0 & Medium \\
+\multicolumn{6}{@{}l}{\textit{Blue-green}}\\
+Bioretention                  & v1.1    & 55 & 0.1\,--\,0.8 & Low    &  8 \\
+Blue-green corridor           & v1.1    & 85 & 1.0\,--\,3.0 & Medium &  5 \\
+Riparian restoration          & v1.1    & 85 & 1.0\,--\,3.0 & Medium &  6 \\
+Large open water body         & new     & 75 & 0.1\,--\,3.0 & Medium &  3 \\
+Small constructed water       & new     & 40 & 0.0\,--\,1.0 & Medium &  6 \\
 \addlinespace
-\multicolumn{5}{@{}l}{\textit{Hybrid}}\\
-12 & Permeable shaded plaza            & 70 & 0.5\,--\,2.5 & Medium \\
-13 & Courtyard greening                & 60 & 0.3\,--\,1.5 & Low \\
-14 & Mixed NbS package                 & 80 & 1.0\,--\,3.0 & Medium \\
+\multicolumn{6}{@{}l}{\textit{Hybrid}}\\
+Permeable shaded hardscape    & v1.1    & 70 & 0.5\,--\,2.5 & Medium &  2 \\
+Enclosed courtyard greening   & v1.1    & 60 & 0.3\,--\,1.5 & Low    &  1 \\
+Vegetated shade structure     & new     & 55 & 0.0\,--\,2.5 & Low    &  2 \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{Total entries}} & \textbf{110} \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{keynote}
+\noindent\textbf{Twelve of the eighteen archetypes are the previous version's
+typologies, unchanged} --- same envelopes, same base scores, same evidence
+ratings, same citations. They are the only classes in the library with
+individually retrieved literature behind them, and this release keeps that
+evidence rather than trading it for catalogue names.
+
+\textbf{No previously published cooling envelope moved in this release}, with
+one exception: the newly retrieved large water body ships at a floor of
+\qty{0.1}{\degreeCelsius} rather than the \qty{0.5}{\degreeCelsius} proposed at
+design time, because source verification showed the field evidence did not
+support the higher floor. \Cref{sec:water-body} tells that story in full,
+because it is a story about how the methodology is meant to work rather than an
+erratum to be buried.
+\end{keynote}
+
+\textbf{How the base cooling score of a new archetype was placed.} The base
+score is a relative \numrange{0}{100} strength index, not a physical quantity,
+and the twelve inherited scores are not a function of the envelope midpoint ---
+bioretention sits at 55 with a \qty{0.45}{\degreeCelsius} midpoint while the
+green roof sits at 45 with a \qty{0.55}{\degreeCelsius} midpoint. There is
+therefore no formula to apply, and inventing one would have moved twelve
+calibrated values in order to make six new ones look derived. Each new score is
+instead placed against a \emph{named comparator already in the library}, with
+the argument stated where the archetype is derived below and in
+\Cref{app:typologies}.
+
+\subsection{Two retirements}
+\label{sec:retirements}
+
+Two typologies published at earlier versions no longer name a selectable
+intervention. Both are methodology changes rather than renames: each carried
+cited values and each appeared in a golden scenario.
+
+\paragraph{Schoolyard greening is retired.} The source document is explicit
+that a schoolyard is a \emph{land-use context}, not an intervention. Keeping it
+would have meant asking the user ``what is the land use here?'' and then
+offering, as an intervention, the land use they had just described. A school
+site is instead offered the real interventions that suit it --- \num{72} of the
+\num{110} entries name a school among their land uses --- through the
+availability matrix of \Cref{sec:availability}. The evidence that supported
+the retired typology is the same evidence supporting the small green area with
+trees, which the catalogue's green playground entry inherits; nothing was
+discarded except the duplicated question.
+
+\paragraph{The mixed NbS package is retired} in favour of real packages
+(\Cref{sec:packages}). The finding it encoded --- that no retrieved source
+quantifies super-additive cooling --- has not changed and is not re-argued.
+What changed is that the tool no longer needs an opaque averaged card to
+express it: a user now selects the actual components, each is scored and shown
+individually, and the combination rules do the work the averaged card was
+standing in for.
 
 \subsection{How envelopes were derived}
 \label{sec:derivation}
@@ -130,7 +232,7 @@ nighttime effects are (\Cref{sec:limit-daytime}).}
 Three principles governed the derivation of an envelope from these estimates.
 
 \textbf{An envelope is not a prediction.} The lower bound represents a poorly
-performing instance of the typology; the upper bound represents a well-executed
+performing instance of the archetype; the upper bound represents a well-executed
 instance under favourable conditions. Site adjustment moves an assessment
 \emph{within} this envelope (\Cref{sec:cooling}); it does not extend it.
 
@@ -140,14 +242,14 @@ in many cases modelled under favourable assumptions, adopted upper bounds sit
 at or below the synthesis central estimate rather than above it.
 
 \textbf{Where sources disagree, the conservative value is adopted and the
-disagreement is documented} rather than averaged away. Two typologies ---
-green roof and green fa\c{c}ade --- rest on genuinely conflicting evidence, and
-both are treated in \Cref{sec:weak-points}.
+disagreement is documented} rather than averaged away. Three archetypes ---
+the green roof, the green fa\c{c}ade, and the large open water body --- rest on
+genuinely conflicting evidence, and all three are treated below.
 
-\subsection{Three calibration decisions that warrant reviewer attention}
+\subsection{Calibration decisions that warrant reviewer attention}
 \label{sec:calibration}
 
-Three decisions materially lowered the tool's headline numbers relative to a
+Four decisions materially lowered the tool's headline numbers relative to a
 naive reading of the literature. Each is stated here because each is
 contestable.
 
@@ -164,7 +266,7 @@ gives \qty{0.94}{\degreeCelsius} --- roughly \SI{72}{\percent} of the
 modelling-inclusive figure, for the one measure where both are available.
 
 Adopted upper bounds therefore sit at or below synthesis central estimates
-rather than above them. The clearest case is street tree planting: the
+rather than above them. The clearest case is the street tree canopy: the
 synthesis reports \qty{4.0(16)}{\degreeCelsius} for street trees in tropical
 climates, but the adopted ceiling is \qty{3.0}{\degreeCelsius}. The tropical
 figure carries a \qty{\pm 1.6}{\degreeCelsius} interval and describes
@@ -177,12 +279,13 @@ present it as one --- it is used to justify the \emph{direction} of the
 adjustment, not its size. A reviewer who considers the correction too
 aggressive, or not aggressive enough, is disputing exactly the right thing.
 
-\subsubsection{The mixed package does not claim super-additivity}
+\subsubsection{Packages do not claim super-additivity}
 \label{sec:super-additivity}
 
 An earlier draft of the methodology proposed a \qty{3.5}{\degreeCelsius}
-ceiling for the mixed NbS package, on the intuition that combining measures
-should outperform any single measure. That value was rejected.
+ceiling for a combined intervention package, on the intuition that combining
+measures should outperform any single measure. That value was rejected, and the
+rejection survives the move to real packages unchanged.
 
 No retrieved source quantifies super-additive cooling from combining
 interventions. \textcite{gunawardena2017} describes green and blue features as
@@ -191,15 +294,16 @@ offering synergistic benefits, but qualitatively and without quantification.
 all; its best-performing individual measures cluster at
 \SIrange{2.0}{3.0}{\degreeCelsius}.
 
-The envelope is therefore capped at \qty{1.0}{--}\qty{3.0}{\degreeCelsius}, the
-best-evidenced single-measure ceiling. Claiming that a package outperforms its
-strongest component would be an unsourced assumption placed at exactly the
-point where a user is most likely to select it. The package's genuine advantage
-is expressed where evidence supports it --- breadth of co-benefits and
-robustness across varying site conditions --- and not as additional degrees.
+A package's reported temperature is therefore \textbf{capped at its
+best-evidenced component and never summed} (\Cref{sec:packages}). Claiming that
+a package outperforms its strongest component would be an unsourced assumption
+placed at exactly the point where a user is most likely to select it. The
+package's genuine advantage is expressed where evidence supports it --- breadth
+of co-benefits, which are unioned across components --- and not as additional
+degrees.
 
-\subsubsection{Green roofs and green fa\c{c}ades are the weakest points, and
-are labelled as such}
+\subsubsection{Green roofs and green fa\c{c}ades are the weakest inherited
+points, and are labelled as such}
 \label{sec:weak-points}
 
 \paragraph{Green roof.} Three sources point in different directions.
@@ -216,7 +320,7 @@ differ: a green roof's thermal benefit is concentrated at roof level and inside
 the building beneath, and it does not propagate to the street canyon in the way
 city-scale albedo and evapotranspiration changes would. The
 \SIrange{0.3}{3}{\kelvin} figure is therefore \textbf{not} used as a site-level
-typology value. The adopted envelope of
+value. The adopted envelope of
 \SIrange{0.1}{1.0}{\degreeCelsius} sits near the bottom of the published
 spread, and the tool states in its output that green roof benefits are
 principally building-level rather than street-level.
@@ -237,31 +341,322 @@ canyon. This is a hypothesis, not a finding from either source, and it is
 labelled as such.
 
 Given an unresolved conflict between sources and a fivefold climate spread, the
-typology receives a conservative envelope of
+archetype receives a conservative envelope of
 \SIrange{0.3}{2.0}{\degreeCelsius}, an evidence confidence rating of
 \emph{low}, and an explicit caveat in the tool's output. Its confidence rating
 also caps the cooling-block confidence at medium regardless of how complete the
-user's inputs are (\Cref{sec:evidence-propagation}).
+user's inputs are (\Cref{sec:evidence-propagation}). Eleven catalogue entries
+inherit it, which makes it the second most widely inherited class in the
+library and the one whose weakness reaches the most results.
 
-\paragraph{And one further weak point.} Rain garden / bioswale deserves the
-same flag. No retrieved source quantifies air-temperature cooling for rain
-gardens or bioswales specifically. \textcite{keravec2026} offers no
-bioswale-specific estimate, and its neighbouring categories --- green areas at
+\paragraph{And one further weak point.} Bioretention deserves the same flag. No
+retrieved source quantifies air-temperature cooling for rain gardens or
+bioswales specifically. \textcite{keravec2026} offers no bioswale-specific
+estimate, and its neighbouring categories --- green areas at
 \qty{2.0}{\degreeCelsius}, water bodies at \qty{2.1}{\degreeCelsius} --- are
 not transferable to a small drainage feature.
 \textcite{gunawardena2017} identifies tree-dominated greenspace as delivering
 heat-stress relief and does not identify small blue features as significant
 coolers. The adopted envelope of \SIrange{0.1}{0.8}{\degreeCelsius} is a
 reasoned lower bound from adjacent evidence, flagged low confidence, and the
-tool reports this typology's primary benefits as stormwater management and
+tool reports this archetype's primary benefits as stormwater management and
 biodiversity rather than cooling.
 
-\subsection{Suitability conditions}
+\subsubsection{Newer, broader evidence is deliberately not adopted wholesale}
+\label{sec:non-adoption}
+
+\textcite{kumar2024} is a systematic review screening \num{27486} papers to
+\num{202} analysed, covering \num{51} green--blue infrastructure types. It
+post-dates the calibration of the twelve inherited archetypes, which makes it
+the sharpest available external test of them, and it plays two distinct roles
+in this methodology.
+
+\textbf{As a validation}, it reports street trees at up to
+\qty{2.8}{\degreeCelsius} by in-situ monitoring --- inside the tool's existing
+\SIrange{0.5}{3.0}{\degreeCelsius} envelope. Newer and broader evidence
+therefore supports the conservative calibration rather than overturning it,
+which is the outcome a conservative calibration is supposed to produce and is
+worth recording when it happens.
+
+\textbf{As a non-adoption}, the same review reports means well above the tool's
+envelopes for other types: green walls at
+\qty{4.1(42)}{\degreeCelsius}, vegetated balconies at
+\qty{3.8(27)}{\degreeCelsius}, and botanical gardens at
+\qty{5.0(35)}{\degreeCelsius}. These are \textbf{not} adopted. Taking them
+selectively would break internal consistency --- vegetated balconies would
+outscore street trees --- and adopting them wholesale is a full recalibration of
+the library, which would require its own sensitivity analysis and its own
+version. It is recorded here and in the decision log as a candidate for a
+future methodology review, not smuggled into this one. Note also that the
+green-wall figure's standard deviation exceeds its mean.
+
+A reviewer who believes the tool should adopt these figures is disputing
+something specific and answerable, which is why the non-adoption is stated
+rather than left implicit in a set of numbers that simply happen to be lower.
+
+\subsection{The four archetypes retrieved for this version}
+\label{sec:new-archetypes}
+
+Each of the four exists because the catalogue contains entries that would
+otherwise have inherited an envelope belonging to a different body of study. In
+two cases that inheritance would have overstated the entry roughly threefold.
+
+\subsubsection{The large open water body, and one envelope that moved at
+implementation}
+\label{sec:water-body}
+
+The large open water body archetype --- inherited by urban lake restoration,
+living shorelines, and coastal ecological corridors --- ships at
+\SIrange{0.1}{3.0}{\degreeCelsius}, not the
+\SIrange{0.5}{3.0}{\degreeCelsius} proposed when this release was designed.
+
+\begin{keynote}
+\noindent\textbf{A design may be approved; a citation is only settled once it
+has been read.}
+
+The approved design attributed a cooling magnitude near
+\qty{2}{\degreeCelsius} to \textcite{yao2023a}. Source verification, carried out
+before the value was allowed into configuration, established that the paper
+reports no such figure: it measures a \SIrange{0.1}{0.6}{\degreeCelsius}
+daytime cool island at urban lakes in two humid subtropical cities --- an order
+of magnitude below the attributed value --- alongside a
+\SIrange{1.2}{1.3}{\degreeCelsius} \emph{heat} island at night.
+
+Holding the floor at \qty{0.5}{\degreeCelsius} would have made the tool claim
+more than its most direct field evidence supports, which is precisely the
+inflation the clipping rule of \Cref{sec:cooling} exists to prevent, and it
+would have shipped a citation that did not say what the configuration claimed it
+said. The floor was therefore lowered to the measured minimum.
+
+Four further citation corrections were made in the same verification pass, none
+of which moved a value: an author list, a nocturnal-warming figure conflated
+between two papers by the same first author, a study of two parks under drought
+that had been described as a study of allotment gardens, and a
+mean-radiant-temperature range quoted more roundly than the source states. The
+verification policy of \Cref{app:verification} is what caught all five, and it
+is reported here rather than silently repaired because a methodology that only
+publishes its successful checks is not publishing a check at all.
+\end{keynote}
+
+The resulting envelope spans a factor of thirty, and the width is the finding
+rather than a defect. A remote-sensing-inclusive meta-analysis of 27 studies
+gives a pooled \qty{2.5}{\kelvin} (\SIrange{1.9}{3.2}{\kelvin} at
+\SI{95}{\percent}) \parencite{volker2013}, while direct field measurement of
+actual urban lakes gives \SIrange{0.1}{0.6}{\degreeCelsius}
+\parencite{yao2023a}; and \textcite{ampatzidis2020} identifies remote sensing
+as the overestimating measurement mode. A narrower envelope would have to pick
+a side that the evidence does not support picking, so the tool reports the
+disagreement and its output caveat says so in as many words rather than leaving
+a reader to wonder why the range is so wide.
+
+The ceiling is unchanged at \qty{3.0}{\degreeCelsius}, on
+\textcite{keravec2026}'s \qty{2.1}{\degreeCelsius} for water bodies and the
+upper bound of the \textcite{volker2013} confidence interval. The base score of
+75 is placed below the blue-green corridor at 85, because a water body alone
+lacks the corridor's canopy component --- the corridor's envelope rests on the
+canopy evidence as much as on the water evidence --- and because its
+field-measured daytime performance is weak.
+
+\subsubsection{Small constructed water, and the interpolation the engine refuses}
+\label{sec:small-water}
+
+Constructed wetlands, retention ponds, detention basins, water squares,
+floating wetlands, and roof wetlands would naturally have inherited the
+blue-green corridor at \SIrange{1.0}{3.0}{\degreeCelsius} on family resemblance
+--- they are water, and water cools. Three independent lines say otherwise for
+\emph{small constructed} water.
+
+\textcite{jacobs2020} simulates 16 representative urban water bodies and reports
+afternoon air temperature in surrounding spaces reduced by typically
+\qty{0.2}{\degreeCelsius}, maximum \qty{0.6}{\degreeCelsius}; synthesising 20
+further papers, 14 of them (\SI{70}{\percent}) report an effect of
+\qty{1}{\degreeCelsius} or less, and the paper concludes that the local thermal
+effect of small water bodies ``can be considered negligible in design
+practice''. \textcite{yao2023b} measures an urban pond at
+\qty{0.6}{\degreeCelsius} of daytime cooling against a reference site, with
+\qty{1.8}{\degreeCelsius} of nocturnal \emph{warming}.
+\textcite{ampatzidis2020} adds that sensible cooling can be offset by increased
+water-vapour content. The adopted envelope is
+\SIrange{0.0}{1.0}{\degreeCelsius}, with a genuine zero floor on
+\textcite{jacobs2020}'s own conclusion, and a base score of 40 --- below the
+extensive green roof at 45, because the two share a ceiling near
+\qty{1.0}{\degreeCelsius} but this class has a true zero floor and the roof does
+not. Without the split, six catalogue entries would have been overstated
+roughly threefold.
+
+\begin{keynote}
+\noindent\textbf{The two water archetypes are never interpolated between by
+area.} They are separate bodies of study, not two points on a published
+dose--response curve: the size-threshold literature for water bodies is
+land-surface-temperature only, and no published curve connects the two on air
+temperature.
+
+An area-based interpolation would look eminently reasonable and would be
+unsourced. The engine therefore does not perform one, and the test suite asserts
+its absence by scoring the same constructed wetland on two sites differing in
+area by a factor of \num{2500} and requiring an identical ceiling, so that a
+future edit cannot introduce it quietly.
+\end{keynote}
+
+\subsubsection{Non-canopy vegetation, and the surface/air conflation}
+\label{sec:non-canopy}
+
+Planting beds, groundcover, pocket meadows, roof meadows, and green medians ---
+seven entries --- inherit a class of their own rather than the tree-based
+classes, on the strength of one study that measures both metrics on the same
+plots. \textcite{armson2012} found that grass reduced maximum \emph{surface}
+temperature by up to \qty{24}{\degreeCelsius} while having little effect upon
+\emph{globe} temperature, whereas shading reduced globe temperature by
+\SIrange{5}{7}{\degreeCelsius}, and concludes that grass ``has little effect
+upon local air or globe temperatures \dots\ whereas tree shade can provide
+effective local cooling''.
+
+That contrast is decisive precisely because it is measured on the same plots: a
+\qty{24}{\degreeCelsius} surface reduction alongside almost no globe-temperature
+change is not a small effect measured badly, it is a large effect on the wrong
+quantity. It is also the mechanism by which most impressive published figures
+for grass cooling are generated, and the tool's output caveat tells the user
+exactly that.
+
+The floor is a genuine zero, on \textcite{gill2013}, which models grass cooling
+as reduced or lost in summer droughts when soils dry out, and on
+\textcite{kraemer2022}, whose field measurement under the 2018--2019 Central
+European drought found the grass-dominated park to be the hottest area during
+the daytime while the tree-dominated park stayed consistently cooler. The
+adopted envelope is \SIrange{0.0}{1.5}{\degreeCelsius} with a base score of 50,
+below the small green area with trees at 65, which shares the
+\qty{1.5}{\degreeCelsius} ceiling but adds the canopy shade that
+\textcite{armson2012} shows is doing the work.
+
+\subsubsection{Vegetated shade structures, and a figure that does not transfer}
+\label{sec:shade-structure}
+
+Green pergolas and green waiting shelters take
+\SIrange{0.0}{2.5}{\degreeCelsius} at \emph{low} confidence, from
+\textcite{chafer2020} --- the only measured comparison of a vine-covered
+pergola against an identical bare support, giving a maximum daytime difference
+of \qty{2.5}{\degreeCelsius} for west-oriented pergolas in a Mediterranean
+climate. That paper's abstract headlines ``up to \qty{5}{\degreeCelsius}'', but
+that figure compares greenery against \emph{unshaded} conditions rather than
+against the bare pergola; the like-for-like contrast is the one adopted, and the
+discrepancy is recorded in \Cref{app:verification} so that a reviewer checking
+the abstract does not read an error into the ceiling.
+
+\begin{keynote}
+\noindent\textbf{The ``shading devices \qty{2.0}{\degreeCelsius}'' figure from
+\textcite{keravec2026} is deliberately not used here.} That category aggregates
+area-scale shading, where the cooled air volume persists against advection; a
+pergola shades roughly \qty{10}{\metre\squared}. Applying the figure would rate
+a pergola above measured tree canopy, which \textcite{ouyang2024} puts at
+\qty{1.42}{\degreeCelsius}.
+
+The same figure \emph{is} used by the permeable shaded hardscape archetype,
+where the scale matches. The distinction is scale, not scepticism about the
+source, and the test suite asserts both halves of it.
+\end{keynote}
+
+\textcite{ouyang2024} also separates the two axes that matter for shade
+structures, measuring an air temperature reduction of
+\qty{1.42}{\degreeCelsius} for natural shade against
+\qty{1.31}{\degreeCelsius} for artificial, alongside mean radiant temperature
+reductions of \qty{15.93}{\degreeCelsius} and \qty{13.71}{\degreeCelsius}
+respectively --- an order of magnitude apart. Users will feel substantially
+cooler under a pergola than the air-temperature figure suggests, and the output
+caveat says so: under-selling an intervention is as misleading as over-selling
+it, only in the other direction. \textcite{colter2019} supplies the ordering
+that keeps the base score at 55, well below the permeable shaded hardscape at
+70: sparse and open canopies group with solid constructed shade rather than
+with dense canopy.
+
+\subsection{The two derived archetypes, and a citable absence}
+\label{sec:derived-archetypes}
+
+Retrieval established that no class-specific cooling evidence exists for
+productive landscapes. Both productive archetypes are therefore \emph{derived}
+--- bounded from an adjacent class with the bounding argument stated --- and
+both are rated \emph{low} confidence for that reason.
+
+What makes this different from the bioretention case, where no source was found
+at all, is that here \textbf{the absence itself is citable}.
+\textcite{kumar2024} places allotments and city farms among the least-studied
+of its \num{51} infrastructure types, with insufficient data to quantify their
+cooling. The methodology can therefore state the gap as a finding rather than
+as a search failure, which is a materially stronger position.
+
+\textbf{Productive tree canopy} --- urban orchards, food forests, agroforestry
+systems --- takes \SIrange{0.5}{2.0}{\degreeCelsius} at a base score of 60,
+bounded \emph{below} dense tree canopy on two grounds: orchard and agroforestry
+canopies are deliberately kept open for access and yield, so they sit below the
+\SI{40}{\percent} canopy-cover inflection identified by \textcite{ziter2019},
+and \textcite{colter2019} establishes that sparse canopies do not perform like
+closed ones. The envelope matches the established park at a lower evidence
+rating: the same range, honestly labelled as inherited rather than measured.
+
+\textbf{Productive ground-level planting} --- community gardens, allotments,
+school gardens, urban farms, productive roofs, rooftop farms --- inherits the
+non-canopy vegetation envelope of \SIrange{0.0}{1.5}{\degreeCelsius} at a base
+score of 45, below non-canopy vegetation at 50, because cultivated ground-level
+cover is periodically broken between crops.
+
+\begin{keynote}
+\noindent\textbf{The best allotment-garden measurement available cannot be used
+for a value.} \textcite{rost2020} measured 13 Berlin allotment complexes at an
+average \qty{2.7}{\kelvin} cooler than built-up areas --- \emph{at night}. The
+restriction is in the study's title, abstract, and design, and this tool reports
+daytime air temperature. The study is cited as evidence of what the
+productive-landscape literature does and does not measure, and for no numeric
+value.
+
+\textbf{Irrigation is not credited as extra degrees.} \textcite{cheung2022}
+documents irrigation as \emph{sustaining} performance through drought rather
+than raising it, measuring agricultural cooling at
+\SIrange{0.09}{0.43}{\degreeCelsius} against modelled potentials of
+\SIrange{2.1}{2.5}{\degreeCelsius}, and predicting an increase in the daily
+\emph{minimum} temperature as stored heat is released overnight. One nuance is
+carried carefully: that measured-versus-modelled gap is specific to
+\emph{agricultural field} studies, and the same paper measures
+\SIrange{-2}{-1}{\degreeCelsius} in irrigated urban parks, much closer to the
+modelled values. The methodology therefore does \emph{not} claim that models
+overstate irrigation cooling in general.
+\end{keynote}
+
+\subsection{Suitability conditions, inherited with twenty-one overrides}
 \label{sec:suitability}
 
-Each typology declares conditions under which it is unsuitable: a minimum
-viable site area, a soil requirement, an irrigation requirement, and any
-unsuitable climate zones. \Cref{app:typologies} lists these per typology.
+Each archetype declares the conditions under which an intervention is
+unsuitable: a minimum viable site area, a soil requirement, an irrigation
+requirement, and any unsuitable climate zones. Catalogue entries
+\textbf{inherit} these, with per-entry overrides only where the catalogue's own
+description of the entry makes an inherited value plainly wrong.
+
+Inventing a minimum area and a soil requirement for each of \num{110} entries
+would have manufactured exactly the precision the archetype model exists to
+avoid. There are \num{21} overrides in total, each listed with its reason in
+\Cref{app:typologies}, and \textbf{no new number enters the methodology through
+an override}: every replacement value --- \qtylist{20;50;200;500;1000;2000}
+{\metre\squared} --- is one already present in the cited library, borrowed from
+the archetype that established it. A test fails if the override list grows past
+\num{25} entries, because a long list would mean the inheritance ruling had
+quietly been abandoned.
+
+The overrides fall into three groups, and the second is the one worth reading.
+Area overrides correct a scale mismatch: the dense tree canopy's
+\qty{2000}{\metre\squared} describes the woodland its \emph{cooling evidence}
+comes from, not the footprint of a microforest on a constrained site. Soil
+overrides in the roof group set the requirement to \emph{none}, because a roof's
+growing medium is built rather than ground, and requiring ground soil on a roof
+would flag every roof entry whose archetype happens to be a ground-level class.
+And the four ground-rooted fa\c{c}ade entries override soil in the
+\emph{stricter} direction, to \emph{limited}, because the catalogue defines them
+as rooted in natural ground where the containerised living-wall archetype
+requires nothing --- an override that removes an option rather than adding one.
+
+\paragraph{Land-use context is not a second list.} The urban-context
+sub-indicator of \Cref{tab:suitability-rules} compares the site's land use
+against the entry's own land-use list, which is the availability matrix's list
+(\Cref{sec:availability}). An entry is therefore ``in context'' exactly where it
+is offered --- one list, one meaning, and no opportunity for two lists to drift
+apart.
 
 When a disqualifying condition is met, the tool computes the assessment
 transparently but attaches a prominent \emph{``not suitable for this site''}
@@ -271,15 +666,16 @@ implausible intervention --- riparian restoration on a site with no water
 feature, for instance --- would misrepresent the finding as a matter of degree
 when it is a matter of kind.
 
-Unsuitable typologies nonetheless remain fully selectable. A user deliberately
-testing a hypothesis should not be overridden by the tool, and the flag
-follows the result through to the report regardless.
+Unsuitable entries nonetheless remain fully selectable, including entries the
+availability matrix did not offer for this site. A user deliberately testing a
+hypothesis should not be overridden by the tool, and the flag follows the result
+through to the report regardless.
 
 One suitability rule is worth singling out because it encodes a caveat that
 would otherwise be lost in prose. \textcite{gunawardena2017} notes that poorly
 designed bluespace may \emph{exacerbate} heat stress under oppressive humid
 conditions. Rather than leaving this as a written warning, the methodology
-encodes it as a climate-suitability penalty: blue-green typologies are
+encodes it as a climate-suitability penalty: blue-green archetypes are
 downgraded to the \emph{moderate} condition level in tropical-wet zones
 (\Cref{tab:climate-matrix}). A caveat that changes a number is a caveat that
 gets read.

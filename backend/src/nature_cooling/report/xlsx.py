@@ -130,6 +130,17 @@ def _results_sheet(sheet: Worksheet, content: ReportContent) -> None:
             write(block.title, sub_row.label, sub_row.value)
         if block.note is not None:
             write(block.title, "", block.note)
+    for component in content.package_rows:
+        marker = f" · {STRINGS['package_representative']}" if component.is_representative else ""
+        write(
+            STRINGS["package_heading"],
+            component.name,
+            f"{STRINGS['package_archetype']} {component.archetype} · "
+            f"{STRINGS['package_evidence']} {component.evidence} · "
+            f"{STRINGS['package_range']} {component.cooling_range} · "
+            f"{STRINGS['package_suitability']} {component.suitability}{marker}",
+        )
+    write(STRINGS["package_heading"], "", content.package_note)
     for name, score, nominal, applied in content.components:
         write(
             STRINGS["components_heading"],

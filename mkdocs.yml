@@ -68,9 +68,9 @@ nav:
   - Decision log: DECISIONS.md
   - V2 vision: V2-VISION.md
   - Release briefs:
-      - v1.2 — NbS catalogue & packages: V1.2-BRIEF.md
-      - v1.2 review pack — curated catalogue: V1.2-REVIEW-PACK.md
-      - v1.2 review pack — archetypes & availability: V1.2-REVIEW-PACK-2.md
+      - v2.0 — NbS catalogue & packages: V1.2-BRIEF.md
+      - v2.0 review pack — curated catalogue: V1.2-REVIEW-PACK.md
+      - v2.0 review pack — archetypes & availability: V1.2-REVIEW-PACK-2.md
       - Phase 3 — API service: PHASE-3-BRIEF.md
       - Phase 4 — Web application: PHASE-4-BRIEF.md
       - Phase 5 — Report export: PHASE-5-BRIEF.md

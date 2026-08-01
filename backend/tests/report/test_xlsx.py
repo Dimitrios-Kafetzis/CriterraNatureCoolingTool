@@ -11,7 +11,7 @@ from openpyxl import load_workbook
 from openpyxl.worksheet.worksheet import Worksheet
 
 from nature_cooling.report import build_xlsx_report
-from nature_cooling.report.catalog import STRINGS
+from nature_cooling.report.catalog import FIELD_LABELS, STRINGS
 from nature_cooling.report.content import build_content
 
 
@@ -95,6 +95,55 @@ def test_results_sheet_flattens_every_block_row(render_args: Any) -> None:
     assert (heat_card.title, STRINGS["category"], heat_card.category) in flat
     component_rows = [row for row in rows if row[0] == STRINGS["components_heading"]]
     assert len(component_rows) == len(content.components)
+
+
+def test_results_sheet_itemises_every_package_component(render_args: Any) -> None:
+    """D-038: the workbook carries the component breakdown, not only the headline.
+
+    The workbook has no page budget, so it itemises a package of one as readily
+    as a package of five — the PDF's decision to skip the table for a single
+    intervention is a layout choice, not a data one.
+    """
+    args = render_args("s02_tropical_wet_informal_settlement_package")
+    content = build_content(**args)
+    sheet = load_workbook(BytesIO(build_xlsx_report(**args)))[STRINGS["sheet_results"]]
+    rows = _cells(sheet)
+    package_rows = [row for row in rows if row[0] == STRINGS["package_heading"]]
+    # One row per component, plus the combination-rule note.
+    assert len(package_rows) == len(content.package_rows) + 1
+    assert package_rows[-1][2] == content.package_note
+
+    by_name = {row[1]: row[2] for row in package_rows[:-1]}
+    for component in content.package_rows:
+        rendered = by_name[component.name]
+        assert component.archetype in rendered
+        assert component.evidence in rendered
+        assert component.cooling_range in rendered
+        # The workbook has no page limit, so it always carries every field.
+        assert component.suitability in rendered
+        marked = STRINGS["package_representative"] in rendered
+        assert marked == component.is_representative
+
+
+def test_results_sheet_states_the_single_intervention_case_too(render_args: Any) -> None:
+    args = render_args("s01_temperate_street_trees_worked_example")
+    sheet = load_workbook(BytesIO(build_xlsx_report(**args)))[STRINGS["sheet_results"]]
+    values = {row[2] for row in _cells(sheet)}
+    assert STRINGS["package_single"] in values
+
+
+def test_inputs_sheet_labels_the_availability_only_answers(render_args: Any) -> None:
+    """D-044.1: the four gating answers are disclosed as feeding no score."""
+    args = render_args("s24_productive_landscape_evidence_gap")
+    sheet = load_workbook(BytesIO(build_xlsx_report(**args)))[STRINGS["sheet_inputs"]]
+    labels = [row[0] for row in _cells(sheet)]
+    for field in (
+        "includes_railway",
+        "existing_woodland",
+        "waterfront_type",
+        "productive_governance",
+    ):
+        assert FIELD_LABELS[field] in labels
 
 
 def test_results_sheet_carries_flags_notes_and_exclusions(render_args: Any) -> None:

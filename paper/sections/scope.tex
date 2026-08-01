@@ -4,19 +4,23 @@
 \subsection{What the tool is}
 
 \Tool{} is a screening-level, multi-criteria decision-support instrument. It
-converts a structured description of an urban site and one proposed
-nature-based intervention into comparable scores and indicative quantitative
+converts a structured description of an urban site and one or more proposed
+nature-based interventions into comparable scores and indicative quantitative
 estimates, so that early planning and investment decisions can be made on a
 transparent, evidence-referenced basis.
 
-A user describes a site through six input groups, selects one of fourteen
-intervention typologies, and receives a Heat Priority Index, a Cooling
+A user describes a site through six input groups, selects one or more of the
+\num{110} catalogue entries the tool offers for that site
+(\Cref{sec:typologies}), and receives a Heat Priority Index, a Cooling
 Potential Score with an indicative daytime pedestrian-level air temperature
 reduction range, derived cooling-energy and greenhouse-gas estimates, cost
 outputs where cost data has been supplied, equity and co-benefit scores, a
 single NbS Cooling Opportunity Score for comparing options, per-block
 confidence ratings, and an itemised list of every default the engine applied.
-Interventions for the same site can be assessed and compared side by side.
+Where several interventions are selected, each is scored and reported
+individually and the package's headline outputs are combined under the rules of
+\Cref{sec:packages}, which never sum a temperature. Interventions and packages
+for the same site can be assessed and compared side by side.
 
 \subsection{What the tool is not}
 \label{sec:not}
@@ -118,8 +122,12 @@ rules are enforced by continuous integration rather than by review convention
 
 The commitment to honest uncertainty is the one that most visibly reduces the
 tool's apparent authority. A screening instrument that reported single numbers
-would look more decisive and would be easier to put in a slide. The adopted
-cooling envelopes span factors of three to ten, and the climate-differentiated
+would look more decisive and would be easier to put in a slide. The narrowest
+adopted cooling envelope spans a factor of three; the widest with a non-zero
+floor, the large open water body, spans a factor of thirty because remote
+sensing and field measurement disagree by an order of magnitude
+(\Cref{sec:water-body}); and four archetypes carry a genuine zero floor,
+for which no ratio is defined at all. The climate-differentiated
 estimates
 in \textcite{keravec2026} carry uncertainty intervals that in several cases
 approach or exceed $\pm\,$\qty{1}{\degreeCelsius}, and in the case of street

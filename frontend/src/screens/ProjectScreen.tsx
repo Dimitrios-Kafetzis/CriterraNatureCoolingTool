@@ -51,6 +51,7 @@ export function ProjectScreen() {
   return (
     <div>
       <h1>{project.name}</h1>
+      <MigrationNotes notes={project.migrated_notes ?? []} />
       <h2>{messages.project.assessments}</h2>
       {project.assessments.length === 0 ? (
         <p className="muted">{messages.project.empty}</p>
@@ -130,6 +131,33 @@ export function ProjectScreen() {
         )}
       </div>
     </div>
+  );
+}
+
+/**
+ * What a storage migration changed, itemised (D-029, D-044.2).
+ *
+ * The notes are the service's own text and are rendered verbatim. They exist
+ * precisely so a user whose saved answers were reshaped is told what happened
+ * rather than discovering it, so they are shown on opening the project, not
+ * hidden behind a disclosure.
+ */
+export function MigrationNotes({ notes }: { notes: string[] }) {
+  if (notes.length === 0) return null;
+  return (
+    <section
+      className="notice notice--warn"
+      role="status"
+      aria-label={messages.project.migratedHeading}
+    >
+      <strong>{messages.project.migratedHeading}</strong>
+      <p className="small">{messages.project.migratedIntro}</p>
+      <ul>
+        {notes.map((note, index) => (
+          <li key={`${index}-${note}`}>{note}</li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

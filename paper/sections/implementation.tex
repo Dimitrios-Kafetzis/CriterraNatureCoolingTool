@@ -24,10 +24,19 @@ Every methodology value lives in schema-validated, version-stamped YAML under
 \textbf{File} & \textbf{Content} \\
 \midrule
 \texttt{nbs\_typologies.yaml} &
-The fourteen typologies: base cooling scores, temperature envelopes, evidence
-confidence, cooling mechanisms, suitability conditions, co-benefit defaults,
-and a \texttt{sources} array carrying, for each citation, the source key and
-the specific finding it supports. \\
+Both levels of the library (\Cref{sec:archetypes}): the \num{18} cooling
+archetypes with their base cooling scores, temperature envelopes, evidence
+confidence, suitability conditions, co-benefit defaults, output caveats, and a
+\texttt{sources} array carrying for each citation the source key and the
+specific finding it supports; and the \num{110} catalogue entries with their
+identity, family, kind, primary cooling mechanism, availability, the archetype
+each inherits, and the \num{21} per-entry suitability overrides. \\
+\addlinespace
+\texttt{availability.yaml} &
+The gating policy of \Cref{sec:availability}: what each of the four site
+conditions means, what an \emph{unanswered} condition means, what each
+assessment scale offers, the package size warning threshold, and the land-use
+mapping counts. It carries no performance value and feeds no score. \\
 \addlinespace
 \texttt{weights.yaml} &
 Every weighted sum in \Cref{sec:formulas}, with its rationale, plus the
@@ -57,7 +66,7 @@ The deterministic text fragments from which recommendations are composed, and
 the conditions under which climate-dependent caveats fire. \\
 \addlinespace
 \texttt{derived\_scores.yaml} &
-The derivation rules fixed at version \methver{}: suitability and equity
+The derivation rules fixed at version 2026.08.01: suitability and equity
 sub-indicator rules, cost-feasibility payback brackets, investment-readiness
 rules, time-to-benefit buckets, the confidence field-to-block mapping, and the
 score interpretation bands. \\
@@ -70,8 +79,8 @@ Changing the methodology never requires changing code, which has three
 consequences. A deployment can rebalance the weights it disagrees with ---
 including the equity-forward stance of \Cref{sec:effective-weights} --- without
 forking the software. A reviewer can read the complete parameterisation of the
-tool in seven short files rather than by tracing constants through source
-code.
+tool in nine configuration files rather than by tracing constants through
+source code.
 And the diff of a methodology change is legible: it shows values moving, not
 logic moving.
 
@@ -87,18 +96,23 @@ described planned software in the present tense would forfeit precisely the
 credibility this section exists to establish.
 
 \textbf{Implemented and running in continuous integration:} the configuration
-layer --- schema-validated loading of all eight methodology files, version
+layer --- schema-validated loading of all nine methodology files, version
 lock-step enforcement, and the citation cross-check against the bibliography ---
-the six evidence rules of \Cref{sec:evidence-rules}; and, as of version
-\methver{}, the calculation engine itself: the input and result schemas, one
-scoring module per formula family, branched confidence, the deterministic
-recommendation composer, and the orchestrating entry point, under a
-\SI{100}{\percent} line-coverage gate with twenty hand-verified golden
-scenarios, a byte-identical determinism test, and the executed sensitivity
-analysis of \Cref{sec:sensitivity-results}.
+the six evidence rules of \Cref{sec:evidence-rules}; the calculation engine
+itself, comprising the input and result schemas, one scoring module per formula
+family, the availability matrix, the package combination rules of
+\Cref{sec:packages}, branched confidence, the deterministic recommendation
+composer, and the orchestrating entry point, under a \SI{100}{\percent}
+line-coverage gate with \num{24} hand-verified golden scenarios, a
+byte-identical determinism test, and the executed sensitivity analysis of
+\Cref{sec:sensitivity-results}; the report and workbook export; the HTTP API
+with its explicit stored-draft migration (\Cref{sec:governance}); and the web
+interface.
 
-\textbf{Specified but not yet implemented:} the API layer and the web
-interface. These are Phases 3 and 4.
+The claims in this section are about what the repository contains, and a
+reviewer should check them by cloning it. Where this paper describes a
+behaviour the engine is \emph{specified} to have rather than one it exhibits,
+it says so.
 
 Every number in the worked example of \Cref{sec:worked-example} was first
 computed by hand from the specification and is now also asserted, digit for
@@ -116,21 +130,21 @@ The calculation engine is specified as a pure function
 \]
 
 with no input or output, no network access, no global mutable state, and no
-stochastic component. Determinism will therefore be a structural property of
-the design rather than a behaviour that testing hopes to confirm: there is no
+stochastic component. Determinism is therefore a structural property of the
+design rather than a behaviour that testing hopes to confirm: there is no
 source of variation for a test to detect. A determinism test is nonetheless
-specified, on the principle that a structural guarantee worth relying on is
-worth verifying.
+run, on the principle that a structural guarantee worth relying on is worth
+verifying.
 
-Each result is to record both the engine version and the methodology version
-that produced it, and comparisons between results computed under differing
-methodology versions are to raise a warning rather than being silently rendered
-side by side.
+Each result records both the engine version and the methodology version that
+produced it, and comparisons between results computed under differing
+methodology versions raise a warning rather than being silently rendered side
+by side.
 
-This contract is a design commitment published in advance of its
-implementation, which is the point at which it can still be criticised
-cheaply. A reviewer who believes the contract is too strong, too weak, or
-unenforceable is invited to say so now.
+The contract was published in advance of its implementation, which is the point
+at which it could still be criticised cheaply, and it has not been relaxed
+since. A reviewer who believes it is too strong, too weak, or unenforceable is
+invited to say so.
 
 \subsection{Machine-enforced evidence rules}
 \label{sec:evidence-rules}
@@ -140,10 +154,11 @@ Configuration loading fails --- and continuous integration fails with it --- if
 any of the following holds.
 
 \begin{enumerate}
-  \item \textbf{A typology carries no citation.} The schema requires a
-  non-empty \texttt{sources} array on every typology, and each entry must carry
-  both a source key and the finding it supports. An uncited performance value
-  cannot be loaded.
+  \item \textbf{A performance value carries no citation.} The schema requires a
+  non-empty \texttt{sources} array on every archetype, and each entry in it must
+  carry both a source key and the finding it supports. Because catalogue entries
+  inherit their values, the check runs over the \emph{resolved} library, so an
+  entry cannot acquire an uncited value through inheritance either.
 
   \item \textbf{A citation points at an unrecorded source.} Every
   \texttt{sources[].key} appearing anywhere in the configuration tree is
@@ -158,7 +173,7 @@ any of the following holds.
   methodology version moves as a single unit or not at all.
 
   \item \textbf{A temperature envelope is inverted or implausible.} The maximum
-  must not fall below the minimum, and no typology may declare a maximum above
+  must not fall below the minimum, and no resolved entry may declare a maximum above
   \qty{3.5}{\degreeCelsius}. The upper guard encodes a methodology judgment: no
   retrieved source supports a daytime pedestrian-level air temperature
   reduction above roughly \qty{3}{\degreeCelsius} for a single site-level
@@ -167,9 +182,10 @@ any of the following holds.
   which makes the change visible in review.
 
   \item \textbf{The low-confidence declarations are removed.} A test asserts
-  that green fa\c{c}ade, rain garden / bioswale, and courtyard greening remain
-  declared as low evidence confidence, guarding against a future edit quietly
-  promoting a weakly evidenced typology.
+  that the green fa\c{c}ade / living wall, bioretention, the enclosed courtyard,
+  the vegetated shade structure, and both productive archetypes remain declared
+  as low evidence confidence, guarding against a future edit quietly promoting a
+  weakly evidenced class.
 
   \item \textbf{Default costs appear.} A test asserts that the country defaults
   ship no cost or emission values pending verification, and that the typology
@@ -185,16 +201,16 @@ produce a subtly wrong tool; they produce a red build.
 \subsection{Testing and continuous integration}
 \label{sec:testing}
 
-\paragraph{The configuration layer.} The test suite asserts that all
-fourteen typologies load and validate,
-that every configuration file shares one version stamp, that every typology
-carries at least one citation with a stated finding, that every source key
-resolves against the bibliography, that temperature envelopes are ordered and
-below the \qty{3.5}{\degreeCelsius} guard, that the three low-confidence
-typologies remain declared as such, and that no default cost or unverified
-emission value ships. Negative cases are tested explicitly: an invented
-citation key, a version mismatch, an uncited typology, and an inverted envelope
-must each fail the load.
+\paragraph{The configuration layer.} The test suite asserts that all \num{18}
+archetypes and all \num{110} entries load, resolve, and validate, that every
+entry names an archetype that exists, that every configuration file shares one
+version stamp, that every resolved entry carries at least one citation with a
+stated finding, that every source key resolves against the bibliography, that
+temperature envelopes are ordered and below the \qty{3.5}{\degreeCelsius}
+guard, that the six low-confidence archetypes remain declared as such, and that
+no default cost or unverified emission value ships. Negative cases are tested
+explicitly: an invented citation key, a version mismatch, an uncited class, and
+an inverted envelope must each fail the load.
 
 These are the six evidence rules of \Cref{sec:evidence-rules}. Continuous
 integration runs linting, format checking, strict static type checking, and the
@@ -202,14 +218,28 @@ full test suite --- configuration, scoring, confidence, recommendation,
 scenarios, determinism --- with the \SI{100}{\percent} engine coverage gate on
 every push and pull request, across supported Python versions.
 
-\paragraph{Delivered in Phase 2.} Unit tests for every scoring module, with
-the \SI{100}{\percent} engine line-coverage target enforced as a build gate;
-twenty golden scenarios, each a stored input with a hand-verified expected
-output and its derivation, serving as regression armour against unintended
+\paragraph{The engine.} Unit tests cover every scoring module, with the
+\SI{100}{\percent} engine line-coverage target enforced as a build gate;
+\num{24} golden scenarios, each a stored input with a hand-verified expected
+output and its derivation, serve as regression armour against unintended
 methodology drift and as the basis of the sensitivity analysis of
-\Cref{sec:sensitivity-results}; and a determinism test asserting
-byte-identical results across repeated runs and freshly loaded configurations.
-API contract tests follow with Phase 3.
+\Cref{sec:sensitivity-results}; and a determinism test asserts byte-identical
+results across repeated runs and freshly loaded configurations.
+
+\paragraph{Three methodology properties are asserted as tests rather than
+stated as prose}, because each is a rule a plausible future edit would break.
+\emph{Availability feeds no score:} one site is scored twice, with all four
+gating questions answered and with none of them answered, and the two results
+must be byte-identical (\Cref{sec:availability}). \emph{The two water
+archetypes are never interpolated by area:} the same constructed wetland scored
+on two sites differing in area by a factor of \num{2500} must report an
+identical ceiling (\Cref{sec:small-water}). And \emph{the area-scale shading
+figure does not transfer to pergola scale:} the vegetated shade structure must
+not cite it, while the permeable shaded hardscape must
+(\Cref{sec:shade-structure}). The nine published availability situation counts and the four
+land-use totals --- including the \num{72} entries that name \emph{school} in
+their land-use list --- are likewise asserted, so a land use silently losing
+its interventions fails the build.
 
 The ordering is deliberate rather than incidental. The evidence rules were
 implemented before the scoring code they protect, so that no scoring value can
@@ -238,13 +268,13 @@ tagged, public, immutable artefact rather than the current state of a codebase.
 It is worth being precise about the limits of these guarantees, since this
 section makes the strongest reproducibility claims in the paper.
 
-The arrangement guarantees, today, that every methodology value in the
-repository carries a citation to a recorded source, that no citation names a
-source the bibliography does not hold, and that a change to any value is
-versioned and visible across every file at once. Once the engine exists, it
-extends to the guarantee that the tool applies exactly the methodology
-described in this document. These are properties of internal consistency and
-traceability, not of correctness.
+The arrangement guarantees that every methodology value in the repository
+carries a citation to a recorded source, that no citation names a source the
+bibliography does not hold, that a change to any value is versioned and visible
+across every file at once, and --- since the engine and its coverage gate exist
+--- that the tool applies exactly the methodology described in this document.
+These are properties of internal consistency and traceability, not of
+correctness.
 
 It does \emph{not} guarantee that the methodology is correct, that the adopted
 envelopes are the right ones, or that the cited sources support the weight

@@ -12,13 +12,17 @@ const capped = (validateCapped as unknown as ValidateResponse).confidence;
 describe('ConfidencePanel', () => {
   it('renders each block level and completeness exactly as the engine previewed them', () => {
     render(<ConfidencePanel preview={partial} />);
-    // The recorded preview: cooling 30% low, hint promises medium via soil availability.
+    // The recorded preview: cooling 60% medium; equity 33.3% low, with a hint
+    // promising medium via either refuge-access field.
     const meter = screen.getByRole('img', {
       name: new RegExp(messages.confidence.completeness(partial.cooling.completeness_percent)),
     });
     expect(meter).toBeInTheDocument();
     const expectedHint = messages.confidence.hintRaises(
-      messages.fields.soil_availability!.label,
+      [
+        messages.fields.access_to_cooled_indoor_space!.label,
+        messages.fields.access_to_cool_outdoor_refuge!.label,
+      ].join(messages.confidence.hintOr),
       'Medium',
     );
     expect(screen.getByText(new RegExp(expectedHint))).toBeInTheDocument();

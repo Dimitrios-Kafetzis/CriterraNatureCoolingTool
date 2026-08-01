@@ -21,8 +21,14 @@ One quantity still rests on an assumption: the grid emission factor of
 \subsection{The illustrative site and intervention}
 
 A neighbourhood-scale street corridor in a dense, largely sealed inner-city
-area in a temperate climate. The proposed intervention is street tree planting
-(typology 01). \Cref{tab:we-inputs} gives the inputs.
+area in a temperate climate. The proposed intervention is a \emph{tree avenue}
+--- one of the \num{110} catalogue entries --- which inherits the
+\emph{street tree canopy} archetype (\Cref{tab:typologies}) and with it an
+envelope of \SIrange{0.5}{3.0}{\degreeCelsius}, a base cooling score of 75,
+and a \emph{high} evidence rating. Every performance number below is the
+archetype's, and the result says so. This is a package of one: the combination
+rules of \Cref{sec:packages} apply but have nothing to combine.
+\Cref{tab:we-inputs} gives the inputs.
 
 \begin{table}[htbp]
 \centering
@@ -52,7 +58,8 @@ Vulnerability & Population density                & High \\
            & Vulnerable population presence       & High \\
            & Access to cooled indoor space        & Low \\
 \addlinespace
-Intervention & Typology                           & Street tree planting (01) \\
+Intervention & Intervention selected                & Tree avenue \\
+           & Archetype inherited                  & Street tree canopy \\
            & New canopy area at maturity          & \qty{1200}{\metre\squared} \\
 \addlinespace
 Energy     & Nearby building cooling demand relevant & Yes \\
@@ -124,9 +131,9 @@ $f_{\mathrm{soilwater}} = 0.8$.
 \emph{Scale.} Assessment scale \emph{neighbourhood} maps to \emph{good}, so
 $f_{\mathrm{scale}} = 1.0$.
 
-\emph{Climate.} Street tree planting is a \emph{green}-family typology in a
-\emph{temperate} zone, which \Cref{tab:climate-matrix} rates \emph{good}, so
-$f_{\mathrm{climate}} = 1.0$.
+\emph{Climate.} The street tree canopy is a \emph{green}-family archetype and
+the site is in a \emph{temperate} zone, which \Cref{tab:climate-matrix} rates
+\emph{good}, so $f_{\mathrm{climate}} = 1.0$.
 
 By \Cref{eq:adjustment},
 
@@ -135,8 +142,8 @@ A = 0.40(1.0) + 0.25(0.8) + 0.20(1.0) + 0.15(1.0)
   = 0.400 + 0.200 + 0.200 + 0.150 = \mathbf{0.95}.
 \]
 
-Street tree planting has base cooling score $B = 75$ and envelope
-$[\tau_{\min}, \tau_{\max}] = [0.5,\, 3.0]$. By \Cref{eq:cps},
+The inherited street tree canopy archetype has base cooling score $B = 75$ and
+envelope $[\tau_{\min}, \tau_{\max}] = [0.5,\, 3.0]$. By \Cref{eq:cps},
 
 \[
 S_{\mathrm{cool}} = \clamp{75 \times 0.95} = \mathbf{71.25}.
@@ -165,8 +172,9 @@ $\clamp{1200/6000 \times 100} = \SI{20.0}{\percent}$.
 
 \paragraph{Energy.} All three preconditions of \Cref{sec:energy} hold: nearby
 building cooling demand is confirmed relevant, an annual demand of
-\qty{450000}{\kilo\watt\hour} is supplied, and street tree planting is flagged
-as capable of affecting adjacent building loads. By \Cref{eq:energy-range},
+\qty{450000}{\kilo\watt\hour} is supplied, and the street tree canopy archetype
+is flagged as capable of affecting adjacent building loads. By
+\Cref{eq:energy-range},
 
 \begin{align*}
 E_{\min} &= 450\,000 \times 0.50 \times 0.02 = \qty{4500}{\kilo\watt\hour\per\year}, \\
@@ -200,9 +208,9 @@ payback, and cost feasibility are all reported as \emph{not estimated}. Cost
 feasibility is therefore excluded from the final aggregation and its weight
 redistributed.
 
-\paragraph{Co-benefits.} Street tree planting carries library default levels of
-\emph{medium} biodiversity, \emph{medium} stormwater, \emph{high} public
-health, and \emph{high} urban quality. As noted in
+\paragraph{Co-benefits.} The street tree canopy archetype carries library
+default levels of \emph{medium} biodiversity, \emph{medium} stormwater,
+\emph{high} public health, and \emph{high} urban quality. As noted in
 \Cref{sec:composite-subscores}, the library supplies no default for social
 inclusion, so it falls to the neutral \emph{unknown} value of 50 and is
 itemised as an applied assumption. By \Cref{eq:cobenefit},
@@ -215,10 +223,11 @@ S_{\mathrm{cobenefit}}
 
 \paragraph{NbS Suitability.} Applying the rules of
 \Cref{tab:suitability-rules}: the site offers sixty times the
-\qty{100}{\metre\squared} minimum ($S_{\mathrm{space}} = 100$); soil
-availability \emph{limited} exactly meets the typology's \emph{limited}
-requirement ($S_{\mathrm{soil}} = 75$); irrigation \emph{occasional} exactly
-meets the \emph{occasional} requirement ($S_{\mathrm{water}} = 75$);
+\qty{100}{\metre\squared} minimum inherited from the archetype
+($S_{\mathrm{space}} = 100$); soil availability \emph{limited} exactly meets the
+inherited \emph{limited} requirement ($S_{\mathrm{soil}} = 75$); irrigation
+\emph{occasional} exactly meets the \emph{occasional} requirement
+($S_{\mathrm{water}} = 75$);
 maintenance intensity and land use were not supplied, so both take the neutral
 50, itemised. Then
 
@@ -269,8 +278,8 @@ The NbS Cooling Opportunity Score is \textbf{72.3}, which falls in the
 Applying the branched confidence model of \Cref{sec:confidence} with the
 field-to-block mapping enumerated at version \methver{}: the cooling block has
 eight of its ten slots supplied (\SI{80}{\percent} $\rightarrow$
-\emph{high}; street tree planting carries \emph{high} evidence confidence, so
-no cap applies). The energy block has the relevance confirmation and the demand
+\emph{high}; the street tree canopy archetype carries \emph{high} evidence
+confidence, so no cap applies). The energy block has the relevance confirmation and the demand
 but no energy price (two of three, \SI{66.7}{\percent} $\rightarrow$
 \emph{medium}). The economic block has none of its four fields
 (\emph{low}). The equity block has three of its six fields
@@ -290,7 +299,7 @@ values are daytime, pedestrian-level air temperature reductions.}
 \midrule
 Heat Priority Index        & 71.8 --- \emph{High} & High \\
 Cooling Potential Score    & 71.3 & High \\
-Temperature reduction      & \qtyrange{0.50}{2.85}{\degreeCelsius} (daytime, pedestrian-level air) & High \\
+Temperature reduction      & \qtyrange{0.50}{2.85}{\degreeCelsius} (daytime, pedestrian-level air; on the street tree canopy evidence) & High \\
 Heat-index improvement     & \emph{High} (midpoint \qty{1.675}{\degreeCelsius}) & High \\
 Shade potential            & \SI{20.0}{\percent} of site & High \\
 Energy savings             & \qtyrange{4500}{51300}{\kilo\watt\hour} per year & Medium \\
@@ -336,8 +345,16 @@ greenhouse-gas output, which scales linearly with it and enters no score.
 
 \subsection{What this example demonstrates}
 
-Four properties of the methodology are visible in the arithmetic above, and
+Five properties of the methodology are visible in the arithmetic above, and
 each corresponds to a design commitment from \Cref{sec:commitments}.
+
+\textbf{The evidence class is named, not implied.} Every performance value used
+above --- the base score, the envelope, the minimum area, the soil and
+irrigation requirements, the co-benefit defaults, the evidence rating, and the
+building-energy applicability --- belongs to the street tree canopy archetype,
+not to the tree avenue entry, and the result says so. A reader can therefore see
+at what resolution the claim is made, which is the point of
+\Cref{sec:archetypes} and the limitation of \Cref{sec:limit-inheritance}.
 
 \textbf{The clipping rule binds in practice.} The raw lower bound
 $0.5 \times 0.95 = 0.475$ was clipped up to the literature floor. On a better

@@ -7,9 +7,9 @@ Developed by [Criterra](https://criterra.eu).
 [![CI](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-> **Status: v1.1 — first review round addressed.** The tool is packaged and published: one `pip install` and one command (`nature-cooling serve`) start the whole application — API and web app on a single origin — from a wheel that embeds the production frontend build and the cited methodology configuration. A container image ships to GHCR with a minimal compose file, the full documentation corpus is published at **[dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/)**, and `vX.Y.Z` tags build and publish every artefact automatically.
+> **Status: v2.0 — the NbS catalogue release.** The tool is packaged and published: one `pip install` and one command (`nature-cooling serve`) start the whole application — API and web app on a single origin — from a wheel that embeds the production frontend build and the cited methodology configuration. A container image ships to GHCR with a minimal compose file, the full documentation corpus is published at **[dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/)**, and `vX.Y.Z` tags build and publish every artefact automatically.
 >
-> v1.1 answers the first product review (D-038): every questionnaire parameter now carries an on-demand explanation of what it means and what it affects, cooling-refuge access is asked as two evidenced indicators rather than one ambiguous field, *campus* and *memorial* join the land uses, and the Criterra identity is present in the app, the report, and the docs site. Methodology `2026.08.03`. See [Roadmap](#roadmap).
+> **v2.0 replaces the NbS library with the curated UNEP *Nature for Cooling* catalogue.** 110 typologies, each inheriting one of 18 cited cooling archetypes, because solution-specific cooling literature does not exist for 110 interventions and inventing 110 envelopes would manufacture precision the catalogue does not contain — so an entry inherits a *cited* envelope and every result names the evidence class it came from. An assessment may now propose a **package** of interventions, scored individually and combined under rules that never sum a temperature. Four new site questions decide which interventions are offered and feed no score. Methodology `2026.08.04`. See [Roadmap](#roadmap).
 
 ---
 
@@ -23,7 +23,7 @@ The tool answers five questions cities keep asking:
 4. **What** cooling, climate, cost, and social benefits will they deliver?
 5. **Which** projects deserve priority for design and investment?
 
-A user describes a site through a six-step questionnaire, selects one of 14 NbS typologies (street trees, urban forest, green roof, blue-green corridor, …), and receives:
+A user describes a site through a six-step questionnaire, selects one or more of 110 NbS typologies (tree avenues, microforests, green roofs, constructed wetlands, food forests, …) from a menu filtered to what actually suits the site, and receives:
 
 - a **Heat Priority Index** (0–100) — how much the site deserves attention,
 - a **Cooling Potential Score** (0–100) with an indicative **temperature-reduction range (°C)**,
@@ -95,8 +95,8 @@ The methodology also states plainly where it is weak: green façade and bioswale
 | 6 | Documentation site, packaging, hosting | ✅ |
 | 7 | Stabilisation — external methodology review & hardening | ✅ (shipped in v1.1) |
 | 8 | **v1.1** — review round 1: parameter explanations, cooling-refuge split, brand identity | ✅ |
-| 9 | **v1.2** — UNEP NbS catalogue, scale- and condition-based availability, multi-intervention packages | 🔄 next |
-| 10 | **v1.3** — map-based site selection with parameter autofill | ⏳ |
+| 9 | **v2.0** — UNEP NbS catalogue, scale- and condition-based availability, multi-intervention packages | ✅ |
+| 10 | **v2.1** — map-based site selection with parameter autofill | 🔄 next |
 
 ## Running the tool
 
@@ -154,7 +154,7 @@ result = run_assessment(
         assessment_scale="neighbourhood",
         site_area_m2=6000,
         climate_zone="temperate",
-        nbs_type="street_tree_planting",
+        nbs_type=["tree_avenue"],
     ),
     load_config(),
 )

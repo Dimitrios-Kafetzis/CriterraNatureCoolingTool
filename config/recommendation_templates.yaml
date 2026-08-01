@@ -5,7 +5,7 @@
 # or reporting path: the transparency and determinism commitments require that
 # identical inputs always produce identical text (decision D-011 / OQ-12).
 
-version: "2026.08.03"
+version: "2026.08.04"
 
 opening:
   by_heat_priority:
@@ -19,6 +19,15 @@ opportunity:
   moderate: "The assessed intervention represents a moderate NbS cooling opportunity."
   strong: "The assessed intervention represents a strong NbS cooling opportunity."
   high_priority: "The assessed intervention represents a high-priority NbS cooling opportunity."
+
+package:
+  # Stated BEFORE the cooling clause so the temperature figure is read knowing
+  # it belongs to one component rather than to the sum of them (D-038).
+  template: >
+    This assessment proposes a package of {count} interventions: {components}.
+    Each is scored individually below; the package's temperature estimate is the
+    best-evidenced component's ({carrier}) and is never the sum of its parts, as
+    no retrieved source quantifies super-additive cooling from combining measures.
 
 cooling_clause:
   template: >
@@ -40,6 +49,40 @@ flags:
   blue_humidity: >
     In humid conditions, poorly designed water features can add humidity without
     improving perceived thermal comfort; design detailing matters here.
+  small_water_negligible_daytime: >
+    Small constructed water features are among the weakest daytime coolers in
+    the library: the simulation and field evidence puts their effect at a few
+    tenths of a degree, and the largest synthesis of the topic concludes it is
+    negligible in design practice. Their case rests on stormwater, habitat and
+    amenity rather than on air temperature.
+  water_nocturnal_warming: >
+    Water bodies measured at night WARM their surroundings rather than cooling
+    them. This tool reports daytime values only, so that effect is outside the
+    estimate above rather than netted off against it.
+  water_remote_sensing_spread: >
+    Published cooling estimates for open water disagree by an order of
+    magnitude: remote-sensing-inclusive syntheses report around 2.5 C while
+    direct field measurement of urban lakes reports 0.1-0.6 C by day. The wide
+    envelope reported here is that disagreement, not measurement noise.
+  non_canopy_surface_not_air: >
+    Grass, meadow and herbaceous planting cool the SURFACE dramatically and the
+    air very little - the measured contrast is up to 24 C of surface cooling
+    against almost no change in globe temperature. Figures quoted for this kind
+    of planting elsewhere are often surface temperatures; this one is not.
+  shade_structure_comfort_not_air: >
+    A vegetated shade structure delivers a large COMFORT benefit and a small
+    air-temperature one: measured mean radiant temperature falls by around
+    14-16 C while air temperature falls by around 1.4 C. Users will feel
+    substantially cooler beneath it than this air-temperature figure suggests.
+  productive_evidence_gap: >
+    Productive landscapes are among the least-studied intervention types in the
+    cooling literature, with insufficient data to quantify them directly. This
+    estimate is inherited from an adjacent evidence class, and the gap is a
+    documented finding rather than an oversight.
+  irrigation_sustains_not_raises: >
+    Irrigation sustains this intervention's performance through drought; it does
+    not raise it. Measured cooling from irrigated cultivation falls well below
+    modelled potential, and irrigation warms nights by releasing stored heat.
   energy_not_calculated: >
     Cooling-energy savings were not calculated ({reason}).
   cost_not_estimated: >

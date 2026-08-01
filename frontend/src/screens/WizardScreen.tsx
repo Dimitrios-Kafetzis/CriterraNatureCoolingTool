@@ -19,6 +19,8 @@ import { StepForm } from '../wizard/StepForm';
 import { STEPS, stepTitle } from '../wizard/steps';
 import type {
   AssessmentInput,
+  AvailabilityQuery,
+  AvailableTypologies,
   DraftInput,
   FieldIssue,
   InputField,
@@ -31,6 +33,29 @@ const SAVE_DEBOUNCE_MS = 600;
 const VALIDATE_DEBOUNCE_MS = 350;
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
+
+/**
+ * The site conditions the availability endpoint gates on (D-043, D-044.1),
+ * read straight off the draft. `assessment_scale` is required, so a draft
+ * without one has nothing to ask about yet and the picker offers everything.
+ *
+ * The three yes/no/unknown answers become booleans only where the user said
+ * yes or no; an explicit "unknown" is not a "no", so it is left unsent and the
+ * service decides what an unanswered condition means.
+ */
+function availabilityQuery(draft: DraftInput): AvailabilityQuery | null {
+  if (draft.assessment_scale == null) return null;
+  const tristate = (value: 'yes' | 'no' | 'unknown' | null | undefined) =>
+    value === 'yes' ? true : value === 'no' ? false : undefined;
+  return {
+    assessment_scale: draft.assessment_scale,
+    land_use: draft.land_use,
+    waterfront_type: draft.waterfront_type,
+    includes_railway: tristate(draft.includes_railway),
+    existing_woodland: tristate(draft.existing_woodland),
+    productive_governance: draft.productive_governance,
+  };
+}
 
 export function WizardScreen() {
   const { projectId, assessmentId } = useParams<'projectId' | 'assessmentId'>();
@@ -52,6 +77,7 @@ export function WizardScreen() {
   const [evaluating, setEvaluating] = useState(false);
   const [library, setLibrary] = useState<TypologyLibrary | null>(null);
   const [methodology, setMethodology] = useState<MethodologyData | null>(null);
+  const [availability, setAvailability] = useState<AvailableTypologies | null>(null);
 
   // What the store currently holds, to avoid saving an unchanged draft.
   const persisted = useRef<string>('');
@@ -103,6 +129,38 @@ export function WizardScreen() {
 
   const debouncedDraft = useDebouncedValue(draft, SAVE_DEBOUNCE_MS);
   const debouncedForValidate = useDebouncedValue(draft, VALIDATE_DEBOUNCE_MS);
+
+  // What the service offers for this site (D-043). Re-asked whenever a gating
+  // answer changes; the frontend derives no availability rule of its own
+  // (ARCHITECTURE boundary 1), so this is the only source of the answer. The
+  // query is serialised as the effect's dependency because it is rebuilt on
+  // every render — the answers it is made of are what should re-trigger it,
+  // not the object's identity.
+  const querySignature = useMemo(() => {
+    const query = draft === null ? null : availabilityQuery(draft);
+    return query === null ? null : JSON.stringify(query);
+  }, [draft]);
+
+  useEffect(() => {
+    if (querySignature === null) {
+      setAvailability(null);
+      return;
+    }
+    let cancelled = false;
+    api
+      .availableTypologies(JSON.parse(querySignature) as AvailabilityQuery)
+      .then((response) => {
+        if (!cancelled) setAvailability(response);
+      })
+      .catch(() => {
+        // Unavailable: the picker then offers every entry rather than
+        // inventing a gating rule to fill the gap.
+        if (!cancelled) setAvailability(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [querySignature]);
 
   // Auto-save (D-020): debounced PATCH of the full draft input.
   useEffect(() => {
@@ -247,6 +305,7 @@ export function WizardScreen() {
           setField={setField}
           library={library}
           methodology={methodology}
+          availability={availability}
         />
 
         {validation && validation.warnings.length > 0 ? (

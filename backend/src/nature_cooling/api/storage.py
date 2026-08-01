@@ -19,7 +19,8 @@ from pathlib import Path
 
 import platformdirs
 
-from nature_cooling.api.schemas import Project
+from nature_cooling.api.migration import migrate_document
+from nature_cooling.api.schemas import STORAGE_SCHEMA_VERSION, Project
 
 _APP_NAME = "criterra-nature-cooling"
 _APP_AUTHOR = "Criterra"
@@ -64,8 +65,22 @@ class ProjectStore:
         )
         os.replace(temp, path)
 
+    def _read(self, path: Path) -> Project:
+        """Read, migrate if needed, and validate one project document.
+
+        Migration runs on read and is **not** written back: the file is
+        rewritten only when the user next saves, so opening a project to look
+        at it never rewrites their data. The notes travel on the in-memory
+        document so the response can itemise what changed (D-029, D-044.2).
+        """
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        migrated, notes = migrate_document(raw, STORAGE_SCHEMA_VERSION)
+        project = Project.model_validate(migrated)
+        project.migration_notes = notes
+        return project
+
     def load(self, project_id: str) -> Project:
-        """Read one project.
+        """Read one project, migrating older storage schemas explicitly.
 
         Raises:
             ProjectNotFoundError: if no file exists for this identifier.
@@ -73,7 +88,7 @@ class ProjectStore:
         path = self._path(project_id)
         if not path.is_file():
             raise ProjectNotFoundError(project_id)
-        return Project.model_validate(json.loads(path.read_text(encoding="utf-8")))
+        return self._read(path)
 
     def delete(self, project_id: str) -> None:
         """Delete one project file.
@@ -90,8 +105,5 @@ class ProjectStore:
         """All stored projects, most recently updated first."""
         if not self._root.is_dir():
             return []
-        projects = [
-            Project.model_validate(json.loads(path.read_text(encoding="utf-8")))
-            for path in self._root.glob("*.json")
-        ]
+        projects = [self._read(path) for path in self._root.glob("*.json")]
         return sorted(projects, key=lambda p: (p.updated_at, p.project_id), reverse=True)

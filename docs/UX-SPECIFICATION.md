@@ -25,11 +25,19 @@ A single guided flow (D-018). No quick/full mode split: the confidence meter alr
 | Step | Group | Notes |
 |---|---|---|
 | 1 | Project information | Identity and context; shortest step, establishes momentum |
-| 2 | Site characteristics | The heaviest step; area, cover, land use, users, soil, irrigation |
+| 2 | Site characteristics | The heaviest step; area, cover, land use, users, soil, irrigation, and the four availability answers (§3.1) |
 | 3 | Climate and heat exposure | Climate zone required; measured values optional |
 | 4 | Vulnerability and equity | Social context |
 | 5 | NbS intervention | The guided typology picker (§5) |
 | 6 | Cost and energy | Entirely optional; gated by an explicit "do you have cost data?" |
+
+### 3.1 The four availability answers, and the promise the interface must keep
+
+Step 2 asks four questions that decide **which interventions the tool offers** and feed **no score** (D-044.1): whether the site includes a railway, whether it already carries woodland, what kind of waterfront it adjoins, and who could deliver a productive landscape there.
+
+Their explanations must say so plainly. The tool's premise is that a user can see what skipping a question costs (§4), and a question that cannot move a number has to admit it — otherwise the interface implies an influence the methodology denies. Each explanation therefore ends with the same statement in the same terms: *"It feeds no score. Your answer cannot raise or lower any result."*
+
+The governance question is a multi-select, and its help text carries a second promise that is easy to get backwards: **leaving it blank hides nothing.** An unanswered question is not evidence that no one could deliver, so every productive option stays on offer until the user narrows it (D-043.3). Copy that read "leave unticked if none could" would tell the user the opposite of what the system does.
 
 Persistent throughout: a step indicator, the live confidence panel (§4), and **Back** / **Continue**. Work auto-saves as the user progresses (D-020); a closed tab loses nothing.
 
@@ -52,28 +60,43 @@ Two behaviours make this work rather than nag:
 - **It names the single highest-value missing field.** The user sees precisely which answer buys the most confidence and decides whether it is worth finding out — the tool assists rather than demands.
 - **It shows blocks independently.** A user with no interest in payback can skip the entire economic block knowingly, without feeling the assessment is degraded overall.
 
-Where a typology's evidence confidence caps a block (green façade, rain garden/bioswale, courtyard greening — see Methodology Report §6.2), the panel says so: *"Cooling confidence is capped at Medium because published evidence for this typology is limited."* Complete inputs cannot compensate for thin evidence, and the interface must not imply otherwise.
+Where an entry's inherited evidence class caps a block (green façade / living wall, bioretention, enclosed courtyard, vegetated shade structure, and both productive classes — see Methodology Report §6.2), the panel says so: *"Cooling confidence is capped at Medium because published evidence for this typology is limited."* Complete inputs cannot compensate for thin evidence, and the interface must not imply otherwise.
 
 ## 5. The guided typology picker
 
 The specification's ordering collects site data before intervention choice. Left alone, that means a user who picks riparian restoration for a site with no water discovers the problem at the results screen, after 40 questions — the worst possible moment.
 
-The fix is not to reorder the questions but to make the picker context-aware. By step 5 the tool knows the site, so all 14 cards render sorted by fit and annotated (D-019):
+The fix is not to reorder the questions but to make the picker context-aware. By step 5 the tool knows the site, so the cards render sorted by fit and annotated (D-019).
+
+**From v2.0 the picker also has to survive its own catalogue.** The library holds 110 entries across fourteen families, and a school site is offered 67 of them; a flat list of cards is not something anyone will read. Regrouping is therefore a functional requirement of this release, not polish. The picker groups by family, filters by name, and supports selecting several entries as a package (D-038):
 
 ```
-┌──────────────────────────────┬──────────────────────────────┐
-│ ✓ Urban forest               │ ✓ Street tree planting       │
-│   Well suited to this site   │   Well suited to this site   │
-│   Strong cooling 1.0–3.0 °C  │   Strong cooling 0.5–3.0 °C  │
-│   Evidence: high             │   Evidence: high             │
-├──────────────────────────────┼──────────────────────────────┤
-│ ! Green façade               │ ✕ Riparian restoration       │
-│   Needs reliable irrigation  │   No water feature on site   │
-│   Evidence: limited          │   Not suitable — selectable  │
-└──────────────────────────────┴──────────────────────────────┘
+Your package (2)                                     ⚠ nothing above 5
+  1. Tree Avenue                                           [remove]
+  2. Rain garden                                           [remove]
+
+Search  [ tree                                    ]  [clear]
+
+Offered for this site — 67 entries
+  ▾ Tree-based elements (13 · elements)
+    ┌──────────────────────────────┬──────────────────────────────┐
+    │ ✓ Tree grove            [✓]  │ ✓ Strategic individual tree  │
+    │   Well suited to this site   │   Well suited to this site   │
+    │   1.0–3.0 °C · Evidence high │   0.5–3.0 °C · Evidence high │
+    │   Dense tree canopy          │   Street tree canopy         │
+    └──────────────────────────────┴──────────────────────────────┘
+  ▸ Park scale (9 · composites)
+  ▸ Water landscape (12 · composites)
+
+Not offered for this site — still selectable
+  ▸ Woodland & forest (2)   restoration types need existing woodland
 ```
 
-Each card shows fit, the literature cooling envelope, and evidence confidence — the three things that should drive the choice. Unsuitable typologies stay fully selectable: a user deliberately testing a hypothesis must not be overridden, and the flag follows through to results and the report.
+Each card shows fit, the literature cooling envelope, evidence confidence, **and the evidence class its numbers are inherited from** — under the archetype model an entry inherits a *cited* envelope, and the interface must say which one rather than implying solution-specific evidence that does not exist.
+
+Two rules the picker must not break. **Availability is asked, never computed**: `GET /api/typologies/available` says what suits this site and the picker renders that answer; no gating rule originates in the frontend (ARCHITECTURE boundary 1). And **availability guides, it never blocks** (D-019): entries the matrix does not offer sit in a separate, de-emphasised, labelled section and stay fully selectable, because a professional deliberately testing a hypothesis must not be overridden. The flag follows through to results and the report.
+
+At city and district scale the copy changes: those scales compose a package rather than choosing one option (D-043.2), so their short menus are correct by construction rather than a defect. Above five components the picker states plainly that adding another will not raise the temperature estimate — it adds co-benefit breadth and cost only (D-044.4).
 
 Selecting a card reveals its sizing fields (intervention area, canopy at maturity, maturity period, maintenance, complexity — the schema's intervention group, per D-031).
 
@@ -85,9 +108,10 @@ A single scrolling page, ordered by decreasing decision relevance:
 2. **Flags**, where present — suitability warnings first, then evidence-confidence caveats (green roofs benefit the building rather than the street; blue typologies in humid climates), then any low overall confidence.
 3. **The recommendation** — deterministic composed text (no language model).
 4. **The six output blocks** — cooling, energy and GHG, economic, equity and co-benefits, each with its own confidence badge and each showing ranges, never point estimates. Blocks that could not be calculated say why: *"Capital cost not estimated — no cost data supplied. This tool ships no default cost values."*
-5. **Assumptions applied** — every default the engine used, itemised.
-6. **Method note and limitations**, including the daytime-only caveat.
-7. **Actions** — export report, compare another option, return to projects.
+5. **The package**, where more than one intervention was proposed — every component itemised with its own cooling range, evidence class, evidence confidence and suitability, with the component carrying the headline temperature marked. The combination rules are rendered **verbatim from the result**, not restated in interface language, so the report and the screen cannot drift into describing different arithmetic. A single intervention renders no package section and looks exactly as it always has.
+6. **Assumptions applied** — every default the engine used, itemised.
+7. **Method note and limitations**, including the daytime-only caveat.
+8. **Actions** — export report, compare another option, return to projects.
 
 Every score links to its formula and sources in the methodology browser. A user who wants to know why a number is what it is is two clicks from the evidence.
 

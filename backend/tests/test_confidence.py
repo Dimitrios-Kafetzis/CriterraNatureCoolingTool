@@ -5,7 +5,7 @@ from __future__ import annotations
 from nature_cooling.engine import confidence
 
 
-def _typology(config, nbs_type="street_tree_planting"):
+def _typology(config, nbs_type="tree_avenue"):
     return config.typologies.by_type(nbs_type)
 
 
@@ -102,7 +102,7 @@ def test_threshold_boundaries(config, build_input):
 def test_low_evidence_typology_caps_cooling_at_medium(config, build_input):
     """Complete cooling inputs cannot compensate for thin evidence (green facade)."""
     inp = build_input(
-        nbs_type="green_facade",
+        nbs_type=["indirect_ground_rooted_green_facade"],
         existing_tree_canopy_percent=0,
         existing_green_cover_percent=2,
         impervious_surface_percent=95,
@@ -114,7 +114,9 @@ def test_low_evidence_typology_caps_cooling_at_medium(config, build_input):
         new_canopy_area_at_maturity_m2=0,
         expected_maturity_period_years=1,
     )
-    block = confidence.compute(inp, _typology(config, "green_facade"), config)
+    block = confidence.compute(
+        inp, _typology(config, "indirect_ground_rooted_green_facade"), config
+    )
     assert block.completeness_percent["cooling"] == 100.0
     assert block.cooling == "medium"
     assert block.cooling_capped_by_evidence is True
@@ -123,7 +125,9 @@ def test_low_evidence_typology_caps_cooling_at_medium(config, build_input):
 def test_cap_not_reported_when_not_binding(config, build_input):
     """A low-evidence typology with sparse inputs is low anyway: no cap claim."""
     block = confidence.compute(
-        build_input(nbs_type="green_facade"), _typology(config, "green_facade"), config
+        build_input(nbs_type=["indirect_ground_rooted_green_facade"]),
+        _typology(config, "indirect_ground_rooted_green_facade"),
+        config,
     )
     assert block.cooling == "low"
     assert block.cooling_capped_by_evidence is False

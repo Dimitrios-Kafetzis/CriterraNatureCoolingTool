@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route } from 'react-router';
 import { describe, expect, it } from 'vitest';
@@ -10,23 +10,29 @@ import assessmentDraft from './fixtures/assessment-draft.json';
 import assessmentEvaluated from './fixtures/assessment-evaluated.json';
 import meta from './fixtures/meta.json';
 import methodology from './fixtures/methodology.json';
+import assessmentDuplicate from './fixtures/assessment-duplicate.json';
 import project from './fixtures/project.json';
 import typologies from './fixtures/typologies.json';
+import available from './fixtures/typologies-available.json';
 import validateCapped from './fixtures/validate-capped.json';
 import validateEmpty from './fixtures/validate-empty.json';
 import validatePartial from './fixtures/validate-partial.json';
 
 const draftUrl = `/projects/${project.project_id}/assessments/${assessmentDraft.assessment_id}/edit`;
 
-function baseRoutes(validateResponse: unknown): MockRoute[] {
+function baseRoutes(
+  validateResponse: unknown,
+  storedAssessment: unknown = assessmentDraft,
+): MockRoute[] {
   return [
     { method: 'GET', path: '/api/meta', response: meta },
     { method: 'GET', path: '/api/typologies', response: typologies },
+    { method: 'GET', path: '/api/typologies/available', response: available },
     { method: 'GET', path: '/api/methodology', response: methodology },
     {
       method: 'GET',
       path: new RegExp(`^/api/projects/${project.project_id}/assessments/[^/]+$`),
-      response: assessmentDraft,
+      response: storedAssessment,
     },
     {
       method: 'PATCH',
@@ -117,7 +123,7 @@ describe('WizardScreen', () => {
     expect(await screen.findByText(messages.confidence.evidenceCap)).toBeInTheDocument();
   });
 
-  it('renders all 14 typology cards on the intervention step (D-019)', async () => {
+  it('renders every catalogue entry on the intervention step (D-019, D-043)', async () => {
     installFetchMock(baseRoutes(validatePartial));
     renderWizard(`${draftUrl}?step=5`);
 
@@ -126,7 +132,139 @@ describe('WizardScreen', () => {
     ).toBeInTheDocument();
     const cards = await screen.findAllByRole('button', { pressed: false });
     expect(cards.filter((card) => card.className.includes('picker__card')).length).toBe(
-      typologies.typologies.length,
+      typologies.resolved.length,
+    );
+  });
+
+  it('asks the service which entries this site is offered, computing no rule of its own', async () => {
+    // The duplicate carries the site: scale, land use, and the four gating
+    // answers, which are exactly what the availability query is built from.
+    const { calls } = installFetchMock(baseRoutes(validatePartial, assessmentDuplicate));
+    renderWizard(`${draftUrl}?step=5`);
+
+    await screen.findByRole('heading', { name: messages.wizard.steps.intervention.title });
+    await waitFor(() => {
+      const call = calls.find((candidate) => candidate.url.startsWith('/api/typologies/available'));
+      expect(call).toBeDefined();
+      const query = new URLSearchParams(call!.url.split('?')[1]);
+      expect(query.get('assessment_scale')).toBe(assessmentDuplicate.input.assessment_scale);
+      expect(query.get('land_use')).toBe(assessmentDuplicate.input.land_use);
+      expect(query.get('waterfront_type')).toBe(assessmentDuplicate.input.waterfront_type);
+      // yes/no answers reach the service as booleans, and only when answered.
+      expect(query.get('includes_railway')).toBe('false');
+      expect(query.getAll('productive_governance')).toEqual(
+        assessmentDuplicate.input.productive_governance,
+      );
+    });
+
+    // What the service withheld is separated and labelled, never removed.
+    expect(
+      await screen.findByRole('region', { name: messages.picker.notOfferedHeading }),
+    ).toBeInTheDocument();
+  });
+
+  it('asks nothing while the scale is unanswered, and offers every entry', async () => {
+    // The bare draft has no assessment_scale, so there is nothing to ask.
+    const { calls } = installFetchMock(baseRoutes(validatePartial));
+    renderWizard(`${draftUrl}?step=5`);
+
+    await screen.findByRole('heading', { name: messages.wizard.steps.intervention.title });
+    await screen.findAllByRole('button', { pressed: false });
+    expect(calls.some((call) => call.url.startsWith('/api/typologies/available'))).toBe(false);
+    expect(
+      screen.queryByRole('region', { name: messages.picker.notOfferedHeading }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('saves a multi-component package as an ordered list (D-038)', async () => {
+    const { calls } = installFetchMock(baseRoutes(validatePartial, assessmentDuplicate));
+    renderWizard(`${draftUrl}?step=5`);
+
+    await screen.findByRole('heading', { name: messages.wizard.steps.intervention.title });
+    const user = userEvent.setup();
+    const chosen = available.nbs_types.slice(0, 2);
+    for (const nbsType of chosen) {
+      const entry = typologies.resolved.find((candidate) => candidate.nbs_type === nbsType)!;
+      const card = screen
+        .getAllByRole('button')
+        .find(
+          (element) =>
+            element.className.includes('picker__card') &&
+            element.querySelector('.picker__name')?.textContent === entry.display_name,
+        )!;
+      await user.click(card);
+    }
+
+    await waitFor(
+      () => {
+        const patches = calls.filter((call) => call.method === 'PATCH');
+        const last = patches[patches.length - 1];
+        expect((last?.body as { input: { nbs_type?: string[] } }).input.nbs_type).toEqual(chosen);
+      },
+      { timeout: 3000 },
+    );
+  });
+
+  it('asks the four availability questions on the site step, each stated as feeding no score (D-044.1)', async () => {
+    installFetchMock(baseRoutes(validatePartial));
+    renderWizard(`${draftUrl}?step=2`);
+
+    await screen.findByRole('heading', { name: messages.wizard.steps.site.title });
+    for (const field of [
+      'includes_railway',
+      'existing_woodland',
+      'waterfront_type',
+      'productive_governance',
+    ] as const) {
+      const meta = messages.fields[field]!;
+      expect(screen.getByText(meta.label)).toBeInTheDocument();
+      // D-041: the explanation says plainly that the answer feeds no score.
+      expect(meta.affects).toMatch(/feeds no score|cannot raise or lower any result/);
+    }
+  });
+
+  it('records a multi-select answer as a list, and an empty one as unanswered (D-043.3)', async () => {
+    const { calls } = installFetchMock(baseRoutes(validatePartial));
+    renderWizard(`${draftUrl}?step=2`);
+
+    await screen.findByRole('heading', { name: messages.wizard.steps.site.title });
+    const user = userEvent.setup();
+    const group = screen.getByRole('group', {
+      name: new RegExp(messages.fields.productive_governance!.label),
+    });
+    const community = within(group).getByLabelText(
+      messages.options.productive_governance.community,
+    );
+    const commercial = within(group).getByLabelText(
+      messages.options.productive_governance.commercial,
+    );
+
+    await user.click(community);
+    await user.click(commercial);
+    await waitFor(
+      () => {
+        const patches = calls.filter((call) => call.method === 'PATCH');
+        const last = patches[patches.length - 1];
+        expect(
+          (last?.body as { input: { productive_governance?: string[] } }).input
+            .productive_governance,
+        ).toEqual(['community', 'commercial']);
+      },
+      { timeout: 3000 },
+    );
+
+    // Unticking every box removes the field rather than storing an empty list.
+    await user.click(community);
+    await user.click(commercial);
+    await waitFor(
+      () => {
+        const patches = calls.filter((call) => call.method === 'PATCH');
+        const last = patches[patches.length - 1];
+        expect((last?.body as { input: Record<string, unknown> }).input).not.toHaveProperty(
+          'productive_governance',
+        );
+      },
+      { timeout: 3000 },
     );
   });
 
@@ -160,6 +298,7 @@ describe('WizardScreen', () => {
     installFetchMock([
       { method: 'GET', path: '/api/meta', response: meta },
       { method: 'GET', path: '/api/typologies', response: typologies },
+      { method: 'GET', path: '/api/typologies/available', response: available },
       { method: 'GET', path: '/api/methodology', response: methodology },
       {
         method: 'GET',

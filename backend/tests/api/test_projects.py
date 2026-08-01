@@ -6,6 +6,7 @@ from typing import Any
 
 from fastapi.testclient import TestClient
 
+from nature_cooling.api.schemas import STORAGE_SCHEMA_VERSION
 from nature_cooling.engine.config import MethodologyConfig
 
 _MISSING_ID = "00000000-0000-0000-0000-000000000000"
@@ -22,13 +23,33 @@ def test_create_project_returns_the_full_document(
     client: TestClient, config: MethodologyConfig
 ) -> None:
     body = _create(client, site={"site_area_m2": 6000.0, "climate_zone": "temperate"})
-    assert body["schema_version"] == 1
+    assert body["schema_version"] == STORAGE_SCHEMA_VERSION
     assert body["name"] == "Riverside pilot"
     assert body["site"] == {"site_area_m2": 6000.0, "climate_zone": "temperate"}
     assert body["assessments"] == []
     assert body["created_at"] == body["updated_at"]
     assert body["created_at"].endswith("+00:00")
     assert body["current_methodology_version"] == config.version
+    # A project this build wrote was never migrated, so it has nothing to
+    # itemise (D-029): the notes describe an event, not the project.
+    assert body["migrated_notes"] == []
+
+
+def test_the_availability_answers_are_site_description_and_travel_with_the_project(
+    client: TestClient,
+) -> None:
+    """D-044.1: the four gating answers describe the site, so a project holds them."""
+    body = _create(
+        client,
+        site={
+            "includes_railway": "yes",
+            "existing_woodland": "no",
+            "waterfront_type": "river",
+            "productive_governance": ["community", "institutional"],
+        },
+    )
+    assert body["site"]["waterfront_type"] == "river"
+    assert body["site"]["productive_governance"] == ["community", "institutional"]
 
 
 def test_create_project_rejects_unknown_site_fields(client: TestClient) -> None:

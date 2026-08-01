@@ -7,11 +7,18 @@
 The design below was published at methodology version 2026.07.30, before the
 calculation engine existed, precisely so that it could be criticised before
 execution and so that the results could not be shaped after the fact to suit
-the outcome. The analysis was executed in Phase 2 against the twenty
-hand-verified golden scenarios; \Cref{sec:sensitivity-results} reports the
-results at version \methver{}, produced by
-\texttt{tools/sensitivity\_analysis.py} and regenerated whenever any
-aggregation weight changes.
+the outcome. It has not been altered since.
+\Cref{sec:sensitivity-results} reports the results at version \methver{},
+produced by \texttt{tools/sensitivity\_analysis.py} and regenerated whenever
+any aggregation weight changes.
+
+The results are \textbf{regenerated for this version, not carried forward}. At
+version \prevver{} they were re-confirmed unchanged because no library value
+had moved; that is not true here. The library moved from fourteen typologies to
+\num{110} entries over \num{18} archetypes and the scenario set grew from
+twenty to \num{24}, so the analysis was re-executed in full. The aggregation
+weights themselves are \textbf{unchanged}: what moved is the population of
+scenarios they are applied to.
 \end{keynote}
 
 \subsection{Why sensitivity analysis is obligatory here}
@@ -97,18 +104,18 @@ correspond to four distinct ways the tool could mislead a user.
 \subsection{Results at version \methver{}}
 \label{sec:sensitivity-results}
 
-The full scenario set (twenty scenarios, 190 scenario pairs) was re-scored
-under each of the twelve perturbations --- six weights, each at
+The full scenario set (\num{24} scenarios, \num{276} scenario pairs) was
+re-scored under each of the twelve perturbations --- six weights, each at
 $\lambda \in \{0.75, 1.25\}$ of \Cref{eq:perturbation}.
 
 \begin{table}[H]
 \centering
 \caption[Sensitivity analysis results]{Sensitivity of the NbS Cooling
 Opportunity Score to \SI{\pm 25}{\percent} perturbation of each aggregation
-weight, across the twenty golden scenarios. Rank stability is the proportion of
-the 190 scenario pairs whose ordering is preserved; displacement is the
-absolute change in the Opportunity Score (0--100 scale); migrations counts
-scenarios whose interpretation band changed.}
+weight, across the \num{24} golden scenarios at version \methver{}. Rank
+stability is the proportion of the \num{276} scenario pairs whose ordering is
+preserved; displacement is the absolute change in the Opportunity Score
+(0--100 scale); migrations counts scenarios whose interpretation band changed.}
 \label{tab:sensitivity-results}
 \small
 \begin{tabular}{@{}llrrrr@{}}
@@ -116,18 +123,18 @@ scenarios whose interpretation band changed.}
 \textbf{Weight} & \textbf{Shift} & \textbf{Rank stab.} &
 \textbf{Mean disp.} & \textbf{Max disp.} & \textbf{Migrations} \\
 \midrule
-Heat Priority Index & $-25\%$ & 0.9737 & 0.56 & 2.00 & 1 \\
-                    & $+25\%$ & 0.9895 & 0.49 & 1.77 & 0 \\
-Cooling Potential   & $-25\%$ & 0.9895 & 0.62 & 2.01 & 1 \\
-                    & $+25\%$ & 0.9842 & 0.54 & 1.77 & 1 \\
-NbS Suitability     & $-25\%$ & 0.9895 & 0.47 & 1.49 & 0 \\
-                    & $+25\%$ & 0.9842 & 0.43 & 1.38 & 0 \\
-Vulnerability       & $-25\%$ & 0.9895 & 0.52 & 1.75 & 0 \\
-                    & $+25\%$ & 0.9895 & 0.47 & 1.62 & 0 \\
-Co-benefits         & $-25\%$ & 0.9947 & 0.32 & 0.77 & 0 \\
-                    & $+25\%$ & 0.9895 & 0.30 & 0.74 & 0 \\
-Cost Feasibility    & $-25\%$ & 0.9895 & 0.17 & 1.12 & 0 \\
-                    & $+25\%$ & 0.9842 & 0.16 & 1.06 & 0 \\
+Heat Priority Index & $-25\%$ & 0.9529 & 0.65 & 2.00 & 1 \\
+                    & $+25\%$ & 0.9891 & 0.57 & 1.77 & 1 \\
+Cooling Potential   & $-25\%$ & 0.9819 & 0.79 & 2.05 & 2 \\
+                    & $+25\%$ & 0.9601 & 0.69 & 1.79 & 1 \\
+NbS Suitability     & $-25\%$ & 0.9891 & 0.54 & 1.49 & 0 \\
+                    & $+25\%$ & 0.9891 & 0.49 & 1.38 & 1 \\
+Vulnerability       & $-25\%$ & 0.9891 & 0.50 & 1.75 & 0 \\
+                    & $+25\%$ & 0.9928 & 0.45 & 1.62 & 1 \\
+Co-benefits         & $-25\%$ & 0.9964 & 0.34 & 1.01 & 1 \\
+                    & $+25\%$ & 0.9891 & 0.32 & 0.96 & 0 \\
+Cost Feasibility    & $-25\%$ & 0.9928 & 0.14 & 1.04 & 0 \\
+                    & $+25\%$ & 0.9928 & 0.13 & 1.00 & 0 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -135,36 +142,72 @@ Cost Feasibility    & $-25\%$ & 0.9895 & 0.17 & 1.12 & 0 \\
 The four committed quantities, in the order of \Cref{sec:sa-reported}:
 
 \begin{enumerate}
-  \item \textbf{Rank stability.} Worst case \num{0.9737}, under the $-25\%$
-  Heat Priority Index perturbation: five of 190 pairs reorder. Nine of the
-  twelve perturbations preserve at least \SI{98.4}{\percent} of pair
-  orderings. Every reordering involves a pair whose baseline scores differ by
-  less than about two points --- pairs the methodology itself would describe as
-  materially equivalent.
+  \item \textbf{Rank stability.} Worst case \num[group-digits=none]{0.9529}, under the $-25\%$
+  Heat Priority Index perturbation. Ten of the twelve perturbations preserve
+  at least \SI{98}{\percent} of pair orderings. Reordering still occurs only
+  between scenarios whose baseline scores differ by around two points or less
+  --- pairs the methodology itself would describe as materially equivalent.
 
-  \item \textbf{Score displacement.} Pooled over all 240
-  scenario-perturbation combinations: mean \num{0.42} points, median
-  \num{0.32}, 75th percentile \num{0.59}, maximum \num{2.01} on the 0--100
+  \item \textbf{Score displacement.} Pooled over all \num{288}
+  scenario-perturbation combinations: mean \num{0.47} points, median
+  \num{0.34}, 75th percentile \num{0.67}, maximum \num{2.05} on the 0--100
   scale.
 
-  \item \textbf{Category migration.} Three of 240 combinations cross a band
-  boundary, each from a baseline score within about \num{1.3} points of the
-  boundary (59.58 $\rightarrow$ 60.3 and 60.39 across the Moderate--Strong
-  line; 80.92 $\rightarrow$ 79.63 across the Strong--High-priority line). No
-  scenario moves by more than one band, and no scenario distant from a boundary
-  migrates.
+  \item \textbf{Category migration.} \num{8} of \num{288} combinations cross a
+  band boundary. Six of the eight involve two scenarios sitting almost exactly
+  on the Moderate--Strong line, at \num{59.58} and \num{59.89} --- within half
+  a point of the boundary. The remaining two are a Strong--High-priority
+  crossing from \num{80.92} and a further crossing of the same near-boundary
+  scenario. No scenario moves by more than one band, and no scenario far from a
+  boundary migrates.
 
   \item \textbf{Influence ranking.} By mean absolute displacement: Cooling
-  Potential (0.58), Heat Priority Index (0.53), Vulnerability (0.49), NbS
-  Suitability (0.45), Co-benefits (0.31), Cost Feasibility (0.17). Cost
-  feasibility ranks last partly by construction: it is excluded and its weight
-  redistributed in the fifteen of twenty scenarios that supply no cost data, so
-  the weight binds only where economic evidence exists.
+  Potential (\num{0.74}), Heat Priority Index (\num{0.61}), NbS Suitability
+  (\num{0.51}), Vulnerability (\num{0.48}), Co-benefits (\num{0.33}), Cost
+  Feasibility (\num{0.14}). Cost feasibility ranks last partly by construction:
+  it is excluded and its weight redistributed in the nineteen of \num{24}
+  scenarios that supply no cost data, so the weight binds only where economic
+  evidence exists.
 \end{enumerate}
 
+\subsection{What moved since version \prevver{}, and why}
+\label{sec:sa-moved}
+
+\begin{keynote}
+\noindent\textbf{Every headline figure is slightly worse than at version
+\prevver{}, and the honest reading is that this is a property of the scenario
+set rather than a degradation of the methodology.}
+
+\begin{center}\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{Headline figure} & \textbf{\prevver{}} & \textbf{\methver{}} \\
+\midrule
+Worst-case rank stability      & 0.9737   & 0.9529 \\
+Pooled mean displacement       & 0.42     & 0.47 \\
+Category migrations            & 3 of 240 & 8 of 288 \\
+\quad as a proportion          & \SI{1.25}{\percent} & \SI{2.8}{\percent} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The cause is visible in the migration table. \textbf{Four of the
+eight migrations are a single new scenario}, the productive-landscape evidence
+gap, whose baseline score of \num{59.89} sits \num{0.11} points below a band
+boundary. A scenario that close to a boundary will cross it under almost any
+perturbation.
+
+The four new scenarios were chosen to exercise this release's \emph{evidence}
+edge cases --- the small-water envelope, the pergola-scale ceiling, the package
+cap, and the productive evidence gap --- and not to sit comfortably inside
+bands. One of them landing on a boundary is a coincidence of that choice.
+Reporting it as though the tool had become less stable would be the wrong
+reading; suppressing it would be worse.
+\end{keynote}
+
 \paragraph{Interpretation.} Under \SI{\pm 25}{\percent} perturbation of any
-single aggregation weight, the tool's priority ordering is substantially
-stable: at least \SI{97.4}{\percent} of pairwise orderings survive every
+single aggregation weight, the tool's priority ordering remains substantially
+stable: at least \SI{95.29}{\percent} of pairwise orderings survive every
 perturbation, scores move by well under half a point on average, and category
 changes occur only for sites already sitting on a band boundary. The disclosed
 equity-forward stance of \Cref{sec:effective-weights} therefore changes fewer
@@ -174,20 +217,29 @@ unless two options were near-tied to begin with --- and near-ties are exactly
 the cases the methodology already tells users not to resolve on the headline
 score alone.
 
-Two qualifications are owed. The analysis perturbs one weight at a time, so
-these figures are not bounds for simultaneous re-weightings. And the golden
-scenarios are designed to span the methodology's behaviour --- climates,
-typologies, data completeness, cost availability --- not to be a probability
-sample of real assessments; the stability figures are properties of this set.
-Both qualifications argue for reading near-boundary results as ranges rather
-than verdicts, which the confidence mechanism already enforces at the point of
-use.
+A third qualification is now visible in the numbers, and it is the one this
+version adds. \textbf{The migration count is a weak statistic on a set of
+\num{24} scenarios}, because it is dominated by where those scenarios happen to
+sit relative to band boundaries: one near-boundary scenario contributes half of
+the migrations. Rank stability and displacement are the figures to read. The
+migration count is best read as ``which scenarios sit on a boundary'', which is
+what the paragraph above states directly.
+
+Two further qualifications are owed and are unchanged. The analysis perturbs
+one weight at a time, so these figures are not bounds for simultaneous
+re-weightings. And the golden scenarios are designed to span the methodology's
+behaviour --- climates, archetypes, data completeness, cost availability ---
+not to be a probability sample of real assessments; the stability figures are
+properties of this set. Both qualifications argue for reading near-boundary
+results as ranges rather than verdicts, which the confidence mechanism already
+enforces at the point of use.
 
 \subsection{Publication and maintenance}
 
 The results above are also committed to the repository in machine-generated
-form (\texttt{docs/methodology/SENSITIVITY-ANALYSIS.md}) and in the
-Methodology Report, and must be regenerated whenever any weight changes. Because a
+form (\texttt{docs/\allowbreak methodology/\allowbreak
+SENSITIVITY-\allowbreak ANALYSIS.md}) and in the Methodology Report, and must
+be regenerated whenever any weight changes. Because a
 weight change requires a methodology version bump
 (\Cref{sec:governance}), and because the version stamp is enforced across all
 configuration files by continuous integration, a weight change that does not

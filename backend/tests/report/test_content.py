@@ -160,6 +160,112 @@ def test_input_rows_render_fields_this_catalog_does_not_know(render_args: Any) -
     assert extra.value == "some value"
 
 
+def test_a_single_intervention_names_itself_and_states_that_it_is_one(
+    render_args: Any,
+) -> None:
+    args = render_args("s01_temperate_street_trees_worked_example")
+    content = build_content(**args)
+    assert content.typology == args["result"]["typology"]["display_name"]
+    assert content.package_note == STRINGS["package_single"]
+
+
+def test_a_package_names_every_component_in_its_identity_line(render_args: Any) -> None:
+    """D-044.2: the report says what was assessed, not just the headline entry."""
+    args = render_args("s02_tropical_wet_informal_settlement_package")
+    names = [item["typology"]["display_name"] for item in args["result"]["components"]]
+    assert len(names) > 1
+    content = build_content(**args)
+    for name in names:
+        assert name in content.typology
+
+
+def test_package_rows_itemise_each_component_verbatim(render_args: Any) -> None:
+    """D-038: every component is reported on its own terms, nothing averaged.
+
+    The figures are the engine's own — the component's inherited evidence
+    class, its evidence rating, and its own adjusted cooling range.
+    """
+    args = render_args("s02_tropical_wet_informal_settlement_package")
+    components = args["result"]["components"]
+    content = build_content(**args)
+    assert len(content.package_rows) == len(components)
+
+    for row, component in zip(content.package_rows, components, strict=True):
+        typology = component["typology"]
+        assert row.name == typology["display_name"]
+        assert row.archetype == typology["archetype_display_name"]
+        assert row.evidence == OPTION_LABELS[typology["evidence_confidence"]]
+        assert fmt(component["cooling"]["delta_t_min_c"]) in row.cooling_range
+        assert fmt(component["cooling"]["delta_t_max_c"]) in row.cooling_range
+        # Every component's suitability is displayed, including the
+        # representative's: the marker is a separate field, so marking a row
+        # can never cost it its score.
+        assert row.suitability == fmt(component["suitability"]["score"])
+        assert row.is_representative == component["is_representative"]
+
+
+def test_the_package_note_states_the_capped_never_summed_rule(render_args: Any) -> None:
+    """D-014/D-044.4: no retrieved source quantifies super-additive cooling, so
+    the report says the estimate is never the sum of its parts."""
+    args = render_args("s02_tropical_wet_informal_settlement_package")
+    content = build_content(**args)
+    assert content.package_note == STRINGS["package_rule"]
+    assert "never the sum of its parts" in content.package_note
+
+
+def test_exactly_one_component_carries_the_package_estimate(render_args: Any) -> None:
+    args = render_args("s02_tropical_wet_informal_settlement_package")
+    result = args["result"]
+    content = build_content(**args)
+    marked = [row for row in content.package_rows if row.is_representative]
+    assert len(marked) == 1
+    representative = next(item for item in result["components"] if item["is_representative"])
+    assert marked[0].name == representative["typology"]["display_name"]
+    assert marked[0].suitability == fmt(representative["suitability"]["score"])
+    assert result["package"]["representative_nbs_type"] == representative["typology"]["nbs_type"]
+
+
+def test_the_typology_row_names_every_selected_entry(render_args: Any) -> None:
+    """``nbs_type`` is a list since D-044.2, and its label says so."""
+    args = render_args("s02_tropical_wet_informal_settlement_package")
+    content = build_content(**args)
+    row = next(item for item in content.inputs if item.field == "nbs_type")
+    assert row.label == FIELD_LABELS["nbs_type"] == "Intervention typologies"
+    for selected in args["inp"]["nbs_type"]:
+        assert selected in row.value
+    assert row.marker == ""
+
+
+def test_the_availability_answers_render_as_availability_only(render_args: Any) -> None:
+    """D-044.1: a reader must never look for these four fields' contribution to
+    a number, so the Inputs sheet labels them as gating answers."""
+    args = render_args("s24_productive_landscape_evidence_gap")
+    content = build_content(**args)
+    by_field = {row.field: row for row in content.inputs}
+    for field in (
+        "includes_railway",
+        "existing_woodland",
+        "waterfront_type",
+        "productive_governance",
+    ):
+        assert by_field[field].label == FIELD_LABELS[field]
+        assert "availability only" in by_field[field].label
+
+    governance = by_field["productive_governance"]
+    assert governance.value == ", ".join(args["inp"]["productive_governance"])
+    assert governance.marker == ""
+
+
+def test_an_empty_multi_select_is_a_real_answer_not_an_absence(render_args: Any) -> None:
+    """ "None selected" is distinct from "not answered": one is an answer."""
+    args = render_args("s24_productive_landscape_evidence_gap")
+    args["inp"]["productive_governance"] = []
+    content = build_content(**args)
+    row = next(item for item in content.inputs if item.field == "productive_governance")
+    assert row.value == STRINGS["none_selected"]
+    assert row.marker == ""
+
+
 def test_confidence_rows_state_level_and_completeness(render_args: Any) -> None:
     args = render_args("s01_temperate_street_trees_worked_example")
     result = args["result"]

@@ -46,6 +46,28 @@ during heat events. A favourable daytime result from this tool should
 selected on the strength of a daytime score may deliver much less of the
 health benefit a city is actually seeking.
 
+\begin{keynote}
+\noindent\textbf{The evidence retrieved for version \methver{} sharpens this
+limitation into a warning for two classes of intervention. They do not merely
+cool less at night; they warm.}
+
+\textbf{Water.} \textcite{yao2023b} measures \qty{1.8}{\degreeCelsius} of
+nocturnal warming at an urban pond, \textcite{yao2023a} measures a
+\SIrange{1.2}{1.3}{\degreeCelsius} nocturnal heat island at urban lakes, and
+\textcite{ampatzidis2020} states that blue space may exacerbate the nighttime
+urban heat island outright, with sensible cooling partly offset by increased
+water-vapour content.
+
+\textbf{Irrigated productive landscapes.} \textcite{cheung2022} predicts an
+increase in the daily \emph{minimum} air temperature, as heat stored in wet
+soil through the day is released overnight.
+
+In both cases the effect is \textbf{outside} the tool's daytime estimate rather
+than netted off against it, and both archetypes carry an output caveat saying
+so. A daytime-only tool that quietly omitted this would be reporting only the
+favourable half of what its own sources found.
+\end{keynote}
+
 A user whose primary concern is nighttime heat should treat this tool's output
 as addressing a related but different question.
 
@@ -65,9 +87,14 @@ insight this methodology cannot express through an air-temperature envelope.
 
 The direction of the resulting error is known and is worth stating plainly:
 \textbf{the tool systematically understates the benefit of shade-dominant
-interventions.} Street tree planting, shaded pedestrian corridors, and
-permeable shaded plazas deliver more human benefit than their air-temperature
-figures convey.
+interventions.} Every entry inheriting the street tree canopy, the continuous
+shaded corridor, the permeable shaded hardscape, or the vegetated shade
+structure delivers more human benefit than its air-temperature figure conveys.
+The vegetated shade structure is the starkest case, and it is measured:
+\textcite{ouyang2024} reports an air temperature reduction of
+\qty{1.42}{\degreeCelsius} alongside a mean radiant temperature reduction of
+\qty{15.93}{\degreeCelsius} for the same natural shade --- an order of
+magnitude apart. The tool reports the first number and says so.
 
 This bias was not corrected, and the decision not to correct it deserves
 explanation. Applying an uplift to shade-dominant typologies would require a
@@ -96,6 +123,55 @@ the evidence base covers the user's part of the world. A complete assessment of
 a site in a tropical city may report high cooling confidence while resting on
 thinner evidence than the same assessment in a temperate one. This is a known
 gap in the confidence model and a candidate for a future methodology version.
+
+\subsection{An entry's cooling value is its archetype's, not its own}
+\label{sec:limit-inheritance}
+
+This is the limitation created by the archetype model of
+\Cref{sec:archetypes}, and it is the price of the honesty that model buys.
+
+\num{110} catalogue entries are served by \num{18} cited evidence classes.
+Fifteen entries therefore report the street tree canopy's
+\SIrange{0.5}{3.0}{\degreeCelsius} and eleven report the green fa\c{c}ade's
+\SIrange{0.3}{2.0}{\degreeCelsius}, whatever distinguishes one entry from
+another within the class. A suspended-pavement tree pit and a continuous tree
+trench are not the same intervention, and the tool does not pretend to
+distinguish their cooling.
+
+The alternative was worse. Assigning \num{110} separate envelopes would have
+required inventing \num{92} of them, since solution-specific measurement does
+not exist at that resolution, and a fabricated envelope is indistinguishable in
+a report from a measured one. What the tool does instead is inherit a
+\emph{cited} envelope and \textbf{name the evidence class in every result}, so
+that a reader can see the resolution of the claim rather than having to infer
+it. Two entries reporting the same range because they inherit the same class is
+a visible fact about the output, not a hidden assumption inside it.
+
+The consequence for use is direct: \textbf{the tool does not discriminate
+between entries within one archetype on cooling}. Two such entries are
+separated, if at all, by their suitability conditions, their co-benefit
+defaults, and their availability --- not by their temperature range. A user
+choosing between them on the strength of a cooling difference is reading a
+difference that is not there.
+
+\subsection{Newer and larger published figures are not adopted}
+\label{sec:limit-non-adoption}
+
+\Cref{sec:non-adoption} records that \textcite{kumar2024} reports figures
+substantially above this library's envelopes for several intervention types ---
+green walls at \qty{4.1(42)}{\degreeCelsius}, vegetated balconies at
+\qty{3.8(27)}{\degreeCelsius}, botanical gardens at
+\qty{5.0(35)}{\degreeCelsius} --- and that they are deliberately not adopted,
+because selective adoption would break internal consistency and wholesale
+adoption is a full recalibration requiring its own sensitivity analysis.
+
+A reader should understand what that means for the outputs: \textbf{if those
+figures are right, this tool understates the corresponding interventions.} The
+non-adoption is a defensible methodological choice and it is also a live
+disagreement with a recent review, held open rather than resolved. It is
+recorded as a candidate for a future methodology version, and a reviewer who
+believes the recalibration should happen now is making an argument the project
+would need to answer with evidence rather than with precedent.
 
 \subsection{Modelling bias is mitigated, not eliminated}
 
@@ -126,17 +202,22 @@ version stamp of the configuration that produced them.
 
 \subsection{Specification gaps at version \methver{}}
 
-Three parts of the methodology are declared but not fully specified at this
-version, and are collected here so that a reviewer has them in one place:
-the input-to-sub-indicator rules for the NbS Suitability and Equity scores
-(\Cref{sec:composite-subscores}); the payback bracket boundaries and
-combination rule for cost feasibility (\Cref{eq:cost-feasibility}); and the
+The three specification gaps disclosed at version 2026.07.30 --- the
+input-to-sub-indicator rules for the NbS Suitability and Equity scores
+(\Cref{sec:composite-subscores}), the payback bracket boundaries and
+combination rule for cost feasibility (\Cref{eq:cost-feasibility}), and the
 enumeration of which input fields feed which confidence block
-(\Cref{sec:confidence}). In addition, the country emission factor table ships
-empty (\Cref{sec:ghg}), so greenhouse-gas outputs are reported as
-\emph{not calculated} unless a deployment supplies its own factor. Each of
-these requires a version bump and a corresponding update to this document when
-it is resolved.
+(\Cref{sec:confidence}) --- were closed at version 2026.08.01 and remain
+closed. They are named here because a reader comparing versions should be able
+to see what happened to them, not because they are still open.
+
+One gap remains, and it is a data gap rather than a specification gap: the
+country emission factor table ships \textbf{empty} (\Cref{sec:ghg}), so
+greenhouse-gas outputs are reported as \emph{not calculated} unless a
+deployment supplies its own factor. This is the verification policy operating
+as designed --- no unverified value ships --- and it is nonetheless a
+functional limitation. Closing it requires per-country verification, a version
+bump, and a corresponding update to this document in the same change set.
 
 \subsection{Misuse cases}
 \label{sec:misuse}
@@ -213,4 +294,7 @@ that had none, which is worse than having no tool at all.
   score that is quoted.
   \item Name the metric whenever a temperature is reported: daytime,
   pedestrian-level, air temperature.
+  \item Carry the evidence class with the number. A cooling range is the
+  archetype's, not the entry's (\Cref{sec:limit-inheritance}), and the result
+  states which archetype it came from for exactly this reason.
 \end{itemize}

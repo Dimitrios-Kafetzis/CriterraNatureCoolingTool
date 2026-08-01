@@ -4,13 +4,28 @@ The methodology lives in ``config/*.yaml``, not in code. This module loads those
 files, validates them against Pydantic schemas, and refuses to produce a
 configuration that violates the project's evidence rules.
 
-Two rules are enforced here rather than left to review:
+Since version ``2026.08.04`` the typology library has two levels (D-044). An
+**archetype** is a cited evidence class: it carries every performance value —
+the temperature envelope, the base cooling score, the evidence rating, the
+suitability conditions, the co-benefit defaults — and the citations behind
+them. A **typology** is one of the 110 catalogue entries: it carries identity,
+family, availability, and the archetype it inherits from, plus per-entry
+suitability overrides where the source text states a constraint (D-044.3).
+Loading resolves the two into the flat ``Typology`` the scoring modules have
+always consumed, so no formula changed shape when the library grew.
+
+Three rules are enforced here rather than left to review:
 
 1. Every typology's performance values must carry at least one source citation
-   (decision D-012). An uncited typology is a hard error, not a warning.
+   (decision D-012). Because values are inherited, this is enforced on the
+   *resolved* typology: an entry whose archetype cites nothing is a hard error.
 2. Every source key referenced anywhere in the configuration must exist in the
    bibliography (``docs/methodology/BIBLIOGRAPHY.md``), so a citation cannot
    point at a source that was never recorded.
+3. Every typology must name an archetype that exists, and every archetype must
+   be used by at least one typology — an evidence class nothing inherits from
+   is a citation with no consumer, and a dangling archetype reference would
+   otherwise fail at scoring time rather than at load time.
 """
 
 from __future__ import annotations
@@ -21,10 +36,15 @@ from pathlib import Path
 from typing import Any, Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 CategoryName = Literal["green", "building", "blue_green", "hybrid"]
 ConfidenceLevel = Literal["low", "medium", "high"]
+EntryKind = Literal["element", "composite"]
+Provenance = Literal["existing", "new", "derived"]
+AssessmentScaleName = Literal["city", "district", "neighbourhood", "site", "building"]
+WaterfrontType = Literal["lake", "river", "dry_river", "covered_river", "sea"]
+GovernanceType = Literal["community", "individual", "institutional", "commercial"]
 
 _VERSION_PATTERN = re.compile(r"^\d{4}\.\d{2}\.\d{2}$")
 _BIBLIOGRAPHY_KEY_PATTERN = re.compile(r"^\*\*`([a-z0-9]+)`\*\*", re.MULTILINE)
@@ -54,22 +74,61 @@ class Suitability(BaseModel):
     unsuitable_climate_zones: list[str] = Field(default_factory=list)
 
 
-class Typology(BaseModel):
-    """One NbS typology and its literature-grounded performance assumptions."""
+class SuitabilityOverride(BaseModel):
+    """A per-entry departure from the archetype's suitability conditions.
+
+    Permitted only where the catalogue's own description of the entry makes an
+    inherited value plainly wrong (D-044.3); every replacement value is one
+    already present in the cited v1.1 library, so no new number enters the
+    methodology through an override.
+    """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    nbs_id: str
-    nbs_type: str
+    minimum_site_area_m2: float | None = Field(default=None, gt=0)
+    requires_soil: Literal["none", "limited", "moderate", "high"] | None = None
+    requires_irrigation: Literal["none", "occasional", "reliable"] | None = None
+
+
+class Availability(BaseModel):
+    """When an entry is offered to the user (D-043, D-044.1).
+
+    Availability gates *selection*; it feeds no score. A condition that is
+    ``None``/``False`` is ungated — notably the four constructed water features,
+    which need no existing water body, and the woodland *creation* types, which
+    need no existing woodland.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    scales: list[AssessmentScaleName] = Field(min_length=1)
+    land_uses: list[str] | Literal["all"]
+    requires_waterfront: list[WaterfrontType] | None = None
+    requires_railway: bool = False
+    requires_existing_woodland: bool = False
+    requires_governance: GovernanceType | None = None
+
+
+class Archetype(BaseModel):
+    """One cited cooling evidence class (D-044).
+
+    Every performance value in the library lives here, with the citations that
+    support it. The 110 catalogue entries carry no performance value of their
+    own; each inherits exactly one archetype and the report names the evidence
+    class it inherited from.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    archetype: str
     display_name: str
+    provenance: Provenance
     category: CategoryName
     base_cooling_score: float = Field(ge=0, le=100)
     temp_reduction_min_c: float = Field(ge=0)
     temp_reduction_max_c: float = Field(ge=0)
     evidence_confidence: ConfidenceLevel
-    primary_cooling_mechanism: str
     building_energy_applicable: bool
-    typical_use_context: list[str]
     suitability: Suitability
     co_benefit_defaults: dict[str, str]
     output_caveats: list[str] = Field(default_factory=list)
@@ -87,13 +146,136 @@ class Typology(BaseModel):
         return value
 
 
+class TypologyEntry(BaseModel):
+    """One catalogue entry, as written in ``nbs_typologies.yaml``."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    nbs_id: str
+    nbs_type: str
+    display_name: str
+    archetype: str
+    family: str
+    kind: EntryKind
+    primary_cooling_mechanism: str
+    availability: Availability
+    suitability_overrides: SuitabilityOverride | None = None
+    notes: str | None = None
+
+
+class Typology(BaseModel):
+    """One catalogue entry resolved against its archetype.
+
+    This is the flat view every scoring module consumes, and the shape the API
+    serves. ``archetype`` and ``evidence_provenance`` are reported so a result
+    can always name the evidence class its numbers came from.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    nbs_id: str
+    nbs_type: str
+    display_name: str
+    family: str
+    kind: EntryKind
+    archetype: str
+    archetype_display_name: str
+    evidence_provenance: Provenance
+    category: CategoryName
+    base_cooling_score: float = Field(ge=0, le=100)
+    temp_reduction_min_c: float = Field(ge=0)
+    temp_reduction_max_c: float = Field(ge=0)
+    evidence_confidence: ConfidenceLevel
+    primary_cooling_mechanism: str
+    building_energy_applicable: bool
+    typical_use_context: list[str]
+    availability: Availability
+    suitability: Suitability
+    suitability_inherited: bool
+    co_benefit_defaults: dict[str, str]
+    output_caveats: list[str] = Field(default_factory=list)
+    sources: list[Source] = Field(min_length=1)
+    notes: str | None = None
+
+
+# The land-use enumeration the availability matrix and the urban-context
+# sub-indicator share. Declared here so that ``land_uses: all`` resolves to a
+# concrete list rather than a special case every consumer must remember.
+LAND_USES: tuple[str, ...] = (
+    "street_corridor",
+    "residential",
+    "mixed_use",
+    "commercial",
+    "public_space",
+    "park",
+    "school",
+    "campus",
+    "healthcare",
+    "memorial",
+    "industrial",
+    "other",
+)
+
+
+def _resolve(entry: TypologyEntry, archetype: Archetype) -> Typology:
+    """Merge one entry with its archetype into the flat scoring view."""
+    override = entry.suitability_overrides
+    conditions = archetype.suitability
+    if override is not None:
+        conditions = Suitability(
+            minimum_site_area_m2=(
+                override.minimum_site_area_m2
+                if override.minimum_site_area_m2 is not None
+                else conditions.minimum_site_area_m2
+            ),
+            requires_soil=override.requires_soil or conditions.requires_soil,
+            requires_irrigation=override.requires_irrigation or conditions.requires_irrigation,
+            unsuitable_climate_zones=list(conditions.unsuitable_climate_zones),
+        )
+    land_uses = entry.availability.land_uses
+    return Typology(
+        nbs_id=entry.nbs_id,
+        nbs_type=entry.nbs_type,
+        display_name=entry.display_name,
+        family=entry.family,
+        kind=entry.kind,
+        archetype=archetype.archetype,
+        archetype_display_name=archetype.display_name,
+        evidence_provenance=archetype.provenance,
+        category=archetype.category,
+        base_cooling_score=archetype.base_cooling_score,
+        temp_reduction_min_c=archetype.temp_reduction_min_c,
+        temp_reduction_max_c=archetype.temp_reduction_max_c,
+        evidence_confidence=archetype.evidence_confidence,
+        primary_cooling_mechanism=entry.primary_cooling_mechanism,
+        building_energy_applicable=archetype.building_energy_applicable,
+        # The urban-context sub-indicator (D-022) compares the site's land use
+        # against the entry's own land-use list, which is the availability
+        # matrix's list: an entry is "in context" exactly where it is offered.
+        typical_use_context=list(LAND_USES) if land_uses == "all" else list(land_uses),
+        availability=entry.availability,
+        suitability=conditions,
+        suitability_inherited=override is None,
+        co_benefit_defaults=dict(archetype.co_benefit_defaults),
+        output_caveats=list(archetype.output_caveats),
+        sources=list(archetype.sources),
+        notes=entry.notes if entry.notes is not None else archetype.notes,
+    )
+
+
 class TypologyLibrary(BaseModel):
-    """The complete typology library, as loaded from ``nbs_typologies.yaml``."""
+    """The complete typology library, as loaded from ``nbs_typologies.yaml``.
+
+    ``archetypes`` and ``typologies`` are the file as written; ``resolved`` is
+    the flat scoring view, computed once at load.
+    """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     version: str
-    typologies: list[Typology] = Field(min_length=1)
+    archetypes: list[Archetype] = Field(min_length=1)
+    typologies: list[TypologyEntry] = Field(min_length=1)
+    resolved: list[Typology] = Field(default_factory=list)
 
     @field_validator("version")
     @classmethod
@@ -102,9 +284,18 @@ class TypologyLibrary(BaseModel):
             raise ValueError(f"version must be date-stamped as YYYY.MM.DD, got {value!r}")
         return value
 
+    @field_validator("archetypes")
+    @classmethod
+    def _unique_archetypes(cls, value: list[Archetype]) -> list[Archetype]:
+        names = [item.archetype for item in value]
+        duplicates = {name for name in names if names.count(name) > 1}
+        if duplicates:
+            raise ValueError(f"duplicate archetype: {sorted(duplicates)}")
+        return value
+
     @field_validator("typologies")
     @classmethod
-    def _unique_identifiers(cls, value: list[Typology]) -> list[Typology]:
+    def _unique_identifiers(cls, value: list[TypologyEntry]) -> list[TypologyEntry]:
         for field in ("nbs_id", "nbs_type"):
             seen = [getattr(item, field) for item in value]
             duplicates = {item for item in seen if seen.count(item) > 1}
@@ -112,12 +303,46 @@ class TypologyLibrary(BaseModel):
                 raise ValueError(f"duplicate {field}: {sorted(duplicates)}")
         return value
 
+    @model_validator(mode="after")
+    def _resolve_inheritance(self) -> TypologyLibrary:
+        by_name = {item.archetype: item for item in self.archetypes}
+        missing = sorted({e.archetype for e in self.typologies} - set(by_name))
+        if missing:
+            raise ValueError(f"typologies reference unknown archetypes: {missing}")
+        unused = sorted(set(by_name) - {e.archetype for e in self.typologies})
+        if unused:
+            raise ValueError(f"archetypes no typology inherits from: {unused}")
+        unknown_uses = sorted(
+            {
+                use
+                for entry in self.typologies
+                if entry.availability.land_uses != "all"
+                for use in entry.availability.land_uses
+                if use not in LAND_USES
+            }
+        )
+        if unknown_uses:
+            raise ValueError(f"availability names unknown land uses: {unknown_uses}")
+        object.__setattr__(
+            self,
+            "resolved",
+            [_resolve(entry, by_name[entry.archetype]) for entry in self.typologies],
+        )
+        return self
+
     def by_type(self, nbs_type: str) -> Typology:
-        """Return the typology with this ``nbs_type``, or raise ``ConfigError``."""
-        for typology in self.typologies:
+        """Return the resolved typology with this ``nbs_type``, or raise."""
+        for typology in self.resolved:
             if typology.nbs_type == nbs_type:
                 return typology
         raise ConfigError(f"unknown nbs_type: {nbs_type!r}")
+
+    def archetype_by_name(self, name: str) -> Archetype:
+        """Return one archetype by name, or raise ``ConfigError``."""
+        for archetype in self.archetypes:
+            if archetype.archetype == name:
+                return archetype
+        raise ConfigError(f"unknown archetype: {name!r}")
 
 
 class MethodologyConfig(BaseModel):
@@ -134,6 +359,7 @@ class MethodologyConfig(BaseModel):
     country_defaults: dict[str, Any]
     recommendation_templates: dict[str, Any]
     derived_scores: dict[str, Any]
+    availability: dict[str, Any]
 
 
 _CONFIG_FILES = {
@@ -144,6 +370,7 @@ _CONFIG_FILES = {
     "country_defaults": "country_defaults.yaml",
     "recommendation_templates": "recommendation_templates.yaml",
     "derived_scores": "derived_scores.yaml",
+    "availability": "availability.yaml",
 }
 
 
@@ -247,6 +474,13 @@ def load_config(
             f"but {mismatched} differ. All methodology files must share one version."
         )
 
+    # D-012/D-017 — every typology's performance values carry a citation — is
+    # enforced structurally rather than here: ``Archetype.sources`` has a
+    # minimum length of one, every typology inherits exactly one archetype, and
+    # an archetype nothing inherits from is rejected above. A resolved typology
+    # therefore cannot exist without a citation, and a second runtime check
+    # would be unreachable code asserting what the schema already guarantees.
+
     known = bibliography_keys(bibliography_path)
     cited = collect_source_keys(
         {"typologies": library.model_dump(), **documents},
@@ -256,6 +490,22 @@ def load_config(
         raise ConfigError(
             f"citations reference sources absent from the bibliography: {unknown}. "
             "Add them to docs/methodology/BIBLIOGRAPHY.md or correct the keys."
+        )
+
+    # Every output caveat an archetype declares must have text to render, or a
+    # result would silently drop a caveat the evidence requires it to state.
+    caveat_texts = documents["recommendation_templates"].get("flags", {})
+    missing_caveats = sorted(
+        {
+            caveat
+            for archetype in library.archetypes
+            for caveat in archetype.output_caveats
+            if caveat not in caveat_texts
+        }
+    )
+    if missing_caveats:
+        raise ConfigError(
+            f"output caveats have no text in recommendation_templates.yaml: {missing_caveats}."
         )
 
     return MethodologyConfig(

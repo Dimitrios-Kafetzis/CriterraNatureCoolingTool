@@ -5,7 +5,7 @@ standalone, publication-quality scientific paper for expert review — the
 document to send to UNEP, independent scientific reviewers, and public
 authorities.
 
-**Methodology version:** `2026.08.03` · **Licence:** Apache-2.0 · **Author:** Criterra
+**Methodology version:** `2026.08.04` · **Licence:** Apache-2.0 · **Author:** Criterra
 
 This paper is the expanded, citable form of
 [`docs/methodology/METHODOLOGY.md`](../docs/methodology/METHODOLOGY.md). It is
@@ -20,7 +20,7 @@ version stamp.
 
 > Criterra (2026). *The Nature for Cooling Rapid Assessment Tool: a transparent,
 > evidence-grounded screening methodology for prioritising nature-based solutions
-> for urban cooling.* Methodology Report, version 2026.08.03.
+> for urban cooling.* Methodology Report, version 2026.08.04.
 > https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool
 
 ```bibtex
@@ -32,7 +32,7 @@ version stamp.
   type        = {Methodology Report},
   institution = {Criterra},
   year        = {2026},
-  version     = {2026.07.30},
+  version     = {2026.08.04},
   url         = {https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool},
 }
 ```
@@ -65,7 +65,7 @@ Or directly:
 latexmk -pdf main.tex
 ```
 
-The current build produces a 72-page PDF with no LaTeX errors, no warnings, and
+The current build produces a 111-page PDF with no LaTeX errors, no warnings, and
 no overfull boxes.
 
 ## Layout
@@ -82,17 +82,17 @@ paper/
 │   ├── related-work.tex     Positioning; how a screening tool should be judged
 │   ├── framework.tex        Three-layer structure
 │   ├── inputs.tex           Inputs, normalisation, the LST proxy caution
-│   ├── typologies.tex       The 14-typology library and its calibration
+│   ├── typologies.tex       The archetype library: 110 entries over 18 classes
 │   ├── formulas.tex         Every scoring formula and weight
 │   ├── uncertainty.tex      Ranges, branched confidence, missing data
-│   ├── sensitivity.tex      Planned analysis (not a result — see below)
+│   ├── sensitivity.tex      Design and the regenerated results at 2026.08.04
 │   ├── implementation.tex   Config-as-data, machine-enforced evidence rules
 │   ├── worked-example.tex   One hand-computed illustrative assessment
 │   ├── limitations.tex      Limitations and misuse cases
 │   ├── governance.tex       Versioning and how to challenge the methodology
 │   ├── conclusion.tex
-│   └── appendices.tex       A–E: typologies, weights, fields, glossary,
-│                            source verification register
+│   └── appendices.tex       A–E: archetypes and entries, weights, fields,
+│                            glossary, source verification register
 ├── figures/           TikZ / pgfplots sources (all vector, no raster)
 │   ├── three-layer-framework.tex
 │   ├── data-flow.tex
@@ -121,9 +121,15 @@ paper/
   air-temperature-only scope, the geographic skew of the evidence base, the
   modelling bias, the absence of default costs, and the contestability of the
   weights are deliberate disclosures.
-- **Sensitivity analysis is planned, not reported.** Section 9 specifies a
-  design. It has not been run at version `2026.07.30`, and the paper must not
-  imply results exist.
+- **Sensitivity analysis is reported, and its published design is fixed.** The
+  design was published before the engine existed and has not been altered. The
+  results are regenerated from `docs/methodology/SENSITIVITY-ANALYSIS.md`
+  whenever the scenario set or any aggregation weight moves, and every figure
+  in the paper must match that file.
+- **An entry carries no performance value.** Envelopes, base scores, evidence
+  ratings, suitability conditions, and co-benefit defaults belong to the
+  archetype. Anything the paper attributes to a catalogue entry must be
+  identity, family, availability, or its primary cooling mechanism.
 - **All units via `siunitx`**, all figures vector (TikZ/pgfplots), all tables
   `booktabs` with no vertical rules.
 
@@ -131,7 +137,8 @@ paper/
 
 | Macro | Renders |
 |---|---|
-| `\methver` | the methodology version, `2026.07.30` |
+| `\methver` | the methodology version, `2026.08.04` |
+| `\prevver` | the previous methodology version, `2026.08.03` |
 | `\tool` / `\Tool` | "the Nature for Cooling Rapid Assessment Tool" |
 | `\repourl` | the repository URL |
 | `\clamp{x}` | $\mathrm{clamp}(x)$, bounding to 0–100 |
@@ -140,18 +147,18 @@ paper/
 | `\fieldname{...}` | a `snake_case` config field, breakable at underscores |
 | `keynote` environment | a boxed note the reader must not skip |
 
-## Known specification gaps recorded in the paper
+## Known gaps recorded in the paper
 
-The paper documents, rather than papers over, four places where methodology
-version `2026.07.30` is incomplete. These are listed in Section 12.8 and should
-be resolved with the engine in Phase 2:
+The three specification gaps disclosed at version `2026.07.30` — the
+input-to-sub-indicator rules, the cost-feasibility derivation, and the
+confidence field-to-block mapping — were closed at `2026.08.01`. One gap
+remains, and the paper states it in the limitations section:
 
-1. The input-to-sub-indicator rules for the NbS Suitability and Equity scores.
-2. The payback bracket boundaries and combination rule for cost feasibility.
-3. The enumeration of which input fields feed which confidence block.
-4. The country emission factor table, which ships empty, so greenhouse-gas
-   outputs report *not calculated* unless a deployment supplies its own factor.
+- The country emission factor table ships **empty**, so greenhouse-gas outputs
+  report *not calculated* unless a deployment supplies its own factor.
 
-Additionally, the Equity Score is computed and reported but does not enter the
-final aggregation, and the `imperviousness` field is used by the heat exposure
-formula without being declared in `config/input_mapping.yaml`.
+Two disclosures that are design choices rather than gaps are also carried in
+the paper: the Equity Score is computed and reported but does not enter the
+final aggregation, and an entry's cooling range is its archetype's, so the tool
+does not discriminate on cooling between two entries inheriting the same
+evidence class.

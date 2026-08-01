@@ -17,10 +17,40 @@ export type FieldIssue = Schemas['FieldIssue'];
 export type MetaResponse = Schemas['MetaResponse'];
 export type TypologyLibrary = Schemas['TypologyLibrary'];
 export type Typology = Schemas['Typology'];
+export type TypologySummary = Schemas['TypologySummary'];
+export type ComponentBlock = Schemas['ComponentBlock'];
+export type PackageBlock = Schemas['PackageBlock'];
 export type ProjectSummary = Schemas['ProjectSummary'];
 export type ProjectView = Schemas['ProjectView'];
 export type AssessmentView = Schemas['AssessmentView'];
 export type ConfidenceLevel = BlockConfidencePreview['level'];
+
+/** The five element families and the composite families, exactly as served. */
+export type TypologyFamily = Typology['family'];
+
+/**
+ * The site conditions `GET /api/typologies/available` gates on (D-043,
+ * D-044.1). Assembled from a draft; every value is passed through untouched,
+ * because the frontend computes no availability rule of its own — it asks.
+ */
+export interface AvailabilityQuery {
+  assessment_scale: NonNullable<AssessmentInput['assessment_scale']>;
+  land_use?: AssessmentInput['land_use'];
+  waterfront_type?: AssessmentInput['waterfront_type'];
+  includes_railway?: boolean | undefined;
+  existing_woodland?: boolean | undefined;
+  productive_governance?: AssessmentInput['productive_governance'];
+}
+
+/**
+ * `GET /api/typologies/available` (D-043, D-044.1).
+ *
+ * Generated from the service's own response model, like every other response
+ * shape: the service is the single source of truth and CI fails on drift.
+ * `nbs_types` is rendered exactly as ordered there. It is not a permission
+ * list — an entry absent from it stays fully selectable (D-019).
+ */
+export type AvailableTypologies = components['schemas']['AvailableTypologies'];
 
 /**
  * A draft questionnaire state: any subset of the engine's input fields

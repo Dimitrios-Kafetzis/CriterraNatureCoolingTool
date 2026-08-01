@@ -1,0 +1,73 @@
+{
+ "name": "Constructed wetland on a residential site — the small-water envelope",
+ "description": "Guards the retrieval finding that small constructed water features take their own 0.0-1.0 C archetype and are NEVER interpolated with large water bodies by area (D-044, D-045). A 40 000 m2 site is deliberately used: a large site must not pull this entry toward the large_water_body envelope, because the two are separate bodies of study rather than two points on a dose-response curve.",
+ "derivation": [
+  "Heat exposure (data-poor): 75.0.",
+  "Vulnerability: 50.0.",
+  "HPI: 0.60*75.0 + 0.40*50.0 = 65.0 (high).",
+  "Adjustment for Constructed Wetland: 0.675.",
+  "Cooling: base 40 * 0.675 = 27.0; envelope 0.0-1.0 C inherited from the small_constructed_water evidence class; clipped range 0.0-0.68 C (midpoint 0.34 -> low).",
+  "Suitability: 86.25 (minimum area 50 m2).",
+  "Co-benefits: 51.25. Equity: 50.0.",
+  "Energy: typology_not_applicable.",
+  "Opportunity: 53.96 (moderate); excluded ['cost_feasibility'].",
+  "Confidence: cooling medium, energy low, economic low, equity low -> lower median low."
+ ],
+ "input": {
+  "assessment_scale": "neighbourhood",
+  "site_area_m2": 40000,
+  "existing_tree_canopy_percent": 5,
+  "existing_green_cover_percent": 30,
+  "impervious_surface_percent": 55,
+  "soil_availability": "moderate",
+  "irrigation_availability": "none",
+  "land_use": "park",
+  "climate_zone": "temperate",
+  "heat_exposure_level": "high",
+  "population_density": "medium",
+  "vulnerable_population_presence": "medium",
+  "nbs_type": [
+   "constructed_wetland"
+  ],
+  "new_canopy_area_at_maturity_m2": 0
+ },
+ "expected": {
+  "heat_exposure.score": 75.0,
+  "heat_exposure.path": "data_poor",
+  "vulnerability.score": 50.0,
+  "heat_priority.score": 65.0,
+  "heat_priority.category": "high",
+  "adjustment.factor": 0.675,
+  "cooling.potential_score": 27.0,
+  "cooling.delta_t_min_c": 0.0,
+  "cooling.delta_t_max_c": 0.68,
+  "cooling.delta_t_midpoint_c": 0.34,
+  "cooling.heat_index_improvement": "low",
+  "suitability.score": 86.25,
+  "co_benefits.score": 51.25,
+  "equity.score": 50.0,
+  "energy.status": "typology_not_applicable",
+  "energy.savings_min_kwh_per_year": null,
+  "energy.savings_max_kwh_per_year": null,
+  "ghg.status": "energy_not_calculated",
+  "costs.annual_savings_status": "energy_not_calculated",
+  "costs.payback_status": "missing_capital_cost",
+  "costs.cost_feasibility_status": "not_estimated",
+  "costs.investment_readiness_status": "not_estimated",
+  "opportunity.score": 53.96,
+  "opportunity.category": "moderate",
+  "opportunity.excluded_components": [
+   "cost_feasibility"
+  ],
+  "confidence.cooling": "medium",
+  "confidence.energy": "low",
+  "confidence.economic": "low",
+  "confidence.equity": "low",
+  "confidence.overall": "low",
+  "confidence.cooling_capped_by_evidence": false,
+  "package.component_count": 1,
+  "package.representative_nbs_type": "constructed_wetland",
+  "typology.archetype": "small_constructed_water",
+  "cooling.shade_potential_percent": 0.0
+ }
+}

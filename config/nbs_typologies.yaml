@@ -1,12 +1,27 @@
-# NbS Typology Library
+# NbS Typology Library — cooling archetypes and catalogue entries
 #
-# The performance assumptions for each of the 14 supported nature-based solution
-# typologies. Every performance value carries a `sources` list; CI rejects any
-# typology whose performance values are uncited.
+# The library has two levels since version 2026.08.04 (D-044).
+#
+# An ARCHETYPE is a cited evidence class. It carries every performance value —
+# temperature envelope, base cooling score, evidence rating, suitability
+# conditions, co-benefit defaults — and the citations behind them. There are 18.
+#
+# A TYPOLOGY is one of the 110 curated catalogue entries. It carries identity,
+# family, availability, and the one archetype it inherits from. It carries NO
+# performance value of its own.
+#
+# This is how the UNEP catalogue is adopted without weakening the evidence rules:
+# solution-specific cooling literature does not exist for 110 typologies, and
+# inventing 110 envelopes would have manufactured precision the catalogue does
+# not contain. Instead an entry inherits a CITED envelope and every result names
+# the evidence class it inherited from — a Miyawaki forest reports its cooling on
+# the dense-canopy evidence, and says so.
 #
 # All temperature values are DAYTIME, PEDESTRIAN-LEVEL AIR temperature reductions
 # in degrees Celsius, relative to an equivalent unimproved site. They are NOT
-# surface temperatures and NOT thermal comfort indices.
+# surface temperatures and NOT thermal comfort indices. Several of the sources
+# below report both, and keeping them apart is the single most important thing
+# this library does.
 #
 # temp_reduction_min_c / temp_reduction_max_c define the literature envelope.
 # Site adjustment may reduce an estimate below this envelope but never above it
@@ -15,20 +30,27 @@
 # Derivations: docs/methodology/EVIDENCE-TABLES.md
 # Source keys: docs/methodology/BIBLIOGRAPHY.md
 
-version: "2026.08.03"
+version: "2026.08.04"
 
-typologies:
-  - nbs_id: "01"
-    nbs_type: street_tree_planting
-    display_name: Street tree planting
+archetypes:
+
+  # ---------------------------------------------------------------------------
+  # The twelve inherited classes. These ARE the v1.1 typologies, unchanged:
+  # same envelopes, same base scores, same evidence ratings, same suitability
+  # conditions, same citations (D-043.6). They are the only entries in the whole
+  # library with individually retrieved literature behind them, and this release
+  # keeps that evidence rather than trading it for catalogue names.
+  # ---------------------------------------------------------------------------
+
+  - archetype: street_tree_canopy
+    display_name: Street tree canopy
+    provenance: existing
     category: green
     base_cooling_score: 75
     temp_reduction_min_c: 0.5
     temp_reduction_max_c: 3.0
     evidence_confidence: high
-    primary_cooling_mechanism: shade and evapotranspiration
     building_energy_applicable: true
-    typical_use_context: [street_corridor, residential, mixed_use, commercial, campus]
     suitability:
       minimum_site_area_m2: 100
       requires_soil: limited
@@ -48,21 +70,21 @@ typologies:
         finding: "Empirical studies broadly support cooler air beneath tree canopy."
       - key: rahman2020
         finding: "Species and leaf area index materially change delivered cooling."
+      - key: kumar2024
+        finding: "Street trees measured at up to 2.8 C by in-situ monitoring, inside this envelope: newer and broader evidence supports the conservative calibration rather than overturning it."
     notes: >
       Upper bound capped at 3.0 C rather than the tropical central estimate of
       4.0 C, which carries a +/-1.6 C interval and reflects favourable conditions.
 
-  - nbs_id: "02"
-    nbs_type: shaded_pedestrian_corridor
-    display_name: Shaded pedestrian corridor
+  - archetype: continuous_shaded_corridor
+    display_name: Continuous shaded corridor
+    provenance: existing
     category: green
     base_cooling_score: 80
     temp_reduction_min_c: 0.5
     temp_reduction_max_c: 3.0
     evidence_confidence: medium
-    primary_cooling_mechanism: continuous shade and evapotranspiration
     building_energy_applicable: false
-    typical_use_context: [street_corridor, public_space, mixed_use, campus, memorial]
     suitability:
       minimum_site_area_m2: 200
       requires_soil: limited
@@ -83,17 +105,15 @@ typologies:
       The narrow-street effect reported by keravec2026 is an urban-form effect,
       not an NbS intervention, and is deliberately not inherited.
 
-  - nbs_id: "03"
-    nbs_type: pocket_park
-    display_name: Pocket park
+  - archetype: small_green_area_with_trees
+    display_name: Small green area with trees
+    provenance: existing
     category: green
     base_cooling_score: 65
     temp_reduction_min_c: 0.3
     temp_reduction_max_c: 1.5
     evidence_confidence: high
-    primary_cooling_mechanism: evapotranspiration and shade
     building_energy_applicable: false
-    typical_use_context: [public_space, residential, mixed_use, campus, memorial]
     suitability:
       minimum_site_area_m2: 200
       requires_soil: limited
@@ -106,24 +126,24 @@ typologies:
       urban_quality: high
     sources:
       - key: bowler2010
-        finding: "Meta-analysis: park on average 0.94 C cooler by day; larger parks and those with trees cooler."
+        finding: "Meta-analysis: park on average 0.94 C cooler by day; the review reports that larger parks and parks containing trees tended to be cooler, stated qualitatively."
       - key: keravec2026
         finding: "Parks 1.3 C pedestrian-level daytime air temperature reduction."
     notes: >
       Explicitly the small end of the park distribution, bounded below the
       general park estimate by the size relationship reported in bowler2010.
+      That relationship is qualitative and hedged in the source, and is worded
+      here to match (corrected at 2026.08.04).
 
-  - nbs_id: "04"
-    nbs_type: urban_forest
-    display_name: Urban forest / dense canopy planting
+  - archetype: dense_tree_canopy
+    display_name: Dense tree canopy
+    provenance: existing
     category: green
     base_cooling_score: 90
     temp_reduction_min_c: 1.0
     temp_reduction_max_c: 3.0
     evidence_confidence: high
-    primary_cooling_mechanism: dense shade and evapotranspiration
     building_energy_applicable: true
-    typical_use_context: [park, public_space, residential, campus, memorial]
     suitability:
       minimum_site_area_m2: 2000
       requires_soil: moderate
@@ -142,17 +162,15 @@ typologies:
       - key: bowler2010
         finding: "Larger, tree-rich green sites cooler during the day."
 
-  - nbs_id: "05"
-    nbs_type: park_upgrade
-    display_name: Park upgrade
+  - archetype: established_park
+    display_name: Established park
+    provenance: existing
     category: green
     base_cooling_score: 70
     temp_reduction_min_c: 0.5
     temp_reduction_max_c: 2.0
     evidence_confidence: high
-    primary_cooling_mechanism: increased canopy and evapotranspiration
     building_energy_applicable: false
-    typical_use_context: [park, public_space, campus, memorial]
     suitability:
       minimum_site_area_m2: 500
       requires_soil: limited
@@ -165,58 +183,24 @@ typologies:
       urban_quality: high
     sources:
       - key: bowler2010
-        finding: "Park mean 0.94 C daytime cooling; parks with trees cooler than open turf."
+        finding: "Park mean 0.94 C daytime cooling; parks with trees reported cooler than open turf."
       - key: keravec2026
         finding: "Parks 1.3 C, green areas 2.0 C pedestrian-level daytime air temperature reduction."
+      - key: kraemer2022
+        finding: "Under 2018-2019 drought and heat, maximum spatially averaged park-to-built cooling was 1.1 C in the morning, falling below 1 C in the afternoon and confined to shaded areas."
     notes: >
       Represents added cooling over an already partly green baseline, so the
       achievable increment is bounded below new-forest values.
 
-  - nbs_id: "06"
-    nbs_type: schoolyard_greening
-    display_name: Schoolyard greening
-    category: green
-    base_cooling_score: 75
-    temp_reduction_min_c: 0.5
-    temp_reduction_max_c: 2.0
-    evidence_confidence: medium
-    primary_cooling_mechanism: shade and evapotranspiration
-    building_energy_applicable: true
-    typical_use_context: [school, public_space, campus]
-    suitability:
-      minimum_site_area_m2: 300
-      requires_soil: limited
-      requires_irrigation: occasional
-      unsuitable_climate_zones: []
-    co_benefit_defaults:
-      biodiversity: medium
-      stormwater: medium
-      public_health: high
-      urban_quality: high
-    sources:
-      - key: keravec2026
-        finding: "Green areas 2.0 C and street trees 1.5 C pedestrian-level daytime air temperature reduction."
-      - key: ziter2019
-        finding: "Cooling maximised at city-block scale (60-90 m), comparable to a schoolyard footprint."
-      - key: bowler2010
-        finding: "Tree-containing green sites outperform open green space."
-    notes: >
-      No schoolyard-specific synthesis found; values inherited from small green
-      areas with trees at matching spatial scale. The typology's distinct value
-      is exposure of a vulnerable group, expressed through vulnerability and
-      equity scoring rather than through inflated cooling.
-
-  - nbs_id: "07"
-    nbs_type: green_roof
-    display_name: Green roof
+  - archetype: extensive_green_roof
+    display_name: Extensive green roof
+    provenance: existing
     category: building
     base_cooling_score: 45
     temp_reduction_min_c: 0.1
     temp_reduction_max_c: 1.0
     evidence_confidence: medium
-    primary_cooling_mechanism: roof surface cooling and evapotranspiration
     building_energy_applicable: true
-    typical_use_context: [commercial, residential, industrial, mixed_use, campus]
     suitability:
       minimum_site_area_m2: 50
       requires_soil: none
@@ -240,17 +224,15 @@ typologies:
       The tool states in its output that green-roof benefits are principally
       building-level rather than street-level.
 
-  - nbs_id: "08"
-    nbs_type: green_facade
-    display_name: Green facade
+  - archetype: green_facade_living_wall
+    display_name: Green facade or living wall
+    provenance: existing
     category: building
     base_cooling_score: 50
     temp_reduction_min_c: 0.3
     temp_reduction_max_c: 2.0
     evidence_confidence: low
-    primary_cooling_mechanism: wall shading and evapotranspiration
     building_energy_applicable: true
-    typical_use_context: [commercial, residential, mixed_use, street_corridor, campus]
     suitability:
       minimum_site_area_m2: 20
       requires_soil: none
@@ -271,18 +253,19 @@ typologies:
       air temperature while the micro-scale comparison ranks them below trees on
       comfort, plausibly explained by near-wall measurement position. Low
       confidence, conservative envelope, explicit caveat in tool output.
+      kumar2024 reports green walls at 4.1 +/- 4.2 C, which is deliberately not
+      adopted (D-044): its own standard deviation exceeds its mean, and adopting
+      it selectively would rate a wall above measured tree canopy.
 
-  - nbs_id: "09"
-    nbs_type: rain_garden_bioswale
-    display_name: Rain garden / bioswale
+  - archetype: bioretention
+    display_name: Bioretention and drainage planting
+    provenance: existing
     category: blue_green
     base_cooling_score: 55
     temp_reduction_min_c: 0.1
     temp_reduction_max_c: 0.8
     evidence_confidence: low
-    primary_cooling_mechanism: evapotranspiration and infiltration
     building_energy_applicable: false
-    typical_use_context: [street_corridor, public_space, residential, park, campus, memorial]
     suitability:
       minimum_site_area_m2: 50
       requires_soil: moderate
@@ -303,17 +286,15 @@ typologies:
       specifically. Value is a reasoned lower bound from adjacent evidence.
       Primary benefits are stormwater and biodiversity, not cooling.
 
-  - nbs_id: "10"
-    nbs_type: blue_green_corridor
+  - archetype: blue_green_corridor
     display_name: Blue-green corridor
+    provenance: existing
     category: blue_green
     base_cooling_score: 85
     temp_reduction_min_c: 1.0
     temp_reduction_max_c: 3.0
     evidence_confidence: medium
-    primary_cooling_mechanism: evaporation from water surfaces and canopy shade
     building_energy_applicable: false
-    typical_use_context: [public_space, park, street_corridor, mixed_use]
     suitability:
       minimum_site_area_m2: 1000
       requires_soil: moderate
@@ -329,18 +310,20 @@ typologies:
         finding: "Water bodies 2.1 C and urban forests 2.1 C pedestrian-level daytime air temperature reduction; water bodies and parks reported as largely climate-independent."
       - key: gunawardena2017
         finding: "Green and blue features together offer synergistic benefits; poorly designed bluespace may exacerbate heat stress in humid conditions."
+    notes: >
+      The corridor combines an open water body with continuous canopy, which is
+      why it sits above the water-only archetype: its envelope rests on the
+      canopy evidence as much as on the water evidence.
 
-  - nbs_id: "11"
-    nbs_type: riparian_restoration
+  - archetype: riparian_restoration
     display_name: Riparian restoration
+    provenance: existing
     category: blue_green
     base_cooling_score: 85
     temp_reduction_min_c: 1.0
     temp_reduction_max_c: 3.0
     evidence_confidence: medium
-    primary_cooling_mechanism: evaporation from water surfaces and riparian canopy
     building_energy_applicable: false
-    typical_use_context: [park, public_space]
     suitability:
       minimum_site_area_m2: 1000
       requires_soil: moderate
@@ -356,18 +339,19 @@ typologies:
         finding: "Water bodies 2.1 C, climate-robust; urban forests 2.1 C pedestrian-level daytime air temperature reduction."
       - key: gunawardena2017
         finding: "Bluespace cooling mechanisms; humid-condition heat-stress caveat."
+    notes: >
+      As with the blue-green corridor, the envelope rests on the combination of
+      flowing water and riparian canopy, not on the water surface alone.
 
-  - nbs_id: "12"
-    nbs_type: permeable_shaded_plaza
-    display_name: Permeable shaded plaza
+  - archetype: permeable_shaded_hardscape
+    display_name: Permeable shaded hardscape
+    provenance: existing
     category: hybrid
     base_cooling_score: 70
     temp_reduction_min_c: 0.5
     temp_reduction_max_c: 2.5
     evidence_confidence: medium
-    primary_cooling_mechanism: shade, surface permeability and evaporation
     building_energy_applicable: false
-    typical_use_context: [public_space, commercial, mixed_use, campus, memorial]
     suitability:
       minimum_site_area_m2: 200
       requires_soil: limited
@@ -385,19 +369,20 @@ typologies:
         finding: "Shade positioned in heat-exposed locations is the decisive design factor."
     notes: >
       The permeable-pavement estimate rests on a narrower evidence base than the
-      vegetation figures, so the adopted upper bound is set below it.
+      vegetation figures, so the adopted upper bound is set below it. The
+      keravec2026 shading-devices figure is admissible HERE, at plaza scale,
+      because that category aggregates area-scale shading; it is deliberately
+      not inherited by the pergola-scale archetype below.
 
-  - nbs_id: "13"
-    nbs_type: courtyard_greening
-    display_name: Courtyard greening
+  - archetype: enclosed_courtyard
+    display_name: Enclosed courtyard greening
+    provenance: existing
     category: hybrid
     base_cooling_score: 60
     temp_reduction_min_c: 0.3
     temp_reduction_max_c: 1.5
     evidence_confidence: low
-    primary_cooling_mechanism: shade and evapotranspiration in enclosed space
     building_energy_applicable: true
-    typical_use_context: [residential, mixed_use, school, healthcare, campus]
     suitability:
       minimum_site_area_m2: 50
       requires_soil: limited
@@ -419,34 +404,1447 @@ typologies:
       Small, enclosed, often sheltered from ventilation. Bounded by scale
       limitation; no courtyard-specific synthesis exists.
 
-  - nbs_id: "14"
-    nbs_type: mixed_nbs_package
-    display_name: Mixed NbS package
-    category: hybrid
-    base_cooling_score: 80
-    temp_reduction_min_c: 1.0
+  # ---------------------------------------------------------------------------
+  # The four classes retrieved for this release. Each exists because the
+  # catalogue contains entries that would otherwise have inherited an envelope
+  # belonging to a different body of study.
+  # ---------------------------------------------------------------------------
+
+  - archetype: large_water_body
+    display_name: Large open water body
+    provenance: new
+    category: blue_green
+    base_cooling_score: 75
+    temp_reduction_min_c: 0.1
     temp_reduction_max_c: 3.0
     evidence_confidence: medium
-    primary_cooling_mechanism: combined shade, evapotranspiration and evaporation
-    building_energy_applicable: true
-    typical_use_context: [mixed_use, public_space, residential, commercial, park, campus, memorial]
+    building_energy_applicable: false
     suitability:
-      minimum_site_area_m2: 500
-      requires_soil: limited
-      requires_irrigation: occasional
+      minimum_site_area_m2: 1000
+      requires_soil: moderate
+      requires_irrigation: none
       unsuitable_climate_zones: []
     co_benefit_defaults:
       biodiversity: high
       stormwater: high
-      public_health: high
+      public_health: medium
       urban_quality: high
+    output_caveats: [water_remote_sensing_spread, water_nocturnal_warming]
     sources:
       - key: keravec2026
-        finding: "Best-performing individual NbS measures cluster at 2.0-3.0 C; no synthesis estimate exists for combined packages."
-      - key: gunawardena2017
-        finding: "Combined green and blue features offer synergistic ecosystem benefits, stated qualitatively and not quantified."
+        finding: "Water bodies 2.1 C pedestrian-level daytime air temperature reduction, reported as largely climate-independent."
+      - key: volker2013
+        finding: "Meta-analysis of 27 studies: pooled cooling of 2.5 K (95% CI 1.9-3.2 K) in the warmest months, attributed to urban blue sites WHEN REMOTE-SENSING DATA ARE INCLUDED. A single pooled estimate across ponds, lakes and rivers together; it does not differentiate cooling by water-body size."
+      - key: yao2023a
+        finding: "Year-long field measurement of urban lakes in Nanjing and Guangzhou: weak daytime urban cool island intensity of 0.1-0.6 C, against a 1.2-1.3 C heat island intensity at night in the warm months."
+      - key: ampatzidis2020
+        finding: "A clear disparity exists between cooling potentials reported by remote sensing and those from field measurement or numerical simulation; at night blue spaces may exacerbate the urban heat island."
     notes: >
-      The draft methodology's 3.5 C upper bound was rejected: no retrieved source
-      quantifies super-additive cooling from combining measures. Capped at the
-      best-evidenced single-measure ceiling. The package's advantage is expressed
-      as co-benefit breadth and robustness, not additional degrees.
+      The envelope floor is 0.1 C, not the 0.5 C proposed in the v1.2 review
+      pack. The pack attributed a cooling magnitude near 2 C to yao2023a;
+      retrieval at implementation established that the paper reports no such
+      figure and instead measures 0.1-0.6 C by day. Holding the floor at 0.5
+      would have made the tool claim more than its most direct field evidence
+      supports, which is exactly the inflation D-008 exists to prevent. The
+      ceiling stays at 3.0 C on keravec2026 and the volker2013 confidence
+      interval. The width of the envelope is real and is the finding: the
+      remote-sensing-inclusive meta-analysis and the direct field measurements
+      disagree by an order of magnitude, and ampatzidis2020 names remote sensing
+      as the overestimating mode. See D-045.
+
+  - archetype: small_constructed_water
+    display_name: Small constructed water feature
+    provenance: new
+    category: blue_green
+    base_cooling_score: 40
+    temp_reduction_min_c: 0.0
+    temp_reduction_max_c: 1.0
+    evidence_confidence: medium
+    building_energy_applicable: false
+    suitability:
+      minimum_site_area_m2: 50
+      requires_soil: moderate
+      requires_irrigation: none
+      unsuitable_climate_zones: []
+    co_benefit_defaults:
+      biodiversity: medium
+      stormwater: high
+      public_health: low
+      urban_quality: medium
+    output_caveats: [small_water_negligible_daytime, water_nocturnal_warming]
+    sources:
+      - key: jacobs2020
+        finding: "Sixteen simulated urban water bodies: afternoon air temperature in surrounding spaces reduced by typically 0.2 C, maximum 0.6 C. Of 20 papers synthesised for water bodies without fountains, 14 (70%) report an air-temperature effect of 1 C or less; local thermal effects of small water bodies can be considered negligible in design practice."
+      - key: yao2023b
+        finding: "Field measurement of an urban pond: moderate daytime cooling of 0.6 C against a reference soil site, and a pronounced nocturnal warming effect of 1.8 C."
+      - key: ampatzidis2020
+        finding: "Blue-space cooling varies with time of day, season and location; at night blue spaces may exacerbate the urban heat island, and sensible cooling can be offset by increased water-vapour content."
+    notes: >
+      THIS ARCHETYPE MUST NEVER BE INTERPOLATED WITH large_water_body BY AREA.
+      The two are separate bodies of study, not two points on a dose-response
+      curve: the size-threshold literature is land-surface-temperature only,
+      and no published curve connects them on air temperature. Without this
+      split, constructed wetlands, retention ponds, detention basins and water
+      squares would have inherited blue_green_corridor at 1.0-3.0 C on family
+      resemblance and been overstated roughly threefold. The floor is a genuine
+      zero because jacobs2020 concludes the daytime effect is negligible in
+      design practice.
+
+  - archetype: non_canopy_vegetation
+    display_name: Non-canopy vegetation
+    provenance: new
+    category: green
+    base_cooling_score: 50
+    temp_reduction_min_c: 0.0
+    temp_reduction_max_c: 1.5
+    evidence_confidence: medium
+    building_energy_applicable: false
+    suitability:
+      minimum_site_area_m2: 50
+      requires_soil: limited
+      requires_irrigation: occasional
+      unsuitable_climate_zones: []
+    co_benefit_defaults:
+      biodiversity: medium
+      stormwater: medium
+      public_health: low
+      urban_quality: medium
+    output_caveats: [non_canopy_surface_not_air]
+    sources:
+      - key: armson2012
+        finding: "Measured on the same plots: grass reduced maximum SURFACE temperature by up to 24 C but had little effect upon GLOBE temperature, while shading reduced globe temperature by 5-7 C. Grass has little effect on local air or globe temperature; tree shade provides effective local cooling."
+      - key: gill2013
+        finding: "Modelled: grass cooling can be reduced or lost in summer droughts when soils dry out, an effect projected to become more pronounced under climate change."
+      - key: kraemer2022
+        finding: "Field measurement under drought: the grass-dominated park was the hottest area during the daytime, while the tree-dominated park was consistently cooler."
+      - key: bowler2010
+        finding: "Parks containing trees reported cooler than open turf, stated qualitatively."
+      - key: kumar2024
+        finding: "Typology-resolved review placing grass and herbaceous systems well below canopy systems for air-temperature cooling."
+    notes: >
+      armson2012 is decisive because it measures both metrics on the same plots
+      and so isolates the surface/air conflation that inflates most published
+      grass figures: cutting surface temperature by 24 C while barely moving
+      globe temperature is the whole finding. The floor is a genuine zero for
+      dry or dormant planting, on gill2013 and kraemer2022.
+
+  - archetype: vegetated_shade_structure
+    display_name: Vegetated shade structure
+    provenance: new
+    category: hybrid
+    base_cooling_score: 55
+    temp_reduction_min_c: 0.0
+    temp_reduction_max_c: 2.5
+    evidence_confidence: low
+    building_energy_applicable: false
+    suitability:
+      minimum_site_area_m2: 20
+      requires_soil: none
+      requires_irrigation: reliable
+      unsuitable_climate_zones: []
+    co_benefit_defaults:
+      biodiversity: low
+      stormwater: low
+      public_health: medium
+      urban_quality: medium
+    output_caveats: [shade_structure_comfort_not_air]
+    sources:
+      - key: chafer2020
+        finding: "The only measured comparison of a vine-covered pergola against an identical bare support: maximum daytime air temperature difference 2.5 C (45.3 C over the bare ropes against 42.9 C under the greenery), west-oriented pergolas, Mediterranean climate."
+      - key: ouyang2024
+        finding: "Field measurement of shading structures on both axes: air temperature reduced 1.42 C (natural) and 1.31 C (artificial), while mean radiant temperature was reduced 15.93 C and 13.71 C respectively - an order of magnitude apart."
+      - key: colter2019
+        finding: "Sparse and open canopies group with solid constructed shade structures rather than with dense canopy: PET relief under Parkinsonia, Prosopis and ramadas was 2.9-4.3 C worse than under dense-canopy species."
+    notes: >
+      THE keravec2026 "SHADING DEVICES 2.0 C" FIGURE IS DELIBERATELY NOT USED
+      HERE. That category aggregates area-scale shading, where the cooled air
+      volume persists against advection; a pergola shades roughly 10 m2.
+      Applying it would rate a pergola above measured tree canopy, which
+      ouyang2024 measures at 1.42 C. The same figure IS used by the
+      permeable_shaded_hardscape archetype, where the scale matches.
+      Low confidence with n=1 for the actual intervention. The ceiling of 2.5 C
+      is chafer2020's measured peak; note that paper's abstract headlines
+      "up to 5 C", which is greenery against UNSHADED conditions rather than
+      against the bare pergola, and is not the like-for-like contrast this
+      envelope needs.
+
+  # ---------------------------------------------------------------------------
+  # The two derived classes. Retrieval established that no class-specific
+  # evidence exists, so each is bounded from an adjacent class with the
+  # bounding argument stated. The absence itself is cited (kumar2024), which
+  # makes it a finding rather than a search failure.
+  # ---------------------------------------------------------------------------
+
+  - archetype: productive_canopy
+    display_name: Productive tree canopy
+    provenance: derived
+    category: green
+    base_cooling_score: 60
+    temp_reduction_min_c: 0.5
+    temp_reduction_max_c: 2.0
+    evidence_confidence: low
+    building_energy_applicable: false
+    suitability:
+      minimum_site_area_m2: 500
+      requires_soil: moderate
+      requires_irrigation: reliable
+      unsuitable_climate_zones: []
+    co_benefit_defaults:
+      biodiversity: medium
+      stormwater: medium
+      public_health: high
+      urban_quality: high
+    output_caveats: [productive_evidence_gap]
+    sources:
+      - key: kumar2024
+        finding: "Review of 51 green-blue infrastructure types across 202 publications: allotments and city farms are among the least-studied categories, with insufficient data to quantify their cooling."
+      - key: ziter2019
+        finding: "Cooling strengthens above approximately 40% canopy cover; orchard and agroforestry canopies are deliberately kept open for access and yield, so they sit below that inflection."
+      - key: colter2019
+        finding: "Sparse canopies perform no better than solid artificial shade, which bounds an open production canopy below a closed woodland canopy."
+      - key: cheung2022
+        finding: "Irrigation sustains rather than raises performance: measured agricultural cooling was 0.09-0.43 C against modelled potentials of 2.1-2.5 C, and irrigation increases the daily minimum air temperature as stored heat is released at night."
+    notes: >
+      Derived, not retrieved: bounded below dense_tree_canopy on the ziter2019
+      canopy-cover inflection and the colter2019 sparse-canopy finding, and
+      given the same envelope as established_park with a lower evidence rating.
+      Irrigation is NOT credited as extra degrees - the cheung2022 contrast is
+      specific to agricultural fields, and the same paper measures -2 to -1 C
+      in irrigated urban parks, so no general claim that models overstate
+      irrigation cooling is made here.
+
+  - archetype: productive_non_canopy
+    display_name: Productive ground-level planting
+    provenance: derived
+    category: green
+    base_cooling_score: 45
+    temp_reduction_min_c: 0.0
+    temp_reduction_max_c: 1.5
+    evidence_confidence: low
+    building_energy_applicable: false
+    suitability:
+      minimum_site_area_m2: 200
+      requires_soil: moderate
+      requires_irrigation: reliable
+      unsuitable_climate_zones: []
+    co_benefit_defaults:
+      biodiversity: medium
+      stormwater: low
+      public_health: high
+      urban_quality: medium
+    output_caveats: [productive_evidence_gap, irrigation_sustains_not_raises]
+    sources:
+      - key: kumar2024
+        finding: "Allotments and city farms are among the least-studied of 51 green-blue infrastructure types, with insufficient data to quantify their cooling."
+      - key: rost2020
+        finding: "The best available allotment-garden measurement: 13 Berlin complexes averaged 2.7 K cooler than built-up areas AT NIGHT. Nocturnal only by design, so it cannot support a daytime value."
+      - key: armson2012
+        finding: "Ground-level vegetation cuts surface temperature substantially while barely affecting globe temperature, which is the basis of the inherited envelope."
+      - key: cheung2022
+        finding: "Measured agricultural cooling 0.09-0.43 C against modelled potentials of 2.1-2.5 C; irrigation raises the daily minimum air temperature at night."
+    notes: >
+      Derived: inherits the non_canopy_vegetation envelope, because cultivated
+      ground-level planting is ground-level vegetation whose cover is
+      periodically broken between crops. Rated low rather than medium because
+      the inheritance is an argument rather than a measurement of this class.
+      The evidence gap is CITABLE (kumar2024) rather than merely unfilled,
+      which is a stronger position than the rain-garden precedent where no
+      source was found at all.
+typologies:
+
+  # A. Tree-based elements — 13 entries
+  - nbs_id: "A1"
+    nbs_type: strategic_individual_tree_planting
+    display_name: Strategic individual-tree planting
+    archetype: street_tree_canopy
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: shade, then evapotranspiration once established
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "A2"
+    nbs_type: tree_cluster
+    display_name: Tree cluster
+    archetype: small_green_area_with_trees
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: overlapping canopy shade + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "A3"
+    nbs_type: tree_grove
+    display_name: Tree grove
+    archetype: dense_tree_canopy
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: extensive overhead shade + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+    suitability_overrides:
+      minimum_site_area_m2: 200
+  - nbs_id: "A4"
+    nbs_type: conventional_tree_pit
+    display_name: Conventional individual tree pit
+    archetype: street_tree_canopy
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: limited canopy shade + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "A5"
+    nbs_type: enlarged_tree_pit
+    display_name: Enlarged tree pit
+    archetype: street_tree_canopy
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: canopy shade + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "A6"
+    nbs_type: structural_soil_tree_pit
+    display_name: Structural-soil tree pit
+    archetype: street_tree_canopy
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: canopy shade + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, park, school, campus, healthcare, other]
+  - nbs_id: "A7"
+    nbs_type: soil_cell_tree_pit
+    display_name: Suspended-pavement or soil-cell tree pit
+    archetype: street_tree_canopy
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: canopy shade + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, park, school, campus, healthcare, other]
+  - nbs_id: "A8"
+    nbs_type: stormwater_tree_pit
+    display_name: Stormwater tree pit
+    archetype: bioretention
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: canopy shade + runoff-fed evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "A9"
+    nbs_type: bioretention_tree_pit
+    display_name: Bioretention tree pit
+    archetype: bioretention
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: canopy shade + evapotranspiration; infiltration
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "A11"
+    nbs_type: continuous_tree_trench
+    display_name: Continuous tree trench
+    archetype: street_tree_canopy
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: continuous canopy shade + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, school, campus, healthcare, industrial, other]
+  - nbs_id: "A12"
+    nbs_type: continuous_open_tree_planting_bed
+    display_name: Continuous open planting bed for trees
+    archetype: street_tree_canopy
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: canopy shade + evapotranspiration; surface permeability
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "A13"
+    nbs_type: connected_multi_layer_planting_bed
+    display_name: Connected multi-layer planting bed
+    archetype: street_tree_canopy
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: canopy shade + multi-layer evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "A14"
+    nbs_type: tree_island
+    display_name: Tree island
+    archetype: small_green_area_with_trees
+    family: tree_based
+    kind: element
+    primary_cooling_mechanism: shade + reduced paved surface area/albedo
+    availability:
+      scales: [site, building]
+      land_uses: all
+
+  # B. Ground-level vegetated and bioretention elements — 11 entries
+  - nbs_id: "B1"
+    nbs_type: conventional_planting_bed
+    display_name: Conventional planting bed
+    archetype: non_canopy_vegetation
+    family: ground_level
+    kind: element
+    primary_cooling_mechanism: modest evapotranspiration; surface permeability
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "B2"
+    nbs_type: shrub_dominated_planting_bed
+    display_name: Shrub-dominated planting bed
+    archetype: non_canopy_vegetation
+    family: ground_level
+    kind: element
+    primary_cooling_mechanism: low-level shade + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "B3"
+    nbs_type: herbaceous_perennial_bed
+    display_name: Herbaceous perennial bed
+    archetype: non_canopy_vegetation
+    family: ground_level
+    kind: element
+    primary_cooling_mechanism: evapotranspiration; soil shading
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "B4"
+    nbs_type: groundcover_planting
+    display_name: Groundcover planting
+    archetype: non_canopy_vegetation
+    family: ground_level
+    kind: element
+    primary_cooling_mechanism: reduced surface heating + soil moisture retention
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "B6"
+    nbs_type: pocket_meadow
+    display_name: Pocket meadow
+    archetype: non_canopy_vegetation
+    family: ground_level
+    kind: element
+    primary_cooling_mechanism: evapotranspiration; soil protection
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "B7"
+    nbs_type: rain_garden
+    display_name: Rain garden
+    archetype: bioretention
+    family: ground_level
+    kind: element
+    primary_cooling_mechanism: evapotranspiration + evaporation from stored water
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "B8"
+    nbs_type: bioswale
+    display_name: Bioswale
+    archetype: bioretention
+    family: ground_level
+    kind: element
+    primary_cooling_mechanism: evapotranspiration + evaporation
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "B9"
+    nbs_type: infiltration_planting_bed
+    display_name: Infiltration planting bed
+    archetype: bioretention
+    family: ground_level
+    kind: element
+    primary_cooling_mechanism: evapotranspiration; infiltration/permeability
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "B10"
+    nbs_type: depressed_bioretention_bed
+    display_name: Depressed bioretention bed
+    archetype: bioretention
+    family: ground_level
+    kind: element
+    primary_cooling_mechanism: evapotranspiration + evaporation
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "B11"
+    nbs_type: vegetated_planter_with_stormwater_function
+    display_name: Vegetated planter with stormwater function
+    archetype: bioretention
+    family: ground_level
+    kind: element
+    primary_cooling_mechanism: evapotranspiration (irrigation-dependent)
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, school, campus, healthcare, industrial, other]
+  - nbs_id: "B12"
+    nbs_type: large_volume_connected_planters
+    display_name: Large-volume connected planters
+    archetype: bioretention
+    family: ground_level
+    kind: element
+    primary_cooling_mechanism: evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, school, campus, healthcare, industrial, other]
+
+  # C. Green-roof systems — 12 entries
+  - nbs_id: "C1"
+    nbs_type: extensive_green_roof
+    display_name: Extensive green roof
+    archetype: extensive_green_roof
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: evapotranspiration + surface albedo at roof level
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "C2"
+    nbs_type: semi_intensive_green_roof
+    display_name: Semi-intensive green roof
+    archetype: extensive_green_roof
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "C3"
+    nbs_type: intensive_green_roof
+    display_name: Intensive green roof
+    archetype: small_green_area_with_trees
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: evapotranspiration + shade at roof level
+    availability:
+      scales: [site, building]
+      land_uses: [residential, mixed_use, commercial, public_space, park, school, campus, healthcare, other]
+    suitability_overrides:
+      minimum_site_area_m2: 50
+      requires_soil: none
+  - nbs_id: "C5"
+    nbs_type: biodiverse_green_roof
+    display_name: Biodiverse green roof
+    archetype: extensive_green_roof
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "C6"
+    nbs_type: brown_roof
+    display_name: Brown roof
+    archetype: extensive_green_roof
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: limited evapotranspiration; surface albedo
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "C8"
+    nbs_type: blue_green_roof
+    display_name: Blue-green roof
+    archetype: extensive_green_roof
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: evapotranspiration sustained by stored water
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "C11"
+    nbs_type: biosolar_roof
+    display_name: Biosolar roof
+    archetype: extensive_green_roof
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: evapotranspiration + panel shading of substrate
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "C13"
+    nbs_type: productive_green_roof
+    display_name: Productive green roof
+    archetype: productive_non_canopy
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: evapotranspiration (irrigated)
+    availability:
+      scales: [site, building]
+      land_uses: [residential, mixed_use, commercial, school, campus, healthcare, industrial, other]
+    suitability_overrides:
+      minimum_site_area_m2: 50
+      requires_soil: none
+  - nbs_id: "C14"
+    nbs_type: rooftop_farm
+    display_name: Rooftop farm
+    archetype: productive_non_canopy
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: evapotranspiration (irrigated)
+    availability:
+      scales: [site, building]
+      land_uses: [residential, mixed_use, commercial, school, campus, industrial, other]
+    suitability_overrides:
+      minimum_site_area_m2: 200
+      requires_soil: none
+  - nbs_id: "C15"
+    nbs_type: roof_meadow
+    display_name: Roof meadow
+    archetype: non_canopy_vegetation
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+    suitability_overrides:
+      minimum_site_area_m2: 50
+      requires_soil: none
+  - nbs_id: "C16"
+    nbs_type: roof_wetland
+    display_name: Roof wetland
+    archetype: small_constructed_water
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: evaporation + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: [residential, mixed_use, commercial, public_space, school, campus, healthcare, industrial, other]
+    suitability_overrides:
+      minimum_site_area_m2: 50
+      requires_soil: none
+  - nbs_id: "C17"
+    nbs_type: rooftop_woodland
+    display_name: Tree roof or rooftop woodland
+    archetype: dense_tree_canopy
+    family: green_roof
+    kind: element
+    primary_cooling_mechanism: canopy shade + evapotranspiration at roof level
+    availability:
+      scales: [site, building]
+      land_uses: [residential, mixed_use, commercial, public_space, school, campus, healthcare, other]
+    suitability_overrides:
+      minimum_site_area_m2: 200
+      requires_soil: none
+
+  # D. Vertical-greening systems — 10 entries
+  - nbs_id: "D1"
+    nbs_type: direct_ground_rooted_green_facade
+    display_name: Direct ground-rooted green façade
+    archetype: green_facade_living_wall
+    family: vertical_greening
+    kind: element
+    primary_cooling_mechanism: facade shading + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+    suitability_overrides:
+      requires_soil: limited
+  - nbs_id: "D2"
+    nbs_type: indirect_ground_rooted_green_facade
+    display_name: Indirect ground-rooted green façade
+    archetype: green_facade_living_wall
+    family: vertical_greening
+    kind: element
+    primary_cooling_mechanism: facade shading + evapotranspiration + ventilated air gap
+    availability:
+      scales: [site, building]
+      land_uses: all
+    suitability_overrides:
+      requires_soil: limited
+  - nbs_id: "D5"
+    nbs_type: planter_rooted_green_facade
+    display_name: Planter-rooted green façade
+    archetype: green_facade_living_wall
+    family: vertical_greening
+    kind: element
+    primary_cooling_mechanism: facade shading + evapotranspiration (irrigation-dependent)
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, park, school, campus, healthcare, industrial, other]
+  - nbs_id: "D6"
+    nbs_type: cascading_facade_planting
+    display_name: Cascading façade planting
+    archetype: green_facade_living_wall
+    family: vertical_greening
+    kind: element
+    primary_cooling_mechanism: facade shading + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, school, campus, healthcare, other]
+  - nbs_id: "D7"
+    nbs_type: modular_living_wall
+    display_name: Modular living wall
+    archetype: green_facade_living_wall
+    family: vertical_greening
+    kind: element
+    primary_cooling_mechanism: evapotranspiration + facade shading (irrigation-dependent)
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, school, campus, healthcare, other]
+  - nbs_id: "D8"
+    nbs_type: substrate_based_living_wall
+    display_name: Substrate-based living wall
+    archetype: green_facade_living_wall
+    family: vertical_greening
+    kind: element
+    primary_cooling_mechanism: evapotranspiration + facade shading
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, school, campus, healthcare, other]
+  - nbs_id: "D9"
+    nbs_type: hydroponic_living_wall
+    display_name: Hydroponic living wall
+    archetype: green_facade_living_wall
+    family: vertical_greening
+    kind: element
+    primary_cooling_mechanism: evapotranspiration + facade shading (irrigation-dependent)
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, school, campus, healthcare, other]
+  - nbs_id: "D11"
+    nbs_type: vegetated_screen
+    display_name: Vegetated screen
+    archetype: green_facade_living_wall
+    family: vertical_greening
+    kind: element
+    primary_cooling_mechanism: shade + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "D12"
+    nbs_type: green_noise_barrier
+    display_name: Green noise barrier
+    archetype: green_facade_living_wall
+    family: vertical_greening
+    kind: element
+    primary_cooling_mechanism: evapotranspiration + reduced surface heating
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, park, school, campus, healthcare, memorial, industrial, other]
+    suitability_overrides:
+      requires_soil: limited
+  - nbs_id: "D13"
+    nbs_type: vegetated_retaining_wall
+    display_name: Vegetated retaining wall
+    archetype: green_facade_living_wall
+    family: vertical_greening
+    kind: element
+    primary_cooling_mechanism: evapotranspiration; reduced mineral surface heating
+    availability:
+      scales: [site, building]
+      land_uses: all
+    suitability_overrides:
+      requires_soil: limited
+
+  # E. Vegetated overhead and shelter systems — 3 entries
+  - nbs_id: "E1"
+    nbs_type: green_pergola
+    display_name: Green pergola
+    archetype: vegetated_shade_structure
+    family: vegetated_shelter
+    kind: element
+    primary_cooling_mechanism: overhead shade + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+  - nbs_id: "E3"
+    nbs_type: vegetated_arcade
+    display_name: Vegetated arcade
+    archetype: continuous_shaded_corridor
+    family: vegetated_shelter
+    kind: element
+    primary_cooling_mechanism: continuous route shade + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, park, school, campus, healthcare, memorial, other]
+  - nbs_id: "E6"
+    nbs_type: green_waiting_shelter
+    display_name: Green waiting shelter
+    archetype: vegetated_shade_structure
+    family: vegetated_shelter
+    kind: element
+    primary_cooling_mechanism: shade (thermal refuge) + evapotranspiration
+    availability:
+      scales: [site, building]
+      land_uses: all
+
+  # 2. Street scale — 7 entries
+  - nbs_id: "2.2"
+    nbs_type: tree_avenue
+    display_name: Tree Avenue
+    archetype: street_tree_canopy
+    family: street
+    kind: composite
+    primary_cooling_mechanism: shade — continuous linear canopy, plus evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [street_corridor, residential, mixed_use, commercial, park, campus, healthcare, memorial, industrial, other]
+  - nbs_id: "2.5"
+    nbs_type: green_street
+    display_name: Green Street
+    archetype: street_tree_canopy
+    family: street
+    kind: composite
+    primary_cooling_mechanism: shade + evapotranspiration + evaporation from bioretention + permeability
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [street_corridor, residential, mixed_use, commercial, campus, healthcare, industrial, other]
+  - nbs_id: "2.9"
+    nbs_type: green_median
+    display_name: Green Median
+    archetype: non_canopy_vegetation
+    family: street
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration + reduced impervious heat storage; shade where trees
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [street_corridor, residential, mixed_use, commercial, campus, industrial, other]
+  - nbs_id: "2.13"
+    nbs_type: green_tram_corridor
+    display_name: Green Tram Corridor
+    archetype: street_tree_canopy
+    family: street
+    kind: composite
+    primary_cooling_mechanism: surface albedo/permeability + evapotranspiration from de-sealed track bed
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [street_corridor, residential, mixed_use, commercial, other]
+  - nbs_id: "2.15"
+    nbs_type: green_pedestrian_street
+    display_name: Green Pedestrian Street
+    archetype: continuous_shaded_corridor
+    family: street
+    kind: composite
+    primary_cooling_mechanism: shade — full-width canopy over the pedestrian surface + evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, campus, healthcare, other]
+  - nbs_id: "2.16"
+    nbs_type: green_alley
+    display_name: Green Alley
+    archetype: street_tree_canopy
+    family: street
+    kind: composite
+    primary_cooling_mechanism: vertical-greening evapotranspiration + facade shading + permeability
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [street_corridor, residential, mixed_use, commercial, industrial, other]
+  - nbs_id: "2.17"
+    nbs_type: green_parking_lane
+    display_name: Green Parking Lane
+    archetype: street_tree_canopy
+    family: street
+    kind: composite
+    primary_cooling_mechanism: shade over parked vehicles and pavement + permeability and evaporation
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [street_corridor, residential, mixed_use, commercial, campus, healthcare, industrial, other]
+
+  # 3. Public space scale — 6 entries
+  - nbs_id: "3.1"
+    nbs_type: tree_plaza
+    display_name: Tree Plaza
+    archetype: small_green_area_with_trees
+    family: public_space
+    kind: composite
+    primary_cooling_mechanism: shade — canopy over gathering and seating areas + evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, commercial, public_space, school, campus, healthcare, other]
+  - nbs_id: "3.2"
+    nbs_type: cooling_plaza
+    display_name: Cooling Plaza
+    archetype: permeable_shaded_hardscape
+    family: public_space
+    kind: composite
+    primary_cooling_mechanism: shade (trees plus vegetated structures) + evapotranspiration and evaporation
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, commercial, public_space, school, campus, healthcare, other]
+  - nbs_id: "3.3"
+    nbs_type: permeable_plaza
+    display_name: Permeable Plaza
+    archetype: permeable_shaded_hardscape
+    family: public_space
+    kind: composite
+    primary_cooling_mechanism: surface permeability and evaporation + reduced heat storage
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, commercial, public_space, school, campus, healthcare, industrial, other]
+  - nbs_id: "3.4"
+    nbs_type: civic_green
+    display_name: Civic Green
+    archetype: established_park
+    family: public_space
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration from green ground plane + reduced imperviousness
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, commercial, public_space, school, campus, healthcare, other]
+  - nbs_id: "3.5"
+    nbs_type: courtyard_greening
+    display_name: Courtyard Greening
+    archetype: enclosed_courtyard
+    family: public_space
+    kind: composite
+    primary_cooling_mechanism: facade and ground shading + evapotranspiration in an enclosed volume
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, commercial, public_space, school, campus, healthcare, other]
+  - nbs_id: "3.15"
+    nbs_type: green_playground
+    display_name: Green Playground
+    archetype: small_green_area_with_trees
+    family: public_space
+    kind: composite
+    primary_cooling_mechanism: shade over play surfaces + evapotranspiration + de-sealing
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, public_space, park, school, campus, healthcare, other]
+
+  # 4. Park scale — 9 entries
+  - nbs_id: "4.1"
+    nbs_type: pocket_park
+    display_name: Pocket Park
+    archetype: established_park
+    family: park
+    kind: composite
+    primary_cooling_mechanism: shade + evapotranspiration, highly localised
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, campus, healthcare, other]
+    suitability_overrides:
+      minimum_site_area_m2: 200
+  - nbs_id: "4.2"
+    nbs_type: neighbourhood_park
+    display_name: Neighbourhood Park
+    archetype: established_park
+    family: park
+    kind: composite
+    primary_cooling_mechanism: shade + evapotranspiration, park cool island
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, park, other]
+  - nbs_id: "4.4"
+    nbs_type: district_park
+    display_name: District Park
+    archetype: established_park
+    family: park
+    kind: composite
+    primary_cooling_mechanism: shade + evapotranspiration, cool-air export to surroundings
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [park, other]
+  - nbs_id: "4.5"
+    nbs_type: regional_park
+    display_name: Regional Park
+    archetype: established_park
+    family: park
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration + cool-air-mass generation and advection
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [park, other]
+  - nbs_id: "4.11"
+    nbs_type: water_park
+    display_name: Water Park
+    archetype: established_park
+    family: park
+    kind: composite
+    primary_cooling_mechanism: evaporation from open water + riparian shade
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [park, other]
+  - nbs_id: "4.15"
+    nbs_type: naturalistic_park
+    display_name: Naturalistic Park
+    archetype: established_park
+    family: park
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration from tall multi-layer vegetation + shade
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [park, campus, memorial, other]
+  - nbs_id: "4.17"
+    nbs_type: stormwater_park
+    display_name: Stormwater Park
+    archetype: established_park
+    family: park
+    kind: composite
+    primary_cooling_mechanism: evaporation from moist soils/basins + evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, park, campus, industrial, other]
+  - nbs_id: "4.20"
+    nbs_type: linear_park
+    display_name: Linear Park
+    archetype: established_park
+    family: park
+    kind: composite
+    primary_cooling_mechanism: shade + evapotranspiration distributed along a corridor; ventilation path
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [street_corridor, residential, mixed_use, park, industrial, other]
+  - nbs_id: "4.22"
+    nbs_type: coastal_park
+    display_name: Coastal Park
+    archetype: established_park
+    family: park
+    kind: composite
+    primary_cooling_mechanism: sea-breeze advection + evapotranspiration; mangrove/dune shade
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [park, other]
+
+  # 5. Woodland and forest scale — 6 entries
+  - nbs_id: "5.1"
+    nbs_type: urban_woodland_site
+    display_name: Urban woodland (site)
+    archetype: dense_tree_canopy
+    family: woodland_forest
+    kind: composite
+    primary_cooling_mechanism: continuous canopy shade + evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, park, school, campus, healthcare, memorial, industrial, other]
+  - nbs_id: "5.3"
+    nbs_type: microforest
+    display_name: Microforest
+    archetype: dense_tree_canopy
+    family: woodland_forest
+    kind: composite
+    primary_cooling_mechanism: dense canopy shade + evapotranspiration, local
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, commercial, public_space, park, school, campus, healthcare, memorial, industrial, other]
+    suitability_overrides:
+      minimum_site_area_m2: 200
+  - nbs_id: "5.10"
+    nbs_type: degraded_woodland_restoration
+    display_name: Degraded Woodland Restoration
+    archetype: dense_tree_canopy
+    family: woodland_forest
+    kind: composite
+    primary_cooling_mechanism: restored canopy shade + evapotranspiration from repaired soils
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, park, school, campus, healthcare, memorial, industrial, other]
+      requires_existing_woodland: true
+  - nbs_id: "5.15"
+    nbs_type: afforestation
+    display_name: Afforestation
+    archetype: dense_tree_canopy
+    family: woodland_forest
+    kind: composite
+    primary_cooling_mechanism: new canopy shade + evapotranspiration (long lead time)
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [park, campus, industrial, other]
+  - nbs_id: "5.16"
+    nbs_type: reforestation
+    display_name: Reforestation
+    archetype: dense_tree_canopy
+    family: woodland_forest
+    kind: composite
+    primary_cooling_mechanism: recovered canopy shade + evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [park, campus, industrial, other]
+      requires_existing_woodland: true
+  - nbs_id: "5.18"
+    nbs_type: urban_woodland_buffer
+    display_name: Urban Woodland Buffer
+    archetype: dense_tree_canopy
+    family: woodland_forest
+    kind: composite
+    primary_cooling_mechanism: canopy shade + evapotranspiration; wind and heat-source buffering
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [street_corridor, residential, mixed_use, commercial, park, school, campus, healthcare, memorial, industrial, other]
+
+  # 6. Water landscape scale — 12 entries
+  - nbs_id: "6.1"
+    nbs_type: constructed_wetland
+    display_name: Constructed Wetland
+    archetype: small_constructed_water
+    family: water_landscape
+    kind: composite
+    primary_cooling_mechanism: evaporation + evapotranspiration from open water and emergent vegetation
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, park, school, campus, healthcare, industrial, other]
+  - nbs_id: "6.2"
+    nbs_type: retention_pond
+    display_name: Retention Pond
+    archetype: small_constructed_water
+    family: water_landscape
+    kind: composite
+    primary_cooling_mechanism: evaporation from permanent open water + marginal vegetation evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, park, school, campus, healthcare, industrial, other]
+  - nbs_id: "6.3"
+    nbs_type: detention_basin
+    display_name: Detention Basin
+    archetype: small_constructed_water
+    family: water_landscape
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration from grassed/planted basin, episodic (only when wet)
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, park, school, campus, healthcare, industrial, other]
+  - nbs_id: "6.4"
+    nbs_type: water_square
+    display_name: Water Square
+    archetype: small_constructed_water
+    family: water_landscape
+    kind: composite
+    primary_cooling_mechanism: episodic evaporation + surface permeability; vegetated shade only if planted
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, commercial, public_space, school, campus, other]
+    suitability_overrides:
+      minimum_site_area_m2: 200
+      requires_soil: none
+  - nbs_id: "6.5"
+    nbs_type: daylighted_stream
+    display_name: Daylighted Stream
+    archetype: riparian_restoration
+    family: water_landscape
+    kind: composite
+    primary_cooling_mechanism: evaporation from restored channel + shade and evapotranspiration from riparian planting
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, public_space, park, campus, industrial, other]
+      requires_waterfront: [covered_river]
+  - nbs_id: "6.7"
+    nbs_type: river_restoration
+    display_name: River Restoration
+    archetype: riparian_restoration
+    family: water_landscape
+    kind: composite
+    primary_cooling_mechanism: evaporation from open water + riparian shade and evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [park, industrial, other]
+      requires_waterfront: [river, dry_river]
+  - nbs_id: "6.8"
+    nbs_type: canal_restoration
+    display_name: Canal Restoration
+    archetype: riparian_restoration
+    family: water_landscape
+    kind: composite
+    primary_cooling_mechanism: evaporation from water surface + edge vegetation evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, public_space, park, industrial, other]
+      requires_waterfront: [river]
+  - nbs_id: "6.10"
+    nbs_type: floodplain_restoration
+    display_name: Floodplain Restoration
+    archetype: riparian_restoration
+    family: water_landscape
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration from wet meadow and riparian woodland + evaporation from wetted floodplain
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [park, industrial, other]
+      requires_waterfront: [river, dry_river]
+  - nbs_id: "6.11"
+    nbs_type: urban_lake_restoration
+    display_name: Urban Lake Restoration
+    archetype: large_water_body
+    family: water_landscape
+    kind: composite
+    primary_cooling_mechanism: evaporation from large open water surface + shoreline vegetation evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [public_space, park, other]
+      requires_waterfront: [lake]
+  - nbs_id: "6.12"
+    nbs_type: living_shoreline
+    display_name: Living Shoreline
+    archetype: large_water_body
+    family: water_landscape
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration from marsh vegetation; cooling secondary to erosion control
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [park, industrial, other]
+      requires_waterfront: [lake, sea]
+  - nbs_id: "6.13"
+    nbs_type: floating_wetland
+    display_name: Floating Wetland
+    archetype: small_constructed_water
+    family: water_landscape
+    kind: element
+    primary_cooling_mechanism: evapotranspiration from wetland planting + shading of the water surface
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, commercial, public_space, park, school, campus, healthcare, industrial, other]
+      requires_waterfront: [lake, river]
+    suitability_overrides:
+      requires_soil: none
+  - nbs_id: "6.14"
+    nbs_type: riparian_buffer
+    display_name: Riparian Buffer
+    archetype: riparian_restoration
+    family: water_landscape
+    kind: element
+    primary_cooling_mechanism: shade over water and bank + evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, park, school, campus, healthcare, industrial, other]
+      requires_waterfront: [lake, river, dry_river]
+    suitability_overrides:
+      minimum_site_area_m2: 200
+
+  # 7. Ecological network scale — 6 entries
+  - nbs_id: "7.1"
+    nbs_type: green_corridor
+    display_name: Green Corridor
+    archetype: blue_green_corridor
+    family: ecological_network
+    kind: composite
+    primary_cooling_mechanism: shade + evapotranspiration along a continuous vegetated route
+    availability:
+      scales: [city]
+      land_uses: [street_corridor, residential, mixed_use, public_space, park, campus, industrial, other]
+  - nbs_id: "7.2"
+    nbs_type: ecological_corridor
+    display_name: Ecological Corridor
+    archetype: blue_green_corridor
+    family: ecological_network
+    kind: composite
+    primary_cooling_mechanism: shade + evapotranspiration; cooling secondary to connectivity
+    availability:
+      scales: [city]
+      land_uses: [residential, park, campus, memorial, industrial, other]
+  - nbs_id: "7.4"
+    nbs_type: blue_green_corridor
+    display_name: Blue-Green Corridor
+    archetype: blue_green_corridor
+    family: ecological_network
+    kind: composite
+    primary_cooling_mechanism: evaporation from water + evapotranspiration and shade from corridor vegetation
+    availability:
+      scales: [city]
+      land_uses: [street_corridor, residential, mixed_use, public_space, park, campus, industrial, other]
+  - nbs_id: "7.5"
+    nbs_type: river_corridor
+    display_name: River Corridor
+    archetype: riparian_restoration
+    family: ecological_network
+    kind: composite
+    primary_cooling_mechanism: evaporation from river + riparian shade + cool-air channelling along the valley
+    availability:
+      scales: [city]
+      land_uses: [residential, mixed_use, public_space, park, industrial, other]
+      requires_waterfront: [river]
+  - nbs_id: "7.6"
+    nbs_type: railway_green_corridor
+    display_name: Railway Green Corridor
+    archetype: street_tree_canopy
+    family: ecological_network
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration from trackside and embankment vegetation + shade where woodland strips exist
+    availability:
+      scales: [city]
+      land_uses: [residential, mixed_use, park, industrial, other]
+      requires_railway: true
+    suitability_overrides:
+      minimum_site_area_m2: 1000
+  - nbs_id: "7.14"
+    nbs_type: coastal_ecological_corridor
+    display_name: Coastal Ecological Corridor
+    archetype: large_water_body
+    family: ecological_network
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration from coastal vegetation + sea-breeze penetration inland
+    availability:
+      scales: [city]
+      land_uses: [public_space, park, other]
+      requires_waterfront: [sea]
+
+  # 8. Productive landscape scale — 7 entries
+  - nbs_id: "8.1"
+    nbs_type: community_garden
+    display_name: Community Garden
+    archetype: productive_non_canopy
+    family: productive_landscape
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration, with limited shade from fruit trees
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, public_space, park, school, campus, healthcare, other]
+      requires_governance: community
+  - nbs_id: "8.2"
+    nbs_type: allotment_garden
+    display_name: Allotment Garden
+    archetype: productive_non_canopy
+    family: productive_landscape
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration; reduced by sheds, paths and paving
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, park, other]
+      requires_governance: individual
+  - nbs_id: "8.3"
+    nbs_type: urban_orchard
+    display_name: Urban Orchard
+    archetype: productive_canopy
+    family: productive_landscape
+    kind: composite
+    primary_cooling_mechanism: shade plus evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, public_space, park, school, campus, healthcare, other]
+      requires_governance: community
+  - nbs_id: "8.4"
+    nbs_type: food_forest
+    display_name: Food Forest
+    archetype: productive_canopy
+    family: productive_landscape
+    kind: composite
+    primary_cooling_mechanism: layered canopy shade plus high evapotranspiration
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [residential, mixed_use, public_space, park, school, campus, healthcare, other]
+      requires_governance: community
+  - nbs_id: "8.5"
+    nbs_type: urban_farm
+    display_name: Urban Farm
+    archetype: productive_non_canopy
+    family: productive_landscape
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration from cultivated ground; little shade
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [school, campus, industrial, other]
+      requires_governance: commercial
+    suitability_overrides:
+      minimum_site_area_m2: 500
+  - nbs_id: "8.9"
+    nbs_type: school_garden
+    display_name: School Garden
+    archetype: productive_non_canopy
+    family: productive_landscape
+    kind: composite
+    primary_cooling_mechanism: evapotranspiration, with shade where fruit trees included
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [school, campus]
+      requires_governance: institutional
+  - nbs_id: "8.15"
+    nbs_type: agroforestry_system
+    display_name: Agroforestry System
+    archetype: productive_canopy
+    family: productive_landscape
+    kind: composite
+    primary_cooling_mechanism: canopy shade plus evapotranspiration from two layers
+    availability:
+      scales: [neighbourhood, site]
+      land_uses: [park, campus, other]
+      requires_governance: commercial
+    suitability_overrides:
+      minimum_site_area_m2: 1000
+
+  # 9. Building scale — 3 entries
+  - nbs_id: "9.29"
+    nbs_type: green_balcony
+    display_name: Green Balcony
+    archetype: green_facade_living_wall
+    family: building
+    kind: element
+    primary_cooling_mechanism: local shade, facade cooling, evapotranspiration
+    availability:
+      scales: [building]
+      land_uses: [residential, mixed_use, commercial, school, campus, healthcare, other]
+  - nbs_id: "9.30"
+    nbs_type: green_terrace
+    display_name: Green Terrace
+    archetype: extensive_green_roof
+    family: building
+    kind: element
+    primary_cooling_mechanism: shade and evapotranspiration
+    availability:
+      scales: [building]
+      land_uses: [residential, mixed_use, commercial, school, campus, healthcare, other]
+  - nbs_id: "9.33"
+    nbs_type: green_podium
+    display_name: Green Podium
+    archetype: small_green_area_with_trees
+    family: building
+    kind: composite
+    primary_cooling_mechanism: shade, evapotranspiration, surface permeability
+    availability:
+      scales: [building]
+      land_uses: [residential, mixed_use, commercial, public_space, campus, healthcare, other]
+    suitability_overrides:
+      requires_soil: none
+
+  # 10. District scale — 5 entries
+  - nbs_id: "10.1"
+    nbs_type: green_infrastructure_network
+    display_name: Green Infrastructure Network
+    archetype: blue_green_corridor
+    family: district
+    kind: composite
+    primary_cooling_mechanism: cumulative shade and evapotranspiration across connected spaces
+    availability:
+      scales: [district]
+      land_uses: [residential, mixed_use, commercial, public_space, park, campus, industrial, other]
+  - nbs_id: "10.2"
+    nbs_type: blue_green_infrastructure_network
+    display_name: Blue-Green Infrastructure Network
+    archetype: blue_green_corridor
+    family: district
+    kind: composite
+    primary_cooling_mechanism: evaporation and evapotranspiration from retained water
+    availability:
+      scales: [district]
+      land_uses: [residential, mixed_use, commercial, public_space, park, campus, industrial, other]
+  - nbs_id: "10.3"
+    nbs_type: urban_cooling_network
+    display_name: Urban Cooling Network
+    archetype: dense_tree_canopy
+    family: district
+    kind: composite
+    primary_cooling_mechanism: shade along routes plus evapotranspiration at refuges
+    availability:
+      scales: [district]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, park, campus, healthcare, other]
+  - nbs_id: "10.4"
+    nbs_type: green_mobility_network
+    display_name: Green Mobility Network
+    archetype: street_tree_canopy
+    family: district
+    kind: composite
+    primary_cooling_mechanism: shade over movement routes plus evapotranspiration
+    availability:
+      scales: [district]
+      land_uses: [street_corridor, residential, mixed_use, commercial, public_space, park, campus, healthcare, other]
+    suitability_overrides:
+      minimum_site_area_m2: 1000
+  - nbs_id: "10.10"
+    nbs_type: forest_district
+    display_name: Forest District
+    archetype: dense_tree_canopy
+    family: district
+    kind: composite
+    primary_cooling_mechanism: continuous canopy shade plus evapotranspiration
+    availability:
+      scales: [district]
+      land_uses: [residential, mixed_use, public_space, park, campus, other]

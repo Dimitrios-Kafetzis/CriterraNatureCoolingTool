@@ -1,0 +1,81 @@
+{
+ "name": "Community garden on a healthcare site — the citable evidence gap",
+ "description": "The productive archetypes inherit rather than measure, and the gap is itself cited (kumar2024 places allotments and city farms among the least-studied categories). This scenario also exercises the productive-governance availability answer, which gates the menu and must move no score (D-044.1).",
+ "derivation": [
+  "Heat exposure (data-poor): 75.0.",
+  "Vulnerability: 65.0.",
+  "HPI: 0.60*75.0 + 0.40*65.0 = 71.0 (high).",
+  "Adjustment for Community Garden: 0.88.",
+  "Cooling: base 45 * 0.88 = 39.6; envelope 0.0-1.5 C inherited from the productive_non_canopy evidence class; clipped range 0.0-1.32 C (midpoint 0.66 -> medium).",
+  "Suitability: 77.5 (minimum area 200 m2).",
+  "Co-benefits: 48.75. Equity: 83.75.",
+  "Energy: typology_not_applicable.",
+  "Opportunity: 59.89 (moderate); excluded ['cost_feasibility'].",
+  "Confidence: cooling medium, energy low, economic low, equity high -> lower median low."
+ ],
+ "input": {
+  "assessment_scale": "site",
+  "site_area_m2": 2500,
+  "existing_tree_canopy_percent": 6,
+  "existing_green_cover_percent": 25,
+  "impervious_surface_percent": 60,
+  "soil_availability": "moderate",
+  "irrigation_availability": "reliable",
+  "land_use": "healthcare",
+  "climate_zone": "temperate",
+  "heat_exposure_level": "high",
+  "population_density": "medium",
+  "vulnerable_population_presence": "very_high",
+  "access_to_cooled_indoor_space": "high",
+  "productive_governance": [
+   "community"
+  ],
+  "nbs_type": [
+   "community_garden"
+  ],
+  "new_canopy_area_at_maturity_m2": 100,
+  "expected_maturity_period_years": 2,
+  "maintenance_intensity": "high",
+  "public_accessibility": "high",
+  "community_participation": "very_high"
+ },
+ "expected": {
+  "heat_exposure.score": 75.0,
+  "heat_exposure.path": "data_poor",
+  "vulnerability.score": 65.0,
+  "heat_priority.score": 71.0,
+  "heat_priority.category": "high",
+  "adjustment.factor": 0.88,
+  "cooling.potential_score": 39.6,
+  "cooling.delta_t_min_c": 0.0,
+  "cooling.delta_t_max_c": 1.32,
+  "cooling.delta_t_midpoint_c": 0.66,
+  "cooling.heat_index_improvement": "medium",
+  "suitability.score": 77.5,
+  "co_benefits.score": 48.75,
+  "equity.score": 83.75,
+  "energy.status": "typology_not_applicable",
+  "energy.savings_min_kwh_per_year": null,
+  "energy.savings_max_kwh_per_year": null,
+  "ghg.status": "energy_not_calculated",
+  "costs.annual_savings_status": "energy_not_calculated",
+  "costs.payback_status": "missing_capital_cost",
+  "costs.cost_feasibility_status": "not_estimated",
+  "costs.investment_readiness_status": "not_estimated",
+  "opportunity.score": 59.89,
+  "opportunity.category": "moderate",
+  "opportunity.excluded_components": [
+   "cost_feasibility"
+  ],
+  "confidence.cooling": "medium",
+  "confidence.energy": "low",
+  "confidence.economic": "low",
+  "confidence.equity": "high",
+  "confidence.overall": "low",
+  "confidence.cooling_capped_by_evidence": true,
+  "package.component_count": 1,
+  "package.representative_nbs_type": "community_garden",
+  "typology.archetype": "productive_non_canopy",
+  "cooling.shade_potential_percent": 4.0
+ }
+}

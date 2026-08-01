@@ -1,50 +1,65 @@
 {
-  "name": "Riparian restoration on a small commercial site with limited soil: not suitable",
-  "description": "Two disqualifying conditions (area, soil). The assessment still computes transparently (D-009) and the flags surface in the recommendation.",
-  "derivation": [
-    "Heat exposure (data-poor): medium -> 50. Vulnerability all unknown -> 50. HPI = 50 (Medium).",
-    "Adjustment: canopy unknown 1.0; soil-water limited -> moderate 0.8; scale site moderate 0.8; climate blue_green/temperate good 1.0: 0.40+0.20+0.16+0.15 = 0.91.",
-    "Cooling: 85*0.91 = 77.35; dT 1.00 (floor) - 2.73; midpoint 1.865 high.",
-    "Suitability: space 400/1000 = 0.4x -> 25 + flag; soil limited < moderate -> 25 + flag; water (requires none) 100; maintenance unknown 50; commercial not in context 25: 7.5+6.25+20+7.5+2.5 = 43.75.",
-    "Energy: riparian restoration is not building-energy applicable -> typology_not_applicable.",
-    "Co-benefits: 0.25*75+0.25*75+0.2*50+0.15*50+0.15*75 = 66.25. Equity all neutral 50.",
-    "Opportunity (cost excluded): (12.5+19.3375+6.5625+7.5+6.625)/0.9 = 58.36 (Moderate).",
-    "Confidence: cooling 2/10 low; energy 0 low; economic 0 low; equity 0 low; overall low."
-  ],
-  "input": {
-    "assessment_scale": "site",
-    "site_area_m2": 400,
-    "soil_availability": "limited",
-    "land_use": "commercial",
-    "climate_zone": "temperate",
-    "heat_exposure_level": "medium",
-    "nbs_type": "riparian_restoration"
-  },
-  "expected": {
-    "heat_exposure.score": 50.0,
-    "vulnerability.score": 50.0,
-    "heat_priority.score": 50.0,
-    "heat_priority.category": "medium",
-    "adjustment.factor": 0.91,
-    "cooling.potential_score": 77.35,
-    "cooling.delta_t_min_c": 1.0,
-    "cooling.delta_t_max_c": 2.73,
-    "suitability.score": 43.75,
-    "suitability.suitable": false,
-    "suitability.flags.0.code": "below_minimum_area",
-    "suitability.flags.1.code": "insufficient_soil",
-    "energy.status": "typology_not_applicable",
-    "ghg.status": "energy_not_calculated",
-    "co_benefits.score": 66.25,
-    "equity.score": 50.0,
-    "opportunity.score": 58.36,
-    "opportunity.category": "moderate",
-    "confidence.overall": "low"
-  },
-  "recommendation_contains": [
-    "IMPORTANT: this typology is not suitable for this site",
-    "site area 400 m2 is below the minimum viable area of 1000 m2 for Riparian restoration",
-    "soil availability 'limited' is below the typology requirement 'moderate'",
-    "treat the result as a screening signal"
+ "name": "Riparian restoration on a small commercial site with limited soil: not suitable",
+ "description": "Two disqualifying conditions (area, soil). The assessment still computes transparently (D-009) and the flags surface in the recommendation.",
+ "derivation": [
+  "Heat exposure (data-poor): 50.0.",
+  "Vulnerability: 50.0.",
+  "HPI: 0.60*50.0 + 0.40*50.0 = 50.0 (medium).",
+  "Adjustment for River Restoration: 0.91.",
+  "Cooling: base 85 * 0.91 = 77.35; envelope 1.0-3.0 C inherited from the riparian_restoration evidence class; clipped range 1.0-2.73 C (midpoint 1.865 -> high).",
+  "Suitability: 43.75 (minimum area 1000 m2).",
+  "Co-benefits: 66.25. Equity: 50.0.",
+  "Energy: typology_not_applicable.",
+  "Opportunity: 58.36 (moderate); excluded ['cost_feasibility'].",
+  "Confidence: cooling low, energy low, economic low, equity low -> lower median low."
+ ],
+ "input": {
+  "assessment_scale": "site",
+  "site_area_m2": 400,
+  "soil_availability": "limited",
+  "land_use": "commercial",
+  "climate_zone": "temperate",
+  "heat_exposure_level": "medium",
+  "nbs_type": [
+   "river_restoration"
   ]
+ },
+ "expected": {
+  "heat_exposure.score": 50.0,
+  "heat_exposure.path": "data_poor",
+  "vulnerability.score": 50.0,
+  "heat_priority.score": 50.0,
+  "heat_priority.category": "medium",
+  "adjustment.factor": 0.91,
+  "cooling.potential_score": 77.35,
+  "cooling.delta_t_min_c": 1.0,
+  "cooling.delta_t_max_c": 2.73,
+  "cooling.delta_t_midpoint_c": 1.865,
+  "cooling.heat_index_improvement": "high",
+  "suitability.score": 43.75,
+  "co_benefits.score": 66.25,
+  "equity.score": 50.0,
+  "energy.status": "typology_not_applicable",
+  "energy.savings_min_kwh_per_year": null,
+  "energy.savings_max_kwh_per_year": null,
+  "ghg.status": "energy_not_calculated",
+  "costs.annual_savings_status": "energy_not_calculated",
+  "costs.payback_status": "missing_capital_cost",
+  "costs.cost_feasibility_status": "not_estimated",
+  "costs.investment_readiness_status": "not_estimated",
+  "opportunity.score": 58.36,
+  "opportunity.category": "moderate",
+  "opportunity.excluded_components": [
+   "cost_feasibility"
+  ],
+  "confidence.cooling": "low",
+  "confidence.energy": "low",
+  "confidence.economic": "low",
+  "confidence.equity": "low",
+  "confidence.overall": "low",
+  "confidence.cooling_capped_by_evidence": false,
+  "package.component_count": 1,
+  "package.representative_nbs_type": "river_restoration",
+  "typology.archetype": "riparian_restoration"
+ }
 }

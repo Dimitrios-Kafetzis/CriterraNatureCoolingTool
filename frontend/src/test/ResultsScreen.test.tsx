@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { Route } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { ResultsScreen } from '../screens/ResultsScreen';
@@ -8,6 +8,7 @@ import { installFetchMock } from './mockFetch';
 import { renderAt } from './render';
 import assessmentDraft from './fixtures/assessment-draft.json';
 import assessmentEvaluated from './fixtures/assessment-evaluated.json';
+import assessmentPackage from './fixtures/assessment-package.json';
 import meta from './fixtures/meta.json';
 import project from './fixtures/project.json';
 import resultMinimal from './fixtures/result-minimal.json';
@@ -128,5 +129,85 @@ describe('ResultsScreen', () => {
     renderResults(assessmentDraft);
     expect(await screen.findByText(messages.results.draftNotice)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: messages.results.continueDraft })).toBeInTheDocument();
+  });
+
+  it('shows no package section for a single-intervention assessment (D-038)', async () => {
+    renderResults(assessmentEvaluated);
+    await screen.findByText(messages.results.heading);
+    expect(result.package.component_count).toBe(1);
+    expect(
+      screen.queryByRole('region', { name: messages.results.packageSection.heading }),
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('ResultsScreen — packages (D-038)', () => {
+  const view = assessmentPackage as unknown as AssessmentView;
+  const packaged = view.result as unknown as AssessmentResult;
+  const url = `/projects/${project.project_id}/assessments/${view.assessment_id}/results`;
+  const p = messages.results.packageSection;
+
+  it('itemises every component with its own range, evidence class and suitability', async () => {
+    renderResults(assessmentPackage, url);
+    const section = await screen.findByRole('region', { name: p.heading });
+    expect(packaged.components.length).toBeGreaterThan(1);
+
+    for (const component of packaged.components) {
+      const item = within(section)
+        .getAllByRole('listitem')
+        .find((element) => element.textContent!.includes(component.typology.display_name))!;
+      expect(item).toBeDefined();
+      const text = item.textContent!;
+      expect(text).toContain(component.typology.archetype_display_name);
+      expect(text).toContain(String(component.cooling.delta_t_min_c));
+      expect(text).toContain(String(component.cooling.delta_t_max_c));
+      expect(text).toContain(String(component.suitability.score));
+    }
+  });
+
+  it('marks exactly the component that carries the headline estimate', async () => {
+    renderResults(assessmentPackage, url);
+    const section = await screen.findByRole('region', { name: p.heading });
+    const marks = within(section).getAllByText(p.representative);
+    expect(marks).toHaveLength(1);
+    const representative = packaged.components.find((component) => component.is_representative)!;
+    expect(representative.typology.nbs_type).toBe(packaged.package.representative_nbs_type);
+    expect(marks[0]!.closest('li')!.textContent).toContain(representative.typology.display_name);
+  });
+
+  it('renders the combination rules as the engine stated them, not restated', async () => {
+    renderResults(assessmentPackage, url);
+    const section = await screen.findByRole('region', { name: p.heading });
+    for (const rule of [
+      packaged.package.cooling_rule,
+      packaged.package.co_benefit_rule,
+      packaged.package.suitability_rule,
+      packaged.package.cost_rule,
+    ]) {
+      expect(within(section).getByText(rule)).toBeInTheDocument();
+    }
+    expect(
+      within(section).getByText(
+        (_content, element) =>
+          element?.tagName === 'P' &&
+          element.textContent ===
+            `${p.representativeWhy}: ${packaged.package.representative_reason}`,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('names the single component the energy figure was derived from', async () => {
+    renderResults(assessmentPackage, url);
+    const section = await screen.findByRole('region', { name: p.heading });
+    const energyComponent = packaged.components.find(
+      (component) => component.typology.nbs_type === packaged.package.energy_component_nbs_type,
+    );
+    expect(
+      within(section).getByText(
+        energyComponent
+          ? p.energyComponent(energyComponent.typology.display_name)
+          : p.energyNoComponent,
+      ),
+    ).toBeInTheDocument();
   });
 });

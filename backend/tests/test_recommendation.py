@@ -3,11 +3,33 @@
 from __future__ import annotations
 
 from nature_cooling.engine import recommendation
+from nature_cooling.engine.models import ComponentBlock, TypologySummary
+from nature_cooling.engine.scoring import adjustment, co_benefits, cooling, suitability
 
 
-def _compose(
-    config, build_input, *, nbs_type="street_tree_planting", input_overrides=None, **overrides
-):
+def _component(config, inp, nbs_type, *, is_representative):
+    """Score one package component exactly as the runner does.
+
+    The composer reads a component's typology summary and its representative
+    flag; the blocks are computed rather than stubbed so that the fixture can
+    never drift from what the engine actually hands the composer.
+    """
+    typology = config.typologies.by_type(nbs_type)
+    adjustment_block, _ = adjustment.compute(inp, typology, config)
+    suitability_block, _ = suitability.compute(inp, typology, config)
+    co_benefits_block, _ = co_benefits.compute(inp, typology, config)
+    return ComponentBlock(
+        typology=TypologySummary.of(typology),
+        adjustment=adjustment_block,
+        suitability=suitability_block,
+        cooling=cooling.compute(inp, typology, adjustment_block.factor, config),
+        co_benefits=co_benefits_block,
+        is_representative=is_representative,
+    )
+
+
+def _compose(config, build_input, *, nbs_type="tree_avenue", input_overrides=None, **overrides):
+    """Compose for a package of one: the carrier is its only component."""
     defaults = dict(
         heat_priority_category="high",
         opportunity_category="strong",
@@ -21,9 +43,10 @@ def _compose(
         overall_confidence="high",
     )
     defaults.update(overrides)
-    inp = build_input(nbs_type=nbs_type, **(input_overrides or {}))
+    inp = build_input(nbs_type=[nbs_type], **(input_overrides or {}))
     typology = config.typologies.by_type(nbs_type)
-    return recommendation.compose(inp, typology, config=config, **defaults)
+    components = [_component(config, inp, nbs_type, is_representative=True)]
+    return recommendation.compose(inp, typology, config=config, components=components, **defaults)
 
 
 def test_baseline_composition(config, build_input):
@@ -31,10 +54,11 @@ def test_baseline_composition(config, build_input):
     assert text.startswith("This site shows a high heat priority.")
     assert "strong NbS cooling opportunity" in text
     assert (
-        "Street tree planting is expected to deliver an indicative daytime air "
+        "Tree Avenue is expected to deliver an indicative daytime air "
         "temperature reduction of 0.5-2.85 C at pedestrian level, principally "
-        "through shade and evapotranspiration." in text
+        "through shade \u2014 continuous linear canopy, plus evapotranspiration." in text
     )
+    assert "This assessment proposes a package of" not in text  # a package of one
     assert "IMPORTANT" not in text
     assert "not calculated" not in text
 
@@ -42,6 +66,77 @@ def test_baseline_composition(config, build_input):
 def test_temperature_formatting_keeps_one_decimal(config, build_input):
     text = _compose(config, build_input, delta_t_min_c=1.0, delta_t_max_c=3.0)
     assert "1.0-3.0 C" in text
+
+
+def test_package_clause_names_the_carrier_before_the_temperature(config, build_input):
+    """D-038/D-014: a package's degrees belong to one component, never the sum.
+
+    The clause is stated BEFORE the cooling clause so the figure is read in the
+    knowledge that it is the best-evidenced component's. Here the tree avenue
+    (high evidence) carries the estimate over the green roof (medium) and the
+    rain garden (low), and the quoted range is its own, so the text must name
+    the carrier and disclaim the sum before the number appears.
+    """
+    slugs = ["tree_avenue", "extensive_green_roof", "rain_garden"]
+    inp = build_input(nbs_type=slugs)
+    components = [
+        _component(config, inp, slug, is_representative=(slug == "tree_avenue")) for slug in slugs
+    ]
+    text = recommendation.compose(
+        inp,
+        config.typologies.by_type("tree_avenue"),
+        config=config,
+        components=components,
+        heat_priority_category="high",
+        opportunity_category="strong",
+        delta_t_min_c=0.5,
+        delta_t_max_c=2.85,
+        suitability_flags=[],
+        energy_status="calculated",
+        energy_status_message="Energy savings derived from estimated cooling effect.",
+        annual_savings_status="calculated",
+        payback_status="calculated",
+        overall_confidence="high",
+    )
+    assert (
+        "This assessment proposes a package of 3 interventions: Tree Avenue, "
+        "Extensive green roof and Rain garden." in text
+    )
+    assert (
+        "the package's temperature estimate is the best-evidenced component's (Tree Avenue) "
+        "and is never the sum of its parts" in text
+    )
+    assert text.index("package of 3 interventions") < text.index("0.5-2.85 C")
+
+
+def test_package_caveats_are_unioned_across_components(config, build_input):
+    """A caveat earned by any component is a caveat on the assessment.
+
+    The tree avenue carries the estimate, but the green roof in the package
+    still obliges the text to say that its benefit does not reach the street.
+    """
+    slugs = ["tree_avenue", "extensive_green_roof"]
+    inp = build_input(nbs_type=slugs)
+    components = [
+        _component(config, inp, slug, is_representative=(slug == "tree_avenue")) for slug in slugs
+    ]
+    text = recommendation.compose(
+        inp,
+        config.typologies.by_type("tree_avenue"),
+        config=config,
+        components=components,
+        heat_priority_category="high",
+        opportunity_category="strong",
+        delta_t_min_c=0.5,
+        delta_t_max_c=2.85,
+        suitability_flags=[],
+        energy_status="calculated",
+        energy_status_message="Energy savings derived from estimated cooling effect.",
+        annual_savings_status="calculated",
+        payback_status="calculated",
+        overall_confidence="high",
+    )
+    assert "concentrated at roof level" in text
 
 
 def test_not_suitable_flag_lists_reasons(config, build_input):
@@ -55,12 +150,12 @@ def test_not_suitable_flag_lists_reasons(config, build_input):
 
 
 def test_low_evidence_flag_for_green_facade(config, build_input):
-    text = _compose(config, build_input, nbs_type="green_facade")
+    text = _compose(config, build_input, nbs_type="indirect_ground_rooted_green_facade")
     assert "published evidence for this typology is limited or inconsistent" in text
 
 
 def test_green_roof_street_level_caveat(config, build_input):
-    text = _compose(config, build_input, nbs_type="green_roof")
+    text = _compose(config, build_input, nbs_type="extensive_green_roof")
     assert "concentrated at roof level" in text
 
 

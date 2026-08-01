@@ -8,4 +8,4 @@ Packages:
     api:    the FastAPI service exposing the engine (Phase 3).
 """
 
-__version__ = "1.1.0"
+__version__ = "2.0.0"

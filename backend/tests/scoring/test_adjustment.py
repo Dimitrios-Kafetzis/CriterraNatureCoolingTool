@@ -7,7 +7,7 @@ import pytest
 from nature_cooling.engine.scoring import adjustment
 
 
-def _typology(config, nbs_type="street_tree_planting"):
+def _typology(config, nbs_type="tree_avenue"):
     return config.typologies.by_type(nbs_type)
 
 
@@ -125,20 +125,22 @@ def test_scale_condition(config, build_input, scale, expected):
     assert block.scale.level == expected
 
 
+# The matrix is keyed on the archetype's category, so each row below names the
+# catalogue entry whose inherited category exercises that cell.
 @pytest.mark.parametrize(
     ("zone", "nbs_type", "expected"),
     [
         ("tropical_wet", "blue_green_corridor", "moderate"),  # humidity caveat
         ("tropical_dry", "blue_green_corridor", "excellent"),
-        ("arid", "street_tree_planting", "moderate"),  # water limitation
-        ("arid", "permeable_shaded_plaza", "good"),
-        ("semi_arid", "green_roof", "good"),
-        ("temperate", "street_tree_planting", "good"),
-        ("other", "street_tree_planting", "unknown"),
+        ("arid", "tree_avenue", "moderate"),  # water limitation
+        ("arid", "permeable_plaza", "good"),  # hybrid
+        ("semi_arid", "extensive_green_roof", "good"),  # building
+        ("temperate", "tree_avenue", "good"),
+        ("other", "tree_avenue", "unknown"),
     ],
 )
 def test_climate_matrix(config, build_input, zone, nbs_type, expected):
-    inp = build_input(climate_zone=zone, nbs_type=nbs_type)
+    inp = build_input(climate_zone=zone, nbs_type=[nbs_type])
     block, _ = adjustment.compute(inp, _typology(config, nbs_type), config)
     assert block.climate.level == expected
 
@@ -164,7 +166,7 @@ def test_factor_bounds_all_poor_and_all_excellent(config, build_input):
         irrigation_availability="reliable",
         assessment_scale="city",
         climate_zone="tropical_dry",
-        nbs_type="riparian_restoration",
+        nbs_type=["river_restoration"],
     )
-    block, _ = adjustment.compute(best, _typology(config, "riparian_restoration"), config)
+    block, _ = adjustment.compute(best, _typology(config, "river_restoration"), config)
     assert block.factor == 1.2

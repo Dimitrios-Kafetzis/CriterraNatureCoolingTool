@@ -1,17 +1,37 @@
 /**
- * The guided typology picker (UX §5, D-019, D-009).
+ * The guided typology picker (UX §5, D-019, D-009, D-043, D-044).
  *
- * All 14 cards render sorted and annotated by fit to the site data already
- * entered. Fit is a comparison of the user's answers against each typology's
- * suitability conditions served by GET /api/typologies, using the ordinal
- * ranks served by GET /api/methodology — no rank, threshold, or requirement
- * originates here. Unsuitable typologies stay fully selectable: a user
- * deliberately testing a hypothesis is never overridden, and the flag
- * follows through to the results (computed there by the engine, D-009).
+ * The catalogue holds 110 entries across fourteen families, and a school site
+ * is offered 67 of them, so the picker groups by family, filters by name, and
+ * supports selecting several entries as a package (D-038). Every card keeps
+ * the fit annotation it has always carried: a comparison of the user's answers
+ * against each entry's suitability conditions served by GET /api/typologies,
+ * using the ordinal ranks served by GET /api/methodology — no rank, threshold,
+ * or requirement originates here.
+ *
+ * Two boundaries govern this file:
+ *
+ * * **Availability is asked, never computed.** GET /api/typologies/available
+ *   says what the service offers for this site; the picker sorts and labels by
+ *   that answer and derives no gating rule of its own (ARCHITECTURE boundary
+ *   1). While the answer is unavailable — no scale entered yet, or the request
+ *   failed — every entry is simply offered, which is the pre-v2 behaviour.
+ * * **Availability guides, it never blocks (D-019).** An entry the service
+ *   does not offer stays fully selectable, visually separated and labelled, so
+ *   a professional deliberately testing a hypothesis is never overridden. The
+ *   engine records the choice with its own honest flags (D-009).
  */
 
+import { useId, useMemo, useState } from 'react';
+import { FieldExplainer } from '../components/FieldExplainer';
 import { messages, optionLabel } from '../i18n/en';
-import type { DraftInput, MethodologyData, Typology, TypologyLibrary } from '../api/types';
+import type {
+  AvailableTypologies,
+  DraftInput,
+  MethodologyData,
+  Typology,
+  TypologyLibrary,
+} from '../api/types';
 
 type FitKind = 'suited' | 'caution' | 'unsuitable';
 
@@ -101,54 +121,326 @@ function ranksOf(methodology: MethodologyData): {
 
 const FIT_MARK: Record<FitKind, string> = { suited: '✓', caution: '!', unsuitable: '✕' };
 
+interface Card {
+  typology: Typology;
+  fit: Fit;
+  offered: boolean;
+}
+
+interface FamilyGroup {
+  family: string;
+  cards: Card[];
+}
+
+/** The library's flat scoring view, which is the shape the picker renders. */
+function resolvedEntries(library: TypologyLibrary): Typology[] {
+  return library.resolved ?? [];
+}
+
+/**
+ * Group cards by family in the catalogue's own order, elements before
+ * composites, with any family the catalogue adds later appended rather than
+ * dropped.
+ */
+function groupByFamily(cards: Card[]): FamilyGroup[] {
+  const byFamily = new Map<string, Card[]>();
+  for (const card of cards) {
+    const bucket = byFamily.get(card.typology.family);
+    if (bucket) bucket.push(card);
+    else byFamily.set(card.typology.family, [card]);
+  }
+  const ordered = [...messages.families.order].filter((family) => byFamily.has(family));
+  const extra = [...byFamily.keys()].filter((family) => !ordered.includes(family));
+  return [...ordered, ...extra].map((family) => ({ family, cards: byFamily.get(family) ?? [] }));
+}
+
+function familyLabel(family: string): string {
+  return messages.families.labels[family] ?? family;
+}
+
 export function TypologyPicker(props: {
   library: TypologyLibrary;
   methodology: MethodologyData;
+  availability: AvailableTypologies | null;
   draft: DraftInput;
-  onSelect: (nbsType: string) => void;
+  onChange: (nbsTypes: string[]) => void;
 }) {
-  const ranks = ranksOf(props.methodology);
-  const cards = props.library.typologies
-    .map((typology) => ({ typology, fit: assessFit(props.draft, typology, ranks) }))
-    .sort((a, b) => FIT_ORDER[a.fit.kind] - FIT_ORDER[b.fit.kind]);
+  const [filter, setFilter] = useState('');
+  const filterId = useId();
+  const { library, methodology, availability, draft } = props;
+  const selected = draft.nbs_type ?? [];
+  const entries = resolvedEntries(library);
+
+  const offeredSet = useMemo(
+    () => (availability ? new Set(availability.nbs_types) : null),
+    [availability],
+  );
+
+  const cards = useMemo<Card[]>(() => {
+    const ranks = ranksOf(methodology);
+    return entries
+      .map((typology) => ({
+        typology,
+        fit: assessFit(draft, typology, ranks),
+        // Without a served answer nothing is "not offered": an unasked
+        // question is not a negative one.
+        offered: offeredSet === null || offeredSet.has(typology.nbs_type),
+      }))
+      .sort((a, b) => FIT_ORDER[a.fit.kind] - FIT_ORDER[b.fit.kind]);
+  }, [entries, offeredSet, draft, methodology]);
+
+  const needle = filter.trim().toLowerCase();
+  const matching = needle
+    ? cards.filter(
+        (card) =>
+          card.typology.display_name.toLowerCase().includes(needle) ||
+          card.typology.archetype_display_name.toLowerCase().includes(needle),
+      )
+    : cards;
+
+  const offeredGroups = groupByFamily(matching.filter((card) => card.offered));
+  const withheldGroups = groupByFamily(matching.filter((card) => !card.offered));
+
+  function toggle(nbsType: string) {
+    // Selection order is the user's own and is preserved: the engine reports
+    // components in the order they were proposed.
+    props.onChange(
+      selected.includes(nbsType)
+        ? selected.filter((candidate) => candidate !== nbsType)
+        : [...selected, nbsType],
+    );
+  }
+
+  const byType = new Map(entries.map((typology) => [typology.nbs_type, typology]));
+  const composesPackages = props.availability?.composes_packages ?? false;
+  const warnAbove = props.availability?.warn_above_components;
 
   return (
-    <div className="picker" role="group" aria-label={messages.fields.nbs_type?.label}>
-      {cards.map(({ typology, fit }) => {
-        const selected = props.draft.nbs_type === typology.nbs_type;
-        return (
-          <button
-            key={typology.nbs_type}
-            type="button"
-            className="picker__card"
-            aria-pressed={selected}
-            onClick={() => props.onSelect(typology.nbs_type)}
-          >
-            <span className={`picker__fit picker__fit--${fit.kind}`}>
-              {FIT_MARK[fit.kind]}{' '}
-              {fit.kind === 'suited'
-                ? messages.picker.fit.suited
-                : fit.kind === 'unsuitable'
-                  ? `${messages.picker.fit.unsuitablePrefix} — ${fit.notes.join('; ')}`
-                  : fit.notes.join('; ')}
-            </span>
-            <span className="picker__name">{typology.display_name}</span>
-            <span className="picker__meta">
-              {messages.picker.cooling(
-                typology.temp_reduction_min_c.toLocaleString(),
-                typology.temp_reduction_max_c.toLocaleString(),
-              )}
-            </span>
-            <span className="picker__meta">
-              {messages.picker.evidence(optionLabel(typology.evidence_confidence))}
-              {fit.kind === 'unsuitable' ? ` · ${messages.picker.fit.selectable}` : ''}
-            </span>
-            {selected ? (
-              <span className="badge badge--accent">{messages.picker.selected}</span>
-            ) : null}
+    <div className="picker-shell">
+      {/* The intervention is a questionnaire parameter like any other, so it
+          carries the same D-041 explanation as every field. */}
+      <div className="field__label-row">
+        <span className="field__label">{messages.fields.nbs_type?.label}</span>
+        <FieldExplainer field="nbs_type" />
+      </div>
+      <p className="muted">
+        {composesPackages ? messages.picker.introPackage : messages.picker.intro}
+      </p>
+
+      <SelectionList
+        selected={selected}
+        byType={byType}
+        warnAbove={warnAbove}
+        onRemove={(nbsType) =>
+          props.onChange(selected.filter((candidate) => candidate !== nbsType))
+        }
+      />
+
+      <div className="field picker__filter">
+        <label className="field__label" htmlFor={filterId}>
+          {messages.picker.filterLabel}
+        </label>
+        <input
+          id={filterId}
+          type="search"
+          value={filter}
+          placeholder={messages.picker.filterPlaceholder}
+          onChange={(event) => setFilter(event.target.value)}
+        />
+        {filter !== '' ? (
+          <button type="button" className="button button--quiet" onClick={() => setFilter('')}>
+            {messages.picker.clearFilter}
           </button>
-        );
-      })}
+        ) : null}
+      </div>
+
+      {matching.length === 0 ? <p className="notice">{messages.picker.filterNoMatch}</p> : null}
+
+      {offeredGroups.length > 0 ? (
+        <section aria-label={messages.picker.offeredHeading}>
+          {offeredSet !== null ? (
+            <>
+              <h4 className="picker__section-heading">{messages.picker.offeredHeading}</h4>
+              <p className="muted small">
+                {messages.picker.offeredIntro(props.availability?.count ?? 0)}
+              </p>
+            </>
+          ) : null}
+          {offeredGroups.map((group) => (
+            <FamilySection
+              key={group.family}
+              group={group}
+              selected={selected}
+              defaultOpen={offeredGroups.length <= 3 || needle !== ''}
+              onToggle={toggle}
+            />
+          ))}
+        </section>
+      ) : null}
+
+      {withheldGroups.length > 0 ? (
+        <section className="picker__withheld" aria-label={messages.picker.notOfferedHeading}>
+          <h4 className="picker__section-heading">{messages.picker.notOfferedHeading}</h4>
+          <p className="muted small">{messages.picker.notOfferedIntro}</p>
+          {withheldGroups.map((group) => (
+            <FamilySection
+              key={group.family}
+              group={group}
+              selected={selected}
+              defaultOpen={needle !== ''}
+              onToggle={toggle}
+            />
+          ))}
+        </section>
+      ) : null}
+
+      <p className="muted small">{messages.picker.evidenceClassNote}</p>
     </div>
+  );
+}
+
+/** The current package: a removable, ordered list of what has been chosen. */
+function SelectionList(props: {
+  selected: string[];
+  byType: Map<string, Typology>;
+  warnAbove: number | undefined;
+  onRemove: (nbsType: string) => void;
+}) {
+  const overSize = props.warnAbove !== undefined && props.selected.length > props.warnAbove;
+  return (
+    <div className="picker__selection">
+      <h4 className="picker__section-heading">
+        {messages.picker.selectionHeading}
+        {props.selected.length > 0 ? (
+          <>
+            {' '}
+            <span className="badge badge--accent">
+              {messages.picker.selectionCount(props.selected.length)}
+            </span>
+          </>
+        ) : null}
+      </h4>
+      {props.selected.length === 0 ? (
+        <p className="muted small">{messages.picker.selectionEmpty}</p>
+      ) : (
+        <>
+          <ol className="picker__selection-list">
+            {props.selected.map((nbsType) => {
+              const typology = props.byType.get(nbsType);
+              return (
+                <li key={nbsType}>
+                  <span>
+                    {typology ? (
+                      <>
+                        {typology.display_name}{' '}
+                        <span className="muted small">
+                          · {messages.picker.evidenceClass(typology.archetype_display_name)}
+                        </span>
+                      </>
+                    ) : (
+                      // A migrated draft can name an entry the current library
+                      // no longer holds (D-044.2); it is shown, never hidden.
+                      <span className="error-text">{messages.picker.unknownEntry(nbsType)}</span>
+                    )}
+                  </span>
+                  <button
+                    type="button"
+                    className="button button--quiet"
+                    aria-label={messages.picker.removeLabel(typology?.display_name ?? nbsType)}
+                    onClick={() => props.onRemove(nbsType)}
+                  >
+                    {messages.picker.remove}
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="muted small">{messages.picker.representativeHint}</p>
+        </>
+      )}
+      {overSize && props.warnAbove !== undefined ? (
+        <p className="notice notice--warn" role="status">
+          {messages.picker.sizeWarning(props.warnAbove)}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+/** One collapsible family, with its count in the summary. */
+function FamilySection(props: {
+  group: FamilyGroup;
+  selected: string[];
+  defaultOpen: boolean;
+  onToggle: (nbsType: string) => void;
+}) {
+  const label = familyLabel(props.group.family);
+  const kind = props.group.cards[0]?.typology.kind;
+  return (
+    <details className="collapsible picker__family" open={props.defaultOpen}>
+      <summary>
+        {label}{' '}
+        <span className="muted small">
+          · {messages.picker.groupCount(props.group.cards.length)}
+          {kind ? ` · ${messages.families.kinds[kind] ?? kind}` : ''}
+        </span>
+      </summary>
+      <div className="picker" role="group" aria-label={label}>
+        {props.group.cards.map((card) => (
+          <TypologyCard
+            key={card.typology.nbs_type}
+            card={card}
+            selected={props.selected.includes(card.typology.nbs_type)}
+            onToggle={props.onToggle}
+          />
+        ))}
+      </div>
+    </details>
+  );
+}
+
+function TypologyCard(props: {
+  card: Card;
+  selected: boolean;
+  onToggle: (nbsType: string) => void;
+}) {
+  const { typology, fit, offered } = props.card;
+  return (
+    <button
+      type="button"
+      className={`picker__card${offered ? '' : ' picker__card--withheld'}`}
+      aria-pressed={props.selected}
+      onClick={() => props.onToggle(typology.nbs_type)}
+    >
+      <span className={`picker__fit picker__fit--${fit.kind}`}>
+        {FIT_MARK[fit.kind]}{' '}
+        {fit.kind === 'suited'
+          ? messages.picker.fit.suited
+          : fit.kind === 'unsuitable'
+            ? `${messages.picker.fit.unsuitablePrefix} — ${fit.notes.join('; ')}`
+            : fit.notes.join('; ')}
+      </span>
+      <span className="picker__name">{typology.display_name}</span>
+      <span className="picker__meta">
+        {messages.picker.cooling(
+          typology.temp_reduction_min_c.toLocaleString(),
+          typology.temp_reduction_max_c.toLocaleString(),
+        )}
+      </span>
+      {/* D-044: the entry inherits a cited envelope, and says which one. */}
+      <span className="picker__meta">
+        {messages.picker.evidenceClass(typology.archetype_display_name)}
+      </span>
+      <span className="picker__meta">
+        {messages.picker.evidence(optionLabel(typology.evidence_confidence))}
+        {fit.kind === 'unsuitable' ? ` · ${messages.picker.fit.selectable}` : ''}
+      </span>
+      {!offered ? (
+        <span className="badge badge--warn">{messages.picker.notOfferedBadge}</span>
+      ) : null}
+      {props.selected ? (
+        <span className="badge badge--accent">{messages.picker.selected}</span>
+      ) : null}
+    </button>
   );
 }

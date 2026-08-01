@@ -50,7 +50,7 @@ _REQUIRED_PLACEHOLDERS: dict[str, Any] = {
     "assessment_scale": "site",
     "site_area_m2": math.inf,
     "climate_zone": "other",
-    "nbs_type": "",
+    "nbs_type": ["__unset__"],
 }
 
 # A stand-in for the presence-only completion probe (see ``_hint``): the
@@ -140,13 +140,32 @@ def validate_payload(payload: dict[str, Any], config: MethodologyConfig) -> Vali
         errors = issues_from(exc)
         invalid_fields = {str(item["loc"][0]) for item in exc.errors()}
 
+    # The evidence-confidence cap follows the component that would carry the
+    # package's cooling estimate, which is the same component the engine would
+    # choose (best evidence, then widest envelope). Until every selected entry
+    # resolves, no cap can be asserted and the preview is computed uncapped
+    # (D-029) — a promise about confidence must not rest on a typology the
+    # library cannot find.
     typology: Typology | None = None
-    supplied_type = payload.get("nbs_type")
-    if isinstance(supplied_type, str) and "nbs_type" not in invalid_fields:
-        try:
-            typology = config.typologies.by_type(supplied_type)
-        except ConfigError as exc:
-            errors.append(FieldIssue(field="nbs_type", message=str(exc)))
+    supplied_types = payload.get("nbs_type")
+    if isinstance(supplied_types, list) and "nbs_type" not in invalid_fields:
+        # Every element is a string here: a non-string would have failed
+        # pydantic validation above, putting ``nbs_type`` in ``invalid_fields``
+        # and skipping this block entirely.
+        resolved: list[Typology] = []
+        for index, name in enumerate(supplied_types):
+            try:
+                resolved.append(config.typologies.by_type(name))
+            except ConfigError as exc:
+                errors.append(FieldIssue(field=f"nbs_type.{index}", message=str(exc)))
+        if resolved:
+            typology = max(
+                resolved,
+                key=lambda item: (
+                    _RANK[item.evidence_confidence],
+                    item.temp_reduction_max_c,
+                ),
+            )
 
     if inp is None:
         inp = _placeholder_input(payload, invalid_fields)

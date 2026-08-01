@@ -39,6 +39,14 @@ export const STEPS: Step[] = [
       'irrigation_availability',
       'current_shade_level',
       'land_use',
+      // The four availability questions (D-044.1). They belong with the site
+      // description because that is what they describe; they gate which
+      // interventions are offered and enter no formula, which each field's
+      // explanation states plainly.
+      'includes_railway',
+      'existing_woodland',
+      'waterfront_type',
+      'productive_governance',
     ],
   },
   {
@@ -118,6 +126,8 @@ export const OPTIONS = {
   soil_availability: ['none', 'limited', 'moderate', 'high'],
   irrigation_availability: ['none', 'occasional', 'reliable'],
   current_shade_level: ['very_low', 'low', 'medium', 'high'],
+  waterfront_type: ['lake', 'river', 'dry_river', 'covered_river', 'sea'],
+  productive_governance: ['community', 'individual', 'institutional', 'commercial'],
   standard: ['low', 'medium', 'high', 'very_high'],
   inverted: ['low', 'medium', 'high'],
   yes_no: ['yes', 'no'],
@@ -128,6 +138,8 @@ export const OPTIONS = {
   soil_availability: readonly Exclude<NonNull<'soil_availability'>, 'unknown'>[];
   irrigation_availability: readonly Exclude<NonNull<'irrigation_availability'>, 'unknown'>[];
   current_shade_level: readonly Exclude<NonNull<'current_shade_level'>, 'unknown'>[];
+  waterfront_type: readonly NonNull<'waterfront_type'>[];
+  productive_governance: readonly NonNull<'productive_governance'>[number][];
   standard: readonly Exclude<NonNull<'heat_exposure_level'>, 'unknown'>[];
   inverted: readonly Exclude<NonNull<'implementation_complexity'>, 'unknown'>[];
   yes_no: readonly Exclude<NonNull<'nearby_building_cooling_demand_relevant'>, 'unknown'>[];

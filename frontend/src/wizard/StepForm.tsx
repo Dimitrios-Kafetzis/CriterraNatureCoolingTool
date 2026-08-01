@@ -5,12 +5,13 @@
  */
 
 import { useState } from 'react';
-import { LevelField, NumberField, TextField } from '../components/FieldControls';
+import { LevelField, MultiSelectField, NumberField, TextField } from '../components/FieldControls';
 import { messages } from '../i18n/en';
 import { OPTIONS, type StepId } from './steps';
 import { TypologyPicker } from './TypologyPicker';
 import type {
   AssessmentInput,
+  AvailableTypologies,
   DraftInput,
   InputField,
   MethodologyData,
@@ -24,6 +25,8 @@ export interface StepFormProps {
   setField: <F extends InputField>(field: F, value: AssessmentInput[F] | undefined) => void;
   library: TypologyLibrary | null;
   methodology: MethodologyData | null;
+  /** What the service offers for this site, or null while unknown (D-043). */
+  availability: AvailableTypologies | null;
 }
 
 export function StepForm(props: StepFormProps) {
@@ -142,6 +145,49 @@ function SiteStep({ draft, errors, setField }: StepFormProps) {
         error={errors.land_use}
         onChange={(value) => setField('land_use', value as AssessmentInput['land_use'] | undefined)}
       />
+      {/* The four availability questions (D-044.1): they change which
+          interventions are offered and feed no score, which each field's
+          explanation popover states in as many words. */}
+      <LevelField
+        field="includes_railway"
+        value={draft.includes_railway}
+        options={OPTIONS.yes_no}
+        error={errors.includes_railway}
+        onChange={(value) =>
+          setField('includes_railway', value as AssessmentInput['includes_railway'] | undefined)
+        }
+      />
+      <LevelField
+        field="existing_woodland"
+        value={draft.existing_woodland}
+        options={OPTIONS.yes_no}
+        error={errors.existing_woodland}
+        onChange={(value) =>
+          setField('existing_woodland', value as AssessmentInput['existing_woodland'] | undefined)
+        }
+      />
+      <LevelField
+        field="waterfront_type"
+        value={draft.waterfront_type}
+        options={OPTIONS.waterfront_type}
+        withUnknown={false}
+        error={errors.waterfront_type}
+        onChange={(value) =>
+          setField('waterfront_type', value as AssessmentInput['waterfront_type'] | undefined)
+        }
+      />
+      <MultiSelectField
+        field="productive_governance"
+        value={draft.productive_governance}
+        options={OPTIONS.productive_governance}
+        error={errors.productive_governance}
+        onChange={(value) =>
+          setField(
+            'productive_governance',
+            value as AssessmentInput['productive_governance'] | undefined,
+          )
+        }
+      />
     </fieldset>
   );
 }
@@ -225,20 +271,31 @@ const CO_BENEFIT_FIELDS = [
   'co_benefit_urban_quality',
 ] as const;
 
-function InterventionStep({ draft, errors, setField, library, methodology }: StepFormProps) {
+function InterventionStep({
+  draft,
+  errors,
+  setField,
+  library,
+  methodology,
+  availability,
+}: StepFormProps) {
   if (!library || !methodology) {
     return <p className="muted">{messages.app.loading}</p>;
   }
+  // An empty package is an unanswered field, not an empty list (D-029).
+  const setTypes = (nbsTypes: string[]) =>
+    setField('nbs_type', nbsTypes.length > 0 ? nbsTypes : undefined);
   return (
     <fieldset>
       {errors.nbs_type ? <p className="error-text">{errors.nbs_type}</p> : null}
       <TypologyPicker
         library={library}
         methodology={methodology}
+        availability={availability}
         draft={draft}
-        onSelect={(nbsType) => setField('nbs_type', nbsType)}
+        onChange={setTypes}
       />
-      {draft.nbs_type ? (
+      {(draft.nbs_type?.length ?? 0) > 0 ? (
         <>
           <h3>{messages.picker.sizingHeading}</h3>
           <NumberField

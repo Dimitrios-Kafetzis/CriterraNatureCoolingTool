@@ -7,13 +7,18 @@ studied in detail. The available options are unstructured judgment, which is
 fast but neither comparable nor defensible, and microclimate simulation, which
 is rigorous but too slow and costly for triage. This paper specifies a
 screening-level, multi-criteria methodology that occupies the gap between them.
-The methodology converts a structured description of an urban site and one
-proposed nature-based intervention into a Heat Priority Index, a Cooling
+The methodology converts a structured description of an urban site and one or
+more proposed nature-based interventions into a Heat Priority Index, a Cooling
 Potential Score, an indicative daytime pedestrian-level air-temperature
 reduction range, derived cooling-energy and greenhouse-gas estimates, equity
 and co-benefit scores, and a single NbS Cooling Opportunity Score on a
-\numrange{0}{100} scale, each accompanied by an explicit confidence rating. It
-is built on a library of fourteen intervention typologies whose performance
+\numrange{0}{100} scale, each accompanied by an explicit confidence rating. Its
+intervention library has two levels: \num{110} curated catalogue entries, each
+inheriting one of \num{18} cited \emph{cooling archetypes} that carry every
+performance value and its citations, because solution-specific cooling
+literature does not exist for \num{110} intervention types and inventing
+\num{110} envelopes would manufacture precision the source catalogue does not
+contain. Every result names the evidence class it inherited from. The archetype
 envelopes are derived from published evidence, principally an umbrella review
 of sixty-four systematic reviews \parencite{keravec2026}, an empirical
 meta-analysis of park cooling \parencite{bowler2010}, and a scale-dependent
@@ -21,8 +26,9 @@ canopy study \parencite{ziter2019}; the composite-indicator construction
 follows established practice \parencite{nardo2008} and the prioritisation logic
 follows \textcite{norton2015}. Three calibration choices are emphasised: a
 downward correction for the modelling bias present in the synthesised
-literature, a refusal to claim super-additive cooling for combined
-intervention packages, and the clipping of all reported temperature ranges to
+literature, a refusal to claim super-additive cooling for multi-intervention
+packages, whose reported temperature is capped at the best-evidenced component
+and never summed, and the clipping of all reported temperature ranges to
 the literature-supported envelope so that favourable site conditions can never
 generate a claim exceeding published evidence. The methodology's limitations
 are stated rather than minimised: all cooling values are daytime only; the
@@ -31,8 +37,13 @@ is geographically skewed towards temperate and subtropical Northern Hemisphere
 cities; no default costs are shipped; and the aggregation weights are declared
 expert judgment, including a disclosed equity-forward emphasis that gives
 vulnerability an effective weight of \num{0.25} against heat exposure at
-\num{0.15}. The sensitivity analysis specified here is planned methodology, not
-a reported result. The tool, its configuration, and this document are public
+\num{0.15}. A published sensitivity analysis, regenerated for this version
+across \num{24} golden scenarios, finds priority ordering substantially stable
+under \SI{\pm 25}{\percent} single-weight perturbation: worst-case pairwise
+rank stability \num[group-digits=none]{0.9529}, pooled mean score displacement \num{0.47} points,
+and \num{8} band crossings in \num{288} scenario-perturbation combinations,
+four of them attributable to a single scenario sitting \num{0.11} points below
+a band boundary. The tool, its configuration, and this document are public
 under the Apache License 2.0.
 
 \vspace{6mm}

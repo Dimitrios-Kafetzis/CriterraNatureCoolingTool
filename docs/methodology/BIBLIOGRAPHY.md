@@ -40,6 +40,99 @@ Where a value in the tool depends on a finding that is not *Full*, the configura
 *Verified:* Full (IOPscience, open access).
 *Role in this methodology:* the primary cross-typology anchor, and the empirical basis for treating climate suitability as a first-order adjustment.
 
+**`kumar2024`** — Kumar, P., Debele, S.E., Khalili, S., et al. (2024). Urban heat mitigation by green and blue infrastructure: Drivers, effectiveness, and future needs. *The Innovation*, 5(2), 100588. DOI: [10.1016/j.xinn.2024.100588](https://doi.org/10.1016/j.xinn.2024.100588)
+*Findings used:* systematic review screening **27,486 papers** to **202** analysed, covering **51 green–blue infrastructure (GBGI) types** in 10 divisions. Reports street trees at up to **2.8 °C** by in-situ monitoring. Explicitly identifies **allotments and city farms among the least-studied categories**, with insufficient data to quantify their cooling (alongside private gardens, zoological gardens, golf courses, estuaries). Also reports means well above this tool's envelopes for other types — botanical gardens 5.0 ± 3.5 °C, wetlands 4.9 ± 3.2 °C, green walls 4.1 ± 4.2 °C, vegetated balconies 3.8 ± 2.7 °C.
+*Verified:* Full (PMC open access record, PMC10909648).
+*Role:* two distinct roles. (1) **A validation:** this 2024 typology-resolved review post-dates the v1.1 calibration, and its in-situ street-tree figure of 2.8 °C sits inside the tool's existing 0.5–3.0 °C envelope, so the conservative calibration of D-014 holds against newer and broader evidence. (2) **A citable evidence gap:** it is the source that lets the methodology state the absence of productive-landscape cooling evidence as a finding rather than as a search failure. Its higher figures are **deliberately not adopted** — see D-044 for why selective adoption would break internal consistency and wholesale adoption would be a separate recalibration with its own sensitivity analysis.
+
+---
+
+## Water bodies and constructed water features
+
+The two water archetypes are separate bodies of study, not two points on one curve. The sources below are what establishes that, and the engine never interpolates between them by area (D-044).
+
+**`jacobs2020`** — Jacobs, C., Klok, L., Bruse, M., Cortesão, J., Lenzholzer, S., Kluck, J. (2020). Are urban water bodies really cooling? *Urban Climate*, 32, 100607. DOI: [10.1016/j.uclim.2020.100607](https://doi.org/10.1016/j.uclim.2020.100607)
+*Findings used:* **16** representative virtual urban water bodies simulated (ENVI-met 4.1.3, REALCOOL project). "Afternoon air temperatures in surrounding spaces were reduced by **typically 0.2 °C** and the **maximum cooling effect was 0.6 °C**." A synthesis of results reported in **20 papers** for water bodies without fountains gives a median air-temperature effect of about 0.5 °C, with **14 of the 20 (70%) reporting 1 °C or less**. The paper concludes that local thermal effects of small water bodies "can be considered **negligible in design practice**".
+*Verified:* Full (open publisher PDF via the Wageningen repository, read directly).
+*Role:* the primary source for the `small_constructed_water` archetype, and the reason constructed wetlands, ponds, basins and water squares are **not** allowed to inherit the corridor envelope on family resemblance.
+
+**`volker2013`** — Völker, S., Baumeister, H., Claßen, T., Hornberg, C., Kistemann, T. (2013). Evidence for the temperature-mitigating capacity of urban blue space – a health geographic perspective. *ERDKUNDE*, 67(4), 355–371. DOI: [10.3112/erdkunde.2013.04.05](https://doi.org/10.3112/erdkunde.2013.04.05)
+*Finding used:* systematic review and meta-analysis of **27 studies**; a cooling effect of **2.5 K (95% CI 1.9–3.2 K, p < 0.01)** during the warmest months of the northern hemisphere is attributed to urban blue sites **when remote-sensing data are included**.
+*Verified:* Full (open-access publisher PDF, read directly).
+*Caveats recorded:* this is a **single pooled estimate across ponds, lakes and rivers together — it does not differentiate cooling by water-body size**, so it cannot be used to justify a size-dependent gradient. Its magnitude also depends on the inclusion of remote-sensing data, which `ampatzidis2020` identifies as the overestimating measurement mode.
+
+**`yao2023a`** — Yao, L., Sailor, D.J., Yang, X., Xu, G., Zhao, L. (2023). Are water bodies effective for urban heat mitigation? Evidence from field studies of urban lakes in two humid subtropical cities. *Building and Environment*, 245, 110860. DOI: [10.1016/j.buildenv.2023.110860](https://doi.org/10.1016/j.buildenv.2023.110860)
+*Findings used:* year-long continuous screen-height measurements at lake, residential and rural sites in Nanjing and Guangzhou, China. Relative to rural sites the lakes showed a **weak urban cool island intensity of 0.1–0.6 °C during the day**, but a **heat island intensity of 1.2–1.3 °C at night** during the warm months (May–September).
+*Verified:* Metadata + finding (secondary: Arizona State University Elsevier Pure institutional record, full abstract). Elsevier full text blocked.
+*Role:* **the most direct field evidence for large water bodies, and the reason the `large_water_body` envelope floor was lowered from the 0.5 °C proposed in the review pack to 0.1 °C at implementation.** The pack attributed a cooling magnitude "near 2 °C" to this source; retrieval established that the paper reports no such figure and in fact measures an order of magnitude less by day. See D-045.
+
+**`yao2023b`** — Yao, L., Sailor, D.J., Zhang, X., Wang, J., Zhao, L., Yang, X. (2023). Diurnal pattern and driving mechanisms of the thermal effects of an urban pond. *Sustainable Cities and Society*, 91, 104407. DOI: [10.1016/j.scs.2023.104407](https://doi.org/10.1016/j.scs.2023.104407)
+*Finding used (verbatim):* "compared with a reference soil-site, the pond exerted a moderate daytime cooling effect (**0.6 °C**) but a pronounced nocturnal warming effect (**1.8 °C**)." Field measurement at an urban pond in Nanjing, China, with an energy-balance analysis.
+*Verified:* Metadata + finding (secondary: Arizona State University Elsevier Pure record, full abstract). Elsevier full text blocked.
+*Role:* independent field corroboration of `jacobs2020`'s simulated magnitudes for small water features, and one half of the nocturnal-warming caveat.
+
+**`ampatzidis2020`** — Ampatzidis, P., Kershaw, T. (2020). A review of the impact of blue space on the urban microclimate. *Science of the Total Environment*, 730, 139068. DOI: [10.1016/j.scitotenv.2020.139068](https://doi.org/10.1016/j.scitotenv.2020.139068)
+*Findings used:* the cooling effect of blue space **varies with time of day, season and location**; there is "a clear disparity between the cooling potentials reported by **remote sensing** as opposed to field measurements or numerical simulations"; and "during the night blue spaces may actually **exacerbate the UHI**, reducing urban thermal comfort", with sensible cooling partly offset by increased water-vapour content.
+*Verified:* Full for the diurnal-variability and nocturnal findings (publisher abstract read in full via the University of Bath research portal); the remote-sensing statement is *Metadata + finding (secondary)* — the substance is in the abstract as quoted above, while the compact "remote sensing overestimates" phrasing appears in the article Highlights via an indexing service.
+*Role:* the methodological warning that governs how the two water archetypes are read, and the second half of the nocturnal-warming caveat. The tool is daytime-only and already declares that limitation; these sources sharpen it.
+
+---
+
+## Non-canopy vegetation
+
+**`armson2012`** — Armson, D., Stringer, P., Ennos, A.R. (2012). The effect of tree shade and grass on surface and globe temperatures in an urban area. *Urban Forestry & Urban Greening*, 11(3), 245–255. DOI: [10.1016/j.ufug.2012.05.002](https://doi.org/10.1016/j.ufug.2012.05.002)
+*Findings used:* measured on the same plots — grass reduced **maximum surface temperatures by up to 24 °C** and tree shade by up to 19 °C, but **surface composition had little effect upon globe temperatures**, whereas **shading reduced globe temperature by 5–7 °C**. The authors conclude that "grass has little effect upon local air or globe temperatures … whereas tree shade can provide effective local cooling".
+*Verified:* Full (University of Manchester Research Explorer record, complete abstract).
+*Role:* the decisive source for the `non_canopy_vegetation` archetype, precisely because it measures both metrics on the same plots and so isolates the **surface/air conflation** that inflates most published grass cooling figures. This is why grass-dominated typologies do not inherit tree-canopy values.
+
+**`gill2013`** — Gill, S.E., Rahman, M.A., Handley, J.F., Ennos, A.R. (2013). Modelling water stress to urban amenity grass in Manchester UK under climate change and its potential impacts in reducing urban cooling. *Urban Forestry & Urban Greening*, 12(3), 350–358. DOI: [10.1016/j.ufug.2013.03.005](https://doi.org/10.1016/j.ufug.2013.03.005)
+*Finding used:* grass cooling "can be **reduced or lost in summer droughts**, when soils dry out, an effect that is likely to be more pronounced and occur for longer as climate change proceeds".
+*Verified:* Metadata + finding (secondary: Crossref record for bibliographic details; abstract via indexing services). Elsevier full text blocked.
+*Caveat recorded:* this is a **modelling** study (a bucket soil-moisture model for Greater Manchester, validated by weighing ryegrass turves), not a field measurement of cooling. It is cited for the *direction and mechanism* of drought sensitivity, never for a numeric cooling value.
+*Role:* the justification for a genuine **zero floor** on the non-canopy envelope: dry or dormant planting delivers nothing.
+
+**`kraemer2022`** — Kraemer, R., Kabisch, N. (2022). Parks Under Stress: Air Temperature Regulation of Urban Green Spaces Under Conditions of Drought and Summer Heat. *Frontiers in Environmental Science*, 10, 849965. DOI: [10.3389/fenvs.2022.849965](https://doi.org/10.3389/fenvs.2022.849965)
+*Findings used:* two structurally distinct inner-city parks in Leipzig, Germany (one tree-dominated, one grass-dominated) measured through the 2018–2019 heat and drought periods. Maximum spatially averaged cooling between green space and built-up surroundings was **1.1 °C, in the morning**; in the afternoon, with peaks near 40 °C, cooling was confined to shaded areas and average differences fell **below 1 °C**. The tree-dominated park was consistently cooler (maximum differences 0.39–1.06 °C); the grass-dominated park was the hottest area during the day and cooled more effectively at night.
+*Verified:* Full (open access, Frontiers, read directly).
+*Role:* field corroboration under drought stress of the same ordering `armson2012` establishes experimentally — trees over grass by day — and independent support for the drought sensitivity `gill2013` models. **Note:** an earlier draft of the v1.2 review pack cited this source in connection with allotment gardens; it is a **parks** study and is cited as such.
+
+---
+
+## Vegetated shade structures
+
+**`chafer2020`** — Chàfer, M., Pisello, A.L., Piselli, C., Cabeza, L.F. (2020). Greenery System for Cooling Down Outdoor Spaces: Results of an Experimental Study. *Sustainability*, 12(15), 5888. DOI: [10.3390/su12155888](https://doi.org/10.3390/su12155888)
+*Finding used (verbatim):* "In clear conditions, for the west oriented pergolas the maximum air temperature difference between the rope system and the greenery was found at 4:00 p.m. on 29 June 2019 during daytime with a difference of **2.5 °C**" (45.3 °C under the bare rope support against 42.9 °C under the greenery). Summer 2019 field experiment in a continental Mediterranean climate (Lleida, Spain), comparing two **identical pergola structures**, one planted and one fitted with support ropes only.
+*Verified:* Full (publisher PDF retrieved and read; author list independently confirmed against the Crossref record).
+*Caveats recorded, all three material:* (1) the 2.5 °C applies to the **west-oriented** pergolas; the east-oriented sensors showed a markedly smaller difference. (2) A **larger 3.1 °C difference was measured at night**, which this daytime-only tool does not use. (3) The paper's **abstract headlines "up to 5 °C"**, but that figure is greenery against **unshaded** conditions, not against the bare pergola — the like-for-like contrast this methodology needs is the 2.5 °C above, and the distinction is stated here so that a reviewer comparing the abstract with the adopted ceiling does not read an error into it.
+*Role:* the only measured study of a vine pergola against an identical bare frame, and therefore the source of the `vegetated_shade_structure` ceiling.
+
+**`ouyang2024`** — Ouyang, W., Ren, G., Tan, Z., Li, Y., Ren, C. (2024). Natural shading vs. artificial shading: A comparative analysis of their cooling efficacy in extreme hot weather. *Urban Climate*, 55, 101870. DOI: [10.1016/j.uclim.2024.101870](https://doi.org/10.1016/j.uclim.2024.101870)
+*Findings used:* field measurements on extremely hot days in Hong Kong, comparing covered walkways against tree canopies. **Air temperature reduction 1.42 °C (natural) against 1.31 °C (artificial)**; **mean radiant temperature reduction 15.93 °C (natural) against 13.71 °C (artificial)**; PET reduction 9.06 °C against 9.70 °C.
+*Verified:* Metadata + finding (secondary: Crossref and NASA ADS for bibliographic details; the quantitative findings from two independent renderings of the publisher abstract). ScienceDirect blocked.
+*Role:* the source that separates the two axes for shade structures — an **order-of-magnitude difference between the comfort benefit and the air-temperature benefit** — and therefore the reason a shade structure's *air temperature* envelope is modest even though its comfort effect is large.
+
+**`colter2019`** — Colter, K.R., Middel, A.C., Martin, C.A. (2019). Effects of natural and artificial shade on human thermal comfort in residential neighborhood parks of Phoenix, Arizona, USA. *Urban Forestry & Urban Greening*, 44, 126429. DOI: [10.1016/j.ufug.2019.126429](https://doi.org/10.1016/j.ufug.2019.126429)
+*Finding used (verbatim):* "The difference in PET between full sun and under shade canopies of *Fraxinus* and *Quercus* trees was greater than under shade canopies of *Parkinsonia*, *Prosopis*, trees **or constructed ramadas** by 2.9 to 4.3 °C." Trees and ramadas together attenuated 88–97% of full sunlight, yet the ramadas did not deliver correspondingly greater thermal relief.
+*Verified:* Full (Arizona State University Elsevier Pure record, complete abstract).
+*Caveats recorded:* PET is a comfort index, not air temperature, and is used here only for the **ordering** it establishes. Conditions are narrow — hot summer midday, desert climate, six tree taxa.
+*Role:* establishes that **sparse or open canopies group with solid artificial shade** rather than with dense canopy, which is what bounds the productive-canopy archetype below dense canopy and keeps the shade-structure archetype's confidence low.
+
+---
+
+## Productive landscapes and irrigation
+
+**`rost2020`** — Rost, A.T., Liste, V., Seidel, C., Matscheroth, L., Otto, M., Meier, F., Fenner, D. (2020). How Cool Are Allotment Gardens? A Case Study of Nocturnal Air Temperature Differences in Berlin, Germany. *Atmosphere*, 11(5), 500. DOI: [10.3390/atmos11050500](https://doi.org/10.3390/atmos11050500)
+*Finding used:* 13 allotment garden complexes measured in summer 2018 against densely built-up areas, two large inner-city parks, and rural areas. The complexes were on average **2.7 K cooler at night** than the urban reference.
+*Verified:* Full (publisher-deposited abstract retrieved verbatim).
+*Critical caveat applied by this methodology:* the study is **nocturnal only** — the restriction is in its title, abstract and design. This tool reports **daytime** air temperature, so `rost2020` **cannot** support a daytime cooling value and is not used for one. It is cited as evidence of what the productive-landscape literature does and does not measure.
+*Role:* the best available allotment-garden measurement, and the demonstration that even it does not answer the question this tool asks.
+
+**`cheung2022`** — Cheung, P.K., Nice, K.A., Livesley, S.J. (2022). Irrigating urban green space for cooling benefits: the mechanisms and management considerations. *Environmental Research: Climate*, 1(1), 015001. DOI: [10.1088/2752-5295/ac6e7c](https://doi.org/10.1088/2752-5295/ac6e7c)
+*Findings used:* measured cooling in agricultural fields was **−0.43 °C (maize) and −0.09 °C (soybean)**, against **modelled** reductions in daily maximum air temperature of **2.1–2.5 °C**. Irrigation increases daytime soil heat storage which "would release at night", and the paper predicts an **increase in the daily minimum air temperature** as a result.
+*Verified:* Full (open access, IOPscience, read directly).
+*Caveat recorded, and it matters:* the measured-against-modelled gap above is specific to the **agricultural field** studies. The same paper reports measured irrigation cooling of **−2 °C to −1 °C in two urban parks in Melbourne**, much closer to the modelled values. The methodology therefore does not claim that models overstate irrigation cooling in general.
+*Role:* the basis for treating irrigation as **sustaining** an entry's position within its envelope through drought, never as raising the envelope — and the source of the night-warming caveat on irrigated productive landscapes.
+
 ---
 
 ## Buildings, roofs, and façades

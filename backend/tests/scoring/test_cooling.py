@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import pytest
 
+from nature_cooling.engine.runner import run_assessment
 from nature_cooling.engine.scoring import cooling
 
 
-def _typology(config, nbs_type="street_tree_planting"):
+def _typology(config, nbs_type="tree_avenue"):
     return config.typologies.by_type(nbs_type)
 
 
@@ -26,8 +27,8 @@ def test_worked_example_lower_clip_binds(config, build_input):
 
 
 def test_upper_clip_binds_above_one(config, build_input):
-    """A=1.2 on urban forest: 3.0*1.2=3.6 must clip to the 3.0 ceiling."""
-    block = cooling.compute(build_input(), _typology(config, "urban_forest"), 1.2, config)
+    """A=1.2 on urban woodland: 3.0*1.2=3.6 must clip to the 3.0 ceiling."""
+    block = cooling.compute(build_input(), _typology(config, "urban_woodland_site"), 1.2, config)
     assert block.delta_t_max_c == 3.0
     assert block.delta_t_min_c == 1.2
     assert block.potential_score == 100.0  # 90*1.2=108 clamps to 100
@@ -35,13 +36,44 @@ def test_upper_clip_binds_above_one(config, build_input):
 
 def test_range_always_within_envelope_for_all_typologies(config, build_input):
     """Property: no adjustment factor may push the range outside the envelope."""
-    for typology in config.typologies.typologies:
+    for typology in config.typologies.resolved:
         for factor in (0.5, 0.605, 0.8, 0.95, 1.0, 1.12, 1.2):
             block = cooling.compute(build_input(), typology, factor, config)
             assert typology.temp_reduction_min_c <= block.delta_t_min_c
             assert block.delta_t_min_c <= block.delta_t_max_c
             assert block.delta_t_max_c <= typology.temp_reduction_max_c
             assert 0.0 <= block.potential_score <= 100.0
+
+
+def test_package_cooling_is_the_best_evidenced_component_and_never_the_sum(config, build_input):
+    """D-014/D-038: combining measures may not buy additional degrees.
+
+    No retrieved source quantifies super-additive cooling, so a package is
+    reported at its best-evidenced component's adjusted range. Components are
+    listed weakest-evidence-first to prove the selection is by evidence rating
+    and not by position: the tree avenue (high) carries the estimate over the
+    green roof (medium) and the rain garden (low).
+
+    Summing would give 0.1 + 0.1 + 0.5 = 0.7 to 0.8 + 1.0 + 3.0 = 4.8 C, which
+    is above every envelope in the package and is exactly the claim D-014
+    forbids.
+    """
+    result = run_assessment(
+        build_input(nbs_type=["rain_garden", "extensive_green_roof", "tree_avenue"]), config
+    )
+    carrier = config.typologies.by_type("tree_avenue")
+    assert result.package.representative_nbs_type == "tree_avenue"
+    assert (result.cooling.delta_t_min_c, result.cooling.delta_t_max_c) == (0.5, 3.0)
+    assert result.cooling.delta_t_max_c == carrier.temp_reduction_max_c
+    assert result.cooling.potential_score == carrier.base_cooling_score
+
+    # Never the sum, and never above any single component's own maximum.
+    assert result.cooling.delta_t_max_c < sum(
+        component.cooling.delta_t_max_c for component in result.components
+    )
+    assert result.cooling.delta_t_max_c == max(
+        component.cooling.delta_t_max_c for component in result.components
+    )
 
 
 @pytest.mark.parametrize(
@@ -52,13 +84,15 @@ def test_range_always_within_envelope_for_all_typologies(config, build_input):
     ],
 )
 def test_heat_index_buckets_low_and_medium(config, build_input, factor, expected_bucket):
-    block = cooling.compute(build_input(), _typology(config, "green_roof"), factor, config)
+    block = cooling.compute(
+        build_input(), _typology(config, "extensive_green_roof"), factor, config
+    )
     assert block.heat_index_improvement == expected_bucket
 
 
 def test_heat_index_bucket_boundary_at_one_point_five(config, build_input):
     """Midpoint exactly 1.5 falls in the high bucket ([min, max) convention)."""
-    block = cooling.compute(build_input(), _typology(config, "permeable_shaded_plaza"), 1.0, config)
+    block = cooling.compute(build_input(), _typology(config, "permeable_plaza"), 1.0, config)
     assert block.delta_t_midpoint_c == 1.5
     assert block.heat_index_improvement == "high"
 

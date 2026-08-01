@@ -80,6 +80,13 @@ export const messages = {
     renamePrompt: 'New label for this assessment:',
     empty: 'No assessments yet.',
     createdAt: 'Created',
+    /**
+     * D-029 forbids silent migration, so a project reshaped on read says so
+     * (D-044.2). The notes themselves are the service's own text.
+     */
+    migratedHeading: 'This project was updated to the current storage format',
+    migratedIntro:
+      'Your saved answers were reshaped when this project was opened. Every change is listed below; nothing else was altered, and stored results were not touched.',
   },
 
   wizard: {
@@ -128,7 +135,7 @@ export const messages = {
       intervention: {
         title: 'NbS intervention',
         intro:
-          'Choose the intervention to assess. Cards are ordered and annotated by fit to the site you have described — an unsuitable option stays selectable, and its flag follows into the results.',
+          'Choose the intervention, or several to assess as a package. Cards are grouped by family, ordered and annotated by fit to the site you have described — an unsuitable option stays selectable, and its flag follows into the results.',
       },
       cost: {
         title: 'Cost and energy',
@@ -236,7 +243,35 @@ export const messages = {
       label: 'Land use',
       what: 'The dominant use of the site: a street corridor, a residential block, a school or campus, a park, a memorial landscape, and so on.',
       affects:
-        'Compared against each typology’s documented use contexts to produce the urban-context sub-score of suitability. Being outside a typology’s usual context is a caution, never a disqualification — the context lists are typical, not exhaustive.',
+        'Compared against each typology’s documented use contexts to produce the urban-context sub-score of suitability. Being outside a typology’s usual context is a caution, never a disqualification — the context lists are typical, not exhaustive. It also selects which interventions are offered for this site.',
+    },
+    // The four availability questions (D-044.1). Each `affects` says plainly
+    // that the answer changes which interventions are offered and enters no
+    // formula — the same openness D-031 applied to `current_shade_level`.
+    includes_railway: {
+      label: 'Does the site include a railway or tram corridor?',
+      what: 'Whether an active or disused railway line, tram track, or their immediate verges fall inside the site.',
+      affects:
+        'Only which interventions are offered: it unlocks the green tram corridor and railway green corridor typologies, which need a track to sit alongside. It feeds no score. Your answer cannot raise or lower any result.',
+    },
+    existing_woodland: {
+      label: 'Is there existing woodland or forest on the site?',
+      what: 'Whether the site already carries woodland or forest — a stand of established trees with a woodland structure, not scattered street trees.',
+      affects:
+        'Only which interventions are offered: woodland *restoration* types need existing woodland to restore. Woodland *creation* types — microforest, Miyawaki planting, afforestation — are offered either way, subject to area. It feeds no score.',
+    },
+    waterfront_type: {
+      label: 'Waterfront type',
+      what: 'The kind of water body the site adjoins, if any: a lake, an open river, a dry river bed, a river culverted beneath the site, or the sea. Leave unanswered if the site has no water body.',
+      affects:
+        'Only which interventions are offered, and which ones: a covered river offers stream daylighting; an open river offers river restoration, riparian buffers, and floodplain restoration; a lake offers lake restoration and floating wetlands; the sea offers living shorelines and coastal parks. Constructed water features — wetlands, retention ponds, water squares — are offered regardless, because they need no existing water body. It feeds no score.',
+    },
+    productive_governance: {
+      label: 'Who could deliver a productive landscape here?',
+      help: 'Select every party that could plausibly run it, or leave it blank to see them all.',
+      what: 'Which parties could realistically deliver and run food-growing on this site: a community group, individual residents, an institution such as a school or hospital, or a commercial operator. This asks who can deliver, not who is interested.',
+      affects:
+        'Only which productive-landscape interventions are offered — a community garden needs a community, an urban farm needs a commercial or institutional operator. Leaving it blank hides nothing: an unanswered question is not evidence that no one could deliver, so every productive option stays on offer until you narrow it. It feeds no score.',
     },
     climate_zone: {
       label: 'Climate zone',
@@ -305,9 +340,9 @@ export const messages = {
     },
     nbs_type: {
       label: 'Intervention typology',
-      what: 'The nature-based intervention being assessed. Each typology carries its own cited cooling envelope, suitability conditions, and co-benefit defaults.',
+      what: 'The nature-based intervention, or package of interventions, being assessed. Each entry inherits a cited cooling envelope from one evidence class, along with suitability conditions and co-benefit defaults.',
       affects:
-        'Everything downstream: the cooling envelope, the suitability conditions checked against your site, the co-benefit defaults, and whether building-energy savings can be derived at all.',
+        'Everything downstream: the cooling envelope, the suitability conditions checked against your site, the co-benefit defaults, and whether building-energy savings can be derived at all. Where you select several, each is scored and reported separately, and the package’s headline temperature estimate is capped at the best-evidenced component rather than summed.',
     },
     intervention_area_m2: {
       label: 'Intervention area',
@@ -447,6 +482,19 @@ export const messages = {
       industrial: 'Industrial',
       other: 'Other',
     },
+    waterfront_type: {
+      lake: 'Lake',
+      river: 'River',
+      dry_river: 'Dry river bed',
+      covered_river: 'Covered river (culverted)',
+      sea: 'Sea',
+    },
+    productive_governance: {
+      community: 'A community group',
+      individual: 'Individual residents',
+      institutional: 'An institution (school, hospital, campus)',
+      commercial: 'A commercial operator',
+    },
     levels: {
       none: 'None',
       very_low: 'Very low',
@@ -461,6 +509,53 @@ export const messages = {
       yes: 'Yes',
       no: 'No',
       unknown: 'Unknown / not sure',
+    } as Record<string, string>,
+  },
+
+  /**
+   * The catalogue's fourteen families (D-043): five element families — the
+   * discrete things you build — then the composite families, each a coherent
+   * spatial system made of elements. The order below is the order the picker
+   * renders, elements first.
+   */
+  families: {
+    // Typed as plain strings: the family list is the catalogue's, and a family
+    // the catalogue adds later must be appendable without a type change.
+    order: [
+      'tree_based',
+      'ground_level',
+      'green_roof',
+      'vertical_greening',
+      'vegetated_shelter',
+      'street',
+      'public_space',
+      'park',
+      'woodland_forest',
+      'water_landscape',
+      'ecological_network',
+      'productive_landscape',
+      'building',
+      'district',
+    ] as readonly string[],
+    labels: {
+      tree_based: 'Trees and tree planting',
+      ground_level: 'Ground-level planting',
+      green_roof: 'Green roofs',
+      vertical_greening: 'Vertical greening',
+      vegetated_shelter: 'Vegetated shelters',
+      street: 'Street scale',
+      public_space: 'Public space scale',
+      park: 'Park scale',
+      woodland_forest: 'Woodland and forest scale',
+      water_landscape: 'Water landscape scale',
+      ecological_network: 'Ecological network scale',
+      productive_landscape: 'Productive landscape scale',
+      building: 'Building scale',
+      district: 'District scale',
+    } as Record<string, string>,
+    kinds: {
+      element: 'Element — a discrete thing you build',
+      composite: 'Composite — a spatial system made of elements',
     } as Record<string, string>,
   },
 
@@ -492,6 +587,47 @@ export const messages = {
     evidence: (level: string) => `Evidence: ${level}`,
     selected: 'Selected',
     sizingHeading: 'Size the intervention',
+
+    /**
+     * The catalogue picker (D-043, D-044). 110 entries across fourteen
+     * families is not a flat card list, so the menu groups by family and the
+     * copy states what the entries are: catalogue entries inheriting a cited
+     * evidence class, not solution-specific measurements.
+     */
+    intro:
+      'Select one intervention, or several to assess them together as a package. Entries are grouped by family and annotated by fit to the site you have described.',
+    introPackage:
+      'At this scale an assessment composes a package: select the interventions that together make up the proposal. Each is scored and reported separately.',
+    filterLabel: 'Filter by name',
+    filterPlaceholder: 'e.g. tree, roof, wetland',
+    filterNoMatch: 'No entry matches this filter.',
+    clearFilter: 'Clear filter',
+    groupCount: (shown: number) => (shown === 1 ? '1 entry' : `${shown} entries`),
+    expandGroup: (family: string) => `Show the ${family} entries`,
+    offeredHeading: 'Offered for this site',
+    offeredIntro: (n: number) =>
+      n === 1
+        ? 'One entry is offered for the scale, land use, and site conditions you described.'
+        : `${n} entries are offered for the scale, land use, and site conditions you described.`,
+    notOfferedHeading: 'Not offered for this site',
+    notOfferedIntro:
+      'These are not part of what the service offers for the scale and conditions you described. They stay fully selectable — a deliberate hypothesis is never overridden — and the choice is recorded with the result.',
+    notOfferedBadge: 'Not offered here',
+    evidenceClass: (archetype: string) => `Evidence class: ${archetype}`,
+    evidenceClassNote:
+      'Each entry inherits its cooling envelope from the cited evidence class named on its card, not from measurements of that entry alone.',
+    inherited: 'suitability inherited',
+    selectionHeading: 'Selected interventions',
+    selectionEmpty: 'Nothing selected yet. Choose at least one intervention below.',
+    selectionCount: (n: number) => (n === 1 ? '1 component' : `${n} components`),
+    remove: 'Remove',
+    removeLabel: (name: string) => `Remove ${name} from the selection`,
+    representativeHint: 'Order is preserved as you selected it.',
+    /** D-044.4: unbounded, but the honest consequence is stated. */
+    sizeWarning: (limit: number) =>
+      `This package has more than ${limit} components. Adding a further component will not raise the temperature estimate — the package is reported at its best-evidenced component's range, never summed. More components add co-benefit breadth and cost.`,
+    unknownEntry: (nbsType: string) =>
+      `${nbsType} — this entry is not in the current library and must be re-selected.`,
   },
 
   results: {
@@ -617,6 +753,38 @@ export const messages = {
       appliedWeight: 'Applied weight',
       excluded: (names: string) => `Not estimated and excluded, weight redistributed: ${names}`,
     },
+    /**
+     * The package block (D-038, D-044.4). The combination rules are served as
+     * text by the engine and rendered verbatim; the strings here are the
+     * column headings and labels around them, never a restatement of a rule.
+     */
+    packageSection: {
+      heading: 'The package, component by component',
+      intro: (n: number) =>
+        `This assessment proposes ${n} interventions. Each is scored on its own values and reported on its own terms below.`,
+      representative: 'Carries the headline estimate',
+      representativeWhy: 'Why this component',
+      component: 'Component',
+      cooling: 'Temperature reduction',
+      evidenceClass: 'Evidence class',
+      evidenceConfidence: 'Evidence confidence',
+      suitability: 'Suitability',
+      flags: 'Flags',
+      noFlags: '—',
+      rulesHeading: 'How the components were combined',
+      rules: {
+        cooling: 'Temperature',
+        coBenefits: 'Co-benefits',
+        suitability: 'Suitability',
+        cost: 'Cost',
+        energy: 'Energy',
+      },
+      energyComponent: (name: string) =>
+        `Derived from ${name} alone; component savings are never summed.`,
+      energyNoComponent: 'No component of this package is building-energy applicable.',
+      inheritedNote: (archetype: string) =>
+        `Values inherited from the ${archetype} evidence class.`,
+    },
     assumptionsHeading: 'Assumptions applied',
     assumptionsIntro: 'Every default the engine used in place of an answer:',
     assumptionsNone:
@@ -646,6 +814,7 @@ export const messages = {
     needTwo: 'Select at least two evaluated options.',
     row: {
       typology: 'Typology',
+      components: 'Components',
       opportunity: 'Opportunity Score',
       category: 'Category',
       heatPriority: 'Heat Priority Index',
@@ -702,6 +871,9 @@ export const messages = {
       climate: 'Unsuitable climate zones',
       none: 'none',
     },
+    familyCount: (n: number) => (n === 1 ? '1 entry' : `${n} entries`),
+    archetypeLabel: 'Evidence class',
+    inheritedSuitability: 'Suitability inherited from the evidence class',
     typology: {
       baseScore: 'Base cooling score',
       envelope: 'Temperature reduction envelope',

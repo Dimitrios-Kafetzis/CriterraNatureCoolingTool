@@ -13,7 +13,11 @@ REQUIRED_DEFAULTS: dict[str, Any] = {
     "assessment_scale": "neighbourhood",
     "site_area_m2": 6000.0,
     "climate_zone": "temperate",
-    "nbs_type": "street_tree_planting",
+    # A package of one. `tree_avenue` inherits the street_tree_canopy
+    # archetype — the same cited values the retired `street_tree_planting`
+    # typology carried — and is offered at neighbourhood scale, so the default
+    # fixture raises no availability warning of its own.
+    "nbs_type": ["tree_avenue"],
 }
 
 

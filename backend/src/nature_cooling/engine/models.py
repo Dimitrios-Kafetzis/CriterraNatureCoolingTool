@@ -19,11 +19,18 @@ Two schema-wide conventions implement the methodology's missing-data policy
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from nature_cooling.engine.config import CategoryName, ConfidenceLevel
+from nature_cooling.engine.config import (
+    CategoryName,
+    ConfidenceLevel,
+    EntryKind,
+    GovernanceType,
+    Provenance,
+    WaterfrontType,
+)
 
 AssessmentScale = Literal["city", "district", "neighbourhood", "site", "building"]
 ClimateZone = Literal["tropical_wet", "tropical_dry", "arid", "semi_arid", "temperate", "other"]
@@ -102,6 +109,18 @@ class AssessmentInput(_FrozenModel):
     current_shade_level: ShadeLevel | None = None
     land_use: LandUse | None = None
 
+    # Availability conditions (2026.08.04, D-044.1). These four gate WHICH
+    # interventions the tool offers and feed NO score: they appear in no
+    # formula, in no confidence block, and in no aggregation. Gating is not
+    # scoring — making them scoring inputs would need its own justification and
+    # would move every existing result. Recorded in the schema and disclosed in
+    # the field reference as availability-only, in the manner D-031 used for
+    # ``heat_index_concern``.
+    includes_railway: YesNo | None = None
+    existing_woodland: YesNo | None = None
+    waterfront_type: WaterfrontType | None = None
+    productive_governance: list[GovernanceType] | None = None
+
     # Climate and heat exposure
     climate_zone: ClimateZone
     lst_anomaly_c: float | None = None
@@ -119,7 +138,12 @@ class AssessmentInput(_FrozenModel):
     community_participation: StandardLevel | None = None
 
     # NbS intervention
-    nbs_type: str
+    #
+    # A list since 2026.08.04 (D-044.2): an assessment may propose a package of
+    # several simultaneously available entries. Order is the user's selection
+    # order and is preserved in the itemised component results; the package's
+    # own outputs do not depend on it.
+    nbs_type: list[str] = Field(min_length=1)
     intervention_area_m2: float | None = Field(default=None, gt=0)
     new_canopy_area_at_maturity_m2: float | None = Field(default=None, ge=0)
     expected_maturity_period_years: float | None = Field(default=None, ge=0)
@@ -141,18 +165,81 @@ class AssessmentInput(_FrozenModel):
     currency: str | None = Field(default=None, min_length=3, max_length=3)
     grid_emission_factor_kgco2e_per_kwh: float | None = Field(default=None, gt=0)
 
+    @field_validator("nbs_type")
+    @classmethod
+    def _distinct_components(cls, value: list[str]) -> list[str]:
+        duplicates = sorted({item for item in value if value.count(item) > 1})
+        if duplicates:
+            raise ValueError(f"duplicate package components: {duplicates}")
+        return value
+
+    @field_validator("productive_governance")
+    @classmethod
+    def _canonical_governance(cls, value: list[str] | None) -> list[str] | None:
+        # Canonicalised so that two selections of the same models produce
+        # byte-identical results, whatever order the interface sent them in.
+        return None if value is None else sorted(set(value))
+
+
+class SiteConditions(_FrozenModel):
+    """The four availability answers, read off an input (D-044.1).
+
+    Absence and an explicit ``unknown`` are the same thing here, as everywhere
+    else in the tool.
+    """
+
+    waterfront_type: WaterfrontType | None = None
+    includes_railway: Literal["yes", "no"] | None = None
+    existing_woodland: Literal["yes", "no"] | None = None
+    productive_governance: list[GovernanceType] = Field(default_factory=list)
+
 
 class TypologySummary(_FrozenModel):
-    """The library values the assessment was computed against."""
+    """The library values one component was computed against.
+
+    ``archetype`` and ``evidence_provenance`` are reported alongside the
+    values, because under the archetype model (D-044) an entry inherits a
+    *cited* envelope and the result must name the evidence class it inherited
+    from — a Miyawaki forest reports its cooling on the dense-canopy evidence,
+    and says so.
+    """
 
     nbs_id: str
     nbs_type: str
     display_name: str
+    family: str
+    kind: EntryKind
+    archetype: str
+    archetype_display_name: str
+    evidence_provenance: Provenance
     category: CategoryName
     evidence_confidence: ConfidenceLevel
     base_cooling_score: float
     temp_reduction_min_c: float
     temp_reduction_max_c: float
+    building_energy_applicable: bool
+    suitability_inherited: bool
+
+    @classmethod
+    def of(cls, typology: Any) -> TypologySummary:
+        """Summarise one resolved typology."""
+        return cls(
+            nbs_id=typology.nbs_id,
+            nbs_type=typology.nbs_type,
+            display_name=typology.display_name,
+            family=typology.family,
+            kind=typology.kind,
+            archetype=typology.archetype,
+            archetype_display_name=typology.archetype_display_name,
+            evidence_provenance=typology.evidence_provenance,
+            category=typology.category,
+            evidence_confidence=typology.evidence_confidence,
+            base_cooling_score=typology.base_cooling_score,
+            temp_reduction_min_c=typology.temp_reduction_min_c,
+            temp_reduction_max_c=typology.temp_reduction_max_c,
+            building_energy_applicable=typology.building_energy_applicable,
+            suitability_inherited=typology.suitability_inherited,
+        )
 
 
 class HeatExposureBlock(_FrozenModel):
@@ -320,12 +407,71 @@ class ConfidenceBlock(_FrozenModel):
     completeness_percent: dict[str, float]
 
 
+class ComponentBlock(_FrozenModel):
+    """One package component, scored individually (D-038).
+
+    Every component is scored on its own values and reported on its own terms:
+    its adjustment, its suitability and flags, its cooling range. Nothing here
+    is averaged with a sibling — the package-level blocks are derived from
+    these by the stated combination rules, never the other way round.
+    """
+
+    typology: TypologySummary
+    adjustment: AdjustmentBlock
+    suitability: SuitabilityBlock
+    cooling: CoolingBlock
+    co_benefits: CoBenefitsBlock
+    is_representative: bool
+
+
+class PackageBlock(_FrozenModel):
+    """How the package's headline outputs were combined (D-038, D-044.4).
+
+    The combination rules, and why each is what it is:
+
+    * **Temperature is capped at the best-evidenced component, never summed.**
+      No retrieved source quantifies super-additive cooling from combining
+      measures (D-014), so a package is reported at its representative
+      component's adjusted range. Note that ``min(max_i t_i, t_representative)``
+      and ``t_representative`` are the same number, since the representative's
+      ceiling can never exceed the maximum over components — the cap and the
+      selection are one rule, not two.
+    * **Co-benefits take the union**: the maximum per dimension across
+      components, each still carrying its own component's citation.
+    * **Suitability takes the minimum.** A package is no more deliverable here
+      than its least suitable component; averaging would let a well-fitting
+      component conceal one that cannot be built on this site, which is what
+      D-009 exists to prevent.
+    * **Energy follows the best-evidenced component that is building-energy
+      applicable**, so the derivation still traces to exactly one component and
+      is never summed.
+    * **Costs sum**, which is the user's single ``capital_cost`` entered for the
+      whole package (see the field reference).
+    """
+
+    component_count: int
+    representative_nbs_type: str
+    representative_reason: str
+    cooling_rule: str
+    co_benefit_rule: str
+    suitability_rule: str
+    cost_rule: str
+    energy_component_nbs_type: str | None
+
+
 class AssessmentResult(_FrozenModel):
-    """Everything the engine reports for one assessment run."""
+    """Everything the engine reports for one assessment run.
+
+    The top-level blocks are the PACKAGE's outputs. A single-intervention
+    assessment is a package of one, so every top-level block equals its only
+    component's and nothing about the single case changed shape.
+    """
 
     engine_version: str
     methodology_version: str
     typology: TypologySummary
+    components: list[ComponentBlock]
+    package: PackageBlock
     heat_exposure: HeatExposureBlock
     vulnerability: VulnerabilityBlock
     heat_priority: HeatPriorityBlock

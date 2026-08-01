@@ -5,6 +5,7 @@ from __future__ import annotations
 import itertools
 
 import pytest
+from pydantic import ValidationError
 
 from nature_cooling.engine import run_assessment
 from nature_cooling.engine.config import load_config
@@ -44,7 +45,19 @@ def test_versions_are_stamped(config, build_input):
 
 def test_unknown_typology_raises_value_error(config, build_input):
     with pytest.raises(ValueError, match="unknown nbs_type"):
-        run_assessment(build_input(nbs_type="teleportation_grove"), config)
+        run_assessment(build_input(nbs_type=["teleportation_grove"]), config)
+
+
+def test_an_unknown_component_fails_the_whole_package(config, build_input):
+    """A package is not silently reduced to the components that resolve."""
+    with pytest.raises(ValueError, match="unknown nbs_type"):
+        run_assessment(build_input(nbs_type=["tree_avenue", "teleportation_grove"]), config)
+
+
+def test_duplicate_components_are_refused(config, build_input):
+    """Selecting the same entry twice would double its co-benefits for nothing."""
+    with pytest.raises(ValidationError, match="duplicate package components"):
+        build_input(nbs_type=["tree_avenue", "tree_avenue"])
 
 
 def test_cover_sum_warning(config, build_input):
@@ -81,10 +94,10 @@ def test_property_scores_bounded_and_envelope_respected(config, build_input):
     aggregation weights always summing to one."""
     zones = ["tropical_wet", "tropical_dry", "arid", "semi_arid", "temperate", "other"]
     scales = ["city", "neighbourhood", "building"]
-    for typology, zone, scale in itertools.product(config.typologies.typologies, zones, scales):
+    for typology, zone, scale in itertools.product(config.typologies.resolved, zones, scales):
         result = run_assessment(
             build_input(
-                nbs_type=typology.nbs_type,
+                nbs_type=[typology.nbs_type],
                 climate_zone=zone,
                 assessment_scale=scale,
                 site_area_m2=2500.0,

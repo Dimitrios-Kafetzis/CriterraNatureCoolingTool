@@ -22,7 +22,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from nature_cooling.engine.config import ConfidenceLevel
 from nature_cooling.engine.models import AssessmentInput
 
-STORAGE_SCHEMA_VERSION = 1
+STORAGE_SCHEMA_VERSION = 2
 
 INPUT_FIELDS = frozenset(AssessmentInput.model_fields)
 
@@ -132,6 +132,27 @@ class ValidateResponse(_RequestModel):
     confidence: ConfidencePreview
 
 
+class AvailableTypologies(_RequestModel):
+    """``GET /api/typologies/available`` (D-043, D-044.1).
+
+    A declared response model rather than a bare mapping, so the shape is part
+    of the OpenAPI schema and the frontend's generated types can check it —
+    the same contract every other endpoint offers (D-030).
+
+    ``nbs_types`` lists what the matrix offers, in library order. It is not a
+    permission list: an entry absent from it stays fully selectable (D-019),
+    and the engine scores it with the honest suitability flags of D-009.
+    """
+
+    version: str
+    assessment_scale: str
+    land_use: str | None
+    composes_packages: bool
+    warn_above_components: int
+    count: int
+    nbs_types: list[str]
+
+
 class ProjectCreate(_RequestModel):
     name: str = Field(min_length=1)
     site: dict[str, Any] = Field(default_factory=dict)
@@ -200,7 +221,12 @@ class StoredAssessment(BaseModel):
 
 
 class Project(BaseModel):
-    """The on-disk project document: one JSON file per project (D-028)."""
+    """The on-disk project document: one JSON file per project (D-028).
+
+    A document is validated only after any migration has run, so this model
+    always sees the current schema version. An older document is migrated
+    explicitly and itemised (D-029, D-044.2); a *newer* one is refused.
+    """
 
     model_config = ConfigDict(extra="forbid")
 
@@ -211,6 +237,10 @@ class Project(BaseModel):
     updated_at: str
     site: dict[str, Any]
     assessments: list[StoredAssessment]
+    # Set for the lifetime of one response when this document was migrated on
+    # load, so the interface can tell the user exactly what changed in their
+    # saved work. Never persisted: it describes an event, not the project.
+    migration_notes: list[str] = Field(default_factory=list, exclude=True)
 
     @field_validator("schema_version")
     @classmethod
@@ -246,16 +276,23 @@ class AssessmentView(StoredAssessment):
 
 
 class ProjectView(Project):
-    """A project document plus the current methodology version, for OQ-15."""
+    """A project document plus the current methodology version, for OQ-15.
+
+    ``migrated_notes`` itemises any storage migration applied when this
+    document was read, so a user whose saved drafts were reshaped is told what
+    changed rather than discovering it (D-029, D-044.2).
+    """
 
     current_methodology_version: str
     assessments: list[AssessmentView]  # type: ignore[assignment]
+    migrated_notes: list[str] = Field(default_factory=list)
 
     @classmethod
     def of(cls, project: Project, current_methodology_version: str) -> ProjectView:
         return cls(
             **project.model_dump(exclude={"assessments"}),
             current_methodology_version=current_methodology_version,
+            migrated_notes=list(project.migration_notes),
             assessments=[
                 AssessmentView.of(item, current_methodology_version) for item in project.assessments
             ],

@@ -1,41 +1,75 @@
 {
-  "name": "Demand supplied but relevance question skipped: relevance_not_confirmed",
-  "description": "A supplied demand cannot substitute for the unanswered relevance confirmation; energy confidence drops to low and overall confidence to low.",
-  "derivation": [
-    "Identical to s01 except the relevance question is unanswered (demand still supplied).",
-    "Energy status relevance_not_confirmed.",
-    "Energy completeness 1/3 = 33.3% -> low. Blocks [high, low, low, medium]; lower median -> low overall -> low-confidence flag in the recommendation.",
-    "Opportunity unchanged: 72.29."
+ "name": "Demand supplied but relevance question skipped: relevance_not_confirmed",
+ "description": "A supplied demand cannot substitute for the unanswered relevance confirmation; energy confidence drops to low and overall confidence to low.",
+ "derivation": [
+  "Heat exposure (data-rich): 66.25.",
+  "Vulnerability: 80.0.",
+  "HPI: 0.60*66.25 + 0.40*80.0 = 71.75 (high).",
+  "Adjustment for Tree Avenue: 0.95.",
+  "Cooling: base 75 * 0.95 = 71.25; envelope 0.5-3.0 C inherited from the street_tree_canopy evidence class; clipped range 0.5-2.85 C (midpoint 1.675 -> high).",
+  "Suitability: 76.25 (minimum area 100 m2).",
+  "Co-benefits: 58.75. Equity: 58.75.",
+  "Energy: relevance_not_confirmed.",
+  "Opportunity: 72.29 (strong); excluded ['cost_feasibility'].",
+  "Confidence: cooling high, energy low, economic low, equity medium -> lower median low."
+ ],
+ "input": {
+  "assessment_scale": "neighbourhood",
+  "site_area_m2": 6000,
+  "existing_tree_canopy_percent": 8,
+  "existing_green_cover_percent": 12,
+  "impervious_surface_percent": 85,
+  "soil_availability": "limited",
+  "irrigation_availability": "occasional",
+  "climate_zone": "temperate",
+  "lst_anomaly_c": 4.2,
+  "solar_exposure": "high",
+  "population_density": "high",
+  "vulnerable_population_presence": "high",
+  "access_to_cooled_indoor_space": "low",
+  "nbs_type": [
+   "tree_avenue"
   ],
-  "input": {
-    "assessment_scale": "neighbourhood",
-    "site_area_m2": 6000,
-    "existing_tree_canopy_percent": 8,
-    "existing_green_cover_percent": 12,
-    "impervious_surface_percent": 85,
-    "soil_availability": "limited",
-    "irrigation_availability": "occasional",
-    "climate_zone": "temperate",
-    "lst_anomaly_c": 4.2,
-    "solar_exposure": "high",
-    "population_density": "high",
-    "vulnerable_population_presence": "high",
-    "access_to_cooled_indoor_space": "low",
-    "nbs_type": "street_tree_planting",
-    "new_canopy_area_at_maturity_m2": 1200,
-    "annual_cooling_energy_demand_kwh": 450000
-  },
-  "expected": {
-    "energy.status": "relevance_not_confirmed",
-    "energy.savings_min_kwh_per_year": null,
-    "ghg.status": "energy_not_calculated",
-    "opportunity.score": 72.29,
-    "confidence.energy": "low",
-    "confidence.completeness_percent.energy": 33.3,
-    "confidence.overall": "low"
-  },
-  "recommendation_contains": [
-    "it was not confirmed that nearby building cooling demand is relevant",
-    "treat the result as a screening signal"
-  ]
+  "new_canopy_area_at_maturity_m2": 1200,
+  "annual_cooling_energy_demand_kwh": 450000
+ },
+ "expected": {
+  "heat_exposure.score": 66.25,
+  "heat_exposure.path": "data_rich",
+  "vulnerability.score": 80.0,
+  "heat_priority.score": 71.75,
+  "heat_priority.category": "high",
+  "adjustment.factor": 0.95,
+  "cooling.potential_score": 71.25,
+  "cooling.delta_t_min_c": 0.5,
+  "cooling.delta_t_max_c": 2.85,
+  "cooling.delta_t_midpoint_c": 1.675,
+  "cooling.heat_index_improvement": "high",
+  "suitability.score": 76.25,
+  "co_benefits.score": 58.75,
+  "equity.score": 58.75,
+  "energy.status": "relevance_not_confirmed",
+  "energy.savings_min_kwh_per_year": null,
+  "energy.savings_max_kwh_per_year": null,
+  "ghg.status": "energy_not_calculated",
+  "costs.annual_savings_status": "energy_not_calculated",
+  "costs.payback_status": "missing_capital_cost",
+  "costs.cost_feasibility_status": "not_estimated",
+  "costs.investment_readiness_status": "not_estimated",
+  "opportunity.score": 72.29,
+  "opportunity.category": "strong",
+  "opportunity.excluded_components": [
+   "cost_feasibility"
+  ],
+  "confidence.cooling": "high",
+  "confidence.energy": "low",
+  "confidence.economic": "low",
+  "confidence.equity": "medium",
+  "confidence.overall": "low",
+  "confidence.cooling_capped_by_evidence": false,
+  "package.component_count": 1,
+  "package.representative_nbs_type": "tree_avenue",
+  "typology.archetype": "street_tree_canopy",
+  "cooling.shade_potential_percent": 20.0
+ }
 }

@@ -7,9 +7,7 @@ from nature_cooling.engine.scoring import cooling, energy_ghg
 
 
 def _cooling_block(config, build_input, factor=0.95):
-    return cooling.compute(
-        build_input(), config.typologies.by_type("street_tree_planting"), factor, config
-    )
+    return cooling.compute(build_input(), config.typologies.by_type("tree_avenue"), factor, config)
 
 
 def test_worked_example_range(config, build_input):
@@ -20,7 +18,7 @@ def test_worked_example_range(config, build_input):
     )
     block = energy_ghg.compute_energy(
         inp,
-        config.typologies.by_type("street_tree_planting"),
+        config.typologies.by_type("tree_avenue"),
         _cooling_block(config, build_input),
         config,
     )
@@ -32,7 +30,7 @@ def test_worked_example_range(config, build_input):
 def test_typology_not_applicable_takes_precedence(config, build_input):
     """Pocket park cannot affect building loads, whatever the user supplies."""
     inp = build_input(
-        nbs_type="pocket_park",
+        nbs_type=["pocket_park"],
         nearby_building_cooling_demand_relevant="yes",
         annual_cooling_energy_demand_kwh=100000,
     )
@@ -47,7 +45,7 @@ def test_relevance_no(config, build_input):
     inp = build_input(nearby_building_cooling_demand_relevant="no")
     block = energy_ghg.compute_energy(
         inp,
-        config.typologies.by_type("street_tree_planting"),
+        config.typologies.by_type("tree_avenue"),
         _cooling_block(config, build_input),
         config,
     )
@@ -58,7 +56,7 @@ def test_relevance_not_confirmed(config, build_input):
     inp = build_input(annual_cooling_energy_demand_kwh=100000)
     block = energy_ghg.compute_energy(
         inp,
-        config.typologies.by_type("street_tree_planting"),
+        config.typologies.by_type("tree_avenue"),
         _cooling_block(config, build_input),
         config,
     )
@@ -69,7 +67,7 @@ def test_missing_demand(config, build_input):
     inp = build_input(nearby_building_cooling_demand_relevant="yes")
     block = energy_ghg.compute_energy(
         inp,
-        config.typologies.by_type("street_tree_planting"),
+        config.typologies.by_type("tree_avenue"),
         _cooling_block(config, build_input),
         config,
     )
@@ -81,7 +79,7 @@ def test_ghg_requires_calculated_energy(config, build_input):
     inp = build_input(grid_emission_factor_kgco2e_per_kwh=0.3)
     energy = energy_ghg.compute_energy(
         inp,
-        config.typologies.by_type("street_tree_planting"),
+        config.typologies.by_type("tree_avenue"),
         _cooling_block(config, build_input),
         config,
     )
@@ -98,7 +96,7 @@ def test_ghg_with_user_supplied_factor(config, build_input):
     )
     energy = energy_ghg.compute_energy(
         inp,
-        config.typologies.by_type("street_tree_planting"),
+        config.typologies.by_type("tree_avenue"),
         _cooling_block(config, build_input),
         config,
     )
@@ -117,7 +115,7 @@ def test_ghg_missing_factor_reports_not_calculated(config, build_input):
     )
     energy = energy_ghg.compute_energy(
         inp,
-        config.typologies.by_type("street_tree_planting"),
+        config.typologies.by_type("tree_avenue"),
         _cooling_block(config, build_input),
         config,
     )
@@ -155,7 +153,7 @@ def test_ghg_with_country_default_factor(config, build_input, tmp_path):
     )
     energy = energy_ghg.compute_energy(
         inp,
-        local_config.typologies.by_type("street_tree_planting"),
+        local_config.typologies.by_type("tree_avenue"),
         _cooling_block(local_config, build_input),
         local_config,
     )
