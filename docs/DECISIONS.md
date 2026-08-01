@@ -382,6 +382,26 @@ Four further corrections were made to the pack's citations before they shipped, 
 
 ---
 
+## D-047 — The three v2.1 decisions, ruled (2026-08-01)
+
+All three questions [V2.1-BRIEF.md](V2.1-BRIEF.md) left open are approved as recommended. The design gate for v2.1 is closed; implementation may proceed against the brief.
+
+**D-047.1 — The basemap ships bundled, and external tiles are opt-in.** Natural Earth vectors (public domain) are bundled so the map works entirely offline and delivers the country and climate-zone autofills with no network at all; external tiles exist only if a user explicitly names a source and switches it on.
+
+This is **the first deliberate exception to the no-third-party-request rule** since D-030 established it, and it is worth being precise about what is and is not being conceded. The rule is not relaxed: the **default build still makes no third-party request**, CI still enforces that, and a deployment inside a restricted network keeps working exactly as it does today. What is conceded is that a world-scale basemap at street zoom cannot be bundled — a fact about the size of the earth, not a preference — so a user who needs to draw a site boundary accurately is offered an informed choice rather than a silent limitation. The alternative considered and rejected was defaulting tiles on, which would have made the packaged tool phone out of the box and quietly broken the institutional deployments the rule exists to protect.
+
+Verifying the option before ruling on it moved one number materially: the bundled basemap was estimated at 5–15 MB in the first draft of the brief and is a few hundred kilobytes in fact (Natural Earth 1:110m admin-0 countries is ~175 KB). Size is therefore not an argument against bundling, and the decision reduced to the tile question alone.
+
+**D-047.2 — An autofilled value counts as supplied, and is marked as autofilled.** The user chose the location and the classification is cited, so it is not a guess and should not be treated as one. It is marked as autofilled in the interface, in the stored input, and in the report's Inputs sheet — the provenance treatment defaults have carried since D-034 — and it **never overwrites an answer the user has already given**.
+
+The alternative — not counting it — was rejected for a specific perversity: it would mean that clicking the map and typing the same climate zone by hand produce *different confidence readings for identical inputs*, which teaches users that the tool's confidence meter measures effort rather than information. The disclosure requirement does the work that not-counting was meant to do, without that defect.
+
+**D-047.3 — Köppen–Geiger classes with no urban-heat counterpart map to `other`.** Polar and boreal classes (ET, EF, Dfc and neighbours) map to `other`, which is already the tool's neutral climate condition at factor 1.0, so an unclassifiable location receives neither boost nor penalty. Forcing them into `temperate` was rejected because it would assert that a tundra site cools like a temperate one, which no source in the bibliography supports — an uncited claim introduced through a lookup table is still an uncited claim.
+
+**Source and licence settled before the ruling, not after.** Beck, H.E., et al. (2023), *High-resolution (1 km) Köppen-Geiger maps for 1901–2099 based on constrained CMIP6 projections*, Scientific Data 10, 724, doi:10.1038/s41597-023-02549-6, CC BY 4.0 — the same licence basis on which the `ember` emission factors already ship inside the wheel (D-036), so the redistribution precedent exists. The present-day map covers 1991–2020. The mapping table itself is a methodology value and requires an evidence-table entry, a `config/` table, and a **methodology version bump**; the release should ship the coarsest layer that classifies correctly rather than the finest available.
+
+---
+
 ## D-013 — Weights are expert-calibrated and defended by sensitivity analysis (2026-07-30)
 
 Aggregation weights cannot be "derived" from literature and we do not pretend otherwise. They are declared as expert judgment following composite-indicator practice (OECD/JRC Handbook), and defended empirically via the published sensitivity analysis (see D-011/OQ-29).
