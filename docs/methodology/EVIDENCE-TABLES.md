@@ -350,6 +350,78 @@ Woodland **creation** types — urban woodland, microforest, afforestation, wood
 
 ---
 
+## Climate classification: mapping Köppen–Geiger onto the tool's six zones
+
+Added at version `2026.08.05` (D-047.3, D-048), for the map-based site picker.
+The table lives in [`config/climate_classification.yaml`](../../config/climate_classification.yaml).
+
+**This is a methodology value, and the distinction matters.** The
+classification itself is cited and is not ours: `beck2023` publishes the
+thirty Köppen–Geiger classes at 1 km for 1991–2020 under CC BY 4.0, and the
+tool bundles the 0.1° layer of it. What is *not* in that source, or in any
+source, is which of the tool's six zones each class belongs to. Thirty classes
+onto six zones is a judgement, it selects a row of the climate adjustment
+matrix, and it therefore changes results — so it is declared, derived here, and
+version-stamped like every other methodology value.
+
+| Source | Metric | Finding |
+|---|---|---|
+| `beck2023` | Köppen–Geiger class, 1991–2020 | Thirty classes, published at 1 km and coarser, under CC BY 4.0. The tool bundles the **0.1° (≈11 km)** layer. |
+| `keravec2026` | Variance in cooling effectiveness explained | Solution type alone **12%**; adding climate zone **30%**; adding Köppen–Geiger subzone **78%**. Street trees **4.0 ± 1.6 °C** in tropical (A) versus **1.7 ± 1.4 °C** in arid (B). |
+
+**Adopted: a four-branch rule, not thirty separate assignments.** Every one of
+the thirty rows follows from one of four principles, and the config table
+records which branch produced each row so the mapping can be checked against
+the principle rather than taken on trust. A thirty-row table of individual
+opinions could not be reviewed; a reviewer disagreeing with this one disagrees
+with a stated principle, which is the point.
+
+| Branch | Classes | Zone | Why |
+|---|---|---|---|
+| Tropical | `Af`, `Am` | `tropical_wet` | Group A splits on its dry season, which is the same split the tool's two tropical zones name. No dry season, or a brief one. |
+| Tropical | `Aw` | `tropical_dry` | Savannah: a pronounced dry season. Nothing is interpreted here — the zone names and Köppen's subdivisions describe the same distinction. |
+| Arid | `BWh`, `BWk` | `arid` | Group B splits on desert (BW) versus steppe (BS); the tool splits on arid versus semi-arid. Same axis. |
+| Arid | `BSh`, `BSk` | `semi_arid` | The hot/cold third letter is deliberately ignored: the tool's arid downgrade encodes **water limitation constraining evapotranspiration**, not temperature. A cold desert limits evapotranspiration as a hot one does. |
+| Warm season | C and D ending `a` or `b` | `temperate` | A hot or warm summer. This is where the mid-latitude cooling literature was measured — the studies behind the temperate row are overwhelmingly from Cfa, Cfb, Dfa and Dfb cities. |
+| No warm season | C and D ending `c` or `d`, and all of E | `other` | Fewer than four months above 10 °C, or none. There is no warm season for the cooling literature to describe. |
+
+**Group D is not sent to `other` wholesale, and that is deliberate.** The
+temptation is to read "cold" as "not this tool's problem", but Chicago is
+`Dfa`, Seoul is `Dwa` and Moscow is `Dfb`; all three have serious urban heat
+problems, and all three sit squarely inside the evidence base behind the
+temperate row. Discarding them would lose real signal in exchange for a tidier
+rule.
+
+**The classes with no urban-heat counterpart map to `other` (D-047.3).**
+`other` is already the tool's neutral climate condition — every family resolves
+to condition `unknown`, which is factor **1.0** — so an unclassifiable location
+receives neither a boost nor a penalty. Forcing `ET`, `EF`, `Dfc` and their
+neighbours into `temperate` was rejected: it would assert that a tundra site
+cools like a temperate one, which no source in the bibliography supports, and
+**an uncited claim introduced through a lookup table is still an uncited
+claim**. Refusing to answer is the honest output when the literature has
+nothing to say.
+
+**What this table does and does not affect.** It is consulted only when a user
+opens the map and accepts the value it offers. It never overrides an answer the
+user has given, it introduces no new number into any formula, and a
+questionnaire filled in without the map is unaffected by it entirely. Its
+resolution — 0.1°, roughly 11 km — is stated in the interface and in the report
+alongside every value it produces: the classification is reliable for the city
+a site sits in, not for the site, which is the resolution at which climate zone
+enters this methodology in any case.
+
+**Country identification is not a methodology value** and is recorded here only
+so that both map-derived inputs are documented together. It is a
+point-in-polygon test against public-domain `naturalearth` boundaries, feeding
+the emission-factor and currency defaults and nothing else. Its two judgements
+are documented in [`data/geo/ATTRIBUTION.md`](../../data/geo/ATTRIBUTION.md):
+territories with no ISO 3166-1 code are not assigned to the state that claims
+them, and a point falling just outside a generalised coastline is attributed to
+the coast it sits on within a stated 25 km tolerance.
+
+---
+
 ## Cross-cutting notes
 
 **Nighttime.** All adopted values are daytime. `keravec2026` reports substantially smaller nighttime effects (parks 1.2 °C, green walls 1.4 °C), and `ziter2019` finds canopy cooling minimal at night while impervious-surface warming persists. The tool does not report a nighttime estimate; the Methodology Report states this limitation, which matters because heat-health risk is strongly associated with nighttime heat.

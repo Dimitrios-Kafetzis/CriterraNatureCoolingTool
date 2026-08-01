@@ -12,13 +12,20 @@ the outcome. It has not been altered since.
 produced by \texttt{tools/sensitivity\_analysis.py} and regenerated whenever
 any aggregation weight changes.
 
-The results are \textbf{regenerated for this version, not carried forward}. At
-version \prevver{} they were re-confirmed unchanged because no library value
-had moved; that is not true here. The library moved from fourteen typologies to
-\num{110} entries over \num{18} archetypes and the scenario set grew from
-twenty to \num{24}, so the analysis was re-executed in full. The aggregation
-weights themselves are \textbf{unchanged}: what moved is the population of
-scenarios they are applied to.
+The results are \textbf{re-confirmed unchanged at version \methver{}}. That
+version adds one methodology value---the K\"oppen--Geiger mapping of
+\Cref{sec:map-derived-inputs}---and moves no aggregation weight, no typology
+value, no scoring formula and no golden scenario. The analysis was
+\emph{re-executed rather than assumed}, and every figure below is identical to
+the one published at version \prevver{}; the only difference in the generated
+file is its version stamp. A release that changes nothing the analysis measures
+should be able to demonstrate that rather than assert it.
+
+The figures themselves were regenerated at version \prevver{}, when the library
+moved from fourteen typologies to \num{110} entries over \num{18} archetypes
+and the scenario set grew from twenty to \num{24}. The aggregation weights have
+been \textbf{unchanged} throughout: what moved at that version was the
+population of scenarios they are applied to.
 \end{keynote}
 
 \subsection{Why sensitivity analysis is obligatory here}
@@ -170,23 +177,26 @@ The four committed quantities, in the order of \Cref{sec:sa-reported}:
   evidence exists.
 \end{enumerate}
 
-\subsection{What moved since version \prevver{}, and why}
+\subsection{What last moved these figures, and why}
 \label{sec:sa-moved}
 
 \begin{keynote}
-\noindent\textbf{Every headline figure is slightly worse than at version
-\prevver{}, and the honest reading is that this is a property of the scenario
-set rather than a degradation of the methodology.}
+\noindent\textbf{The figures have not moved at version \methver{}.} They last
+moved at version \prevver{}, when every headline figure became slightly worse
+than at \texttt{2026.08.03}---and the honest reading of that change is that it
+is a property of the scenario set rather than a degradation of the methodology.
 
 \begin{center}\small
-\begin{tabular}{@{}lrr@{}}
+\begin{tabular}{@{}lrrr@{}}
 \toprule
-\textbf{Headline figure} & \textbf{\prevver{}} & \textbf{\methver{}} \\
+\textbf{Headline figure} & \textbf{2026.08.03} & \textbf{\prevver{}} &
+\textbf{\methver{}} \\
 \midrule
-Worst-case rank stability      & 0.9737   & 0.9529 \\
-Pooled mean displacement       & 0.42     & 0.47 \\
-Category migrations            & 3 of 240 & 8 of 288 \\
-\quad as a proportion          & \SI{1.25}{\percent} & \SI{2.8}{\percent} \\
+Worst-case rank stability      & 0.9737   & 0.9529 & 0.9529 \\
+Pooled mean displacement       & 0.42     & 0.47   & 0.47 \\
+Category migrations            & 3 of 240 & 8 of 288 & 8 of 288 \\
+\quad as a proportion          & \SI{1.25}{\percent} & \SI{2.8}{\percent} &
+\SI{2.8}{\percent} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -197,10 +207,10 @@ gap, whose baseline score of \num{59.89} sits \num{0.11} points below a band
 boundary. A scenario that close to a boundary will cross it under almost any
 perturbation.
 
-The four new scenarios were chosen to exercise this release's \emph{evidence}
-edge cases --- the small-water envelope, the pergola-scale ceiling, the package
-cap, and the productive evidence gap --- and not to sit comfortably inside
-bands. One of them landing on a boundary is a coincidence of that choice.
+The four scenarios added at that version were chosen to exercise its
+\emph{evidence} edge cases --- the small-water envelope, the pergola-scale
+ceiling, the package cap, and the productive evidence gap --- and not to sit
+comfortably inside bands. One of them landing on a boundary is a coincidence of that choice.
 Reporting it as though the tool had become less stable would be the wrong
 reading; suppressing it would be worse.
 \end{keynote}

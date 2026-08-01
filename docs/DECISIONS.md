@@ -382,6 +382,47 @@ Four further corrections were made to the pack's citations before they shipped, 
 
 ---
 
+## D-048 — v2.1 implementation rulings: the mapping table, the storage bump, and two datasets that had to be bigger than planned (2026-08-01)
+
+Recorded during the implementation of D-047. Two were left to the implementer by the brief and are ruled here; two are deviations from the brief's letter, made because verifying it against the data showed it would have shipped a wrong answer.
+
+**D-048.1 — The Köppen→zone mapping is a four-branch rule, not thirty assignments.** The mapping table required by D-047.3 is in [`config/climate_classification.yaml`](../config/climate_classification.yaml), derived in the evidence tables, cited to `beck2023`, and carries the methodology bump to `2026.08.05`. Every one of the thirty rows follows from one of four principles, and each row records which branch produced it:
+
+- **Tropical:** group A splits on its dry season, which is the same split the tool's two tropical zones name. `Af`/`Am` → `tropical_wet`, `Aw` → `tropical_dry`. Nothing is interpreted.
+- **Arid:** group B splits on desert versus steppe, and the tool on arid versus semi-arid; the same axis. The hot/cold third letter is deliberately ignored, because the tool's arid downgrade encodes *water limitation constraining evapotranspiration*, not temperature — a cold desert limits it as a hot one does.
+- **Warm season:** C and D ending `a` or `b` → `temperate`. This is where the mid-latitude cooling literature was measured.
+- **No warm season:** C and D ending `c` or `d`, and all of E → `other`, per D-047.3.
+
+The reason for insisting on a rule rather than a table is reviewability. A thirty-row list of individual opinions cannot be reviewed; a reader either accepts it or re-derives it themselves. A reviewer disagreeing with this mapping disagrees with a stated principle, and a test re-derives all thirty rows from the principle so the two cannot drift apart.
+
+**Group D is not sent to `other` wholesale, and that is the ruling's substance.** D-047.3 names ET, EF and Dfc, and the tempting simplification is to read "cold" as "not this tool's problem". Chicago is `Dfa`, Seoul is `Dwa`, Moscow is `Dfb`; all three have serious urban heat problems and all three sit inside the evidence base behind the temperate row. Discarding them would lose real signal for a tidier rule.
+
+**D-048.2 — Storage schema 2 → 3, migrated explicitly and itemised.** Provenance could not live inside the stored `input`: that object holds engine input fields and is `extra="forbid"`, and the engine has no concept of where a value came from — nor should it, since an autofilled value counts as supplied exactly as a typed one does (D-047.2). So `autofilled` is a sibling field, and the schema bumps.
+
+The migration is deliberately the least interesting one this project has run, and its note says so rather than implying something changed in the user's answers. Every assessment written before v2.1 was answered by hand, because there was no map to answer it any other way; an empty provenance record is therefore the *correct and complete* provenance of those drafts, not a default standing in for an unknown. No answer moves, no result is touched, and a migrated draft evaluates to the number it evaluated to before.
+
+Two invariants are enforced at the service boundary rather than trusted from the interface. Only the three derivable fields may be marked as autofilled, so "the map fills in three inputs" stays true as the questionnaire grows; and a mark is dropped for any field whose value is absent, so a mark can never outlive the value it describes and the report can never itemise provenance for an answer that is not there.
+
+**D-048.3 — The country lookup ships at 1:50m, not the 1:110m the brief costed.** D-047.1 recorded that Natural Earth's 1:110m admin-0 layer is ~175 KB and concluded that size was not an argument against bundling. That remains true, and it is why this deviation is affordable — but the layer itself was wrong for the job. **At 1:110m, Natural Earth omits every country smaller than roughly a thousand square kilometres.** A click on Singapore resolved to Malaysia; Monaco to France; Hong Kong, Malta, Bahrain, Andorra, Liechtenstein, San Marino, the Maldives, Barbados and Mauritius were all simply absent. A wrong country stated confidently is worse than no country at all, and it was wrong for precisely the dense hot coastal cities this tool exists to serve.
+
+The lookup therefore reads the 1:50m layer (438 KB compressed), and the 1:110m layer is kept for the basemap the browser draws, where 1:50m detail is invisible at world zoom and its ten-times vertex count is pure cost. Two scales of one public-domain source, each doing the job it suits.
+
+**D-048.4 — A point just outside a boundary is attributed to the nearest country within 25 km, and a point inside an unassigned territory is attributed to none.** These are two halves of one problem. A generalised coastline is drawn inland of the real one, so a great many waterfront capitals — Beirut, Nicosia, Manama, Kingston, Banjul, Monaco, Hong Kong — fall in the sea even at the source's full precision. Refusing to name a country for a waterfront site in Beirut would be precision the data does not have, in the direction of uselessness. The tolerance is far narrower than any open-water distance, never runs when the point is inside a boundary, and so can neither override a containment match nor choose between neighbours at a land border; which of the two ways the answer was reached is recorded.
+
+The second half is what that tolerance would otherwise have done. Four entries carry no ISO 3166-1 code in the source — Northern Cyprus, Somaliland, Kosovo, the Siachen Glacier — and are not assigned to the state that claims them. Simply deleting them, as first implemented, left holes that the coastal tolerance then filled by proximity, handing a site in Northern Cyprus to Cyprus **by accident** — reintroducing through a fallback exactly the claim the omission was making a point of not stating. Their outlines are therefore kept as explicit exclusion zones, and a site inside one returns no country definitively. The user types the code they consider correct.
+
+**D-048.5 — The map is inline SVG with no map library, and the tile concession stays structural.** The frontend's runtime dependencies remain React and react-router. A WebGL map library would have been the first exception, would have shipped inside the wheel, and would not instantiate under the test environment at all — leaving either a mock that tests nothing or a visibly loosened jsdom setup. SVG delivers pan, zoom, point placement and polygon drawing in a few hundred lines and renders under test.
+
+The consequence that matters is that **in the default build there is no tile URL to forget to turn off**: the opt-in layer is built from a template the user types at runtime, so no third-party URL exists anywhere in the build output. The projection is Web Mercator, chosen so that the opt-in tiles line up; areas are never measured from it, since `site_area_m2` is computed geodesically on the server from the drawn longitude/latitude ring.
+
+**D-048.6 — The no-third-party-request check now targets what causes a request, and covers the frontend build.** The old check was two greps over the docs site's HTML. It would have missed a stylesheet `@import` and a `fetch()` of a hard-coded endpoint, and a naive widening to "any `https?://`" would have failed on XML namespace identifiers, React's error-documentation links and the footer's own brand link — a check that cries wolf is a check that gets switched off. [`tools/check_no_third_party_requests.sh`](../tools/check_no_third_party_requests.sh) checks the six shapes that actually fetch, across both published artefacts, and each shape was verified to fail it.
+
+The bundled-dataset licence gate is the first licence check this repository has had; the font OFL notices have never had one. That was tolerable while the only redistributed content was three typefaces added once, and stops being tolerable when a build script copies a directory. It runs in two places: the backend suite checks the repository, and the wheel smoke check asserts the licence texts are present in the **installed artefact** and that the map answers from bundled data with no network at all.
+
+**D-048.7 — The sensitivity analysis is re-confirmed, and the re-confirmation was executed.** No weight, typology value, scoring formula or golden scenario moved, so the published figures should stand — and `tools/sensitivity_analysis.py` was re-run to demonstrate it rather than assert it. Every figure is byte-identical to `2026.08.04`; the only difference in the generated file is the version stamp. This is the treatment `2026.08.03` received and the reason it exists: a release that changes nothing the analysis measures should be able to show that.
+
+---
+
 ## D-047 — The three v2.1 decisions, ruled (2026-08-01)
 
 All three questions [V2.1-BRIEF.md](V2.1-BRIEF.md) left open are approved as recommended. The design gate for v2.1 is closed; implementation may proceed against the brief.

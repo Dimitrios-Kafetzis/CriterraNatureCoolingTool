@@ -274,3 +274,103 @@ The two paths are not equivalent in information content, and the confidence
 mechanism reflects that. The data-poor path is not a degraded mode to be
 avoided; it is the expected mode for most assessments, and the tool is designed
 to give a defensible answer in it.
+
+\subsection{Inputs a map may derive, and the many it may not}
+\label{sec:map-derived-inputs}
+
+Version \methver{} adds an optional map step at the head of the questionnaire.
+It is skippable in one action and the questionnaire is fully usable without
+ever opening it; nothing in this subsection applies to an assessment that did
+not use it.
+
+Exactly three inputs can be derived from a point or a polygon on a map without
+inventing anything. \texttt{site\_area\_m2} is pure geometry: the geodesic area
+of the ring the user drew, evaluated on the authalic sphere, carrying no
+uncertainty beyond the drawing itself. \texttt{country} is a point-in-polygon
+test against public-domain boundaries \parencite{naturalearth}, deterministic given
+the data, and feeds only the emission-factor and currency defaults. And
+\texttt{climate\_zone} is a cited lookup plus a documented mapping: the
+classification is published \parencite{beck2023}, and the mapping of its thirty
+classes onto this tool's six zones is a methodology value in its own right,
+derived below.
+
+Everything else the questionnaire asks about the site is \emph{not} derived
+from the map, and the reason is the whole point of this subsection. Canopy
+cover, green cover, imperviousness, LST anomaly, land use, shade level,
+population density and vulnerable-population presence all require satellite or
+census data. The temptation is worth naming because it is strong: a map that
+filled in canopy cover from a quick NDVI lookup would demonstrate well. It
+would also produce this tool's \emph{most decision-relevant site inputs} from
+an unvalidated pipeline, with no evidence table behind it and no confidence
+treatment---which is precisely the defect the methodology refused when it
+declined to ship default cost values (\Cref{sec:costs}), appearing
+in a new place. The restriction is enforced at the service boundary rather than
+left to the interface, so it holds as the questionnaire grows.
+
+\subsubsection*{Mapping K\"oppen--Geiger onto six zones}
+
+The classification is not ours; the mapping is. Thirty classes onto six zones
+is a judgement that selects a row of the climate adjustment matrix
+(\Cref{sec:adjustment}) and therefore changes results, so it is declared
+as a methodology value with its own citation, derivation and version rather
+than buried in the picker's code. It follows four principles, and every one of
+the thirty assignments records which principle produced it, because a
+thirty-row table of individual opinions could not be reviewed.
+
+\begin{description}[leftmargin=1.5em, style=sameline, font=\normalfont\itshape]
+  \item[Tropical] Group A splits on its dry season, which is the same split the
+  tool's two tropical zones name: \texttt{Af} and \texttt{Am} to
+  \texttt{tropical\_wet}, \texttt{Aw} to \texttt{tropical\_dry}.
+
+  \item[Arid] Group B splits on desert (BW) versus steppe (BS) and the tool on
+  arid versus semi-arid; these are the same axis. The hot/cold third letter is
+  deliberately ignored, because the tool's arid downgrade encodes water
+  limitation constraining evapotranspiration, not temperature---a cold desert
+  limits evapotranspiration as a hot one does.
+
+  \item[Warm season] Groups C and D whose third letter is \texttt{a} or
+  \texttt{b} map to \texttt{temperate}. This is where the mid-latitude cooling
+  literature was measured. Group~D is \emph{not} sent to \texttt{other}
+  wholesale: Chicago is \texttt{Dfa}, Seoul \texttt{Dwa} and Moscow
+  \texttt{Dfb}, all three have serious urban heat problems, and all three sit
+  inside the evidence base behind the temperate row.
+
+  \item[No warm season] Groups C and D whose third letter is \texttt{c} or
+  \texttt{d}, and all of group E, map to \texttt{other}---fewer than four
+  months above \SI{10}{\degreeCelsius}, or none. There is no warm season for
+  the cooling literature to describe.
+\end{description}
+
+Mapping the polar and boreal classes to \texttt{other} rather than to
+\texttt{temperate} matters more than it may appear. \texttt{other} is already
+the tool's neutral climate condition---every family resolves to condition
+\emph{unknown}, factor \num{1.0}---so an unclassifiable location receives
+neither a boost nor a penalty. Forcing them into \texttt{temperate} would
+assert that a tundra site cools like a temperate one, which no source in this
+bibliography supports, and \emph{an uncited claim introduced through a lookup
+table is still an uncited claim}.
+
+The bundled classification layer is \ang{0.1}, roughly \SI{11}{\kilo\metre}.
+That resolution is stated in the interface and in the report wherever a value
+derived from it appears: the classification is reliable for the city a site
+sits in, not for the site itself, which is the resolution at which climate zone
+enters this methodology in any case, since it selects a row of an adjustment
+matrix rather than a temperature.
+
+\subsubsection*{An autofilled value counts as supplied, and says so}
+
+The confidence mechanism (\Cref{sec:confidence}) counts what the tool was
+\emph{told}, not how hard the user worked to tell it. A K\"oppen--Geiger lookup
+at a location the user chose is a cited classification, not a guess, so it
+counts as an answer. Not counting it would mean that clicking the map and
+typing the same climate zone by hand produced \emph{different confidence
+readings for identical inputs}, teaching users that the confidence meter
+measures effort rather than information.
+
+The value therefore counts and the provenance is disclosed instead: beside the
+field in the interface, in the stored input, and itemised in the report's
+Inputs sheet, which distinguishes user-supplied, autofilled and defaulted
+values. Autofill never overwrites an answer the user has already given, and
+overriding a value removes its marking. In practice none of the three fields
+appears in any confidence block, so the question is one of principle rather
+than arithmetic---no confidence figure moves either way.

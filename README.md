@@ -7,9 +7,11 @@ Developed by [Criterra](https://criterra.eu).
 [![CI](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-> **Status: v2.0 — the NbS catalogue release.** The tool is packaged and published: one `pip install` and one command (`nature-cooling serve`) start the whole application — API and web app on a single origin — from a wheel that embeds the production frontend build and the cited methodology configuration. A container image ships to GHCR with a minimal compose file, the full documentation corpus is published at **[dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/)**, and `vX.Y.Z` tags build and publish every artefact automatically.
+> **Status: v2.1 — the map release.** The tool is packaged and published: one `pip install` and one command (`nature-cooling serve`) start the whole application — API and web app on a single origin — from a wheel that embeds the production frontend build and the cited methodology configuration. A container image ships to GHCR with a minimal compose file, the full documentation corpus is published at **[dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/)**, and `vX.Y.Z` tags build and publish every artefact automatically.
 >
-> **v2.0 replaces the NbS library with the curated UNEP *Nature for Cooling* catalogue.** 110 typologies, each inheriting one of 18 cited cooling archetypes, because solution-specific cooling literature does not exist for 110 interventions and inventing 110 envelopes would manufacture precision the catalogue does not contain — so an entry inherits a *cited* envelope and every result names the evidence class it came from. An assessment may now propose a **package** of interventions, scored individually and combined under rules that never sum a temperature. Four new site questions decide which interventions are offered and feed no score. Methodology `2026.08.04`. See [Roadmap](#roadmap).
+> **v2.1 adds an optional map at the head of the questionnaire, and fills in exactly three answers from it** — the site's area from the polygon you draw, its country by point-in-polygon, and its climate zone by Köppen–Geiger lookup. Everything else the questionnaire asks about the site needs satellite or census data, and deriving it from imagery would generate the tool's most decision-relevant inputs from an unvalidated pipeline; that stays out of scope. Both datasets are bundled, so **the map works with no network at all** and the packaged tool still makes no third-party request unless a user explicitly enables external tiles. An autofilled value counts as an answer, is marked as autofilled in the interface and in the report, and never overwrites something you have already said. The questionnaire remains fully usable without ever opening the map. Methodology `2026.08.05`.
+>
+> **v2.0 replaced the NbS library with the curated UNEP *Nature for Cooling* catalogue.** 110 typologies, each inheriting one of 18 cited cooling archetypes, because solution-specific cooling literature does not exist for 110 interventions and inventing 110 envelopes would manufacture precision the catalogue does not contain — so an entry inherits a *cited* envelope and every result names the evidence class it came from. An assessment may propose a **package** of interventions, scored individually and combined under rules that never sum a temperature. Four site questions decide which interventions are offered and feed no score. See [Roadmap](#roadmap).
 
 ---
 
@@ -96,7 +98,7 @@ The methodology also states plainly where it is weak: green façade and bioswale
 | 7 | Stabilisation — external methodology review & hardening | ✅ (shipped in v1.1) |
 | 8 | **v1.1** — review round 1: parameter explanations, cooling-refuge split, brand identity | ✅ |
 | 9 | **v2.0** — UNEP NbS catalogue, scale- and condition-based availability, multi-intervention packages | ✅ |
-| 10 | **v2.1** — map-based site selection with parameter autofill | 🔄 next |
+| 10 | **v2.1** — map-based site selection with parameter autofill | ✅ |
 
 ## Running the tool
 

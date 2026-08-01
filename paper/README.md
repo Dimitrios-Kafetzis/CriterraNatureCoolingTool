@@ -5,7 +5,7 @@ standalone, publication-quality scientific paper for expert review — the
 document to send to UNEP, independent scientific reviewers, and public
 authorities.
 
-**Methodology version:** `2026.08.04` · **Licence:** Apache-2.0 · **Author:** Criterra
+**Methodology version:** `2026.08.05` · **Licence:** Apache-2.0 · **Author:** Criterra
 
 This paper is the expanded, citable form of
 [`docs/methodology/METHODOLOGY.md`](../docs/methodology/METHODOLOGY.md). It is
@@ -20,7 +20,7 @@ version stamp.
 
 > Criterra (2026). *The Nature for Cooling Rapid Assessment Tool: a transparent,
 > evidence-grounded screening methodology for prioritising nature-based solutions
-> for urban cooling.* Methodology Report, version 2026.08.04.
+> for urban cooling.* Methodology Report, version 2026.08.05.
 > https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool
 
 ```bibtex
@@ -32,7 +32,7 @@ version stamp.
   type        = {Methodology Report},
   institution = {Criterra},
   year        = {2026},
-  version     = {2026.08.04},
+  version     = {2026.08.05},
   url         = {https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool},
 }
 ```
@@ -85,7 +85,7 @@ paper/
 │   ├── typologies.tex       The archetype library: 110 entries over 18 classes
 │   ├── formulas.tex         Every scoring formula and weight
 │   ├── uncertainty.tex      Ranges, branched confidence, missing data
-│   ├── sensitivity.tex      Design and the regenerated results at 2026.08.04
+│   ├── sensitivity.tex      Design and the results, re-confirmed at 2026.08.05
 │   ├── implementation.tex   Config-as-data, machine-enforced evidence rules
 │   ├── worked-example.tex   One hand-computed illustrative assessment
 │   ├── limitations.tex      Limitations and misuse cases
@@ -137,8 +137,8 @@ paper/
 
 | Macro | Renders |
 |---|---|
-| `\methver` | the methodology version, `2026.08.04` |
-| `\prevver` | the previous methodology version, `2026.08.03` |
+| `\methver` | the methodology version, `2026.08.05` |
+| `\prevver` | the previous methodology version, `2026.08.04` |
 | `\tool` / `\Tool` | "the Nature for Cooling Rapid Assessment Tool" |
 | `\repourl` | the repository URL |
 | `\clamp{x}` | $\mathrm{clamp}(x)$, bounding to 0–100 |

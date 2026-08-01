@@ -135,8 +135,14 @@ Visual identity: the criterra.eu design tokens (paper `#eaebe2`, ink `#16231c`, 
 | `input_mapping.yaml` | Qualitative → numeric mappings |
 | `country_defaults.yaml` | Emission factors, energy prices, currency (each cited: IEA/Ember, national sources) |
 | `recommendation_templates.yaml` | Deterministic recommendation fragments |
+| `climate_classification.yaml` | Köppen–Geiger class → climate zone, for the map picker's autofill (D-047.3). A methodology value, not data: the classification is cited to `beck2023`, the mapping onto the tool's six zones is the methodology's own judgement |
+| `derived_scores.yaml` | Derived sub-indicators, confidence blocks and thresholds |
 
-Each file has a top-level `version:` (date-stamped). CI validates schemas and refuses uncited performance values.
+Each file has a top-level `version:` (date-stamped), and all of them must agree — a mismatch fails config load and CI. CI validates schemas and refuses uncited performance values.
+
+### 4.1 Bundled datasets (`data/geo/`)
+
+Two published geographic datasets ship inside the wheel, staged alongside `config/` and the bibliography, so that the map-based site picker works with **no network access at all** (D-047.1): Natural Earth admin-0 boundaries (public domain, at 1:50m for the country lookup and 1:110m for the basemap the browser draws) and the Köppen–Geiger present-day classification at 0.1° (Beck et al. 2023, CC BY 4.0). Both are derived from their published sources by `tools/build_datasets.py`, which records each source checksum; both ship with their full licence text and a statement of what was changed, in `data/geo/`. The runtime formats are JSON and zlib, so the package needs no geospatial dependency and installs with one command.
 
 ## 5. Quality and CI/CD
 

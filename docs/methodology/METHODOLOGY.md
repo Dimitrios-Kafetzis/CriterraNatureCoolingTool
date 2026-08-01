@@ -1,7 +1,9 @@
 # Nature for Cooling Rapid Assessment Tool — Methodology Report
 
-**Version:** 2026.08.04 (methodology configuration version `2026.08.04`)
+**Version:** 2026.08.05 (methodology configuration version `2026.08.05`)
 **Status:** Version 2 methodology, released for expert review; calculation engine implemented
+
+**Version `2026.08.05` adds one methodology value and moves nothing else.** The map-based site picker (§3.5, D-047) needs to turn a location into a climate zone, and the mapping from the thirty Köppen–Geiger classes onto this tool's six zones is a judgement that selects a row of the climate adjustment matrix — so it is declared as a methodology value with its own citation, derivation and version, rather than buried in the picker's code. **No cooling envelope, aggregation weight, typology value or scoring formula changed at this version**, and the sensitivity analysis of §7 is therefore **re-confirmed unchanged rather than regenerated**, on the pattern of `2026.08.03`. An assessment filled in without ever opening the map is unaffected by this version in every respect.
 
 **Version `2026.08.04` is the largest methodology change since the tool was first calibrated.** The fourteen-typology library is replaced by the **110 curated entries** of the UNEP *Nature for Cooling* catalogue, each inheriting one of **18 cited cooling archetypes** (§4, D-043, D-044); an assessment may now propose a **package** of interventions, scored individually and combined under rules that never sum a temperature (§4.5); four new site questions **gate which interventions are offered and feed no score** (§3.4, D-044.1); and two typologies are retired — schoolyard greening, because a schoolyard is a land-use context rather than an intervention, and the mixed NbS package, because packages are now real. Twelve archetypes carry the v1.1 typologies' values unchanged, so **no previously published cooling envelope moved**, with one exception recorded in §4.6 and D-045: the newly retrieved `large_water_body` floor was set at 0.1 °C rather than the 0.5 °C proposed at design time, because source verification showed the field evidence did not support the higher floor. The sensitivity analysis of §7 is **regenerated, not carried forward** — unlike `2026.08.03`, this release genuinely changes the library.
 
@@ -139,6 +141,28 @@ Version `2026.08.04` adds four site-characteristic questions:
 That asymmetry is the substance of D-043.3. The originally approved question was a yes/no — "is there interest to create productive landscape from individuals or communities" — which on a "no" would have suppressed the urban farm and the agroforestry system: the highest-canopy, highest-cooling entries in the group, and the ones a municipality is most likely to deliver. A multi-select over four delivery models gates correctly at no extra cost in user effort, and an empty selection is not evidence that no delivery model exists. The tool does not assert a negative from absent information, here as in §5.4 and §5.10.
 
 Two rulings follow from the same principle and are worth stating because both run against intuition. **Woodland creation types are ungated**: urban woodland, microforest, afforestation and the woodland buffer are offered whatever the answer, because creating woodland does not require woodland to be there already — only *restoration* does. And **the four constructed water features carry no waterfront condition at all**: a constructed wetland, retention pond, detention basin or water square needs no existing water body, so gating them on one would withhold exactly the interventions available to a site that has no water.
+
+### 3.5 Inputs a map may derive, and the many it may not
+
+Version `2026.08.05` adds an optional map step at the head of the questionnaire (D-047). It is skippable in one action and the questionnaire is fully usable without ever opening it; nothing in this section applies to an assessment that did not use it.
+
+**Exactly three inputs can be derived from a point or a polygon on a map without inventing anything:**
+
+| Input | Source | Nature of the derivation |
+|---|---|---|
+| `site_area_m2` | the drawn polygon | **Pure geometry.** The geodesic area of the ring the user drew, computed on the authalic sphere. No dataset, no inference, no uncertainty beyond the user's own drawing. |
+| `country` | bundled `naturalearth` boundaries | **Point-in-polygon.** Deterministic given the boundary data; feeds only the emission-factor and currency defaults (§5.6). |
+| `climate_zone` | bundled `beck2023` classification | **A cited lookup plus a documented mapping.** The classification is published; the mapping onto this tool's six zones is a methodology value, derived in [EVIDENCE-TABLES.md](EVIDENCE-TABLES.md) and declared in `config/climate_classification.yaml`. |
+
+**Everything else the questionnaire asks about the site is *not* derived from the map, and the reason is the whole of why this section exists.** Canopy cover, green cover, imperviousness, LST anomaly, land use, shade level, population density and vulnerable-population presence all require satellite or census data. That is the GIS workflow deferred by D-002, and it is out of scope here.
+
+The temptation is worth naming, because it is strong: a map that filled in canopy cover from a quick NDVI lookup would demonstrate well. It would also produce this tool's **most decision-relevant site inputs** from an unvalidated pipeline, with no evidence table behind it and no confidence treatment — which is precisely the defect D-016 refused when it declined to ship default cost values, appearing in a new place. **This release derives three inputs and says plainly that it derives three.** The restriction is enforced at the service boundary rather than left to the interface's good manners, so it holds as the questionnaire grows.
+
+**An autofilled value counts as supplied, and is disclosed as autofilled** (D-047.2). The confidence mechanism (§6) counts what the *tool was told*, not how hard the user worked to tell it: a Köppen–Geiger lookup at a location the user chose is a cited classification, not a guess. Not counting it would mean that clicking the map and typing the same climate zone by hand produced **different confidence readings for identical inputs**, teaching users that the confidence meter measures effort rather than information. So the value counts, and the provenance is disclosed instead — in the interface beside the field, in the stored input, and itemised in the report's Inputs sheet, which distinguishes user-supplied, autofilled and defaulted values. Autofill **never** overwrites an answer the user has already given, and a user who overrides a value removes its marking by doing so.
+
+In practice none of the three fields appears in any confidence block, so the question is one of principle rather than arithmetic: no confidence figure moves either way.
+
+**The classification's resolution is stated wherever its value appears.** The bundled layer is 0.1°, roughly 11 km. It is reliable for the city a site sits in and is not a statement about the site itself — which is the resolution at which climate zone enters this methodology in any case, since it selects a row of an adjustment matrix rather than a temperature.
 
 ---
 
@@ -467,9 +491,11 @@ Required inputs must be present; the assessment does not proceed without them. O
 
 The tool's published sensitivity analysis varies each aggregation weight by **±25%** (renormalising the remainder) across the golden-scenario set and reports rank stability, score displacement, category migration, and an influence ranking. It is implemented in [`tools/sensitivity_analysis.py`](../../tools/sensitivity_analysis.py), its full output is committed at [SENSITIVITY-ANALYSIS.md](SENSITIVITY-ANALYSIS.md), and it must be regenerated whenever any aggregation weight changes.
 
-### 7.1 Results at version 2026.08.04
+### 7.1 Results at version 2026.08.05
 
-**Regenerated, not carried forward.** At `2026.08.03` the figures below were re-confirmed unchanged because no typology value had moved. That is not true of this release: the library changed from 14 typologies to 110 entries over 18 archetypes, the scenario set grew from 20 to 24, and the analysis was therefore re-executed in full. The aggregation weights themselves are **unchanged** — what moved is the population of scenarios they are applied to.
+**Re-confirmed unchanged at `2026.08.05`.** The map release adds one methodology value — the Köppen–Geiger mapping of §3.5 — and moves no aggregation weight, no typology value, no scoring formula and no golden scenario. The analysis was **re-executed rather than assumed**, and every figure below is byte-identical to the one published at `2026.08.04`; only the version stamp on the generated file differs. This is the same treatment `2026.08.03` received, and for the same reason: a release that changes nothing the analysis measures should be able to demonstrate that, not assert it.
+
+The figures themselves were **regenerated at `2026.08.04`**, when the library changed from 14 typologies to 110 entries over 18 archetypes and the scenario set grew from 20 to 24. The aggregation weights have been **unchanged** throughout — what moved at that version was the population of scenarios they are applied to.
 
 The analysis re-scores the **24 golden scenarios** (276 scenario pairs) under each of the 12 perturbations (6 weights × ±25%).
 
@@ -512,7 +538,7 @@ Two further honest qualifications. First, the analysis perturbs one weight at a 
 
 ## 9. Methodology governance
 
-**Versioning.** The methodology version (`2026.08.04`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
+**Versioning.** The methodology version (`2026.08.05`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
 
 **Change process.** Methodology changes are proposed as public pull requests with their evidence. Existing assessments are never silently recomputed: results retain the version that produced them, and the interface indicates when a newer methodology version is available.
 
