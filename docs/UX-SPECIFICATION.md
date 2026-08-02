@@ -18,22 +18,23 @@ The landing screen states what the tool does, what it will ask for, and how long
 
 It offers two actions: **Start a new assessment** and **Open a saved project**. The methodology is linked from here and from every subsequent screen; a user must never have to leave the flow to find out how a number is produced.
 
-## 3. The six steps
+## 3. The steps: an optional map, then six question groups
 
-A single guided flow (D-018). No quick/full mode split: the confidence meter already lets users choose their own depth.
+A single guided flow (D-018). No quick/full mode split: the confidence meter already lets users choose their own depth. Since v2.1 the flow opens with a map step (D-047), skippable in one action, that can fill in exactly three answers — site area, country, climate zone — each marked as autofilled and never overwriting an answer already given (D-047.2). The wizard therefore shows seven steps; the six question groups are unchanged.
 
 | Step | Group | Notes |
 |---|---|---|
-| 1 | Project information | Identity and context; shortest step, establishes momentum |
-| 2 | Site characteristics | The heaviest step; area, cover, land use, users, soil, irrigation, and the four availability answers (§3.1) |
-| 3 | Climate and heat exposure | Climate zone required; measured values optional |
-| 4 | Vulnerability and equity | Social context |
-| 5 | NbS intervention | The guided typology picker (§5) |
-| 6 | Cost and energy | Entirely optional; gated by an explicit "do you have cost data?" |
+| 1 | Find the site on a map | Optional and skippable in one action (D-047); place search moves the map and fills in nothing (D-049.6) |
+| 2 | Project information | Identity and context; shortest step, establishes momentum |
+| 3 | Site characteristics | The heaviest step; area, cover, land use, users, soil, irrigation, and the four availability answers (§3.1) |
+| 4 | Climate and heat exposure | Climate zone required; measured values optional |
+| 5 | Vulnerability and equity | Social context |
+| 6 | NbS intervention | The guided typology picker (§5) |
+| 7 | Cost and energy | Entirely optional; gated by an explicit "do you have cost data?" |
 
 ### 3.1 The four availability answers, and the promise the interface must keep
 
-Step 2 asks four questions that decide **which interventions the tool offers** and feed **no score** (D-044.1): whether the site includes a railway, whether it already carries woodland, what kind of waterfront it adjoins, and who could deliver a productive landscape there.
+The site-characteristics step asks four questions that decide **which interventions the tool offers** and feed **no score** (D-044.1): whether the site includes a railway, whether it already carries woodland, what kind of waterfront it adjoins, and who could deliver a productive landscape there.
 
 Their explanations must say so plainly. The tool's premise is that a user can see what skipping a question costs (§4), and a question that cannot move a number has to admit it — otherwise the interface implies an influence the methodology denies. Each explanation therefore ends with the same statement in the same terms: *"It feeds no score. Your answer cannot raise or lower any result."*
 
@@ -52,7 +53,7 @@ Cooling confidence   ████████░░  Medium
    → Adding existing tree canopy % would raise this to High
 
 Economic confidence  ██░░░░░░░░  Low
-   → Requires cost data (step 6)
+   → Requires cost data (the cost step)
 ```
 
 Two behaviours make this work rather than nag:
@@ -66,7 +67,7 @@ Where an entry's inherited evidence class caps a block (green façade / living w
 
 The specification's ordering collects site data before intervention choice. Left alone, that means a user who picks riparian restoration for a site with no water discovers the problem at the results screen, after 40 questions — the worst possible moment.
 
-The fix is not to reorder the questions but to make the picker context-aware. By step 5 the tool knows the site, so the cards render sorted by fit and annotated (D-019).
+The fix is not to reorder the questions but to make the picker context-aware. By the intervention step the tool knows the site, so the cards render sorted by fit and annotated (D-019).
 
 **From v2.0 the picker also has to survive its own catalogue.** The library holds 110 entries across fourteen families, and a school site is offered 67 of them; a flat list of cards is not something anyone will read. Regrouping is therefore a functional requirement of this release, not polish. The picker groups by family, filters by name, and supports selecting several entries as a package (D-038):
 

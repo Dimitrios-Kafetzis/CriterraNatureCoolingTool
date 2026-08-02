@@ -25,7 +25,7 @@ The tool answers five questions cities keep asking:
 4. **What** cooling, climate, cost, and social benefits will they deliver?
 5. **Which** projects deserve priority for design and investment?
 
-A user describes a site through a six-step questionnaire, selects one or more of 110 NbS typologies (tree avenues, microforests, green roofs, constructed wetlands, food forests, …) from a menu filtered to what actually suits the site, and receives:
+A user describes a site through a short questionnaire — an optional map step that can fill in the site's area, country and climate zone, followed by six steps of questions — selects one or more of 110 NbS typologies (tree avenues, microforests, green roofs, constructed wetlands, food forests, …) from a menu filtered to what actually suits the site, and receives:
 
 - a **Heat Priority Index** (0–100) — how much the site deserves attention,
 - a **Cooling Potential Score** (0–100) with an indicative **temperature-reduction range (°C)**,

@@ -65,9 +65,11 @@ nav:
       - Sensitivity analysis: methodology/SENSITIVITY-ANALYSIS.md
   - Architecture: ARCHITECTURE.md
   - UX specification: UX-SPECIFICATION.md
+  - Hosting & configuration: HOSTING.md
   - Decision log: DECISIONS.md
   - V2 vision: V2-VISION.md
   - Release briefs:
+      - v2.2 — Usable map & deployment imagery: V2.2-BRIEF.md
       - v2.1 — Map picker & autofill: V2.1-BRIEF.md
       - v2.0 — NbS catalogue & packages: V1.2-BRIEF.md
       - v2.0 review pack — curated catalogue: V1.2-REVIEW-PACK.md
