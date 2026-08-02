@@ -71,6 +71,15 @@ of what was changed, in data/geo/:
     attribution carried here and in data/geo/ATTRIBUTION.md.
     Licence: data/geo/LICENCE-koppen-CC-BY-4.0.txt
 
+A set of openly licensed photographs — the NbS example images the
+intervention picker's dialog shows (v2.3, D-051) — is redistributed with this
+software in data/images/, re-encoded from their published sources by
+tools/build_images.py. Every image carries its own licence, restricted to
+public domain / CC0, CC BY, or CC BY-SA; no NC or ND variant ships. Per-image
+author, exact licence, source page, checksums, and what was changed are
+recorded in data/images/manifest.json and data/images/ATTRIBUTION.md, and the
+same attribution is rendered in the interface wherever an image is shown.
+
 No OpenStreetMap data is bundled or redistributed. A deployment operator (or a
 user, per visit) may configure an external raster tile source, typically
 OSM-derived; those tiles are requested by the user's browser directly from the

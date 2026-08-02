@@ -14,6 +14,7 @@ import assessmentDuplicate from './fixtures/assessment-duplicate.json';
 import project from './fixtures/project.json';
 import typologies from './fixtures/typologies.json';
 import available from './fixtures/typologies-available.json';
+import imagesManifest from './fixtures/images-manifest.json';
 import validateCapped from './fixtures/validate-capped.json';
 import validateEmpty from './fixtures/validate-empty.json';
 import validatePartial from './fixtures/validate-partial.json';
@@ -42,6 +43,7 @@ function baseRoutes(
       response: assessmentDraft,
     },
     { method: 'POST', path: '/api/assessments/validate', response: validateResponse },
+    { method: 'GET', path: '/api/images/manifest', response: imagesManifest },
   ];
 }
 
@@ -147,6 +149,21 @@ describe('WizardScreen', () => {
     expect(cards.filter((card) => card.className.includes('picker__card')).length).toBe(
       typologies.resolved.length,
     );
+  });
+
+  it('serves the example-image manifest to the picker in one request (v2.3, D-051)', async () => {
+    // The duplicate's site answers temperate, which the fixture manifest
+    // holds images for, so the affordances render; the draft fixture with no
+    // climate zone is covered by the picker's own tests.
+    const { calls } = installFetchMock(baseRoutes(validatePartial, assessmentDuplicate));
+    renderWizard(stepUrl('intervention'));
+
+    await screen.findByRole('heading', { name: messages.wizard.steps.intervention.title });
+    await waitFor(() => {
+      expect(document.querySelectorAll('.picker__photo').length).toBeGreaterThan(0);
+    });
+    // One manifest request — never a per-card lookup over 110 entries.
+    expect(calls.filter((call) => call.url === '/api/images/manifest')).toHaveLength(1);
   });
 
   it('asks the service which entries this site is offered, computing no rule of its own', async () => {

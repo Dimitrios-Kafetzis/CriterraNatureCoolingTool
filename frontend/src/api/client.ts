@@ -17,6 +17,7 @@ import type {
   GeoLookupResponse,
   MetaResponse,
   MethodologyData,
+  NbsImageManifest,
   PlaceSearchResponse,
   ProjectSummary,
   ProjectView,
@@ -98,6 +99,13 @@ export const api = {
     request<AvailableTypologies>(`/api/typologies/available?${availabilityParams(query)}`),
 
   methodology: () => request<MethodologyData>('/api/methodology'),
+
+  /**
+   * The bundled example images (v2.3, D-051): one request tells the picker
+   * every (archetype-or-override, climate zone) pair a verified photograph
+   * exists for. Pairs absent from the answer render no affordance at all.
+   */
+  imageManifest: () => request<NbsImageManifest>('/api/images/manifest'),
 
   /** The bundled country outlines the offline map draws (D-047.1). */
   basemap: () => request<BasemapDocument>('/api/geo/basemap'),

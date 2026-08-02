@@ -112,6 +112,14 @@ jobs:
             -H 'Content-Type: application/json' \
             -d '{"latitude": 37.9838, "longitude": 23.7275}' > /tmp/lookup.json
           python -c "import json; d = json.load(open('/tmp/lookup.json')); assert d['country']['iso_a2'] == 'GR', d; assert d['climate']['zone'] == 'temperate', d"
+          # The example images ship inside the wheel and are served from it
+          # (v2.3, D-051): the manifest answers, and a declared image comes
+          # back as actual WebP bytes.
+          curl -fsS http://127.0.0.1:8123/api/images/manifest > /tmp/images.json
+          python -c "import json; m = json.load(open('/tmp/images.json')); assert m['images'], 'wheel serves no example images'"
+          first="$(python -c "import json; print(json.load(open('/tmp/images.json'))['images'][0]['file'])")"
+          curl -fsS "http://127.0.0.1:8123/api/images/$first" -o /tmp/example.webp
+          python -c "import pathlib; head = pathlib.Path('/tmp/example.webp').read_bytes()[:16]; assert head[:4] == b'RIFF' and head[8:12] == b'WEBP', head"
       - name: Bundled datasets and the map library ship with the licences that permit them
         run: |
           # Three datasets and one JavaScript library travel inside the wheel,
@@ -131,6 +139,21 @@ jobs:
           # Leaflet is bundled into the frontend build (D-049.5); its BSD-2
           # text must travel with the embedded webapp.
           grep -q 'BSD 2-Clause License' "$site_packages/_bundled/webapp/LICENCE-leaflet.txt"
+          # The example images (v2.3, D-051): every manifest-declared file
+          # must be inside the wheel with the attribution document beside it.
+          images="$site_packages/_bundled/data/images"
+          test -s "$images/manifest.json"
+          test -s "$images/ATTRIBUTION.md"
+          python - "$images" <<'PY'
+          import json, pathlib, sys
+          images = pathlib.Path(sys.argv[1])
+          declared = json.loads((images / "manifest.json").read_text())["images"]
+          assert declared, "empty image manifest in the wheel"
+          for image in declared:
+              path = images / image["file"]
+              assert path.is_file() and path.stat().st_size > 0, f"missing from the wheel: {image['file']}"
+          print(f"OK: {len(declared)} example images inside the wheel")
+          PY
           echo "OK: bundled content ships with its licences and attribution"
       - name: Runtime request gate (D-049.8)
         run: |

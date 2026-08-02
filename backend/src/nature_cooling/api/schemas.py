@@ -122,6 +122,42 @@ class PlaceSearchResponse(_RequestModel):
     attribution: str
 
 
+class NbsImage(_RequestModel):
+    """One bundled example photograph (v2.3, D-051), with its attribution.
+
+    ``nbs_type`` is ``None`` for an archetype-level image; a non-null value is
+    a per-typology override that outranks the archetype image for that entry.
+    The image is an illustrative example, not evidence: captions built from
+    ``caption_subject``, ``place`` and ``zone`` state what and where, never a
+    performance claim (D-051.6).
+    """
+
+    file: str
+    archetype: str
+    nbs_type: str | None
+    zone: str
+    place: str
+    caption_subject: str
+    author: str
+    licence: str
+    licence_url: str | None
+    source_page: str
+    width: int
+    height: int
+
+
+class NbsImageManifest(_RequestModel):
+    """``GET /api/images/manifest`` — every example image this package serves.
+
+    One request tells the picker which (archetype-or-override, zone) pairs
+    have a verified image; every pair absent from this list renders no
+    affordance at all (D-051.5). Empty is an expected answer, not an error.
+    """
+
+    purpose: str
+    images: list[NbsImage]
+
+
 class FieldIssue(_RequestModel):
     """One validation error, addressed to the form field it belongs to."""
 

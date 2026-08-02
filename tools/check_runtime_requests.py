@@ -13,8 +13,10 @@ things:
 
   A. UNCONFIGURED: a complete assessment — entry screen, project creation, the
      map step INCLUDING a map click and applying its autofill, the
-     questionnaire, typology selection, evaluation, results — makes zero
-     requests to any origin but the application's own.
+     questionnaire, typology selection INCLUDING opening an example-image
+     dialog (v2.3, D-051: the photograph must come from the application's own
+     origin, never a third-party image host), evaluation, results — makes
+     zero requests to any origin but the application's own.
 
   B. CONFIGURED: with a tile source configured (a second local port standing
      in for the third party, so this check itself stays offline), tile
@@ -181,6 +183,16 @@ def phase_unconfigured(page: Any, requests: list[str], origin: str, origins: set
     search = page.get_by_role("searchbox", name="Filter by name")
     search.wait_for()
     search.fill("tree avenue")
+
+    # The example-image dialog (v2.3, D-051): the site's climate zone was
+    # autofilled as temperate, and the street_tree_canopy × temperate slot
+    # ships an image, so the Tree Avenue card carries the affordance. The
+    # photograph it opens is bundled — the zero-external-requests assertion
+    # below is what proves the dialog touched no third-party image host.
+    page.get_by_role("button", name="See a real example of Tree Avenue").click()
+    page.locator(".example-dialog img").wait_for()
+    page.get_by_role("button", name="Close", exact=True).click()
+
     page.get_by_role("button", name=re.compile("Tree Avenue")).first.click()
     page.get_by_role("button", name="Continue").click()
 

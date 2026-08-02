@@ -1,0 +1,477 @@
+{
+  "comment": [
+    "The curation record behind data/images/ (v2.3, D-051). One entry per",
+    "filled (archetype-or-override, climate zone) slot. tools/build_images.py",
+    "validates every entry, re-verifies the climate zone against the tool's own",
+    "bundled Köppen grid, downloads and checksums the original, re-encodes it,",
+    "and generates the manifest and attribution document from this file.",
+    "The 'verified' notes record what the three D-051.4 verifications actually",
+    "found: the licence as read from the file page itself, and what the image",
+    "was seen to depict. The zone note is written by the build script, which",
+    "refuses any entry whose zone does not reproduce."
+  ],
+  "images": [
+    {
+      "archetype": "street_tree_canopy",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Schützenallee Hannover.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Sch%C3%BCtzenallee_Hannover.jpg",
+      "author": "Geoprofi Lars",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "place": "Hannover, Germany",
+      "latitude": 52.338742,
+      "longitude": 9.756588,
+      "coordinates_from": "geotag on the file page ({{Location|52.338742|9.756588}})",
+      "caption_subject": "Street tree canopy",
+      "original_sha256": "6ff77f589aafff479d8325e20806d3c64d16d6c14e72e91ebbfe8bd891510d18",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-sa-4.0}} (own work by Geoprofi Lars); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: mature street trees shading an urban street (Schützenallee, Hannover) with roadway, cycle path and apartment buildings — a built street tree canopy, not a park or rural avenue."
+      }
+    },
+    {
+      "archetype": "extensive_green_roof",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:20080708 Chicago City Hall Green Roof.JPG",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:20080708_Chicago_City_Hall_Green_Roof.JPG",
+      "author": "TonyTheTiger",
+      "licence": "CC BY-SA 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "place": "Chicago, United States",
+      "latitude": 41.8837,
+      "longitude": -87.6318,
+      "coordinates_from": "location stated on the file page (Chicago City Hall; category 'Green roof of the City Hall-County Building'); coordinates are the City Hall-County Building's",
+      "caption_subject": "A vegetated roof",
+      "original_sha256": "2a574d6cd5f0d16dce7c9a6f67799081aaaf2f65ea974099200211a6941b9630",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-sa-3.0|GFDL}} (own work by TonyTheTiger, dual-licensed; CC BY-SA 3.0 used); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: aerial view of Chicago City Hall's planted roof — vegetated beds covering the roof of an eleven-storey building amid downtown towers, an unambiguous built green roof."
+      }
+    },
+    {
+      "archetype": "small_constructed_water",
+      "nbs_type": "water_square",
+      "zone": "temperate",
+      "title": "File:Benthemplein terrain basket gestion eau.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Benthemplein_terrain_basket_gestion_eau.jpg",
+      "author": "Cathrotterdam",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "place": "Rotterdam, Netherlands",
+      "latitude": 51.9273,
+      "longitude": 4.476,
+      "coordinates_from": "location stated on the file page (Place Benthemplein de Rotterdam; category 'Benthemplein (Rotterdam)'); coordinates are Benthemplein's",
+      "caption_subject": "A water square (dry state)",
+      "original_sha256": "b15d3a3eb022bf069090e1a26c6e093017bcc2b52af3c7ad17d3a6b8825b43ce",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-sa-4.0}} (own work by Cathrotterdam); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: the Benthemplein water square's sunken basin with tiered seating steps, photographed dry — the built water square itself, visually distinct from the ponds and fountains of its archetype, which is why this is a per-typology override (D-051.1)."
+      }
+    },
+    {
+      "archetype": "small_green_area_with_trees",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Paley Park (54035).jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Paley_Park_(54035).jpg",
+      "author": "Rhododendrites",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "place": "New York City, United States",
+      "latitude": 40.7603,
+      "longitude": -73.9752,
+      "coordinates_from": "location stated on the file page (description 'Paley Park', category 'Paley Park'); coordinates are Paley Park's, 3 East 53rd Street, Manhattan",
+      "caption_subject": "A pocket park under tree canopy",
+      "original_sha256": "c06afac613e44b425fed706dc52cb3f408a07aae76abb154646963d39ca9b194",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-sa-4.0}} (own work by Rhododendrites); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: Paley Park in summer leaf — honey locust canopy shading a small paved pocket park between buildings, with seating in use and its waterfall wall behind. A built small green area with trees; the leafless winter photographs of the same park were rejected for showing a dormant state."
+      }
+    },
+    {
+      "archetype": "blue_green_corridor",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Cheonggyecheon stream at sunrise with trees in Seoul.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Cheonggyecheon_stream_at_sunrise_with_trees_in_Seoul.jpg",
+      "author": "Basile Morin",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "place": "Seoul, South Korea",
+      "latitude": 37.569945,
+      "longitude": 126.982142,
+      "coordinates_from": "geotag on the file page ({{Location|37.569945|126.982142}})",
+      "caption_subject": "A restored stream corridor (Cheonggyecheon)",
+      "original_sha256": "d815041996a73ea6ce7288fc0229750e02e5f055e2dbe366d7c94cfce85f5841",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-sa-4.0}} (own work by Basile Morin); no NC/ND template present. The page also carries {{NoFoP-South Korea}}, a caution about copyrighted architecture or sculpture as photographic subject — this photograph's subject is the stream corridor and its vegetation, not any architectural or sculptural work. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: the Cheonggyecheon daylighted stream running between vegetated banks and tree rows with the city's towers on both sides — a built blue-green corridor through a dense urban centre."
+      }
+    },
+    {
+      "archetype": "green_facade_living_wall",
+      "nbs_type": null,
+      "zone": "semi_arid",
+      "title": "File:Vertical Garden at CaixaForum in Madrid (3320129771).jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Vertical_Garden_at_CaixaForum_in_Madrid_(3320129771).jpg",
+      "author": "Patrick Breen (pdbreen)",
+      "licence": "CC BY 2.0",
+      "licence_url": "https://creativecommons.org/licenses/by/2.0/",
+      "place": "Madrid, Spain",
+      "latitude": 40.411131,
+      "longitude": -3.693106,
+      "coordinates_from": "geotag on the file page ({{Location dec|40.411131|-3.693106|source:Flickr}})",
+      "caption_subject": "A living wall (vertical garden)",
+      "original_sha256": "6975121a3201600b48c78cd30c1875cd6869d51c4d27637062ce2fb7bdc09a66",
+      "verified": {
+        "licence": "File page wikitext carries {{cc-by-2.0}} with a passed FlickreviewR licence review (source Flickr, author pdbreen); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: the CaixaForum vertical garden — a full building-height planted wall over a public plaza with people beneath, unmistakably a built living wall. A close-crop of the same wall was rejected because the wall itself was not identifiable in it."
+      }
+    },
+    {
+      "archetype": "non_canopy_vegetation",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Urban wildflower meadow, Hillfields, Coventry - geograph.org.uk - 6914183.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Urban_wildflower_meadow,_Hillfields,_Coventry_-_geograph.org.uk_-_6914183.jpg",
+      "author": "A J Paxton",
+      "licence": "CC BY-SA 2.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "place": "Coventry, United Kingdom",
+      "latitude": 52.41290828,
+      "longitude": -1.50391681,
+      "coordinates_from": "geotag on the file page (Geograph structured data)",
+      "caption_subject": "An urban wildflower meadow",
+      "original_sha256": "819b07afccc1d9d3fe8df72dbadd42f7e597e76b623cc90ba679efb7f3b41425",
+      "verified": {
+        "licence": "Geograph import holding its licence in structured data; the rendered file page states CC BY-SA 2.0 with author A J Paxton, confirmed directly from the file page 2026-08-02. No NC/ND variant.",
+        "depiction": "Viewed 2026-08-02: a sown wildflower meadow in flower on a road verge in Hillfields, Coventry, with street, traffic and buildings behind — non-canopy urban planting, not a park lawn."
+      }
+    },
+    {
+      "archetype": "large_water_body",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Außenalster Heinrich-Hertz-Turm 02.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Au%C3%9Fenalster_Heinrich-Hertz-Turm_02.jpg",
+      "author": "Flocci Nivis",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "place": "Hamburg, Germany",
+      "latitude": 53.565,
+      "longitude": 10.01,
+      "coordinates_from": "location stated on the file page (description 'View across the Außenalster', taken-on location Hamburg, category 'Außenalster'); coordinates are the Außenalster's",
+      "caption_subject": "An urban lake (the Außenalster)",
+      "original_sha256": "3253054acf8ad1136666f2557df26aaed68bb0951a5dd5006564856d90f11fd6",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-4.0}} (own work by Flocci Nivis); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: the Außenalster lake with reeded shore in the foreground and Hamburg's skyline across the water — a large water body inside a city."
+      }
+    },
+    {
+      "archetype": "established_park",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Manhattan, Central Park (5351029043).jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Manhattan,_Central_Park_(5351029043).jpg",
+      "author": "Bill Abbott",
+      "licence": "CC BY-SA 2.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "place": "New York City, United States",
+      "latitude": 40.7812,
+      "longitude": -73.9665,
+      "coordinates_from": "location stated on the file page (description and category 'Aerial photographs of Central Park', taken-on location New York City); coordinates are Central Park's",
+      "caption_subject": "An established urban park (Central Park)",
+      "original_sha256": "d1a96033bfca8458e6a25c67c055542e8eb4670b983e78e14b3a4dc07148d976",
+      "verified": {
+        "licence": "File page wikitext carries {{cc-by-sa-2.0}} with a passed FlickreviewR licence review (source Flickr, author Bill Abbott); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: aerial view over Midtown with Central Park's continuous green canopy stretching through the building mass — an established park seen in its urban context. A skyline-dominated alternative was rejected because the park was barely visible in it."
+      }
+    },
+    {
+      "archetype": "riparian_restoration",
+      "nbs_type": null,
+      "zone": "tropical_wet",
+      "title": "File:Looking south down Kallang River at Bishan-Ang Mo Kio Park.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Looking_south_down_Kallang_River_at_Bishan-Ang_Mo_Kio_Park.jpg",
+      "author": "Wzhkevin",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "place": "Singapore",
+      "latitude": 1.3647,
+      "longitude": 103.835342,
+      "coordinates_from": "geotag on the file page ({{Location|1.3647|103.835342}})",
+      "caption_subject": "A naturalised river through a park (Kallang River)",
+      "original_sha256": "195c7b13c9a1c4fadffb3f150ddb39afd17c92d8e64e756845558c7254c31a8f",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-sa-4.0}} (own work by Wzhkevin); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: the Kallang River flowing in its naturalised vegetated channel through Bishan-Ang Mo Kio Park, with park trees and housing blocks behind — the built de-canalisation that replaced the former concrete drain."
+      }
+    },
+    {
+      "archetype": "bioretention",
+      "nbs_type": null,
+      "zone": "tropical_wet",
+      "title": "File:Rain garden overview.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Rain_garden_overview.jpg",
+      "author": "Rogersoh",
+      "licence": "CC BY-SA 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "place": "Singapore",
+      "latitude": 1.33043333,
+      "longitude": 103.88392833,
+      "coordinates_from": "geotag on the file page ({{Location|1|19.826|0|N|103|53.0357|0|E}})",
+      "caption_subject": "A rain garden (Balam Estate)",
+      "original_sha256": "3c7d037a7c6f6fd784775781c0af393c5b4a9a52a87c06aff85fe1d4b9e8bcec",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-sa-3.0|GFDL}} (own work by Rogersoh, dual-licensed; CC BY-SA 3.0 used); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: the Balam Estate rain garden's planted bioretention basin — dense wetland planting in a shallow basin beside a footpath, built to filter stormwater before it reaches the drain, as the file page describes."
+      }
+    },
+    {
+      "archetype": "continuous_shaded_corridor",
+      "nbs_type": null,
+      "zone": "tropical_dry",
+      "title": "File:Paseo del Prado 2 (3217433651).jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Paseo_del_Prado_2_(3217433651).jpg",
+      "author": "Tony Hisgett",
+      "licence": "CC BY 2.0",
+      "licence_url": "https://creativecommons.org/licenses/by/2.0/",
+      "place": "Havana, Cuba",
+      "latitude": 23.141538,
+      "longitude": -82.358906,
+      "coordinates_from": "geotag on the file page ({{Location dec|23.141538|-82.358906|source:Flickr}})",
+      "caption_subject": "A tree-shaded promenade (Paseo del Prado)",
+      "original_sha256": "b956f978dc5ec882b03224ee2a68e54aba78ee8b422ed92796cdc8117489f0b5",
+      "verified": {
+        "licence": "File page wikitext carries {{cc-by-2.0}} with a passed flickrreview (source Flickr, author Tony Hisgett); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: the Paseo del Prado's pedestrian promenade under a continuous closed canopy of mature trees, buildings on both sides — a continuous shaded corridor through central Havana."
+      }
+    },
+    {
+      "archetype": "productive_non_canopy",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Natur in der Stadt IMG 107.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Natur_in_der_Stadt_IMG_107.jpg",
+      "author": "WS ReNu",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "place": "Berlin, Germany",
+      "latitude": 52.485,
+      "longitude": 13.365,
+      "coordinates_from": "location stated on the file page (description 'Inselgarten auf der Roten Insel in Berlin-Schöneberg', category 'Rote Insel'); coordinates are the Rote Insel's, Berlin-Schöneberg",
+      "caption_subject": "A community garden (raised beds)",
+      "original_sha256": "862e00a90e1a9b5521dc0ab5e3fe3ea2f088ba15b119a5e7473127505d43053a",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-sa-4.0}} (own work by WS ReNu); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: the Inselgarten community garden — raised planting beds with vegetables and a rainwater tank on a paved urban lot in front of an apartment block, described on the page as a public community project."
+      }
+    },
+    {
+      "archetype": "enclosed_courtyard",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Patio de los Naranjos, Mosque-Cathedral of Córdoba, Spain - DSC07079.JPG",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Patio_de_los_Naranjos,_Mosque-Cathedral_of_C%C3%B3rdoba,_Spain_-_DSC07079.JPG",
+      "author": "Daderot",
+      "licence": "CC0 1.0",
+      "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "place": "Córdoba, Spain",
+      "latitude": 37.8789,
+      "longitude": -4.7794,
+      "coordinates_from": "location stated on the file page (description and category 'Patio de los Naranjos, Mosque-Cathedral of Córdoba'); coordinates are the Mosque-Cathedral's",
+      "caption_subject": "A planted courtyard (Patio de los Naranjos)",
+      "original_sha256": "312fd26a1d240b3290816e77c6f9b781ebee45c2eb02d2962ba9baf8c7f06e1f",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-zero}} (own work by Daderot, dedicated to the public domain under CC0); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: the Patio de los Naranjos — orange trees in a watered grid with a fountain, inside the walled courtyard of the Mosque-Cathedral of Córdoba; the historical exemplar of courtyard planting for shade and cooling."
+      }
+    },
+    {
+      "archetype": "vegetated_shade_structure",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Hantazi 07.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Hantazi_07.jpg",
+      "author": "Dokudami",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "place": "Matsuyama, Japan",
+      "latitude": 33.8578,
+      "longitude": 132.7947,
+      "coordinates_from": "location stated on the file page (description '繁多寺の境内' — the grounds of Hanta-ji — and category 'Hanta-ji'); coordinates are the temple's, Matsuyama, Ehime",
+      "caption_subject": "A wisteria-covered trellis shading seating",
+      "original_sha256": "44de3b1e41f2cb46cfdd2f00cffca3aa4bc43f0077a486f186ca3d049700aa38",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-sa-4.0}} (own work by Dokudami); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: a wisteria trellis (fujidana) in flower, its vines fully covering the frame and shading benches beneath, with the city of Matsuyama in the background — a built vegetated shade structure. A photo of an unplanted pergola was rejected because the structure carried no vegetation."
+      }
+    },
+    {
+      "archetype": "dense_tree_canopy",
+      "nbs_type": "microforest",
+      "zone": "tropical_wet",
+      "title": "File:Miyawaki forest at Edappally Eranakulam 01.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Miyawaki_forest_at_Edappally_Eranakulam_01.jpg",
+      "author": "Vijayanrajapuram",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "place": "Kochi, India",
+      "latitude": 10.0236,
+      "longitude": 76.3097,
+      "coordinates_from": "location stated on the file page (description 'Miyawaki forest at Edappally Eranakulam', in English and Malayalam); coordinates are Edappally's, Ernakulam district, Kochi",
+      "caption_subject": "A young Miyawaki micro-forest",
+      "original_sha256": "f31d9113eb65e6c5b66fe69643f8a598e907798c1d8d533d09471cf3ac9dd009",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-sa-4.0}} (own work by Vijayanrajapuram); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: a fenced Miyawaki planting at Edappally — densely spaced young native saplings with species tags, houses and coconut palms behind. Shown as a per-typology override because a young micro-forest is visually unlike the mature dense canopy of its archetype, and the caption says it is young (D-051.1)."
+      }
+    },
+    {
+      "archetype": "dense_tree_canopy",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Hampstead Heath - geograph.org.uk - 4716892.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Hampstead_Heath_-_geograph.org.uk_-_4716892.jpg",
+      "author": "Martin Addison",
+      "licence": "CC BY-SA 2.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "place": "London, United Kingdom",
+      "latitude": 51.57193744,
+      "longitude": -0.16487319,
+      "coordinates_from": "geotag on the file page (Geograph structured data)",
+      "caption_subject": "Urban woodland (Hampstead Heath)",
+      "original_sha256": "f8f0e5403e38d55b5865651ab2f16cdfb4ad653a9991c9031dea325312931c1c",
+      "verified": {
+        "licence": "Geograph import holding its licence in structured data; the rendered file page states CC BY-SA 2.0 with author Martin Addison, confirmed directly from the file page 2026-08-02. No NC/ND variant.",
+        "depiction": "Viewed 2026-08-02: dense broadleaf woodland edge and meadow on Hampstead Heath — a woodland site inside London, the dense-canopy condition this evidence class describes. The surrounding city is not in frame; the caption claims the place, not the view."
+      }
+    },
+    {
+      "archetype": "small_constructed_water",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Tangerhütte, der Stadtpark-13, Teich und Brücke.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Tangerh%C3%BCtte,_der_Stadtpark-13,_Teich_und_Br%C3%BCcke.jpg",
+      "author": "Dguendel",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "place": "Tangerhütte, Germany",
+      "latitude": 52.428919,
+      "longitude": 11.821114,
+      "coordinates_from": "geotag on the file page ({{Location|52.428919|11.821114}})",
+      "caption_subject": "A park pond",
+      "original_sha256": "be4ca5d33c09e10b170d5d591ce130f28f57efeae8d127f96e8be68fe2fe46c1",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-4.0}} (own work by Dguendel); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: the Stadtpark Tangerhütte pond — a constructed park pond with water lilies, reeded margin and footbridge under mature trees; a small constructed water feature in a public park."
+      }
+    },
+    {
+      "archetype": "established_park",
+      "nbs_type": null,
+      "zone": "arid",
+      "title": "File:Zabeel Park - panoramio.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Zabeel_Park_-_panoramio.jpg",
+      "author": "wilhelmtittes",
+      "licence": "CC BY 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by/3.0/",
+      "place": "Dubai, United Arab Emirates",
+      "latitude": 25.234836,
+      "longitude": 55.296335,
+      "coordinates_from": "geotag on the file page ({{Location|25.234836|55.296335|source:Panoramio}})",
+      "caption_subject": "An irrigated city park (Zabeel Park)",
+      "original_sha256": "fcb75bafc41bb5aa96ab3dc4c27337de3b5eb9990be1c9eb5ca1eead286d5adc",
+      "verified": {
+        "licence": "File page wikitext carries {{cc-by-3.0|wilhelmtittes}} with a passed Panoramioreview; no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: Zabeel Park's irrigated lawns, flowering flame trees and benches — an established, deliberately planted and irrigated public park in an arid-zone city."
+      }
+    },
+    {
+      "archetype": "small_green_area_with_trees",
+      "nbs_type": null,
+      "zone": "other",
+      "title": "File:Austurvöllur 2023.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Austurv%C3%B6llur_2023.jpg",
+      "author": "APK",
+      "licence": "CC BY-SA 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "place": "Reykjavík, Iceland",
+      "latitude": 64.1471,
+      "longitude": -21.9391,
+      "coordinates_from": "location stated on the file page (description 'Austurvöllur is a public square in Reykjavik', category 'Austurvöllur'); coordinates are the square's",
+      "caption_subject": "A green public square (Austurvöllur)",
+      "original_sha256": "cb657f6635430544123e45bb99628c8795ad80b29116331f933284901b0490af",
+      "verified": {
+        "licence": "File page wikitext carries {{self|cc-by-sa-4.0}} (own work by APK); no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: Austurvöllur square — lawns and a central cluster of trees enclosed by downtown Reykjavík, with the Parliament House and cathedral at its edge. A small green area with trees in the tool's 'other' climate zone (Köppen Cfc: no warm season)."
+      }
+    },
+    {
+      "archetype": "established_park",
+      "nbs_type": null,
+      "zone": "tropical_wet",
+      "title": "File:Singapore Botanic Gardens Palm Valley.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Singapore_Botanic_Gardens_Palm_Valley.jpg",
+      "author": "Calvin teo",
+      "licence": "CC BY-SA 3.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "place": "Singapore",
+      "latitude": 1.3138,
+      "longitude": 103.8159,
+      "coordinates_from": "location stated on the file page (description 'Palm Valley in the Singapore Botanic Gardens'); coordinates are the Botanic Gardens'",
+      "caption_subject": "An established park (Singapore Botanic Gardens)",
+      "original_sha256": "547dc144fe2aba896830145555c81c31aef86a009f8a629991fc57862b33ab75",
+      "verified": {
+        "licence": "File page wikitext carries {{self|GFDL|Cc-by-sa-3.0-migrated|Cc-by-sa-2.5,2.0,1.0}} — the licence-migration stack under which the work is available as CC BY-SA 3.0; no NC/ND template present. Read 2026-08-02.",
+        "depiction": "Viewed 2026-08-02: Palm Valley in the Singapore Botanic Gardens — mature palms over an open lawn in heavy public use, an established park in a tropical-wet city."
+      }
+    },
+    {
+      "archetype": "productive_canopy",
+      "nbs_type": null,
+      "zone": "temperate",
+      "title": "File:Stoke Gabriel Community Orchard with apple blossom - geograph.org.uk - 6115975.jpg",
+      "source": "wikimedia_commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Stoke_Gabriel_Community_Orchard_with_apple_blossom_-_geograph.org.uk_-_6115975.jpg",
+      "author": "David Hawgood",
+      "licence": "CC BY-SA 2.0",
+      "licence_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "place": "Stoke Gabriel, United Kingdom",
+      "latitude": 50.4029,
+      "longitude": -3.6201,
+      "coordinates_from": "geotag on the file page (Geograph structured data)",
+      "caption_subject": "A community orchard in blossom",
+      "original_sha256": "2445e88faf80532e6d64f1cc2fb68ddbf398622a971bfcada1acc93a5cf72d07",
+      "verified": {
+        "licence": "Geograph import holding its licence in structured data; the rendered file page states CC BY-SA 2.0 with author David Hawgood, confirmed directly from the file page 2026-08-02. No NC/ND variant.",
+        "depiction": "Viewed 2026-08-02: the Stoke Gabriel community orchard at blossom time — apple trees over grass with a public path and seating, a village setting rather than a dense urban one, which the caption's place name states honestly."
+      }
+    }
+  ]
+}

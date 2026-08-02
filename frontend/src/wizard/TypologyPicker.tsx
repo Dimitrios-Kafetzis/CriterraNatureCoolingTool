@@ -24,11 +24,13 @@
 
 import { useId, useMemo, useState } from 'react';
 import { FieldExplainer } from '../components/FieldExplainer';
+import { ExampleImageDialog } from './ExampleImageDialog';
 import { messages, optionLabel } from '../i18n/en';
 import type {
   AvailableTypologies,
   DraftInput,
   MethodologyData,
+  NbsImage,
   Typology,
   TypologyLibrary,
 } from '../api/types';
@@ -125,6 +127,8 @@ interface Card {
   typology: Typology;
   fit: Fit;
   offered: boolean;
+  /** A verified example photo for exactly this zone, if one exists (D-051). */
+  example: NbsImage | undefined;
 }
 
 interface FamilyGroup {
@@ -158,14 +162,43 @@ function familyLabel(family: string): string {
   return messages.families.labels[family] ?? family;
 }
 
+/**
+ * The example image for one entry, under the strict zone match of D-051.5.
+ *
+ * The lookup mirrors the library's own inheritance (D-044.3, D-051.1): a
+ * per-typology override outranks the archetype image, and the archetype image
+ * serves every entry inheriting it. No climate zone answered, or no verified
+ * image for exactly this zone → `undefined`, and no affordance renders —
+ * absence is the honest state, never a placeholder or a cross-zone
+ * substitute.
+ */
+export function exampleImageFor(
+  typology: Typology,
+  images: NbsImage[] | null,
+  climateZone: string | null | undefined,
+): NbsImage | undefined {
+  if (images == null || climateZone == null) return undefined;
+  let inherited: NbsImage | undefined;
+  for (const image of images) {
+    if (image.zone !== climateZone) continue;
+    if (image.nbs_type === typology.nbs_type) return image;
+    if (image.nbs_type == null && image.archetype === typology.archetype) inherited = image;
+  }
+  return inherited;
+}
+
 export function TypologyPicker(props: {
   library: TypologyLibrary;
   methodology: MethodologyData;
   availability: AvailableTypologies | null;
+  images: NbsImage[] | null;
   draft: DraftInput;
   onChange: (nbsTypes: string[]) => void;
 }) {
   const [filter, setFilter] = useState('');
+  // The open example dialog, if any: the image plus the evidence-class name
+  // of the card it was opened from (the dialog states the inheritance).
+  const [example, setExample] = useState<{ image: NbsImage; archetype: string } | null>(null);
   const filterId = useId();
   const { library, methodology, availability, draft } = props;
   const selected = draft.nbs_type ?? [];
@@ -185,9 +218,10 @@ export function TypologyPicker(props: {
         // Without a served answer nothing is "not offered": an unasked
         // question is not a negative one.
         offered: offeredSet === null || offeredSet.has(typology.nbs_type),
+        example: exampleImageFor(typology, props.images, draft.climate_zone),
       }))
       .sort((a, b) => FIT_ORDER[a.fit.kind] - FIT_ORDER[b.fit.kind]);
-  }, [entries, offeredSet, draft, methodology]);
+  }, [entries, offeredSet, draft, methodology, props.images]);
 
   const needle = filter.trim().toLowerCase();
   const matching = needle
@@ -273,6 +307,7 @@ export function TypologyPicker(props: {
               selected={selected}
               defaultOpen={offeredGroups.length <= 3 || needle !== ''}
               onToggle={toggle}
+              onShowExample={setExample}
             />
           ))}
         </section>
@@ -289,12 +324,21 @@ export function TypologyPicker(props: {
               selected={selected}
               defaultOpen={needle !== ''}
               onToggle={toggle}
+              onShowExample={setExample}
             />
           ))}
         </section>
       ) : null}
 
       <p className="muted small">{messages.picker.evidenceClassNote}</p>
+
+      {example !== null ? (
+        <ExampleImageDialog
+          image={example.image}
+          archetypeDisplayName={example.archetype}
+          onClose={() => setExample(null)}
+        />
+      ) : null}
     </div>
   );
 }
@@ -373,6 +417,7 @@ function FamilySection(props: {
   selected: string[];
   defaultOpen: boolean;
   onToggle: (nbsType: string) => void;
+  onShowExample: (example: { image: NbsImage; archetype: string }) => void;
 }) {
   const label = familyLabel(props.group.family);
   const kind = props.group.cards[0]?.typology.kind;
@@ -392,6 +437,7 @@ function FamilySection(props: {
             card={card}
             selected={props.selected.includes(card.typology.nbs_type)}
             onToggle={props.onToggle}
+            onShowExample={props.onShowExample}
           />
         ))}
       </div>
@@ -403,9 +449,10 @@ function TypologyCard(props: {
   card: Card;
   selected: boolean;
   onToggle: (nbsType: string) => void;
+  onShowExample: (example: { image: NbsImage; archetype: string }) => void;
 }) {
-  const { typology, fit, offered } = props.card;
-  return (
+  const { typology, fit, offered, example } = props.card;
+  const card = (
     <button
       type="button"
       className={`picker__card${offered ? '' : ' picker__card--withheld'}`}
@@ -442,5 +489,30 @@ function TypologyCard(props: {
         <span className="badge badge--accent">{messages.picker.selected}</span>
       ) : null}
     </button>
+  );
+  if (example === undefined) return card;
+  // The card is itself a <button>, so the affordance is a positioned SIBLING
+  // inside a wrapper, never a nested button — invalid HTML the browser would
+  // "fix" by reparenting (D-051.2).
+  return (
+    <div className="picker__card-shell">
+      {card}
+      <button
+        type="button"
+        className="picker__photo"
+        aria-label={messages.picker.example.affordance(typology.display_name)}
+        title={messages.picker.example.affordance(typology.display_name)}
+        onClick={() =>
+          props.onShowExample({ image: example, archetype: typology.archetype_display_name })
+        }
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            fill="currentColor"
+            d="M9.4 5l-1.2 2H4v12h16V7h-4.2l-1.2-2H9.4zM12 9.5a4 4 0 110 8 4 4 0 010-8zm0 1.8a2.2 2.2 0 100 4.4 2.2 2.2 0 000-4.4z"
+          />
+        </svg>
+      </button>
+    </div>
   );
 }

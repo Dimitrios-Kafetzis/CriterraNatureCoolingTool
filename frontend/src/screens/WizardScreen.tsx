@@ -25,6 +25,7 @@ import type {
   FieldIssue,
   InputField,
   MethodologyData,
+  NbsImage,
   TypologyLibrary,
   ValidateResponse,
 } from '../api/types';
@@ -78,6 +79,10 @@ export function WizardScreen() {
   const [library, setLibrary] = useState<TypologyLibrary | null>(null);
   const [methodology, setMethodology] = useState<MethodologyData | null>(null);
   const [availability, setAvailability] = useState<AvailableTypologies | null>(null);
+  // The bundled example images (v2.3, D-051): one manifest request, made
+  // beside the library's. Null — not fetched, or failed — simply renders no
+  // affordance, which is also the honest empty-coverage state.
+  const [images, setImages] = useState<NbsImage[] | null>(null);
   // Which answers the map filled in, and from which dataset (D-047.2). Held
   // beside the draft rather than inside it: `draft` holds engine input fields
   // and nothing else, and the engine has no concept of where a value came from.
@@ -126,6 +131,16 @@ export function WizardScreen() {
       })
       .catch(() => {
         // Step 5 shows its own loading state; a hard failure surfaces on save/validate.
+      });
+    // Fetched separately: the images are an optional garnish (D-051.6), and
+    // a failure here must not delay or degrade the picker itself.
+    api
+      .imageManifest()
+      .then((manifest) => {
+        if (!cancelled) setImages(manifest.images);
+      })
+      .catch(() => {
+        // No affordances render, which is indistinguishable from zero coverage.
       });
     return () => {
       cancelled = true;
@@ -345,6 +360,7 @@ export function WizardScreen() {
           library={library}
           methodology={methodology}
           availability={availability}
+          images={images}
           autofilled={autofilled}
           onAutofill={applyAutofill}
           onSkipMap={() => {

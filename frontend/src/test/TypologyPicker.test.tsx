@@ -1,12 +1,14 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { TypologyPicker, assessFit } from '../wizard/TypologyPicker';
+import { TypologyPicker, assessFit, exampleImageFor } from '../wizard/TypologyPicker';
+import { exampleCaption } from '../wizard/ExampleImageDialog';
 import { messages } from '../i18n/en';
 import type {
   AvailableTypologies,
   DraftInput,
   MethodologyData,
+  NbsImage,
   Typology,
   TypologyLibrary,
 } from '../api/types';
@@ -14,11 +16,13 @@ import methodologyFixture from './fixtures/methodology.json';
 import typologiesFixture from './fixtures/typologies.json';
 import availableFixture from './fixtures/typologies-available.json';
 import availableCityFixture from './fixtures/typologies-available-city.json';
+import imagesFixture from './fixtures/images-manifest.json';
 
 const library = typologiesFixture as unknown as TypologyLibrary;
 const methodology = methodologyFixture as unknown as MethodologyData;
 const available = availableFixture as unknown as AvailableTypologies;
 const availableCity = availableCityFixture as unknown as AvailableTypologies;
+const images = imagesFixture.images as NbsImage[];
 const resolved = library.resolved!;
 const ranks = {
   soil: methodology.derived_scores.suitability_sub_indicators!.requirement_match!.soil_ranks!,
@@ -45,6 +49,7 @@ function renderPicker(props: Partial<Parameters<typeof TypologyPicker>[0]> = {})
       library={library}
       methodology={methodology}
       availability={null}
+      images={null}
       draft={constrainedSite}
       onChange={onChange}
       {...props}
@@ -150,6 +155,7 @@ describe('TypologyPicker', () => {
         library={library}
         methodology={methodology}
         availability={available}
+        images={null}
         draft={{ ...constrainedSite, nbs_type: ['rain_garden'] }}
         onChange={onChange}
       />,
@@ -174,6 +180,7 @@ describe('TypologyPicker', () => {
         library={library}
         methodology={methodology}
         availability={available}
+        images={null}
         draft={{ ...constrainedSite, nbs_type: ['rain_garden', 'extensive_green_roof'] }}
         onChange={onChange}
       />,
@@ -191,6 +198,7 @@ describe('TypologyPicker', () => {
         library={library}
         methodology={methodology}
         availability={available}
+        images={null}
         draft={{ ...constrainedSite, nbs_type: ['rain_garden', 'extensive_green_roof'] }}
         onChange={onChange}
       />,
@@ -284,5 +292,128 @@ describe('TypologyPicker', () => {
     expect(
       screen.getByText(messages.picker.unknownEntry('schoolyard_greening')),
     ).toBeInTheDocument();
+  });
+});
+
+// A site whose climate zone matches the fixture images (all temperate).
+const temperateSite: DraftInput = { site_area_m2: 6000, climate_zone: 'temperate' };
+
+/** Affordance buttons are queried by class in one pass — never by role+name
+ * per entry, which is quadratic over 110 cards and has timed out CI before. */
+function affordances(): HTMLElement[] {
+  return [...document.querySelectorAll<HTMLElement>('.picker__photo')];
+}
+
+describe('example images (v2.3, D-051)', () => {
+  it('resolves strictly by zone, with the override outranking the archetype', () => {
+    // water_square has a per-typology override in its zone, which outranks
+    // the archetype-level image its siblings inherit…
+    const override = exampleImageFor(typology('water_square'), images, 'temperate');
+    expect(override?.file).toBe('water_square--temperate.webp');
+    // …while a sibling of the same archetype inherits the archetype image.
+    expect(exampleImageFor(typology('retention_pond'), images, 'temperate')?.file).toBe(
+      'small_constructed_water--temperate.webp',
+    );
+    // An entry inheriting street_tree_canopy gets the archetype image.
+    expect(exampleImageFor(typology('tree_avenue'), images, 'temperate')?.file).toBe(
+      'street_tree_canopy--temperate.webp',
+    );
+    // Strict zone match (D-051.5): no cross-zone substitution, and no zone
+    // answered means no image at all.
+    expect(exampleImageFor(typology('tree_avenue'), images, 'arid')).toBeUndefined();
+    expect(exampleImageFor(typology('tree_avenue'), images, null)).toBeUndefined();
+    expect(exampleImageFor(typology('tree_avenue'), null, 'temperate')).toBeUndefined();
+  });
+
+  it('shows an affordance only where a verified image matches the zone exactly', () => {
+    renderPicker({ images, draft: temperateSite });
+    const withImage = resolved.filter(
+      (entry) => exampleImageFor(entry, images, 'temperate') !== undefined,
+    );
+    expect(withImage.length).toBeGreaterThan(0);
+    expect(affordances()).toHaveLength(withImage.length);
+  });
+
+  it('shows no affordance for a zone with no verified image — no cross-zone substitution (D-051.5)', () => {
+    // Only temperate images offered to an arid site: nothing renders, because
+    // an arid implementation shown to a temperate user (or vice versa) is the
+    // misleading substitution this rule exists to refuse.
+    const temperateOnly = images.filter((image) => image.zone === 'temperate');
+    renderPicker({ images: temperateOnly, draft: constrainedSite });
+    expect(affordances()).toHaveLength(0);
+  });
+
+  it('shows no affordance while the zone is unanswered', () => {
+    renderPicker({ images, draft: { site_area_m2: 6000 } });
+    expect(affordances()).toHaveLength(0);
+  });
+
+  it('opens a dialog whose caption states place and zone, with the attribution rendered (D-051.3, D-051.6)', async () => {
+    renderPicker({ images, draft: temperateSite });
+    const user = userEvent.setup();
+    const image = images.find((candidate) => candidate.nbs_type === 'water_square')!;
+
+    await user.click(
+      screen.getByRole('button', {
+        name: messages.picker.example.affordance(typology('water_square').display_name),
+      }),
+    );
+
+    const dialog = screen.getByRole('dialog');
+    const caption = exampleCaption(image);
+    // Place and zone, nothing about degrees, performance, or cost — and the
+    // alt text is the caption verbatim.
+    expect(caption).toBe('A water square (dry state) in Rotterdam, Netherlands (Temperate)');
+    const img = within(dialog).getByRole('img', { name: caption });
+    expect(img).toHaveAttribute('src', `/api/images/${image.file}`);
+    expect(within(dialog).getByText(caption)).toBeInTheDocument();
+
+    // The attribution its licence requires: author, licence name linked to
+    // the licence text, and a link to the source page.
+    expect(
+      within(dialog).getByText(new RegExp(messages.picker.example.credit(image.author))),
+    ).toBeInTheDocument();
+    expect(within(dialog).getByRole('link', { name: image.licence })).toHaveAttribute(
+      'href',
+      image.licence_url,
+    );
+    expect(
+      within(dialog).getByRole('link', { name: messages.picker.example.sourceLink }),
+    ).toHaveAttribute('href', image.source_page);
+
+    // The example is stated to be illustrative, never evidence (D-051.6).
+    expect(within(dialog).getByText(messages.picker.example.illustrativeNote)).toBeInTheDocument();
+
+    await user.click(within(dialog).getByRole('button', { name: messages.picker.example.close }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('says an archetype-level photo is from the evidence class, not the card that opened it', async () => {
+    renderPicker({ images, draft: temperateSite });
+    const user = userEvent.setup();
+    const entry = typology('tree_avenue');
+
+    await user.click(
+      screen.getByRole('button', {
+        name: messages.picker.example.affordance(entry.display_name),
+      }),
+    );
+    const dialog = screen.getByRole('dialog');
+    // The caption names what the photograph depicts (the archetype subject),
+    // and the inheritance is stated — a Tree Avenue card showing a street
+    // tree canopy photo says so rather than implying a photo of itself.
+    expect(
+      within(dialog).getByText(
+        messages.picker.example.evidenceClassNote(entry.archetype_display_name),
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('keeps the affordance a sibling of the card button, never nested inside it (D-051.2)', () => {
+    renderPicker({ images, draft: temperateSite });
+    for (const affordance of affordances()) {
+      expect(affordance.closest('.picker__card')).toBeNull();
+      expect(affordance.parentElement!.className).toContain('picker__card-shell');
+    }
   });
 });

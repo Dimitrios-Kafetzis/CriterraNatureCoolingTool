@@ -875,6 +875,85 @@ fieldset {
   font-size: 0.85rem;
 }
 
+/* ---- example images (v2.3, D-051) ---- */
+
+/* The card is a <button>, so the photo affordance is a positioned sibling
+   inside this shell — never a nested button (D-051.2). */
+.picker__card-shell {
+  position: relative;
+  display: grid;
+}
+
+.picker__card-shell > .picker__card {
+  height: 100%;
+}
+
+.picker__photo {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  width: 1.9rem;
+  height: 1.9rem;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.picker__photo:hover,
+.picker__photo:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.picker__photo svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.example-dialog {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  padding: 0;
+  max-width: min(52rem, calc(100vw - 2rem));
+}
+
+.example-dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+}
+
+.example-dialog__body {
+  padding: 1.25rem;
+  display: grid;
+  gap: 0.6rem;
+  justify-items: start;
+}
+
+.example-dialog figure {
+  margin: 0;
+}
+
+.example-dialog img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+.example-dialog figcaption {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  margin-top: 0.6rem;
+}
+
+.example-dialog__credit {
+  color: var(--ink-soft);
+}
+
 /* ---- results ---- */
 
 .results {

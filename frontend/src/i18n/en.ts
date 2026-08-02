@@ -701,6 +701,26 @@ export const messages = {
       `This package has more than ${limit} components. Adding a further component will not raise the temperature estimate — the package is reported at its best-evidenced component's range, never summed. More components add co-benefit breadth and cost.`,
     unknownEntry: (nbsType: string) =>
       `${nbsType} — this entry is not in the current library and must be re-selected.`,
+
+    /**
+     * The example-image dialog (v2.3, D-051). Captions illustrate, never
+     * claim: subject, place and climate zone — nothing about degrees,
+     * performance, or cost (D-051.6). The affordance exists only where a
+     * verified photograph matches the project's climate zone exactly; its
+     * absence is the honest state, so it has no "coming soon" wording.
+     */
+    example: {
+      affordance: (name: string) => `See a real example of ${name}`,
+      caption: (subject: string, place: string, zone: string) => `${subject} in ${place} (${zone})`,
+      evidenceClassNote: (archetype: string) =>
+        `A built example from this entry's evidence class (${archetype}), in the project's climate zone.`,
+      illustrativeNote:
+        'An illustrative example of this kind of intervention — not evidence of its performance at this site.',
+      credit: (author: string) => `Photograph: ${author}`,
+      licenceLabel: 'Licence:',
+      sourceLink: 'Source page',
+      close: 'Close',
+    },
   },
 
   results: {

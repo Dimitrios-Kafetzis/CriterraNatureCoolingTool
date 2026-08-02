@@ -416,6 +416,18 @@ def default_geo_data_dir() -> Path:
     return repo_geo if repo_geo.is_dir() else bundled_data_dir() / "data" / "geo"
 
 
+def default_images_dir() -> Path:
+    """Return the bundled NbS example images: the repository's, else the wheel's.
+
+    Holds the curated photographs the intervention picker's example dialog
+    shows (v2.3, D-051), with the manifest and attribution document their
+    licences require to travel with them. Staged into the wheel by the same
+    ``cp -r data`` that carries the geographic datasets.
+    """
+    repo_images = repo_root() / "data" / "images"
+    return repo_images if repo_images.is_dir() else bundled_data_dir() / "data" / "images"
+
+
 def default_bibliography_path() -> Path:
     """Return the methodology bibliography: the repository's, else the wheel's."""
     repo_bibliography = repo_root() / "docs" / "methodology" / "BIBLIOGRAPHY.md"

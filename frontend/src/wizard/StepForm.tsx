@@ -16,6 +16,7 @@ import type {
   DraftInput,
   InputField,
   MethodologyData,
+  NbsImage,
   TypologyLibrary,
 } from '../api/types';
 
@@ -28,6 +29,8 @@ export interface StepFormProps {
   methodology: MethodologyData | null;
   /** What the service offers for this site, or null while unknown (D-043). */
   availability: AvailableTypologies | null;
+  /** The bundled example images, or null while unknown (v2.3, D-051). */
+  images: NbsImage[] | null;
   /** Which answers the map filled in, and from which dataset (D-047.2). */
   autofilled: Record<string, string>;
   /** Applies a set of map-derived answers at once, with their provenance. */
@@ -297,6 +300,7 @@ function InterventionStep({
   library,
   methodology,
   availability,
+  images,
 }: StepFormProps) {
   if (!library || !methodology) {
     return <p className="muted">{messages.app.loading}</p>;
@@ -311,6 +315,7 @@ function InterventionStep({
         library={library}
         methodology={methodology}
         availability={availability}
+        images={images}
         draft={draft}
         onChange={setTypes}
       />

@@ -116,6 +116,46 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/images/manifest': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Manifest
+     * @description Which example images exist, and the attribution each must carry.
+     */
+    get: operations['manifest_api_images_manifest_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/images/{file_name}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Image File
+     * @description One bundled image. Only manifest-declared names are ever served.
+     */
+    get: operations['image_file_api_images__file_name__get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/meta': {
     parameters: {
       query?: never;
@@ -1111,6 +1151,56 @@ export interface components {
       tiles: components['schemas']['TileSource'] | null;
     };
     /**
+     * NbsImage
+     * @description One bundled example photograph (v2.3, D-051), with its attribution.
+     *
+     *     ``nbs_type`` is ``None`` for an archetype-level image; a non-null value is
+     *     a per-typology override that outranks the archetype image for that entry.
+     *     The image is an illustrative example, not evidence: captions built from
+     *     ``caption_subject``, ``place`` and ``zone`` state what and where, never a
+     *     performance claim (D-051.6).
+     */
+    NbsImage: {
+      /** Archetype */
+      archetype: string;
+      /** Author */
+      author: string;
+      /** Caption Subject */
+      caption_subject: string;
+      /** File */
+      file: string;
+      /** Height */
+      height: number;
+      /** Licence */
+      licence: string;
+      /** Licence Url */
+      licence_url: string | null;
+      /** Nbs Type */
+      nbs_type: string | null;
+      /** Place */
+      place: string;
+      /** Source Page */
+      source_page: string;
+      /** Width */
+      width: number;
+      /** Zone */
+      zone: string;
+    };
+    /**
+     * NbsImageManifest
+     * @description ``GET /api/images/manifest`` — every example image this package serves.
+     *
+     *     One request tells the picker which (archetype-or-override, zone) pairs
+     *     have a verified image; every pair absent from this list renders no
+     *     affordance at all (D-051.5). Empty is an expected answer, not an error.
+     */
+    NbsImageManifest: {
+      /** Images */
+      images: components['schemas']['NbsImage'][];
+      /** Purpose */
+      purpose: string;
+    };
+    /**
      * OpportunityBlock
      * @description NbS Cooling Opportunity Score (5.9), with full weight transparency.
      */
@@ -1731,6 +1821,57 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['PlaceSearchResponse'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  manifest_api_images_manifest_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NbsImageManifest'];
+        };
+      };
+    };
+  };
+  image_file_api_images__file_name__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        file_name: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/webp': unknown;
         };
       };
       /** @description Validation Error */
