@@ -204,7 +204,12 @@ export function MapStep(props: MapStepProps) {
   const selectPlace = useCallback((place: PlaceResult) => {
     // Navigation, never an answer (D-049.6): the map moves, and no
     // questionnaire field changes.
-    setFlyTo({ longitude: place.longitude, latitude: place.latitude, zoom: PLACE_ZOOM });
+    setFlyTo({
+      longitude: place.longitude,
+      latitude: place.latitude,
+      zoom: PLACE_ZOOM,
+      name: place.name,
+    });
     setSearchQuery('');
     setSearchResults(null);
   }, []);

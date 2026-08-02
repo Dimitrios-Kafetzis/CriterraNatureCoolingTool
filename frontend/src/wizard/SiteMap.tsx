@@ -45,6 +45,10 @@ export interface FlyTarget {
   longitude: number;
   latitude: number;
   zoom: number;
+  /** The place's name, anchored on the map — at city zoom the offline
+   * outlines are featureless, and an unlabelled arrival is indistinguishable
+   * from being lost. */
+  name: string;
 }
 
 interface SiteMapProps {
@@ -268,11 +272,27 @@ export function SiteMap(props: SiteMapProps) {
     }
   }, [centre]);
 
-  // A selected place: navigation, never an answer (D-049.6).
+  // A selected place: navigation, never an answer (D-049.6). The marker and
+  // its name stay until another place is chosen, because the bundled outlines
+  // carry no labels of their own to confirm the arrival.
   useEffect(() => {
     const leafletMap = mapRef.current;
     if (leafletMap === null || flyTo === null) return;
     leafletMap.flyTo([flyTo.latitude, flyTo.longitude], flyTo.zoom, { duration: 0.8 });
+    const marker = L.circleMarker([flyTo.latitude, flyTo.longitude], {
+      radius: 5,
+      className: 'sitemap__place',
+      interactive: false,
+    }).bindTooltip(flyTo.name, {
+      permanent: true,
+      direction: 'right',
+      offset: [8, 0],
+      className: 'sitemap__place-label',
+    });
+    marker.addTo(leafletMap);
+    return () => {
+      marker.remove();
+    };
   }, [flyTo]);
 
   return (

@@ -1158,3 +1158,27 @@ details.collapsible summary {
   flex-wrap: wrap;
   margin-bottom: 0.4rem;
 }
+
+/* The searched place: the one label the offline map has, so arriving at a
+   featureless city zoom is confirmably "Athens" rather than anywhere. */
+.sitemap__place {
+  fill: var(--paper-raised);
+  fill-opacity: 1;
+  stroke: var(--ink);
+  stroke-width: 2px;
+}
+
+.sitemap__frame .sitemap__place-label {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  padding: 0.1rem 0.4rem;
+  box-shadow: none;
+}
+
+.sitemap__frame .sitemap__place-label::before {
+  display: none;
+}
