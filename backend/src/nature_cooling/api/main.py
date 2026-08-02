@@ -20,8 +20,13 @@ from fastapi import FastAPI
 import nature_cooling
 from nature_cooling.api.routes import api_router
 from nature_cooling.api.storage import ProjectStore, default_storage_root
+from nature_cooling.api.tiles import TileConfig, tile_config_from_env
 from nature_cooling.api.webapp import SinglePageStaticFiles, default_webapp_dir
 from nature_cooling.engine import MethodologyConfig, get_config
+
+# Passed for `tiles` to mean "read the environment" while keeping None
+# available to tests as an explicit "unconfigured deployment".
+_TILES_FROM_ENV = object()
 
 
 def create_app(
@@ -29,6 +34,7 @@ def create_app(
     config: MethodologyConfig | None = None,
     storage_root: Path | None = None,
     webapp_dir: Path | None = None,
+    tiles: TileConfig | object | None = _TILES_FROM_ENV,
 ) -> FastAPI:
     """Build the service around one methodology configuration and one store."""
     app = FastAPI(
@@ -40,6 +46,10 @@ def create_app(
     app.state.store = ProjectStore(
         storage_root if storage_root is not None else default_storage_root()
     )
+    # The deployment's tile configuration (v2.2, D-049.2): read once, here, so
+    # a broken configuration fails the process at startup with its reason
+    # rather than serving an uncredited or half-working map.
+    app.state.tiles = tiles if tiles is not _TILES_FROM_ENV else tile_config_from_env()
     app.include_router(api_router, prefix="/api")
     webapp = webapp_dir if webapp_dir is not None else default_webapp_dir()
     if webapp is not None:

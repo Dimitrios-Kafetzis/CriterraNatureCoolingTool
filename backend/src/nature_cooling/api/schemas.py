@@ -80,12 +80,46 @@ class _RequestModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+class TileSource(_RequestModel):
+    """The deployment's configured tile source (v2.2, D-049).
+
+    Both halves travel together by construction: the application refuses to
+    start with a URL and no attribution, so imagery can never reach a browser
+    without the credit its licence requires (D-049.2).
+    """
+
+    url_template: str
+    attribution: str
+
+
 class MetaResponse(_RequestModel):
     """``GET /api/meta``."""
 
     engine_version: str
     methodology_version: str
     license: str
+    # None in the unconfigured deployment — the default, in which the
+    # application makes no third-party request (D-049.1).
+    tiles: TileSource | None
+
+
+class PlaceResult(_RequestModel):
+    """One place-search match (v2.2, D-049.6): a name and somewhere to move
+    the map to. Never an answer to any questionnaire field."""
+
+    name: str
+    admin: str
+    latitude: float
+    longitude: float
+    population: int
+
+
+class PlaceSearchResponse(_RequestModel):
+    """``GET /api/geo/places`` — offline navigation by name."""
+
+    query: str
+    results: list[PlaceResult]
+    attribution: str
 
 
 class FieldIssue(_RequestModel):

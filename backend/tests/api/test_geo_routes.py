@@ -321,3 +321,43 @@ def test_patching_with_an_explicit_null_leaves_the_marks_alone(client: TestClien
         json={"label": "Renamed", "autofilled": None},
     ).json()
     assert patched["autofilled"] == {"climate_zone": "beck2023"}
+
+
+# ---- place search (v2.2, D-049.6) ----
+
+
+def test_places_answers_from_bundled_data(client: TestClient) -> None:
+    response = client.get("/api/geo/places", params={"query": "athens"})
+    assert response.status_code == 200
+    body = response.json()
+    assert body["query"] == "athens"
+    top = body["results"][0]
+    assert top["name"] == "Athens"
+    assert top["admin"] == "Greece"
+    assert -90 <= top["latitude"] <= 90
+    assert -180 <= top["longitude"] <= 180
+    assert top["population"] > 100000
+    assert "Natural Earth" in body["attribution"]
+
+
+def test_places_returns_an_empty_list_below_the_minimum_query(client: TestClient) -> None:
+    """One character matches a quarter of the index; the endpoint answers
+    honestly with nothing rather than with noise."""
+    body = client.get("/api/geo/places", params={"query": "a"}).json()
+    assert body["results"] == []
+
+
+def test_places_requires_a_query_and_caps_the_limit(client: TestClient) -> None:
+    assert client.get("/api/geo/places").status_code == 422
+    assert client.get("/api/geo/places", params={"query": ""}).status_code == 422
+    assert client.get("/api/geo/places", params={"query": "athens", "limit": 50}).status_code == 422
+    limited = client.get("/api/geo/places", params={"query": "san", "limit": 2}).json()
+    assert len(limited["results"]) == 2
+
+
+def test_places_carries_no_field_a_result_could_autofill(client: TestClient) -> None:
+    """Navigation, not autofill (D-049.6): the response deliberately has no
+    country code, no climate zone and no area — nothing that could quietly
+    become an answer to a questionnaire field."""
+    body = client.get("/api/geo/places", params={"query": "paris"}).json()
+    assert set(body["results"][0]) == {"name", "admin", "latitude", "longitude", "population"}

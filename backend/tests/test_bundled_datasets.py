@@ -22,7 +22,7 @@ from pathlib import Path
 import pytest
 
 from nature_cooling.engine.config import default_geo_data_dir, repo_root
-from nature_cooling.geo import load_countries, load_koppen
+from nature_cooling.geo import load_countries, load_koppen, load_places
 
 # Every file the geographic datasets consist of, and what it is for.
 REQUIRED_FILES = {
@@ -30,6 +30,7 @@ REQUIRED_FILES = {
     "basemap.json": "the 1:110m outlines the offline basemap draws",
     "koppen_geiger.json": "the climate grid's metadata and legend",
     "koppen_geiger_1991_2020_0p1.bin.z": "the climate class grid itself",
+    "places.json.z": "the populated-places index the offline search reads (v2.2)",
     "LICENCE-naturalearth.txt": "Natural Earth's terms of use",
     "LICENCE-koppen-CC-BY-4.0.txt": "the CC BY 4.0 text the climate grid ships under",
     "ATTRIBUTION.md": "what each dataset is, what was changed, and under what licence",
@@ -97,6 +98,7 @@ def test_the_datasets_declare_the_bibliography_keys_the_methodology_cites(config
     """The report cites a source key; the dataset must be that same source."""
     assert load_koppen().source_key == "beck2023"
     assert load_countries().source_key == "naturalearth"
+    assert load_places().source_key == "naturalearth"
     table = config.climate_classification
     assert table["koppen_to_zone"]["source_dataset"] == "beck2023"
     assert table["country_lookup"]["source_dataset"] == "naturalearth"
@@ -142,3 +144,68 @@ def test_a_wheel_layout_resolves_the_datasets_from_the_bundled_copy(
     monkeypatch.setattr(config_module, "repo_root", lambda: tmp_path / "no-repo-here")
     monkeypatch.setattr(config_module, "bundled_data_dir", lambda: tmp_path / "_bundled")
     assert config_module.default_geo_data_dir() == tmp_path / "_bundled" / "data" / "geo"
+
+
+def test_the_attribution_document_covers_the_place_index() -> None:
+    """A dataset added without its attribution section is the failure the
+    licence gate exists to catch (v2.1 brief, Gates; extended by D-049.6)."""
+    attribution = (default_geo_data_dir() / "ATTRIBUTION.md").read_text(encoding="utf-8")
+    assert "Populated places" in attribution
+    assert "places.json.z" in attribution
+    assert "fills in no answer" in attribution
+
+
+def test_the_notice_file_names_the_place_index() -> None:
+    notice = (repo_root() / "NOTICE").read_text(encoding="utf-8")
+    assert "Populated Places" in notice
+
+
+# ---- the redistributed map library (v2.2, D-049.5) ----
+#
+# Leaflet ships inside the wheel as part of the frontend bundle — the first
+# runtime dependency beyond React and react-router — so the licence gate
+# extends over it exactly as it covers the fonts and the datasets: the BSD-2
+# text must travel with the build, and NOTICE must say so.
+
+
+def test_the_map_library_ships_with_its_licence_text() -> None:
+    licence = repo_root() / "frontend" / "public" / "LICENCE-leaflet.txt"
+    assert licence.is_file(), "Leaflet's BSD-2 text must ship beside the build (D-049.5)"
+    text = licence.read_text(encoding="utf-8")
+    assert "BSD 2-Clause License" in text
+    assert "Volodymyr Agafonkin" in text
+
+
+def test_the_notice_file_names_the_map_library() -> None:
+    notice = (repo_root() / "NOTICE").read_text(encoding="utf-8")
+    assert "Leaflet" in notice
+    assert "BSD 2-Clause" in notice
+    assert "LICENCE-leaflet.txt" in notice
+
+
+def test_the_map_library_is_the_declared_dependency_not_a_vendored_copy() -> None:
+    """The licence text must describe what is actually bundled: the package
+    named in package.json, not a drifted vendored snapshot."""
+    import re
+
+    package_json = json.loads(
+        (repo_root() / "frontend" / "package.json").read_text(encoding="utf-8")
+    )
+    declared = package_json["dependencies"]
+    assert "leaflet" in declared
+    # The frontend's runtime dependencies stay enumerable and deliberate
+    # (D-048.5's spirit survives D-049.5): React, its DOM binding, the router,
+    # and the map library. A fifth entry here is a decision, not an accident.
+    assert set(declared) == {"react", "react-dom", "react-router", "leaflet"}
+    assert re.match(r"[\^~]?1\.", declared["leaflet"])
+
+
+def test_no_openstreetmap_data_is_bundled() -> None:
+    """D-049.7: the package contains no ODbL content. The datasets directory
+    must never quietly gain an OSM extract — a tile source is configured at
+    runtime and requested by the browser, never redistributed."""
+    for path in default_geo_data_dir().iterdir():
+        if path.suffix in {".txt", ".md"}:
+            continue
+        head = path.read_bytes()[:4096].lower()
+        assert b"openstreetmap" not in head, path.name

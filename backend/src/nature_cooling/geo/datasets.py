@@ -31,6 +31,7 @@ from nature_cooling.engine.config import default_geo_data_dir
 COUNTRIES_FILE = "countries.json.z"
 BASEMAP_FILE = "basemap.json"
 KOPPEN_META_FILE = "koppen_geiger.json"
+PLACES_FILE = "places.json.z"
 
 
 class GeoDataError(RuntimeError):
@@ -80,6 +81,38 @@ class CountryBoundaries:
     attribution: str
     scale: str
     codes_omitted: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class Place:
+    """One populated place from the bundled search index (v2.2, D-049.6).
+
+    ``ascii_name`` is the name's ASCII fold, so a query typed without
+    diacritics still matches; it equals ``name`` where the two do not differ.
+    """
+
+    name: str
+    ascii_name: str
+    admin: str
+    latitude: float
+    longitude: float
+    population: int
+
+
+@dataclass(frozen=True)
+class PlaceIndex:
+    """The populated-places layer, ordered by population descending.
+
+    The order is part of the contract: search ranks by scanning in order, so
+    "Paris" finds Paris, France before Paris, Kiribati without a tiebreak
+    table at query time.
+    """
+
+    places: tuple[Place, ...]
+    source_key: str
+    source_release: str
+    licence: str
+    attribution: str
 
 
 @dataclass(frozen=True)
@@ -191,6 +224,34 @@ def load_basemap(data_dir: Path | None = None) -> dict[str, Any]:
     if not document.get("countries"):
         raise GeoDataError(f"{path} declares no outlines")
     return document
+
+
+@lru_cache(maxsize=1)
+def load_places(data_dir: Path | None = None) -> PlaceIndex:
+    """Load the populated-places search index (v2.2, D-049.6)."""
+    directory = data_dir or default_geo_data_dir()
+    path = directory / PLACES_FILE
+    document = _read_compressed_json(path)
+    places = tuple(
+        Place(
+            name=entry["name"],
+            ascii_name=entry.get("ascii", entry["name"]),
+            admin=entry["admin"],
+            latitude=entry["lat"],
+            longitude=entry["lon"],
+            population=entry["pop"],
+        )
+        for entry in document["places"]
+    )
+    if not places:
+        raise GeoDataError(f"{path} declares no places")
+    return PlaceIndex(
+        places=places,
+        source_key=document["source_key"],
+        source_release=document["source_release"],
+        licence=document["licence"],
+        attribution=document["attribution"],
+    )
 
 
 @lru_cache(maxsize=1)

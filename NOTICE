@@ -41,14 +41,28 @@ files in backend/src/nature_cooling/report/fonts/ and frontend/public/fonts/:
   - Hanken Grotesk      Copyright 2020 The Hanken Grotesk Project Authors
   - IBM Plex Mono       Copyright 2017 IBM Corp.
 
-Two published geographic datasets are redistributed with this software, so that
-the map-based site picker works with no network access. Both are derived from
-their published sources by tools/build_datasets.py; both ship with their full
-licence text and a statement of what was changed, in data/geo/:
+One JavaScript library is redistributed with this software, bundled into the
+frontend build the wheel embeds (D-049.5):
+
+  - Leaflet 1.9          Copyright (c) 2010-2023, Volodymyr Agafonkin;
+    Copyright (c) 2010-2011, CloudMade. BSD 2-Clause License. The full licence
+    text ships beside the application assets as LICENCE-leaflet.txt
+    (frontend/public/LICENCE-leaflet.txt in this repository).
+
+Three published geographic datasets are redistributed with this software, so
+that the map-based site picker and its place search work with no network
+access. All are derived from their published sources by
+tools/build_datasets.py; all ship with their full licence text and a statement
+of what was changed, in data/geo/:
 
   - Natural Earth, Admin 0 - Countries, v5.1.2, at 1:50m (country lookup) and
     1:110m (offline basemap). Public domain. No attribution is required by its
     terms; it is given here regardless.
+    Licence: data/geo/LICENCE-naturalearth.txt
+
+  - Natural Earth, Populated Places (simple), v5.1.2, 1:10m — the offline
+    place-search index (all 7,342 places). Public domain, attribution given
+    regardless, as above.
     Licence: data/geo/LICENCE-naturalearth.txt
 
   - Köppen-Geiger climate classification, present day (1991-2020), 0.1 degree.
@@ -56,6 +70,12 @@ licence text and a statement of what was changed, in data/geo/:
     doi:10.1038/s41597-023-02549-6. Licensed CC BY 4.0, which requires the
     attribution carried here and in data/geo/ATTRIBUTION.md.
     Licence: data/geo/LICENCE-koppen-CC-BY-4.0.txt
+
+No OpenStreetMap data is bundled or redistributed. A deployment operator (or a
+user, per visit) may configure an external raster tile source, typically
+OSM-derived; those tiles are requested by the user's browser directly from the
+configured provider and are credited on the map, as ODbL section 4.3 requires
+of publicly used Produced Works. See docs/HOSTING.md.
 
 Runtime and development dependencies retain their own licences, as declared in
 backend/pyproject.toml and frontend/package.json.

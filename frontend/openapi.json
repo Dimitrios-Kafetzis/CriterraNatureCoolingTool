@@ -2243,12 +2243,23 @@
           "methodology_version": {
             "title": "Methodology Version",
             "type": "string"
+          },
+          "tiles": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TileSource"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
           "engine_version",
           "methodology_version",
-          "license"
+          "license",
+          "tiles"
         ],
         "title": "MetaResponse",
         "type": "object"
@@ -2380,6 +2391,69 @@
           "energy_component_nbs_type"
         ],
         "title": "PackageBlock",
+        "type": "object"
+      },
+      "PlaceResult": {
+        "additionalProperties": false,
+        "description": "One place-search match (v2.2, D-049.6): a name and somewhere to move\nthe map to. Never an answer to any questionnaire field.",
+        "properties": {
+          "admin": {
+            "title": "Admin",
+            "type": "string"
+          },
+          "latitude": {
+            "title": "Latitude",
+            "type": "number"
+          },
+          "longitude": {
+            "title": "Longitude",
+            "type": "number"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "population": {
+            "title": "Population",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "admin",
+          "latitude",
+          "longitude",
+          "population"
+        ],
+        "title": "PlaceResult",
+        "type": "object"
+      },
+      "PlaceSearchResponse": {
+        "additionalProperties": false,
+        "description": "``GET /api/geo/places`` — offline navigation by name.",
+        "properties": {
+          "attribution": {
+            "title": "Attribution",
+            "type": "string"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/PlaceResult"
+            },
+            "title": "Results",
+            "type": "array"
+          }
+        },
+        "required": [
+          "query",
+          "results",
+          "attribution"
+        ],
+        "title": "PlaceSearchResponse",
         "type": "object"
       },
       "ProjectCreate": {
@@ -2725,6 +2799,26 @@
           }
         },
         "title": "SuitabilityOverride",
+        "type": "object"
+      },
+      "TileSource": {
+        "additionalProperties": false,
+        "description": "The deployment's configured tile source (v2.2, D-049).\n\nBoth halves travel together by construction: the application refuses to\nstart with a URL and no attribution, so imagery can never reach a browser\nwithout the credit its licence requires (D-049.2).",
+        "properties": {
+          "attribution": {
+            "title": "Attribution",
+            "type": "string"
+          },
+          "url_template": {
+            "title": "Url Template",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url_template",
+          "attribution"
+        ],
+        "title": "TileSource",
         "type": "object"
       },
       "Typology": {
@@ -3209,7 +3303,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0"
     },
     "title": "Nature for Cooling Rapid Assessment Tool",
-    "version": "2.1.0"
+    "version": "2.2.0"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -3365,9 +3459,66 @@
         ]
       }
     },
+    "/api/geo/places": {
+      "get": {
+        "description": "Search the bundled populated-places index by name (v2.2, D-049.6).\n\nNavigation, not autofill: a result is somewhere for the map to move to,\nand selecting one fills in no answer. Answered entirely from bundled\npublic-domain data — this is the navigation aid a deployment without\nconfigured imagery has.",
+        "operationId": "places_api_geo_places_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 1,
+              "title": "Query",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "maximum": 10,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceSearchResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Places",
+        "tags": [
+          "geo"
+        ]
+      }
+    },
     "/api/meta": {
       "get": {
-        "description": "Engine version, methodology version, and licence.",
+        "description": "Engine version, methodology version, licence, and tile configuration.\n\n``tiles`` is how the browser learns what the deployer configured\n(D-049.2): the server never requests a tile itself, it only relays the\ntemplate and the credit that must accompany it (D-049.3).",
         "operationId": "meta_api_meta_get",
         "responses": {
           "200": {

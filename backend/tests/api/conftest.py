@@ -18,7 +18,9 @@ def storage_root(tmp_path: Path) -> Path:
 
 @pytest.fixture()
 def client(config: MethodologyConfig, storage_root: Path) -> TestClient:
-    return TestClient(create_app(config=config, storage_root=storage_root))
+    # tiles=None pins the unconfigured deployment (D-049.1) regardless of what
+    # the developer's shell exports; the configured cases build their own app.
+    return TestClient(create_app(config=config, storage_root=storage_root, tiles=None))
 
 
 # A draft touching every duplication group: carried site/climate/vulnerability

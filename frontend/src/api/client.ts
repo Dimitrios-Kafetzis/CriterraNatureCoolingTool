@@ -17,6 +17,7 @@ import type {
   GeoLookupResponse,
   MetaResponse,
   MethodologyData,
+  PlaceSearchResponse,
   ProjectSummary,
   ProjectView,
   TypologyLibrary,
@@ -108,6 +109,13 @@ export const api = {
    * user has not already answered, and marks what it applies as autofilled.
    */
   geoLookup: (body: GeoLookupRequest) => request<GeoLookupResponse>('/api/geo/lookup', json(body)),
+
+  /**
+   * Offline navigation by name (v2.2, D-049.6): somewhere for the map to move
+   * to. Selecting a result fills in no answer.
+   */
+  places: (query: string) =>
+    request<PlaceSearchResponse>(`/api/geo/places?query=${encodeURIComponent(query)}`),
 
   /** Dry-run validation of a partial questionnaire state (D-028). */
   validate: (draft: DraftInput) =>

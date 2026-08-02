@@ -14,6 +14,19 @@ services:
     volumes:
       - nature-cooling-data:/home/app/.local/share/criterra-nature-cooling
     restart: unless-stopped
+    # Map imagery (v2.2, D-049.2). Unset, the map is the bundled offline
+    # outlines and the application makes NO third-party request — the correct
+    # default for a restricted-network deployment. To show real imagery, set
+    # BOTH variables: a raster tile source you have an agreement with
+    # (MapTiler, Stadia, Geoapify, Thunderforest, Carto, or self-hosted tiles
+    # from an OSM extract) and the credit line that source requires; the
+    # application refuses to start with a URL and no attribution. Do not point
+    # this at tile.openstreetmap.org — see docs/HOSTING.md, which also covers
+    # restricting your API key to this deployment's domain.
+    #
+    # environment:
+    #   NATURE_COOLING_TILE_URL: "https://tiles.example.com/{z}/{x}/{y}.png?key=YOUR_KEY"
+    #   NATURE_COOLING_TILE_ATTRIBUTION: "© OpenStreetMap contributors © Example Tiles"
 
 volumes:
   nature-cooling-data:

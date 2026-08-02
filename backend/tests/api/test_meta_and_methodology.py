@@ -25,6 +25,9 @@ def test_meta_reports_versions_and_licence(client: TestClient, config: Methodolo
         "engine_version": nature_cooling.__version__,
         "methodology_version": config.version,
         "license": "Apache-2.0",
+        # The unconfigured deployment: no tile source, no third-party request
+        # (D-049.1).
+        "tiles": None,
     }
 
 

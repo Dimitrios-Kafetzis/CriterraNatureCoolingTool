@@ -91,6 +91,31 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/geo/places': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Places
+     * @description Search the bundled populated-places index by name (v2.2, D-049.6).
+     *
+     *     Navigation, not autofill: a result is somewhere for the map to move to,
+     *     and selecting one fills in no answer. Answered entirely from bundled
+     *     public-domain data — this is the navigation aid a deployment without
+     *     configured imagery has.
+     */
+    get: operations['places_api_geo_places_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/meta': {
     parameters: {
       query?: never;
@@ -100,7 +125,11 @@ export interface paths {
     };
     /**
      * Meta
-     * @description Engine version, methodology version, and licence.
+     * @description Engine version, methodology version, licence, and tile configuration.
+     *
+     *     ``tiles`` is how the browser learns what the deployer configured
+     *     (D-049.2): the server never requests a tile itself, it only relays the
+     *     template and the credit that must accompany it (D-049.3).
      */
     get: operations['meta_api_meta_get'];
     put?: never;
@@ -1079,6 +1108,7 @@ export interface components {
       license: string;
       /** Methodology Version */
       methodology_version: string;
+      tiles: components['schemas']['TileSource'] | null;
     };
     /**
      * OpportunityBlock
@@ -1153,6 +1183,35 @@ export interface components {
       representative_reason: string;
       /** Suitability Rule */
       suitability_rule: string;
+    };
+    /**
+     * PlaceResult
+     * @description One place-search match (v2.2, D-049.6): a name and somewhere to move
+     *     the map to. Never an answer to any questionnaire field.
+     */
+    PlaceResult: {
+      /** Admin */
+      admin: string;
+      /** Latitude */
+      latitude: number;
+      /** Longitude */
+      longitude: number;
+      /** Name */
+      name: string;
+      /** Population */
+      population: number;
+    };
+    /**
+     * PlaceSearchResponse
+     * @description ``GET /api/geo/places`` — offline navigation by name.
+     */
+    PlaceSearchResponse: {
+      /** Attribution */
+      attribution: string;
+      /** Query */
+      query: string;
+      /** Results */
+      results: components['schemas']['PlaceResult'][];
     };
     /** ProjectCreate */
     ProjectCreate: {
@@ -1303,6 +1362,20 @@ export interface components {
       requires_irrigation?: ('none' | 'occasional' | 'reliable') | null;
       /** Requires Soil */
       requires_soil?: ('none' | 'limited' | 'moderate' | 'high') | null;
+    };
+    /**
+     * TileSource
+     * @description The deployment's configured tile source (v2.2, D-049).
+     *
+     *     Both halves travel together by construction: the application refuses to
+     *     start with a URL and no attribution, so imagery can never reach a browser
+     *     without the credit its licence requires (D-049.2).
+     */
+    TileSource: {
+      /** Attribution */
+      attribution: string;
+      /** Url Template */
+      url_template: string;
     };
     /**
      * Typology
@@ -1626,6 +1699,38 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['GeoLookupResponse'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  places_api_geo_places_get: {
+    parameters: {
+      query: {
+        query: string;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PlaceSearchResponse'];
         };
       };
       /** @description Validation Error */

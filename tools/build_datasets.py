@@ -30,6 +30,12 @@ Sources (all redistributable; see NOTICE and data/geo/ATTRIBUTION.md):
       Beck et al. (2023), Scientific Data 10, 724. CC BY 4.0.
       https://ndownloader.figshare.com/files/61012822
 
+  ne_10m_populated_places_simple.geojson
+      Natural Earth, populated places (simple attributes), 1:10m, release
+      v5.1.2. Public domain. The index the offline place SEARCH reads (v2.2,
+      D-049.6).
+      https://github.com/nvkelso/natural-earth-vector/raw/v5.1.2/geojson/ne_10m_populated_places_simple.geojson
+
 Two scales of the same layer are bundled because the two jobs want opposite
 things. The lookup must be RIGHT: at 1:110m, Natural Earth omits every country
 smaller than about a thousand square kilometres, so a click on Singapore falls
@@ -70,6 +76,7 @@ COORDINATE_PRECISION = 2
 NATURAL_EARTH_RELEASE = "v5.1.2"
 NATURAL_EARTH_50M_SHA256 = "3e458fc036ad0a66411f2c1e6cac49c5d7bfb81cb1123bc513b22511a2b7fdeb"
 NATURAL_EARTH_110M_SHA256 = "6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f"
+NATURAL_EARTH_PLACES_SHA256 = "fd3fa867a320cbd5c5b6bb5bc550afeec2939fb2cef688e508007282a55ac42f"
 KOPPEN_ARCHIVE_MD5 = "7fc2f5a15d4f5fe0ce59c9a9b502aa09"
 KOPPEN_MEMBER = "1991_2020/koppen_geiger_0p1.tif"
 
@@ -251,81 +258,173 @@ def build_koppen(archive: Path) -> tuple[dict[str, Any], bytes]:
     return meta, payload
 
 
+def build_places(source: Path) -> dict[str, Any]:
+    """Reduce the populated-places layer to a search index (v2.2, D-049.6).
+
+    All 7,342 places ship, not a population cut: the 50k-population cut was
+    measured at 88 KB against 149 KB for the full set, so 61 KB is the whole
+    cost of the 3,127 SMALLEST listed places — and a cut at 50k discards
+    precisely the small municipalities, which is the D-048.3 lesson (the
+    1:110m boundary layer that omitted every small country) applied to towns.
+
+    Each entry keeps what search and display need and nothing else: the name,
+    its ASCII fold (so a query without diacritics matches "Málaga"), the
+    country name for disambiguation, the coordinates, and the population the
+    ranking sorts by. Selecting a result MOVES THE MAP AND FILLS IN NO ANSWER
+    (D-049.6) — this index feeds no formula and is not a methodology value.
+    """
+    raw = json.loads(source.read_text(encoding="utf-8"))
+    places: list[dict[str, Any]] = []
+    for feature in raw["features"]:
+        properties = feature["properties"]
+        name = str(properties["name"])
+        ascii_name = str(properties.get("nameascii") or name)
+        entry: dict[str, Any] = {
+            "name": name,
+            "admin": str(properties.get("adm0name") or ""),
+            "lat": round(float(properties["latitude"]), COORDINATE_PRECISION),
+            "lon": round(float(properties["longitude"]), COORDINATE_PRECISION),
+            "pop": int(properties.get("pop_max") or 0),
+        }
+        # The ASCII fold is stored only where it differs, which is the
+        # minority of names; the loader falls back to `name`.
+        if ascii_name != name:
+            entry["ascii"] = ascii_name
+        places.append(entry)
+
+    # Population-descending, so a rank-by-order search needs no sort key at
+    # query time and "Paris" outranks Paris, Kiribati without a tiebreak table.
+    places.sort(key=lambda item: (-item["pop"], item["name"]))
+    print(f"  places: kept all {len(places)}")
+    return {
+        "dataset": "natural_earth_populated_places_10m",
+        "source_key": "naturalearth",
+        "source_release": NATURAL_EARTH_RELEASE,
+        "source_sha256": NATURAL_EARTH_PLACES_SHA256,
+        "scale": "1:10m",
+        "licence": "public domain",
+        "attribution": "Place names from Natural Earth (public domain).",
+        "coordinate_precision_decimals": COORDINATE_PRECISION,
+        "places": places,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--sources",
         type=Path,
         required=True,
-        help="directory holding the two downloaded source files",
+        help="directory holding the downloaded source files",
+    )
+    parser.add_argument(
+        "--only",
+        choices=["countries", "koppen", "places"],
+        action="append",
+        help="build only the named dataset(s); a dataset added later should not "
+        "require re-downloading the 125 MB climate archive to rebuild",
     )
     args = parser.parse_args()
+    selected = set(args.only or ["countries", "koppen", "places"])
 
     lookup_source = args.sources / "ne_50m_admin_0_countries.geojson"
     basemap_source = args.sources / "ne_110m_admin_0_countries.geojson"
     koppen_source = args.sources / "koppen_geiger_tif.zip"
-    for path in (lookup_source, basemap_source, koppen_source):
+    places_source = args.sources / "ne_10m_populated_places_simple.geojson"
+
+    required: list[Path] = []
+    if "countries" in selected:
+        required += [lookup_source, basemap_source]
+    if "koppen" in selected:
+        required.append(koppen_source)
+    if "places" in selected:
+        required.append(places_source)
+    for path in required:
         if not path.is_file():
             raise SystemExit(f"missing source file: {path}")
 
-    for path, expected in (
-        (lookup_source, NATURAL_EARTH_50M_SHA256),
-        (basemap_source, NATURAL_EARTH_110M_SHA256),
-    ):
-        actual = _sha256(path)
-        if actual != expected:
+    if "countries" in selected:
+        for path, expected in (
+            (lookup_source, NATURAL_EARTH_50M_SHA256),
+            (basemap_source, NATURAL_EARTH_110M_SHA256),
+        ):
+            actual = _sha256(path)
+            if actual != expected:
+                raise SystemExit(
+                    f"{path.name} checksum {actual} does not match the recorded {expected}; "
+                    f"the pinned release is {NATURAL_EARTH_RELEASE}"
+                )
+    if "koppen" in selected:
+        actual_md5 = _md5(koppen_source)
+        if actual_md5 != KOPPEN_ARCHIVE_MD5:
             raise SystemExit(
-                f"{path.name} checksum {actual} does not match the recorded {expected}; "
-                f"the pinned release is {NATURAL_EARTH_RELEASE}"
+                f"Koppen archive checksum {actual_md5} does not match the recorded "
+                f"{KOPPEN_ARCHIVE_MD5}"
             )
-    actual_md5 = _md5(koppen_source)
-    if actual_md5 != KOPPEN_ARCHIVE_MD5:
-        raise SystemExit(
-            f"Koppen archive checksum {actual_md5} does not match the recorded "
-            f"{KOPPEN_ARCHIVE_MD5}"
-        )
+    if "places" in selected:
+        actual_places = _sha256(places_source)
+        if actual_places != NATURAL_EARTH_PLACES_SHA256:
+            raise SystemExit(
+                f"{places_source.name} checksum {actual_places} does not match the "
+                f"recorded {NATURAL_EARTH_PLACES_SHA256}; the pinned release is "
+                f"{NATURAL_EARTH_RELEASE}"
+            )
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    print("Natural Earth admin-0 countries:")
-    # The lookup layer is compressed: it is read once into memory at startup and
-    # never served, so its on-disk size is all it costs.
-    lookup = build_countries(lookup_source, "1:50m", NATURAL_EARTH_50M_SHA256)
-    lookup_bytes = zlib.compress(
-        json.dumps(lookup, ensure_ascii=False, separators=(",", ":")).encode("utf-8"), 9
-    )
-    lookup_path = OUTPUT_DIR / "countries.json.z"
-    lookup_path.write_bytes(lookup_bytes)
-    print(f"  wrote {lookup_path} ({lookup_path.stat().st_size} bytes)")
+    if "places" in selected:
+        print("Natural Earth populated places:")
+        places = build_places(places_source)
+        places_bytes = zlib.compress(
+            json.dumps(places, ensure_ascii=False, separators=(",", ":")).encode("utf-8"), 9
+        )
+        places_path = OUTPUT_DIR / "places.json.z"
+        places_path.write_bytes(places_bytes)
+        print(f"  wrote {places_path} ({places_path.stat().st_size} bytes)")
 
-    # The basemap layer is served to the browser as-is, so it stays plain JSON
-    # and carries outlines only — no ISO codes, no names, nothing the drawing
-    # does not use.
-    basemap = build_countries(basemap_source, "1:110m", NATURAL_EARTH_110M_SHA256)
-    basemap["countries"] = [
-        {"iso_a2": entry["iso_a2"], "polygons": entry["polygons"]}
-        for entry in basemap["countries"]
-    ]
-    # The unassigned territories are drawn too — leaving holes in the world map
-    # would be a stranger statement than drawing the outlines.
-    basemap["unassigned"] = [
-        {"polygons": entry["polygons"]} for entry in basemap["unassigned"]
-    ]
-    basemap_path = OUTPUT_DIR / "basemap.json"
-    basemap_path.write_text(
-        json.dumps(basemap, ensure_ascii=False, separators=(",", ":")) + "\n",
-        encoding="utf-8",
-    )
-    print(f"  wrote {basemap_path} ({basemap_path.stat().st_size} bytes)")
+    if "countries" in selected:
+        print("Natural Earth admin-0 countries:")
+        # The lookup layer is compressed: it is read once into memory at startup
+        # and never served, so its on-disk size is all it costs.
+        lookup = build_countries(lookup_source, "1:50m", NATURAL_EARTH_50M_SHA256)
+        lookup_bytes = zlib.compress(
+            json.dumps(lookup, ensure_ascii=False, separators=(",", ":")).encode("utf-8"), 9
+        )
+        lookup_path = OUTPUT_DIR / "countries.json.z"
+        lookup_path.write_bytes(lookup_bytes)
+        print(f"  wrote {lookup_path} ({lookup_path.stat().st_size} bytes)")
 
-    print("Koppen-Geiger present-day classification:")
-    meta, payload = build_koppen(koppen_source)
-    grid_path = OUTPUT_DIR / meta["grid_file"]
-    grid_path.write_bytes(payload)
-    meta_path = OUTPUT_DIR / "koppen_geiger.json"
-    meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"  wrote {grid_path} ({grid_path.stat().st_size} bytes)")
-    print(f"  wrote {meta_path} ({meta_path.stat().st_size} bytes)")
+        # The basemap layer is served to the browser as-is, so it stays plain
+        # JSON and carries outlines only — no ISO codes, no names, nothing the
+        # drawing does not use.
+        basemap = build_countries(basemap_source, "1:110m", NATURAL_EARTH_110M_SHA256)
+        basemap["countries"] = [
+            {"iso_a2": entry["iso_a2"], "polygons": entry["polygons"]}
+            for entry in basemap["countries"]
+        ]
+        # The unassigned territories are drawn too — leaving holes in the world
+        # map would be a stranger statement than drawing the outlines.
+        basemap["unassigned"] = [
+            {"polygons": entry["polygons"]} for entry in basemap["unassigned"]
+        ]
+        basemap_path = OUTPUT_DIR / "basemap.json"
+        basemap_path.write_text(
+            json.dumps(basemap, ensure_ascii=False, separators=(",", ":")) + "\n",
+            encoding="utf-8",
+        )
+        print(f"  wrote {basemap_path} ({basemap_path.stat().st_size} bytes)")
+
+    if "koppen" in selected:
+        print("Koppen-Geiger present-day classification:")
+        meta, payload = build_koppen(koppen_source)
+        grid_path = OUTPUT_DIR / meta["grid_file"]
+        grid_path.write_bytes(payload)
+        meta_path = OUTPUT_DIR / "koppen_geiger.json"
+        meta_path.write_text(
+            json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+        print(f"  wrote {grid_path} ({grid_path.stat().st_size} bytes)")
+        print(f"  wrote {meta_path} ({meta_path.stat().st_size} bytes)")
     return 0
 
 

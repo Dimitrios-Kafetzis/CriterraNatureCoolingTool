@@ -1,0 +1,1 @@
+{"engine_version":"2.2.0","methodology_version":"2026.08.05","license":"Apache-2.0","tiles":{"url_template":"https://tiles.example.test/{z}/{x}/{y}.png?key=demo","attribution":"© OpenStreetMap contributors © ExampleTiles"}}

@@ -1,25 +1,30 @@
 /**
- * The offline site map (v2.1, D-047.1).
+ * The site map (v2.1, D-047.1; reworked on Leaflet in v2.2, D-049.5).
  *
- * Drawn as inline SVG over the bundled Natural Earth outlines, with no map
- * library. That is a deliberate choice, not an omission. The app's only runtime
- * dependencies are React and react-router; a WebGL map library would be the
- * first exception, would ship inside the wheel, and would not instantiate under
- * the test environment at all — leaving either a mock that tests nothing or a
- * visible loosening of the jsdom setup. SVG gives pan, zoom, point placement
- * and polygon drawing in a few hundred lines, renders under test, and makes the
- * offline guarantee structural rather than configured: in the default build
- * there is no tile URL to forget to turn off.
+ * v2.1 hand-rolled this as inline SVG (D-048.5) because a WebGL map library
+ * would not instantiate under the test environment. Leaflet does — map, SVG
+ * vector renderer, tile layer, attribution control and click handling all run
+ * under jsdom, which is what dissolved D-048.5's objection — and it brings
+ * the interaction that makes a map navigable (drag, inertia, cursor-anchored
+ * wheel zoom, touch, date-line wrap) as 42 KB of BSD-2-Clause code with zero
+ * dependencies. Its licence ships beside the build; see NOTICE.
  *
- * Projection is Web Mercator over the unit square, which is what every slippy
- * map on the web uses. It is chosen for one concrete reason: the opt-in tiles
- * D-047.1 permits are published in Web Mercator, and a plate-carrée basemap
- * underneath them would simply not line up. Areas are never measured from the
- * projection — `site_area_m2` is computed geodesically on the server from the
- * drawn longitude/latitude ring — so Mercator's area distortion costs nothing.
+ * The offline guarantee is unchanged: with no tile source resolved, the map
+ * is the bundled Natural Earth outlines and nothing is requested from
+ * anywhere. A tile layer exists only when `tiles` is non-null, which happens
+ * only when a deployer configured a source (D-049.2) or the user named one
+ * (D-047.1) — and every tile source renders its attribution on the map, which
+ * Leaflet's attribution control does per layer (D-049.2).
+ *
+ * Degradation is detected, not assumed (D-049.8): if the first tiles of a
+ * configured source all fail, `onTileFailure` fires and the caller falls back
+ * to the bundled outlines, so an optimistically configured restricted-network
+ * deployment still has a working map.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { messages } from '../i18n/en';
 import type { BasemapDocument } from '../api/types';
 
@@ -29,305 +34,255 @@ export interface Point {
   latitude: number;
 }
 
+/** A resolved tile source: the template and the credit it requires. */
+export interface TileSelection {
+  template: string;
+  attribution: string;
+}
+
+/** Somewhere to move the map to — a selected place. Never an answer. */
+export interface FlyTarget {
+  longitude: number;
+  latitude: number;
+  zoom: number;
+}
+
 interface SiteMapProps {
   basemap: BasemapDocument | null;
   boundary: Point[];
   centre: Point | null;
-  tileTemplate: string | null;
+  tiles: TileSelection | null;
   drawing: boolean;
+  flyTo: FlyTarget | null;
   onBoundaryChange: (boundary: Point[]) => void;
   onCentreChange: (centre: Point) => void;
-}
-
-/** Web Mercator clamps at the latitude where the projection runs to infinity. */
-export const MERCATOR_LIMIT = 85.05112878;
-const MIN_ZOOM = 1;
-const MAX_ZOOM = 4096;
-
-function clamp(value: number, low: number, high: number): number {
-  return Math.min(Math.max(value, low), high);
-}
-
-/** Longitude to unit-square x. */
-export function toX(longitude: number): number {
-  return (longitude + 180) / 360;
-}
-
-/** Latitude to unit-square y, north at 0. */
-export function toY(latitude: number): number {
-  const phi = (clamp(latitude, -MERCATOR_LIMIT, MERCATOR_LIMIT) * Math.PI) / 180;
-  return (1 - Math.log(Math.tan(phi) + 1 / Math.cos(phi)) / Math.PI) / 2;
-}
-
-/** Unit-square x back to longitude. */
-export function toLongitude(x: number): number {
-  return clamp(x * 360 - 180, -180, 180);
-}
-
-/** Unit-square y back to latitude. */
-export function toLatitude(y: number): number {
-  const n = Math.PI * (1 - 2 * clamp(y, 0, 1));
-  return (Math.atan(Math.sinh(n)) * 180) / Math.PI;
-}
-
-/** One country's outlines as an SVG path in unit-square coordinates. */
-function outlinePath(polygons: number[][][][]): string {
-  const parts: string[] = [];
-  for (const polygon of polygons) {
-    for (const ring of polygon) {
-      const [first, ...rest] = ring;
-      if (first === undefined) continue;
-      parts.push(`M ${toX(first[0] ?? 0).toFixed(6)} ${toY(first[1] ?? 0).toFixed(6)}`);
-      for (const point of rest) {
-        parts.push(`L ${toX(point[0] ?? 0).toFixed(6)} ${toY(point[1] ?? 0).toFixed(6)}`);
-      }
-      parts.push('Z');
-    }
-  }
-  return parts.join(' ');
-}
-
-export function SiteMap(props: SiteMapProps) {
-  const { basemap, boundary, centre, drawing, onBoundaryChange, onCentreChange } = props;
-  const svgRef = useRef<SVGSVGElement | null>(null);
-  const [zoom, setZoom] = useState(1);
-  const [focus, setFocus] = useState<Point>({ longitude: 0, latitude: 25 });
-
-  // The visible window, derived rather than stored so zoom and focus can never
-  // disagree about where the map is looking.
-  const view = useMemo(() => {
-    const size = 1 / zoom;
-    return {
-      size,
-      minX: clamp(toX(focus.longitude) - size / 2, 0, 1 - size),
-      minY: clamp(toY(focus.latitude) - size / 2, 0, 1 - size),
-    };
-  }, [zoom, focus]);
-
-  const paths = useMemo(() => {
-    if (basemap === null) return [];
-    return [
-      ...basemap.countries.map((entry) => ({
-        key: entry.iso_a2,
-        d: outlinePath(entry.polygons),
-        unassigned: false,
-      })),
-      ...basemap.unassigned.map((entry, index) => ({
-        key: `unassigned-${index}`,
-        d: outlinePath(entry.polygons),
-        unassigned: true,
-      })),
-    ];
-  }, [basemap]);
-
-  const handleClick = useCallback(
-    (event: React.MouseEvent<SVGSVGElement>) => {
-      const svg = svgRef.current;
-      if (svg === null) return;
-      const rect = svg.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return;
-      const point = {
-        longitude: toLongitude(view.minX + ((event.clientX - rect.left) / rect.width) * view.size),
-        latitude: toLatitude(view.minY + ((event.clientY - rect.top) / rect.height) * view.size),
-      };
-      if (drawing) {
-        onBoundaryChange([...boundary, point]);
-      } else {
-        onCentreChange(point);
-      }
-    },
-    [view, drawing, boundary, onBoundaryChange, onCentreChange],
-  );
-
-  const changeZoom = useCallback((factor: number) => {
-    setZoom((current) => clamp(current * factor, MIN_ZOOM, MAX_ZOOM));
-  }, []);
-
-  const pan = useCallback(
-    (dx: number, dy: number) => {
-      setFocus((current) => ({
-        longitude: toLongitude(clamp(toX(current.longitude) + (dx * 0.25) / zoom, 0, 1)),
-        latitude: toLatitude(clamp(toY(current.latitude) + (dy * 0.25) / zoom, 0, 1)),
-      }));
-    },
-    [zoom],
-  );
-
-  // Follow a site set from outside — a resumed draft, or a typed coordinate.
-  useEffect(() => {
-    if (centre !== null) {
-      setFocus(centre);
-    }
-  }, [centre]);
-
-  const project = (point: Point) => `${toX(point.longitude)} ${toY(point.latitude)}`;
-  const boundaryPath =
-    boundary.length > 0
-      ? `M ${boundary.map(project).join(' L ')}${boundary.length > 2 ? ' Z' : ''}`
-      : '';
-  const markerRadius = view.size / 90;
-
-  const map = messages.map;
-  return (
-    <div className="sitemap">
-      <div className="sitemap__frame">
-        {/*
-          The tile layer exists in the DOM only once a user has named a source
-          and switched it on. Rendering it hidden would still fetch it.
-        */}
-        {props.tileTemplate !== null ? (
-          <TileLayer template={props.tileTemplate} view={view} zoom={zoom} />
-        ) : null}
-        <svg
-          ref={svgRef}
-          className="sitemap__canvas"
-          viewBox={`${view.minX} ${view.minY} ${view.size} ${view.size}`}
-          preserveAspectRatio="xMidYMid slice"
-          onClick={handleClick}
-          role="application"
-          aria-label={drawing ? map.canvasLabelDrawing : map.canvasLabelPlacing}
-        >
-          {props.tileTemplate === null ? (
-            <rect x={0} y={0} width={1} height={1} className="sitemap__sea" />
-          ) : null}
-          {paths.map((entry) => (
-            <path
-              key={entry.key}
-              d={entry.d}
-              className={
-                entry.unassigned ? 'sitemap__land sitemap__land--unassigned' : 'sitemap__land'
-              }
-              vectorEffect="non-scaling-stroke"
-            />
-          ))}
-          {boundaryPath !== '' ? (
-            <path
-              d={boundaryPath}
-              className="sitemap__boundary"
-              vectorEffect="non-scaling-stroke"
-            />
-          ) : null}
-          {boundary.map((point, index) => (
-            <circle
-              key={`${String(point.longitude)},${String(point.latitude)},${String(index)}`}
-              cx={toX(point.longitude)}
-              cy={toY(point.latitude)}
-              r={markerRadius}
-              className="sitemap__vertex"
-            />
-          ))}
-          {centre !== null ? (
-            <circle
-              cx={toX(centre.longitude)}
-              cy={toY(centre.latitude)}
-              r={markerRadius * 1.4}
-              className="sitemap__centre"
-            />
-          ) : null}
-        </svg>
-      </div>
-
-      <div className="sitemap__controls">
-        <div className="sitemap__pad">
-          <button type="button" className="button button--quiet" onClick={() => pan(0, -1)}>
-            {map.panNorth}
-          </button>
-          <div className="sitemap__pad-row">
-            <button type="button" className="button button--quiet" onClick={() => pan(-1, 0)}>
-              {map.panWest}
-            </button>
-            <button type="button" className="button button--quiet" onClick={() => pan(1, 0)}>
-              {map.panEast}
-            </button>
-          </div>
-          <button type="button" className="button button--quiet" onClick={() => pan(0, 1)}>
-            {map.panSouth}
-          </button>
-        </div>
-        <div className="sitemap__zoom">
-          <button
-            type="button"
-            className="button button--quiet"
-            onClick={() => changeZoom(2)}
-            disabled={zoom >= MAX_ZOOM}
-          >
-            {map.zoomIn}
-          </button>
-          <button
-            type="button"
-            className="button button--quiet"
-            onClick={() => changeZoom(0.5)}
-            disabled={zoom <= MIN_ZOOM}
-          >
-            {map.zoomOut}
-          </button>
-        </div>
-      </div>
-
-      {basemap !== null ? <p className="small muted">{basemap.attribution}</p> : null}
-    </div>
-  );
-}
-
-interface TileLayerProps {
-  template: string;
-  view: { minX: number; minY: number; size: number };
-  zoom: number;
+  onTileFailure: () => void;
 }
 
 /**
- * Opt-in raster tiles (D-047.1) — the only place this application requests
- * anything from a host the user did not install it from.
- *
- * The template is the user's own. Nothing here supplies a default and no
- * source is named anywhere in the code, because naming one would make it the
- * obvious choice and quietly turn an informed decision back into a default.
+ * How many consecutive failures, with nothing loaded yet, mean the source is
+ * unreachable rather than missing one tile. The first world view shows a
+ * handful of tiles, so four failures with zero successes is decisive.
  */
-function TileLayer(props: TileLayerProps) {
-  const level = clamp(Math.round(Math.log2(props.zoom)), 0, 19);
-  const count = 2 ** level;
+const TILE_FAILURES_BEFORE_FALLBACK = 4;
 
-  const tiles = useMemo(() => {
-    const out: { key: string; url: string; left: string; top: string; size: string }[] = [];
-    const minX = Math.max(0, Math.floor(props.view.minX * count));
-    const maxX = Math.min(count - 1, Math.floor((props.view.minX + props.view.size) * count));
-    const minY = Math.max(0, Math.floor(props.view.minY * count));
-    const maxY = Math.min(count - 1, Math.floor((props.view.minY + props.view.size) * count));
+/** One country's outlines as GeoJSON coordinates (already [lon, lat]). */
+function toFeatures(basemap: BasemapDocument): GeoJSON.Feature[] {
+  const features: GeoJSON.Feature[] = [];
+  for (const entry of basemap.countries) {
+    features.push({
+      type: 'Feature',
+      properties: { unassigned: false },
+      geometry: { type: 'MultiPolygon', coordinates: entry.polygons },
+    });
+  }
+  for (const entry of basemap.unassigned) {
+    features.push({
+      type: 'Feature',
+      properties: { unassigned: true },
+      geometry: { type: 'MultiPolygon', coordinates: entry.polygons },
+    });
+  }
+  return features;
+}
 
-    // A viewport needs a few dozen tiles at most. The cap stops a pathological
-    // zoom from issuing thousands of requests to someone else's server on the
-    // user's behalf.
-    if ((maxX - minX + 1) * (maxY - minY + 1) > 64) return out;
+export function SiteMap(props: SiteMapProps) {
+  const { basemap, boundary, centre, tiles, drawing, flyTo } = props;
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const outlinesRef = useRef<L.GeoJSON | null>(null);
+  const tileLayerRef = useRef<L.TileLayer | null>(null);
+  const drawnRef = useRef<L.LayerGroup | null>(null);
 
-    const percent = (value: number) => `${String((value / props.view.size) * 100)}%`;
-    for (let x = minX; x <= maxX; x += 1) {
-      for (let y = minY; y <= maxY; y += 1) {
-        out.push({
-          key: `${String(level)}/${String(x)}/${String(y)}`,
-          url: props.template
-            .replace('{z}', String(level))
-            .replace('{x}', String(x))
-            .replace('{y}', String(y)),
-          left: percent(x / count - props.view.minX),
-          top: percent(y / count - props.view.minY),
-          size: percent(1 / count),
-        });
+  // The click handler reads these through refs so the map subscribes once.
+  const stateRef = useRef({ drawing, boundary });
+  stateRef.current = { drawing, boundary };
+  const callbacksRef = useRef({
+    onBoundaryChange: props.onBoundaryChange,
+    onCentreChange: props.onCentreChange,
+    onTileFailure: props.onTileFailure,
+  });
+  callbacksRef.current = {
+    onBoundaryChange: props.onBoundaryChange,
+    onCentreChange: props.onCentreChange,
+    onTileFailure: props.onTileFailure,
+  };
+
+  const map = messages.map;
+
+  // The map itself, created once.
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container === null) return;
+    const leafletMap = L.map(container, {
+      center: [25, 10],
+      zoom: 2,
+      minZoom: 1,
+      maxZoom: 19,
+      // Fractional zoom: the wheel and pinch land between integer levels
+      // rather than jumping octaves of scale.
+      zoomSnap: 0.25,
+      zoomDelta: 0.5,
+      // Panning across the date line re-centres the world copy under the view.
+      worldCopyJump: true,
+      maxBounds: [
+        [-85.06, -540],
+        [85.06, 540],
+      ],
+      maxBoundsViscosity: 0.75,
+      zoomControl: false,
+      attributionControl: false,
+    });
+    // Controls built explicitly so their strings come from the catalog and
+    // the attribution control carries no prefix link.
+    L.control
+      .zoom({ zoomInTitle: map.zoomIn, zoomOutTitle: map.zoomOut, position: 'topleft' })
+      .addTo(leafletMap);
+    L.control.attribution({ prefix: false, position: 'bottomright' }).addTo(leafletMap);
+
+    leafletMap.on('click', (event: L.LeafletMouseEvent) => {
+      const point = {
+        longitude: event.latlng.wrap().lng,
+        latitude: event.latlng.lat,
+      };
+      const current = stateRef.current;
+      if (current.drawing) {
+        callbacksRef.current.onBoundaryChange([...current.boundary, point]);
+      } else {
+        callbacksRef.current.onCentreChange(point);
+      }
+    });
+
+    mapRef.current = leafletMap;
+    return () => {
+      leafletMap.remove();
+      mapRef.current = null;
+      outlinesRef.current = null;
+      tileLayerRef.current = null;
+      drawnRef.current = null;
+    };
+    // The catalog is a module constant; the map is created exactly once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // The bundled outlines — the layer that makes the map work offline.
+  const features = useMemo(() => (basemap === null ? null : toFeatures(basemap)), [basemap]);
+  useEffect(() => {
+    const leafletMap = mapRef.current;
+    if (leafletMap === null || features === null || basemap === null) return;
+    const layer = L.geoJSON({ type: 'FeatureCollection', features } as GeoJSON.FeatureCollection, {
+      style: (feature) => ({
+        className:
+          (feature?.properties as { unassigned?: boolean } | undefined)?.unassigned === true
+            ? 'sitemap__land sitemap__land--unassigned'
+            : 'sitemap__land',
+      }),
+      attribution: basemap.attribution,
+      // Clicks belong to the map, not the polygons under the cursor.
+      interactive: false,
+    }).addTo(leafletMap);
+    outlinesRef.current = layer;
+    return () => {
+      layer.remove();
+      outlinesRef.current = null;
+    };
+  }, [features, basemap]);
+
+  // The tile layer — exists only while a source is resolved (D-049.1), and
+  // detects total failure rather than assuming reachability (D-049.8).
+  useEffect(() => {
+    const leafletMap = mapRef.current;
+    if (leafletMap === null || tiles === null) return;
+    let loaded = 0;
+    let failed = 0;
+    const layer = L.tileLayer(tiles.template, {
+      attribution: tiles.attribution,
+      maxZoom: 19,
+    });
+    layer.on('tileload', () => {
+      loaded += 1;
+    });
+    layer.on('tileerror', () => {
+      failed += 1;
+      // Some tiles failing at the edge of a provider's coverage is normal;
+      // nothing at all loading is an unreachable source.
+      if (loaded === 0 && failed >= TILE_FAILURES_BEFORE_FALLBACK) {
+        callbacksRef.current.onTileFailure();
+      }
+    });
+    layer.addTo(leafletMap);
+    tileLayerRef.current = layer;
+    return () => {
+      layer.remove();
+      tileLayerRef.current = null;
+    };
+  }, [tiles]);
+
+  // The user's drawing: the boundary ring, its vertices, and the site point.
+  useEffect(() => {
+    const leafletMap = mapRef.current;
+    if (leafletMap === null) return;
+    const group = L.layerGroup();
+    if (boundary.length > 0) {
+      const ring = boundary.map((point) => [point.latitude, point.longitude] as L.LatLngTuple);
+      if (boundary.length > 2) {
+        group.addLayer(L.polygon(ring, { className: 'sitemap__boundary', interactive: false }));
+      } else {
+        group.addLayer(L.polyline(ring, { className: 'sitemap__boundary', interactive: false }));
+      }
+      for (const point of boundary) {
+        group.addLayer(
+          L.circleMarker([point.latitude, point.longitude], {
+            radius: 4,
+            className: 'sitemap__vertex',
+            interactive: false,
+          }),
+        );
       }
     }
-    return out;
-  }, [props.template, props.view, count, level]);
+    if (centre !== null) {
+      group.addLayer(
+        L.circleMarker([centre.latitude, centre.longitude], {
+          radius: 6,
+          className: 'sitemap__centre',
+          interactive: false,
+        }),
+      );
+    }
+    group.addTo(leafletMap);
+    drawnRef.current = group;
+    return () => {
+      group.remove();
+      drawnRef.current = null;
+    };
+  }, [boundary, centre]);
+
+  // Follow a site set from outside — a resumed draft, or a typed coordinate —
+  // without yanking the view when the user placed the point themselves.
+  useEffect(() => {
+    const leafletMap = mapRef.current;
+    if (leafletMap === null || centre === null) return;
+    const latlng = L.latLng(centre.latitude, centre.longitude);
+    if (!leafletMap.getBounds().contains(latlng)) {
+      leafletMap.setView(latlng, Math.max(leafletMap.getZoom(), 9));
+    }
+  }, [centre]);
+
+  // A selected place: navigation, never an answer (D-049.6).
+  useEffect(() => {
+    const leafletMap = mapRef.current;
+    if (leafletMap === null || flyTo === null) return;
+    leafletMap.flyTo([flyTo.latitude, flyTo.longitude], flyTo.zoom, { duration: 0.8 });
+  }, [flyTo]);
 
   return (
-    <div className="sitemap__tiles" aria-hidden="true">
-      {tiles.map((tile) => (
-        <img
-          key={tile.key}
-          src={tile.url}
-          alt=""
-          loading="lazy"
-          style={{ left: tile.left, top: tile.top, width: tile.size, height: tile.size }}
-        />
-      ))}
+    <div className={tiles !== null ? 'sitemap sitemap--imagery' : 'sitemap'}>
+      <div
+        ref={containerRef}
+        className="sitemap__frame"
+        role="application"
+        aria-label={drawing ? map.canvasLabelDrawing : map.canvasLabelPlacing}
+      />
     </div>
   );
 }

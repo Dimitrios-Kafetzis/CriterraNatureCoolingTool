@@ -26,8 +26,10 @@ from nature_cooling.geo import (
     load_basemap,
     load_countries,
     load_koppen,
+    load_places,
     look_up_site,
     polygon_area_m2,
+    search_places,
 )
 from nature_cooling.geo.datasets import _countries_from
 from nature_cooling.geo.lookup import (
@@ -537,3 +539,85 @@ def test_an_enclave_is_its_own_country_and_not_the_state_around_it() -> None:
     found = look_up_country(maseru_latitude, maseru_longitude)
     assert found.iso_a2 == "LS"
     assert found.matched == "contains"
+
+
+# ---- place search (v2.2, D-049.6) ----
+
+
+def test_the_place_index_loads_all_places_population_first() -> None:
+    """All 7,342 Natural Earth populated places ship — no population cut
+    (D-049.6) — ordered by population so search ranks by scan order."""
+    index = load_places()
+    assert len(index.places) == 7342
+    assert index.source_key == "naturalearth"
+    assert index.source_release == "v5.1.2"
+    assert index.licence == "public domain"
+    populations = [place.population for place in index.places]
+    assert populations == sorted(populations, reverse=True)
+
+
+def test_search_finds_a_major_city_by_prefix() -> None:
+    results = search_places("athen")
+    assert results, "Athens must be findable"
+    top = results[0]
+    assert top.name == "Athens"
+    assert top.admin == "Greece"
+    assert top.latitude == pytest.approx(37.98, abs=0.1)
+    assert top.longitude == pytest.approx(23.73, abs=0.1)
+
+
+def test_search_matches_the_ascii_fold_of_a_diacritic_name() -> None:
+    """A query typed without diacritics still matches — "malaga" finds
+    Málaga, "sao paulo" finds São Paulo."""
+    assert any(place.name == "Málaga" for place in search_places("malaga"))
+    assert search_places("sao paulo")[0].name == "São Paulo"
+
+
+def test_search_ranks_the_populous_namesake_first() -> None:
+    """Paris, France before Paris, Kiribati — by scan order, no tiebreak
+    table (the index is population-descending)."""
+    results = search_places("paris")
+    assert results[0].admin == "France"
+
+
+def test_search_prefers_prefix_matches_over_substring_matches() -> None:
+    """ "york" must offer York before New York reduces it to a suffix hit."""
+    results = search_places("york")
+    is_prefix = [place.ascii_name.casefold().startswith("york") for place in results]
+    prefix_positions = [i for i, prefix in enumerate(is_prefix) if prefix]
+    substring_positions = [i for i, prefix in enumerate(is_prefix) if not prefix]
+    assert prefix_positions, "York itself must match"
+    assert substring_positions, "New York must also match"
+    assert max(prefix_positions) < min(substring_positions)
+
+
+def test_search_below_the_minimum_query_length_answers_nothing() -> None:
+    assert search_places("") == []
+    assert search_places(" a ") == []
+
+
+def test_search_caps_its_result_count() -> None:
+    assert len(search_places("san", limit=100)) <= 10
+    assert len(search_places("san", limit=3)) == 3
+
+
+def test_a_small_municipality_is_findable() -> None:
+    """The reason the 50k-population cut was rejected: the smallest listed
+    places are exactly the ones a cut discards (D-049.6)."""
+    index = load_places()
+    smallest = index.places[-1]
+    assert smallest.population < 50000
+    assert any(place.name == smallest.name for place in search_places(smallest.name.casefold()))
+
+
+def test_an_empty_place_index_is_refused(tmp_path: Path) -> None:
+    empty = json.dumps(
+        {"places": [], "source_key": "x", "source_release": "x", "licence": "x", "attribution": "x"}
+    ).encode("utf-8")
+    (tmp_path / "places.json.z").write_bytes(zlib.compress(empty))
+    load_places.cache_clear()
+    try:
+        with pytest.raises(GeoDataError, match="declares no places"):
+            load_places(tmp_path)
+    finally:
+        load_places.cache_clear()

@@ -696,6 +696,7 @@ fieldset {
 .sitemap__toolbar {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-end;
   gap: 0.5rem;
   margin-bottom: 0.4rem;
 }
@@ -705,39 +706,42 @@ fieldset {
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--paper-raised);
+  /* The sea. --paper rather than --paper-raised, so land raised above it
+     reads as land (the v2.1 pairing was two near-identical neutrals). */
+  background: var(--paper);
   aspect-ratio: 16 / 9;
-}
-
-.sitemap__canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
   cursor: crosshair;
-  display: block;
 }
 
-/* Opt-in tiles only (D-047.1). This layer has no styling to fall back on
-   because in the default build no element ever carries these classes. */
-.sitemap__tiles {
-  position: absolute;
-  inset: 0;
+/* Leaflet owns the inside of the frame. */
+.sitemap__frame .leaflet-container {
+  background: var(--paper);
+  font-family: var(--font-sans);
+  cursor: crosshair;
 }
 
-.sitemap__tiles img {
-  position: absolute;
-  display: block;
+.sitemap__frame .leaflet-control-attribution {
+  background: color-mix(in srgb, var(--paper-raised) 88%, transparent);
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  padding: 0.1rem 0.4rem;
 }
 
-.sitemap__sea {
-  fill: var(--paper-raised);
-}
-
+/* Land, from the design tokens: an unmistakable accent tint over the raised
+   paper, edged in ink. v2.1's #dfe2d6-on-#f3f4ec was near-featureless at any
+   zoom; this pairing separates land from sea by hue and value at once. */
 .sitemap__land {
-  fill: #dfe2d6;
-  stroke: var(--line);
-  stroke-width: 0.5px;
+  fill: color-mix(in srgb, var(--accent) 20%, var(--paper-raised));
+  fill-opacity: 1;
+  stroke: var(--ink-soft);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+}
+
+/* With imagery under it, the land fill would hide the tiles: outlines only. */
+.sitemap--imagery .sitemap__land {
+  fill: none;
+  stroke: color-mix(in srgb, var(--ink) 40%, transparent);
 }
 
 /* Territories the boundary data carries no ISO code for. Drawn, because a
@@ -745,8 +749,9 @@ fieldset {
    not filled as a country, because the tool does not identify them. */
 .sitemap__land--unassigned {
   fill: none;
-  stroke: var(--line-soft);
+  stroke: var(--line);
   stroke-dasharray: 3 2;
+  vector-effect: non-scaling-stroke;
 }
 
 .sitemap__boundary {
@@ -757,38 +762,59 @@ fieldset {
 
 .sitemap__vertex {
   fill: var(--accent);
+  fill-opacity: 1;
+  stroke: none;
 }
 
 .sitemap__centre {
   fill: var(--accent);
+  fill-opacity: 1;
   stroke: #fff;
   stroke-width: 1.5px;
-  vector-effect: non-scaling-stroke;
 }
 
-.sitemap__controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 1rem;
-  margin-top: 0.5rem;
+.sitemap__search {
+  position: relative;
+  flex: 1 1 14rem;
+  min-width: 12rem;
 }
 
-.sitemap__pad {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
+.sitemap__search input {
+  width: 100%;
 }
 
-.sitemap__pad-row {
-  display: flex;
-  gap: 0.2rem;
+.sitemap__search-results {
+  position: absolute;
+  z-index: 1100; /* above the Leaflet panes (max 1000) */
+  left: 0;
+  right: 0;
+  margin: 0.15rem 0 0;
+  padding: 0.2rem;
+  list-style: none;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(22, 35, 28, 0.12);
+  max-height: 14rem;
+  overflow-y: auto;
 }
 
-.sitemap__zoom {
-  display: flex;
-  gap: 0.4rem;
+.sitemap__search-results button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.3rem 0.5rem;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+
+.sitemap__search-results button:hover,
+.sitemap__search-results button:focus-visible {
+  background: var(--accent-soft);
 }
 
 .field__help--autofilled {

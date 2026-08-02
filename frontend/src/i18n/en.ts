@@ -39,7 +39,7 @@ export const messages = {
     heading: 'Evaluate nature-based solutions for urban cooling',
     what: 'This tool turns a structured description of a site and one or more proposed nature-based interventions — chosen from 110 typologies, from a single tree pit to a district-wide cooling network — into transparent, literature-grounded scores: a Heat Priority Index, a cooling opportunity score with an indicative temperature-reduction range, and energy, cost, equity, and co-benefit estimates.',
     whatItAsks:
-      'It asks about 45 questions across six short steps: the site, its climate and heat exposure, who uses it, the intervention, and (optionally) cost and energy figures. Around 20 are required; a complete pass takes 15–25 minutes.',
+      'It opens with an optional map that can fill in the site’s area, country and climate zone, then asks about 45 questions across six short steps: the site, its climate and heat exposure, who uses it, the intervention, and (optionally) cost and energy figures. Around 20 are required; a complete pass takes 15–25 minutes.',
     partialAnswers:
       'Partial answers are fine. Every optional question can be skipped in one click, and a live confidence meter shows exactly what each skipped answer costs — the assessment never blocks on missing data, and the tool never pretends to know something you did not tell it.',
     startNew: 'Start a new assessment',
@@ -154,9 +154,10 @@ export const messages = {
   },
 
   /**
-   * The map step (v2.1, D-047). The wording carries a fair amount of weight
-   * here: the step has to say what it fills in, say plainly what it does not,
-   * and never suggest that skipping it costs the user anything.
+   * The map step (v2.1, D-047; reworked v2.2, D-049). The wording carries a
+   * fair amount of weight here: the step has to say what it fills in, say
+   * plainly what it does not, and never suggest that skipping it costs the
+   * user anything.
    */
   map: {
     intro:
@@ -167,17 +168,18 @@ export const messages = {
     drawingOff: 'Draw the site boundary',
     drawingOn: 'Drawing — click to add corners',
     clearBoundary: 'Clear the boundary',
-    placingHint: 'Click the map to place the site. Zoom in first for a more exact location.',
+    placingHint:
+      'Drag to pan and scroll or pinch to zoom. Click the map to place the site; zoom in first for a more exact location.',
     drawingHint:
       'Click each corner of the site in turn. Three corners are enough for an area; the shape closes itself.',
     canvasLabelPlacing: 'World map. Click to place the site.',
     canvasLabelDrawing: 'World map. Click to add a corner of the site boundary.',
-    panNorth: 'North',
-    panSouth: 'South',
-    panEast: 'East',
-    panWest: 'West',
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
+    searchLabel: 'Find a place by name',
+    searchPlaceholder: 'City or town…',
+    searchResult: (name: string, admin: string) => (admin === '' ? name : `${name}, ${admin}`),
+    searchNoResults: 'No listed place matches. The index covers cities and towns, not streets.',
     looking: 'Looking up this location…',
     foundHeading: 'What this location tells us',
     foundNothing:
@@ -192,13 +194,28 @@ export const messages = {
       count === 1
         ? '1 answer was filled in from the map. It is marked wherever it appears, including in the report, and you can change it at any time.'
         : `${String(count)} answers were filled in from the map. They are marked wherever they appear, including in the report, and you can change them at any time.`,
-    tilesSummary: 'Use an external map service for detailed imagery (off by default)',
-    tilesExplanation:
-      'This application makes no third-party requests. The map above is drawn from country outlines bundled inside the tool, which is enough to identify a city but not to trace a site boundary accurately. If you need that and your network permits it, you can name a tile service and switch it on here. Your browser will then request map images directly from that service, which will see your IP address and the areas you look at. Nothing is sent to it about your assessment, and the setting is not saved — it lasts for this visit only.',
+    tilesSummaryUser: 'Use an external map service for detailed imagery (off by default)',
+    tilesSummaryDeployer: 'About the map imagery on this deployment',
+    tilesExplanationUser:
+      'This application makes no third-party requests. The map above is drawn from country outlines bundled inside the tool, which is enough to identify a city but not to trace a site boundary accurately. If you need that and your network permits it, you can name a tile service and switch it on here, together with the credit line that service requires — it will be shown on the map. Your browser will then request map images directly from that service, which will see your IP address and the areas you look at. Nothing is sent to it about your assessment, and the setting is not saved — it lasts for this visit only.',
+    tilesExplanationDeployer:
+      'The operator of this deployment has configured a map-imagery source, so detailed imagery is shown by default; its credit appears on the map. Your browser requests map images directly from that service, which will see your IP address and the areas you look at. Nothing is sent to it about your assessment. You can turn the imagery off for this visit, or use a different tile service of your own; neither choice is saved.',
+    tilesDeployerOn: (attribution: string) =>
+      `Imagery is on, from this deployment's configured source (${attribution}).`,
+    tilesDeployerOff: 'Imagery is off for this visit. The map shows the bundled outlines.',
+    tilesDeployerDisable: 'Turn imagery off for this visit',
+    tilesDeployerEnable: 'Turn imagery back on',
     tilesLabel: 'Tile URL template, using {z}, {x} and {y}',
+    tilesAttributionLabel: 'Attribution the service requires',
+    tilesAttributionPlaceholder: '© OpenStreetMap contributors © …',
+    tilesAttributionHelp:
+      'Shown on the map while these tiles are. Most tile services are built from OpenStreetMap data, whose licence requires “© OpenStreetMap contributors” to be displayed; your provider states the exact line.',
     tilesEnable: 'Enable this tile service',
     tilesDisable: 'Turn tiles off',
     tilesEnabled: (template: string) => `Requesting tiles from ${template}`,
+    tilesUnreachable:
+      'The configured imagery source could not be reached from your network. The map has switched to the bundled offline outlines and everything still works.',
+    tilesRetry: 'Try the imagery again',
   },
 
   confidence: {

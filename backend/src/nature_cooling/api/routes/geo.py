@@ -13,17 +13,19 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Query, Request
 
 from nature_cooling.api.schemas import (
     GeoClimate,
     GeoCountry,
     GeoLookupRequest,
     GeoLookupResponse,
+    PlaceResult,
+    PlaceSearchResponse,
 )
 from nature_cooling.engine.config import MethodologyConfig
-from nature_cooling.geo import GeoDataError, look_up_site
-from nature_cooling.geo.datasets import load_basemap
+from nature_cooling.geo import GeoDataError, look_up_site, search_places
+from nature_cooling.geo.datasets import load_basemap, load_places
 
 router = APIRouter(prefix="/geo", tags=["geo"])
 
@@ -40,6 +42,39 @@ def basemap() -> dict[str, Any]:
         return load_basemap()
     except GeoDataError as exc:  # pragma: no cover - defensive; see test_geo_routes
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@router.get("/places")
+def places(
+    query: str = Query(min_length=1, max_length=200),
+    limit: int = Query(default=10, ge=1, le=10),
+) -> PlaceSearchResponse:
+    """Search the bundled populated-places index by name (v2.2, D-049.6).
+
+    Navigation, not autofill: a result is somewhere for the map to move to,
+    and selecting one fills in no answer. Answered entirely from bundled
+    public-domain data — this is the navigation aid a deployment without
+    configured imagery has.
+    """
+    try:
+        matches = search_places(query, limit=limit)
+        attribution = load_places().attribution
+    except GeoDataError as exc:  # pragma: no cover - defensive; see test_geo_routes
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    return PlaceSearchResponse(
+        query=query,
+        results=[
+            PlaceResult(
+                name=place.name,
+                admin=place.admin,
+                latitude=place.latitude,
+                longitude=place.longitude,
+                population=place.population,
+            )
+            for place in matches
+        ],
+        attribution=attribution,
+    )
 
 
 @router.post("/lookup")

@@ -19,6 +19,8 @@ import { renderAt } from './render';
 import { STEPS, stepNumber } from '../wizard/steps';
 
 import meta from './fixtures/meta.json';
+import metaTiles from './fixtures/meta-tiles.json';
+import geoPlaces from './fixtures/geo-places.json';
 import typologies from './fixtures/typologies.json';
 import available from './fixtures/typologies-available.json';
 import methodology from './fixtures/methodology.json';
@@ -32,14 +34,15 @@ import geoLookupOcean from './fixtures/geo-lookup-ocean.json';
 const editUrl = `/projects/${project.project_id}/assessments/${assessmentDraft.assessment_id}/edit`;
 const mapUrl = `${editUrl}?step=${String(stepNumber('map'))}`;
 
-function routes(options: { stored?: unknown; lookup?: unknown } = {}): MockRoute[] {
+function routes(options: { stored?: unknown; lookup?: unknown; meta?: unknown } = {}): MockRoute[] {
   const stored = options.stored ?? assessmentDraft;
   return [
-    { method: 'GET', path: '/api/meta', response: meta },
+    { method: 'GET', path: '/api/meta', response: options.meta ?? meta },
     { method: 'GET', path: '/api/typologies', response: typologies },
     { method: 'GET', path: '/api/typologies/available', response: available },
     { method: 'GET', path: '/api/methodology', response: methodology },
     { method: 'GET', path: '/api/geo/basemap', response: basemap },
+    { method: 'GET', path: '/api/geo/places', response: geoPlaces },
     { method: 'POST', path: '/api/geo/lookup', response: options.lookup ?? geoLookup },
     {
       method: 'GET',
@@ -262,8 +265,8 @@ describe('MapStep, when the map itself is unavailable', () => {
   });
 });
 
-describe('MapStep, external tiles (D-047.1)', () => {
-  it('requests no tiles at all until a user names a source and enables one', async () => {
+describe('MapStep, external tiles (D-047.1, D-049)', () => {
+  it('requests no tiles at all until a source is configured or named', async () => {
     const mock = installFetchMock(routes());
     const user = userEvent.setup();
     renderWizard();
@@ -271,12 +274,13 @@ describe('MapStep, external tiles (D-047.1)', () => {
     await clickMap(user);
     await screen.findByRole('heading', { name: /what this location tells us/i });
 
-    // The default build makes no third-party request. Every call went to this
-    // application's own API, and no tile element exists to make one.
+    // The unconfigured deployment makes no third-party request (D-049.1).
+    // Every call went to this application's own API, and no tile element
+    // exists to make one.
     for (const call of mock.calls) {
       expect(call.url).toMatch(/^\/api\//);
     }
-    expect(document.querySelectorAll('.sitemap__tiles img')).toHaveLength(0);
+    expect(document.querySelectorAll('.leaflet-tile-pane img')).toHaveLength(0);
   });
 
   it('names no tile source of its own, so enabling one is the user naming it', async () => {
@@ -307,5 +311,142 @@ describe('MapStep, external tiles (D-047.1)', () => {
     const explanation = screen.getByText(/makes no third-party requests/i);
     expect(explanation).toBeVisible();
     expect(explanation.textContent).toMatch(/IP address/i);
+  });
+
+  it('requires the attribution alongside a user-named source (D-049.2)', async () => {
+    installFetchMock(routes());
+    const user = userEvent.setup();
+    renderWizard();
+    await screen.findByRole('application');
+    await user.click(screen.getByText(/use an external map service/i));
+
+    const url = screen.getByRole('textbox', { name: /tile url template/i });
+    await user.type(url, 'https://tiles.example.test/{{z}}/{{x}}/{{y}}.png');
+    // A template alone is not enough: the credit its licence requires must
+    // travel with it, or the v2.1 attribution defect comes straight back.
+    expect(screen.getByRole('button', { name: /enable this tile service/i })).toBeDisabled();
+
+    await user.type(
+      screen.getByRole('textbox', { name: /attribution the service requires/i }),
+      '© OpenStreetMap contributors © ExampleTiles',
+    );
+    const enable = screen.getByRole('button', { name: /enable this tile service/i });
+    expect(enable).toBeEnabled();
+    await user.click(enable);
+
+    // The credit renders on the map itself, in the attribution control.
+    await waitFor(() => {
+      const control = document.querySelector('.leaflet-control-attribution');
+      expect(control?.textContent).toMatch(/© OpenStreetMap contributors © ExampleTiles/);
+    });
+    expect(document.querySelectorAll('.leaflet-tile-pane img').length).toBeGreaterThan(0);
+    for (const img of document.querySelectorAll('.leaflet-tile-pane img')) {
+      expect(img.getAttribute('src')).toMatch(/^https:\/\/tiles\.example\.test\//);
+    }
+  });
+});
+
+describe('MapStep, a deployer-configured tile source (D-049)', () => {
+  it('shows the configured imagery by default, credited on the map', async () => {
+    installFetchMock(routes({ meta: metaTiles }));
+    renderWizard();
+    await screen.findByRole('application');
+
+    // The deployment configured a source, so imagery is on without the user
+    // pasting anything (D-049.4) — and its credit is on the map (D-049.2).
+    await waitFor(() => {
+      expect(document.querySelectorAll('.leaflet-tile-pane img').length).toBeGreaterThan(0);
+    });
+    for (const img of document.querySelectorAll('.leaflet-tile-pane img')) {
+      expect(img.getAttribute('src')).toMatch(/^https:\/\/tiles\.example\.test\//);
+    }
+    const control = document.querySelector('.leaflet-control-attribution');
+    expect(control?.textContent).toMatch(/© OpenStreetMap contributors © ExampleTiles/);
+  });
+
+  it('lets the user turn the deployer imagery off for the visit (D-049.4)', async () => {
+    installFetchMock(routes({ meta: metaTiles }));
+    const user = userEvent.setup();
+    renderWizard();
+    await screen.findByRole('application');
+    await waitFor(() => {
+      expect(document.querySelectorAll('.leaflet-tile-pane img').length).toBeGreaterThan(0);
+    });
+
+    await user.click(screen.getByText(/about the map imagery on this deployment/i));
+    await user.click(screen.getByRole('button', { name: /turn imagery off for this visit/i }));
+
+    await waitFor(() => {
+      expect(document.querySelectorAll('.leaflet-tile-pane img')).toHaveLength(0);
+    });
+    // The map is still there — the bundled outlines never left.
+    expect(document.querySelector('.sitemap__land')).not.toBeNull();
+
+    await user.click(screen.getByRole('button', { name: /turn imagery back on/i }));
+    await waitFor(() => {
+      expect(document.querySelectorAll('.leaflet-tile-pane img').length).toBeGreaterThan(0);
+    });
+  });
+
+  it('degrades to the bundled outlines when the source is unreachable (D-049.8)', async () => {
+    installFetchMock(routes({ meta: metaTiles }));
+    renderWizard();
+    await screen.findByRole('application');
+    await waitFor(() => {
+      expect(document.querySelectorAll('.leaflet-tile-pane img').length).toBeGreaterThan(0);
+    });
+
+    // jsdom loads no resources, so failure is delivered the way a browser
+    // would deliver it: error events on the tile images.
+    const tile = document.querySelector('.leaflet-tile-pane img');
+    expect(tile).not.toBeNull();
+    for (let failure = 0; failure < 4; failure += 1) {
+      tile?.dispatchEvent(new Event('error'));
+    }
+
+    // The map falls back to the bundled outlines and says so, and the
+    // questionnaire remains fully usable (D-049.1's restricted-network
+    // promise).
+    expect(await screen.findByText(/could not be reached/i)).toBeVisible();
+    await waitFor(() => {
+      expect(document.querySelectorAll('.leaflet-tile-pane img')).toHaveLength(0);
+    });
+    expect(document.querySelector('.sitemap__land')).not.toBeNull();
+    expect(screen.getByRole('button', { name: /try the imagery again/i })).toBeVisible();
+  });
+});
+
+describe('MapStep, place search (D-049.6)', () => {
+  it('finds places by name and moving there fills in no answer', async () => {
+    const mock = installFetchMock(routes());
+    const user = userEvent.setup();
+    renderWizard();
+    await screen.findByRole('application');
+
+    await user.type(screen.getByRole('searchbox', { name: /find a place by name/i }), 'athens');
+    const result = await screen.findByRole('button', { name: /^Athens, Greece$/ });
+    await user.click(result);
+
+    // Navigation is not autofill: nothing was applied, nothing was saved, and
+    // the lookup was never even called (D-049.6).
+    expect(screen.queryByRole('heading', { name: /what this location tells us/i })).toBeNull();
+    expect(mock.calls.filter((call) => call.method === 'PATCH')).toHaveLength(0);
+    expect(mock.calls.filter((call) => call.url.startsWith('/api/geo/lookup'))).toHaveLength(0);
+    // The list closes once a place is chosen.
+    expect(screen.queryByRole('button', { name: /^Athens, Greece$/ })).toBeNull();
+  });
+
+  it('says when no listed place matches', async () => {
+    const empty = { query: 'xyzzy', results: [], attribution: 'Place names from Natural Earth' };
+    const withEmpty = routes().map((route) =>
+      route.path === '/api/geo/places' ? { ...route, response: empty } : route,
+    );
+    installFetchMock(withEmpty);
+    const user = userEvent.setup();
+    renderWizard();
+    await screen.findByRole('application');
+
+    await user.type(screen.getByRole('searchbox', { name: /find a place by name/i }), 'xyzzy');
+    expect(await screen.findByText(/no listed place matches/i)).toBeVisible();
   });
 });

@@ -1,12 +1,13 @@
 # Bundled geographic datasets
 
-Two published datasets ship inside this tool, in `data/geo/`, and are staged
+Three published datasets ship inside this tool, in `data/geo/`, and are staged
 into the distributable wheel alongside `config/` and the bibliography (D-036).
-They exist so that the map-based site picker introduced in v2.1 works with **no
-network access of any kind** — the country and climate-zone lookups it performs
-are answered entirely from these files (D-047.1).
+They exist so that the map-based site picker introduced in v2.1, and the place
+search introduced in v2.2, work with **no network access of any kind** — the
+country and climate-zone lookups and the place search are answered entirely
+from these files (D-047.1, D-049.6).
 
-Neither file is the publisher's original. Both were derived from it by
+No file here is the publisher's original. All were derived from it by
 [`tools/build_datasets.py`](../../tools/build_datasets.py), which records the
 source URL and checksum of each input and states what was discarded. Run that
 script to reproduce these files from the published sources.
@@ -81,6 +82,44 @@ lookup records which of the two ways it reached its answer.
 
 *Verified:* Full. Release v5.1.2 retrieved from the project repository, both
 scales recorded by SHA-256 in the build script.
+
+---
+
+## Populated places — Natural Earth (v2.2, D-049.6)
+
+**Files:** `places.json.z` (the search index), licence
+`LICENCE-naturalearth.txt` (shared with the boundary layers)
+
+Natural Earth, *Populated Places (simple attributes)*, release **v5.1.2**, at
+1:10m. <https://www.naturalearthdata.com/>
+
+*Use:* offline navigation by name. The map's place search matches a typed
+query against these names and moves the map to the selected place. **Selecting
+a place fills in no answer** — this index feeds no formula, enters no score,
+and is not a methodology value (D-049.6). It exists because the original v2.1
+complaint — nobody can find their street corner at zoom 4 — is a navigation
+problem before it is an imagery problem, and navigation must have an offline
+answer.
+
+*Licence:* **public domain**, as the boundary layers above; attribution given
+here regardless.
+
+*Why all 7,342 places and not a population cut:* the 50,000-population cut was
+measured at 88 KB against 149 KB for the full set, so 61 KB is the entire cost
+of the 3,127 smallest listed places — and a cut at 50k discards precisely the
+small municipalities, which is the D-048.3 lesson (the 1:110m boundary layer
+that omitted every small country) applied to towns.
+
+*What was changed:* every attribute except the place name, its ASCII fold
+(kept only where it differs, so a query without diacritics matches "Málaga"),
+the country name, the coordinates and the population estimate (`pop_max`) was
+discarded; coordinates were rounded to two decimal places (about 1.1 km —
+navigation precision, and the map is moved to a town, not a parcel); and the
+list was sorted by population descending, so search ranks by scan order and
+"Paris" finds Paris, France before Paris, Kiribati.
+
+*Verified:* Full. Release v5.1.2 retrieved from the project repository,
+recorded by SHA-256 in the build script.
 
 ---
 
