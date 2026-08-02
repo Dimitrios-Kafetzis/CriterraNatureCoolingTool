@@ -112,22 +112,39 @@ jobs:
             -H 'Content-Type: application/json' \
             -d '{"latitude": 37.9838, "longitude": 23.7275}' > /tmp/lookup.json
           python -c "import json; d = json.load(open('/tmp/lookup.json')); assert d['country']['iso_a2'] == 'GR', d; assert d['climate']['zone'] == 'temperate', d"
-      - name: Bundled datasets ship with the licences that permit them
+      - name: Bundled datasets and the map library ship with the licences that permit them
         run: |
-          # Two datasets now travel inside the wheel and one of them requires
-          # attribution as a condition of its licence. The backend suite checks
-          # the repository; this checks the artefact that is actually shipped.
+          # Three datasets and one JavaScript library travel inside the wheel,
+          # and some require attribution as a condition of their licence. The
+          # backend suite checks the repository; this checks the artefact that
+          # is actually shipped.
           site_packages="$(/tmp/smoke/bin/python -c 'import nature_cooling, pathlib; print(pathlib.Path(nature_cooling.__file__).parent)')"
           geo="$site_packages/_bundled/data/geo"
           for required in countries.json.z basemap.json koppen_geiger.json \
-                          koppen_geiger_1991_2020_0p1.bin.z ATTRIBUTION.md \
+                          koppen_geiger_1991_2020_0p1.bin.z places.json.z ATTRIBUTION.md \
                           LICENCE-naturalearth.txt LICENCE-koppen-CC-BY-4.0.txt; do
             test -s "$geo/$required" || { echo "missing from the wheel: $required"; exit 1; }
           done
           grep -q 'Creative Commons Attribution 4.0 International Public License' \
             "$geo/LICENCE-koppen-CC-BY-4.0.txt"
           grep -q '10.1038/s41597-023-02549-6' "$geo/ATTRIBUTION.md"
-          echo "OK: bundled datasets ship with their licences and attribution"
+          # Leaflet is bundled into the frontend build (D-049.5); its BSD-2
+          # text must travel with the embedded webapp.
+          grep -q 'BSD 2-Clause License' "$site_packages/_bundled/webapp/LICENCE-leaflet.txt"
+          echo "OK: bundled content ships with its licences and attribution"
+      - name: Runtime request gate (D-049.8)
+        run: |
+          # The static grep proves no third-party URL sits in the build; this
+          # proves what a running deployment actually requests. Drives the
+          # installed wheel headlessly through the runner's system Chrome —
+          # unconfigured (zero external requests across a full assessment),
+          # configured against a local mock host (tiles go there and only
+          # there), and configured against a dead port (degrades to the
+          # bundled outlines).
+          python -m venv /tmp/pw
+          /tmp/pw/bin/pip install playwright
+          /tmp/pw/bin/python tools/check_runtime_requests.py \
+            --server-python /tmp/smoke/bin/python --dist -
       - name: Container image builds from the wheel
         run: docker build -t nature-cooling:ci .
 

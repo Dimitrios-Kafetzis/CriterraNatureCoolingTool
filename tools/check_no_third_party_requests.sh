@@ -1,12 +1,22 @@
 #!/usr/bin/env bash
-# The no-third-party-request gate (D-030, D-035, and now D-047.1).
+# The STATIC half of the no-third-party-request gate (D-030, D-035, D-047.1,
+# D-048.6; runtime companion added by D-049.8).
 #
 # The rule is one of the reasons this tool is deployable inside institutions
 # with restrictive networks, so it is machine-checked rather than remembered.
-# v2.1 is the first release to admit an exception — external map tiles, off by
-# default, requested only from a source a user has explicitly named — and the
-# concession is narrow: THE DEFAULT BUILD STILL MAKES NO THIRD-PARTY REQUEST.
-# This script is what makes that sentence checkable.
+# Since v2.2 the rule reads: the package makes no third-party request until a
+# DEPLOYER configures one, or a user opts in (D-049.1). That configuration is
+# runtime state — two environment variables — and never appears in the build
+# output, so this static check's claim is unchanged: NO third-party URL may
+# sit in a published artefact in a position the browser fetches. A literal
+# tile host in the build would mean something is fetched without an operator
+# having configured it, which is exactly what the rule forbids.
+#
+# What greps cannot state is what a running deployment actually requests;
+# tools/check_runtime_requests.py drives the built app headlessly and asserts
+# that — zero external requests unconfigured, only-the-configured-host when
+# configured, graceful degradation when the host is unreachable. The two
+# checks together replace what was, before v2.2, this file alone.
 #
 # It checks the two published artefacts: the documentation site and the
 # production frontend build.
