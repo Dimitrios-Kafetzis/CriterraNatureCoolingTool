@@ -66,6 +66,43 @@ def test_typologies_returns_the_full_library(client: TestClient, config: Methodo
     assert first_resolved["sources"], "resolved entries must carry their citations"
 
 
+def test_typologies_serves_every_entrys_curation_reason(client: TestClient) -> None:
+    """The v2.6 detail dialog's provenance rides on the library response.
+
+    One request, not 121 (the D-051.7 rule): the reasons travel beside the
+    resolved entries, keyed by ``nbs_id`` — the curation record's own id — and
+    every shipped entry has one, because a card whose dialog could not say why
+    the entry inherits its evidence class would defeat the dialog's purpose.
+    """
+    body = client.get("/api/typologies").json()
+    reasons = body["curation_reasons"]
+    assert set(reasons) == {entry["nbs_id"] for entry in body["resolved"]}
+    assert all(reason.strip() for reason in reasons.values())
+    # Served verbatim from the published records (D-052.3), never reworded in
+    # transit: the supplementary depaving keep, as the record states it.
+    assert reasons["SA16"].startswith("The deliberate removal of sealed surface")
+
+
+def test_typologies_serves_the_full_reference_behind_every_citation_key(
+    client: TestClient,
+) -> None:
+    """A key like ``jacobs2020`` says nothing on its own (v2.6).
+
+    The bibliography rides on the library response so the dialog and the
+    methodology browser can render the work each key names — full citation,
+    DOI, and the link the bibliography itself carries — without a second
+    request and without the frontend originating any reference text.
+    """
+    body = client.get("/api/typologies").json()
+    bibliography = body["bibliography"]
+    cited = {source["key"] for archetype in body["archetypes"] for source in archetype["sources"]}
+    assert cited <= set(bibliography)
+    jacobs = bibliography["jacobs2020"]
+    assert jacobs["reference"].startswith("Jacobs, C., Klok, L., Bruse, M.")
+    assert jacobs["doi"] == "10.1016/j.uclim.2020.100607"
+    assert jacobs["url"] == "https://doi.org/10.1016/j.uclim.2020.100607"
+
+
 def test_available_reports_which_scales_compose_packages(client: TestClient) -> None:
     """D-044.1: city and district compose a package; smaller scales offer alternatives."""
     assert _available(client, assessment_scale="city")["composes_packages"] is True

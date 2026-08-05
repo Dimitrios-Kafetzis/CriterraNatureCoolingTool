@@ -20,11 +20,17 @@
  *   does not offer stays fully selectable, visually separated and labelled, so
  *   a professional deliberately testing a hypothesis is never overridden. The
  *   engine records the choice with its own honest flags (D-009).
+ *
+ * Since v2.6 every card carries one detail affordance opening the per-entry
+ * detail dialog — identity, the inherited evidence class with its citations,
+ * the curation reason served with the library, the suitability conditions
+ * expanded, and the v2.3 example image folded in as a section rather than a
+ * second dialog on the same card.
  */
 
 import { useId, useMemo, useState } from 'react';
 import { FieldExplainer } from '../components/FieldExplainer';
-import { ExampleImageDialog } from './ExampleImageDialog';
+import { TypologyDetailDialog } from './TypologyDetailDialog';
 import { messages, optionLabel } from '../i18n/en';
 import type {
   AvailableTypologies,
@@ -196,9 +202,9 @@ export function TypologyPicker(props: {
   onChange: (nbsTypes: string[]) => void;
 }) {
   const [filter, setFilter] = useState('');
-  // The open example dialog, if any: the image plus the evidence-class name
-  // of the card it was opened from (the dialog states the inheritance).
-  const [example, setExample] = useState<{ image: NbsImage; archetype: string } | null>(null);
+  // The open detail dialog's card, if any (v2.6). The card snapshot is enough:
+  // the dialog is modal, so the draft cannot change while it is open.
+  const [detail, setDetail] = useState<Card | null>(null);
   const filterId = useId();
   const { library, methodology, availability, draft } = props;
   const selected = draft.nbs_type ?? [];
@@ -209,8 +215,9 @@ export function TypologyPicker(props: {
     [availability],
   );
 
+  const ranks = useMemo(() => ranksOf(methodology), [methodology]);
+
   const cards = useMemo<Card[]>(() => {
-    const ranks = ranksOf(methodology);
     return entries
       .map((typology) => ({
         typology,
@@ -221,7 +228,7 @@ export function TypologyPicker(props: {
         example: exampleImageFor(typology, props.images, draft.climate_zone),
       }))
       .sort((a, b) => FIT_ORDER[a.fit.kind] - FIT_ORDER[b.fit.kind]);
-  }, [entries, offeredSet, draft, methodology, props.images]);
+  }, [entries, offeredSet, draft, ranks, props.images]);
 
   const needle = filter.trim().toLowerCase();
   const matching = needle
@@ -307,7 +314,7 @@ export function TypologyPicker(props: {
               selected={selected}
               defaultOpen={offeredGroups.length <= 3 || needle !== ''}
               onToggle={toggle}
-              onShowExample={setExample}
+              onShowDetail={setDetail}
             />
           ))}
         </section>
@@ -324,7 +331,7 @@ export function TypologyPicker(props: {
               selected={selected}
               defaultOpen={needle !== ''}
               onToggle={toggle}
-              onShowExample={setExample}
+              onShowDetail={setDetail}
             />
           ))}
         </section>
@@ -332,11 +339,15 @@ export function TypologyPicker(props: {
 
       <p className="muted small">{messages.picker.evidenceClassNote}</p>
 
-      {example !== null ? (
-        <ExampleImageDialog
-          image={example.image}
-          archetypeDisplayName={example.archetype}
-          onClose={() => setExample(null)}
+      {detail !== null ? (
+        <TypologyDetailDialog
+          typology={detail.typology}
+          reason={library.curation_reasons[detail.typology.nbs_id]}
+          bibliography={library.bibliography}
+          site={draft}
+          ranks={ranks}
+          image={detail.example}
+          onClose={() => setDetail(null)}
         />
       ) : null}
     </div>
@@ -417,7 +428,7 @@ function FamilySection(props: {
   selected: string[];
   defaultOpen: boolean;
   onToggle: (nbsType: string) => void;
-  onShowExample: (example: { image: NbsImage; archetype: string }) => void;
+  onShowDetail: (card: Card) => void;
 }) {
   const label = familyLabel(props.group.family);
   const kind = props.group.cards[0]?.typology.kind;
@@ -437,7 +448,7 @@ function FamilySection(props: {
             card={card}
             selected={props.selected.includes(card.typology.nbs_type)}
             onToggle={props.onToggle}
-            onShowExample={props.onShowExample}
+            onShowDetail={props.onShowDetail}
           />
         ))}
       </div>
@@ -449,9 +460,9 @@ function TypologyCard(props: {
   card: Card;
   selected: boolean;
   onToggle: (nbsType: string) => void;
-  onShowExample: (example: { image: NbsImage; archetype: string }) => void;
+  onShowDetail: (card: Card) => void;
 }) {
-  const { typology, fit, offered, example } = props.card;
+  const { typology, fit, offered } = props.card;
   const card = (
     <button
       type="button"
@@ -490,26 +501,26 @@ function TypologyCard(props: {
       ) : null}
     </button>
   );
-  if (example === undefined) return card;
-  // The card is itself a <button>, so the affordance is a positioned SIBLING
-  // inside a wrapper, never a nested button — invalid HTML the browser would
-  // "fix" by reparenting (D-051.2).
+  // Every entry has details to show (identity, evidence, curation reason), so
+  // every card carries the affordance — one per card, opening the one detail
+  // dialog into which the v2.3 example image is folded. The card is itself a
+  // <button>, so the affordance is a positioned SIBLING inside a wrapper,
+  // never a nested button — invalid HTML the browser would "fix" by
+  // reparenting (D-051.2).
   return (
     <div className="picker__card-shell">
       {card}
       <button
         type="button"
-        className="picker__photo"
-        aria-label={messages.picker.example.affordance(typology.display_name)}
-        title={messages.picker.example.affordance(typology.display_name)}
-        onClick={() =>
-          props.onShowExample({ image: example, archetype: typology.archetype_display_name })
-        }
+        className="picker__details"
+        aria-label={messages.picker.details.affordance(typology.display_name)}
+        title={messages.picker.details.affordance(typology.display_name)}
+        onClick={() => props.onShowDetail(props.card)}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path
             fill="currentColor"
-            d="M9.4 5l-1.2 2H4v12h16V7h-4.2l-1.2-2H9.4zM12 9.5a4 4 0 110 8 4 4 0 010-8zm0 1.8a2.2 2.2 0 100 4.4 2.2 2.2 0 000-4.4z"
+            d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 1.8a7.2 7.2 0 110 14.4 7.2 7.2 0 010-14.4zM12 7a1.3 1.3 0 110 2.6A1.3 1.3 0 0112 7zm-1.1 4h2.2v6h-2.2v-6z"
           />
         </svg>
       </button>

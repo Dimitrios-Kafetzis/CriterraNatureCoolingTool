@@ -19,7 +19,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from nature_cooling.engine.config import ConfidenceLevel
+from nature_cooling.engine.config import Archetype, ConfidenceLevel, Typology, TypologyEntry
 from nature_cooling.engine.models import AssessmentInput
 
 STORAGE_SCHEMA_VERSION = 3
@@ -156,6 +156,43 @@ class NbsImageManifest(_RequestModel):
 
     purpose: str
     images: list[NbsImage]
+
+
+class SourceReference(_RequestModel):
+    """One bibliography entry, served so a citation key can name its work.
+
+    ``reference`` is the full citation in plain text; ``doi`` and ``url`` are
+    the identifier and link the bibliography itself carries. A link the user
+    clicks is not a request the app makes (the D-051.3 reading), so serving
+    these leaves the request gates untouched.
+    """
+
+    reference: str
+    doi: str | None
+    url: str | None
+
+
+class TypologyLibraryResponse(_RequestModel):
+    """``GET /api/typologies`` — the library, verbatim, plus curation provenance.
+
+    ``archetypes``, ``typologies`` and ``resolved`` are the engine's own loaded
+    models, serialised unchanged — the single source of truth the picker
+    renders and the engine scores. Two maps ride beside them (v2.6) so the
+    detail dialog costs no request the picker was not already making:
+    ``curation_reasons``, the one-line reason each shipped entry was kept,
+    keyed by ``nbs_id`` and read from the published curation records in
+    ``docs/assets/``; and ``bibliography``, the full reference behind every
+    citation key, parsed from the bibliography the wheel already carries — a
+    key like ``jacobs2020`` says nothing on its own, so the interface renders
+    the work it names, with its DOI or URL as a link.
+    """
+
+    version: str
+    archetypes: list[Archetype]
+    typologies: list[TypologyEntry]
+    resolved: list[Typology]
+    curation_reasons: dict[str, str]
+    bibliography: dict[str, SourceReference]
 
 
 class FieldIssue(_RequestModel):

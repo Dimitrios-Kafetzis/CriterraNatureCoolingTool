@@ -706,14 +706,14 @@ export const messages = {
       `${nbsType} — this entry is not in the current library and must be re-selected.`,
 
     /**
-     * The example-image dialog (v2.3, D-051). Captions illustrate, never
-     * claim: subject, place and climate zone — nothing about degrees,
-     * performance, or cost (D-051.6). The affordance exists only where a
-     * verified photograph matches the project's climate zone exactly; its
-     * absence is the honest state, so it has no "coming soon" wording.
+     * The example-image strings (v2.3, D-051), rendered since v2.6 as one
+     * section of the detail dialog rather than a dialog of their own. Captions
+     * illustrate, never claim: subject, place and climate zone — nothing about
+     * degrees, performance, or cost (D-051.6). The image section exists only
+     * where a verified photograph matches the project's climate zone exactly;
+     * its absence is the honest state, so it has no "coming soon" wording.
      */
     example: {
-      affordance: (name: string) => `See a real example of ${name}`,
       caption: (subject: string, place: string, zone: string) => `${subject} in ${place} (${zone})`,
       evidenceClassNote: (archetype: string) =>
         `A built example from this entry's evidence class (${archetype}), in the project's climate zone.`,
@@ -722,7 +722,50 @@ export const messages = {
       credit: (author: string) => `Photograph: ${author}`,
       licenceLabel: 'Licence:',
       sourceLink: 'Source page',
+    },
+
+    /**
+     * The per-entry detail dialog (v2.6). It discloses what the tool already
+     * knows about one entry: identity, the inherited evidence class with every
+     * citation and its finding inline — the archetype model's promise, made
+     * visible at the point of choosing rather than behind a disclosure control
+     * — the curation reason served from the published records, the suitability
+     * conditions with their numbers stated, and the example image where one
+     * exists. Absence renders nothing: no placeholder, no "not available".
+     */
+    details: {
+      affordance: (name: string) => `Details of ${name}`,
       close: 'Close',
+      catalogueEntry: (id: string) => `Catalogue entry ${id}`,
+      mechanism: (mechanism: string) => `Cools by: ${mechanism}`,
+      evidenceHeading: 'The evidence behind the numbers',
+      inherits: (archetype: string) =>
+        `This entry inherits its cooling envelope from the ${archetype} evidence class — the values below are that class's, not measurements of this entry alone.`,
+      provenance: {
+        existing: 'Evidence carried unchanged from the v1.1 library.',
+        new: 'Evidence newly retrieved for the archetype library.',
+        derived: 'Evidence derived from adjacent cited classes, with a stated bounding argument.',
+      } as Record<string, string>,
+      sourcesLabel: 'Sources, each with the finding it supports:',
+      reasonHeading: 'Why this entry was kept',
+      suitabilityHeading: 'Fit for the site you described',
+      conditions: {
+        met: 'met',
+        failed: 'not met',
+        unanswered: 'not yet answered',
+        area: (min: string) => `Needs at least ${min} m²`,
+        areaAnswer: (area: string) => ` — this site: ${area} m²`,
+        areaUnanswered: ' — site area not yet given',
+        soil: (requirement: string) => `Needs ${requirement} soil`,
+        soilAnswer: (supplied: string) => ` — this site: ${supplied}`,
+        soilUnanswered: ' — soil availability not yet given',
+        irrigation: (requirement: string) => `Needs ${requirement} irrigation`,
+        irrigationAnswer: (supplied: string) => ` — this site: ${supplied}`,
+        irrigationUnanswered: ' — irrigation availability not yet given',
+        climate: (zones: string) => `Not suited to: ${zones}`,
+        climateAnswer: (zone: string) => ` — this site: ${zone}`,
+        climateUnanswered: ' — climate zone not yet given',
+      },
     },
   },
 
@@ -936,6 +979,16 @@ export const messages = {
     noFlags: '—',
     identicalNote: 'Rows in grey are identical across the selected options.',
     addOption: 'Add another option',
+  },
+
+  /**
+   * Labels around a served citation (v2.6). The reference text itself is
+   * always the bibliography's own line, served by the API — these are only
+   * the words beside the link.
+   */
+  sources: {
+    doi: 'DOI:',
+    link: 'Source',
   },
 
   methodology: {

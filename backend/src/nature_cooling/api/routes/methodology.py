@@ -16,13 +16,18 @@ from typing import Any
 
 from fastapi import APIRouter, Query, Request
 
-from nature_cooling.api.schemas import AvailableTypologies
+from nature_cooling.api.schemas import (
+    AvailableTypologies,
+    SourceReference,
+    TypologyLibraryResponse,
+)
+from nature_cooling.bibliography import references_for
+from nature_cooling.curation import curation_reasons_for
 from nature_cooling.engine import availability as availability_module
 from nature_cooling.engine.config import (
     AssessmentScaleName,
     GovernanceType,
     MethodologyConfig,
-    TypologyLibrary,
     WaterfrontType,
 )
 from nature_cooling.engine.models import SiteConditions
@@ -41,15 +46,32 @@ def _config(request: Request) -> MethodologyConfig:
 
 
 @router.get("/typologies")
-def typologies(request: Request) -> TypologyLibrary:
+def typologies(request: Request) -> TypologyLibraryResponse:
     """The full library: 18 cited archetypes and the 121 entries inheriting them.
 
     ``resolved`` carries each entry merged with its archetype — the flat view
     the picker renders and the engine scores — while ``archetypes`` carries the
     citations, so the interface can show which evidence class a card's numbers
-    came from without inferring anything.
+    came from without inferring anything. ``curation_reasons`` carries the
+    one-line reason each entry was kept (v2.6), read from the published
+    curation records so the detail dialog states provenance the backend serves
+    rather than content the frontend originates; ``bibliography`` carries the
+    full reference behind every citation key, so a key like ``jacobs2020``
+    renders as the work it names rather than as a label.
     """
-    return _config(request).typologies
+    library = _config(request).typologies
+    cited = {source.key for archetype in library.archetypes for source in archetype.sources}
+    return TypologyLibraryResponse(
+        version=library.version,
+        archetypes=list(library.archetypes),
+        typologies=list(library.typologies),
+        resolved=list(library.resolved),
+        curation_reasons=curation_reasons_for(library),
+        bibliography={
+            key: SourceReference(reference=entry.reference, doi=entry.doi, url=entry.url)
+            for key, entry in references_for(cited).items()
+        },
+    )
 
 
 @router.get("/typologies/available")

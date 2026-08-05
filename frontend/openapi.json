@@ -2732,6 +2732,45 @@
         "title": "Source",
         "type": "object"
       },
+      "SourceReference": {
+        "additionalProperties": false,
+        "description": "One bibliography entry, served so a citation key can name its work.\n\n``reference`` is the full citation in plain text; ``doi`` and ``url`` are\nthe identifier and link the bibliography itself carries. A link the user\nclicks is not a request the app makes (the D-051.3 reading), so serving\nthese leaves the request gates untouched.",
+        "properties": {
+          "doi": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doi"
+          },
+          "reference": {
+            "title": "Reference",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "reference",
+          "doi",
+          "url"
+        ],
+        "title": "SourceReference",
+        "type": "object"
+      },
       "Suitability": {
         "additionalProperties": false,
         "description": "Conditions under which a typology is considered unsuitable for a site.",
@@ -3181,17 +3220,30 @@
         "title": "TypologyEntry",
         "type": "object"
       },
-      "TypologyLibrary": {
+      "TypologyLibraryResponse": {
         "additionalProperties": false,
-        "description": "The complete typology library, as loaded from ``nbs_typologies.yaml``.\n\n``archetypes`` and ``typologies`` are the file as written; ``resolved`` is\nthe flat scoring view, computed once at load.",
+        "description": "``GET /api/typologies`` — the library, verbatim, plus curation provenance.\n\n``archetypes``, ``typologies`` and ``resolved`` are the engine's own loaded\nmodels, serialised unchanged — the single source of truth the picker\nrenders and the engine scores. Two maps ride beside them (v2.6) so the\ndetail dialog costs no request the picker was not already making:\n``curation_reasons``, the one-line reason each shipped entry was kept,\nkeyed by ``nbs_id`` and read from the published curation records in\n``docs/assets/``; and ``bibliography``, the full reference behind every\ncitation key, parsed from the bibliography the wheel already carries — a\nkey like ``jacobs2020`` says nothing on its own, so the interface renders\nthe work it names, with its DOI or URL as a link.",
         "properties": {
           "archetypes": {
             "items": {
               "$ref": "#/components/schemas/Archetype"
             },
-            "minItems": 1,
             "title": "Archetypes",
             "type": "array"
+          },
+          "bibliography": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/SourceReference"
+            },
+            "title": "Bibliography",
+            "type": "object"
+          },
+          "curation_reasons": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Curation Reasons",
+            "type": "object"
           },
           "resolved": {
             "items": {
@@ -3204,7 +3256,6 @@
             "items": {
               "$ref": "#/components/schemas/TypologyEntry"
             },
-            "minItems": 1,
             "title": "Typologies",
             "type": "array"
           },
@@ -3216,9 +3267,12 @@
         "required": [
           "version",
           "archetypes",
-          "typologies"
+          "typologies",
+          "resolved",
+          "curation_reasons",
+          "bibliography"
         ],
-        "title": "TypologyLibrary",
+        "title": "TypologyLibraryResponse",
         "type": "object"
       },
       "TypologySummary": {
@@ -3424,7 +3478,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0"
     },
     "title": "Nature for Cooling Rapid Assessment Tool",
-    "version": "2.5.0"
+    "version": "2.6.0"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -4485,14 +4539,14 @@
     },
     "/api/typologies": {
       "get": {
-        "description": "The full library: 18 cited archetypes and the 121 entries inheriting them.\n\n``resolved`` carries each entry merged with its archetype — the flat view\nthe picker renders and the engine scores — while ``archetypes`` carries the\ncitations, so the interface can show which evidence class a card's numbers\ncame from without inferring anything.",
+        "description": "The full library: 18 cited archetypes and the 121 entries inheriting them.\n\n``resolved`` carries each entry merged with its archetype — the flat view\nthe picker renders and the engine scores — while ``archetypes`` carries the\ncitations, so the interface can show which evidence class a card's numbers\ncame from without inferring anything. ``curation_reasons`` carries the\none-line reason each entry was kept (v2.6), read from the published\ncuration records so the detail dialog states provenance the backend serves\nrather than content the frontend originates; ``bibliography`` carries the\nfull reference behind every citation key, so a key like ``jacobs2020``\nrenders as the work it names rather than as a label.",
         "operationId": "typologies_api_typologies_get",
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TypologyLibrary"
+                  "$ref": "#/components/schemas/TypologyLibraryResponse"
                 }
               }
             },

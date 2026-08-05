@@ -11,22 +11,11 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
+import { BibliographyContext, SourceList } from '../components/SourceList';
 import type { MethodologyData, ScoreBand, Typology, TypologyLibrary } from '../api/types';
 import { messages, optionLabel } from '../i18n/en';
 
 const t = messages.methodology;
-
-function SourceList({ sources }: { sources: { key: string; finding: string }[] }) {
-  return (
-    <ul className="source-list">
-      {sources.map((source) => (
-        <li key={`${source.key}-${source.finding.slice(0, 24)}`}>
-          <span className="source-key">{source.key}</span> — {source.finding}
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 function isSourceArray(value: unknown): value is { key: string; finding: string }[] {
   return (
@@ -310,7 +299,10 @@ export function MethodologyScreen() {
     ),
   );
 
-  return (
+  // Every source list below — the typology cards' and the configuration
+  // tree's — resolves its citation keys against the served bibliography, so
+  // a key renders with the work it names (v2.6).
+  const content = (
     <div className="methodology">
       <nav className="methodology__toc" aria-label={t.heading}>
         {SECTION_IDS.map((id) => (
@@ -422,5 +414,10 @@ export function MethodologyScreen() {
         </section>
       </div>
     </div>
+  );
+  return (
+    <BibliographyContext.Provider value={library.bibliography}>
+      {content}
+    </BibliographyContext.Provider>
   );
 }

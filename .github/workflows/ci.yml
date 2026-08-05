@@ -120,6 +120,14 @@ jobs:
           first="$(python -c "import json; print(json.load(open('/tmp/images.json'))['images'][0]['file'])")"
           curl -fsS "http://127.0.0.1:8123/api/images/$first" -o /tmp/example.webp
           python -c "import pathlib; head = pathlib.Path('/tmp/example.webp').read_bytes()[:16]; assert head[:4] == b'RIFF' and head[8:12] == b'WEBP', head"
+          # The curation reasons and the bibliography ship inside the wheel
+          # and are served with the library (v2.6): every resolved entry must
+          # carry a reason, and every citation key must resolve to its full
+          # reference, because the detail dialog renders both from what the
+          # backend serves.
+          curl -fsS http://127.0.0.1:8123/api/typologies > /tmp/typologies.json
+          python -c "import json; d = json.load(open('/tmp/typologies.json')); assert set(d['curation_reasons']) == {t['nbs_id'] for t in d['resolved']} and d['resolved'], 'curation reasons must cover the shipped library'"
+          python -c "import json; d = json.load(open('/tmp/typologies.json')); cited = {s['key'] for a in d['archetypes'] for s in a['sources']}; assert cited <= set(d['bibliography']), 'every cited key must resolve to a served reference'"
       - name: Bundled datasets and the map library ship with the licences that permit them
         run: |
           # Three datasets and one JavaScript library travel inside the wheel,
@@ -154,6 +162,12 @@ jobs:
               assert path.is_file() and path.stat().st_size > 0, f"missing from the wheel: {image['file']}"
           print(f"OK: {len(declared)} example images inside the wheel")
           PY
+          # The published curation records (v2.6): the wheel serves each
+          # entry's curation reason from them, so both must travel inside it.
+          for record in v1.2-curation.json v2.5-curation.json; do
+            test -s "$site_packages/_bundled/docs/assets/$record" \
+              || { echo "missing from the wheel: $record"; exit 1; }
+          done
           echo "OK: bundled content ships with its licences and attribution"
       - name: Runtime request gate (D-049.8)
         run: |

@@ -152,18 +152,20 @@ describe('WizardScreen', () => {
   });
 
   it('serves the example-image manifest to the picker in one request (v2.3, D-051)', async () => {
-    // The duplicate's site answers temperate, which the fixture manifest
-    // holds images for, so the affordances render; the draft fixture with no
-    // climate zone is covered by the picker's own tests.
+    // Whether an image renders inside a card's detail dialog is the picker's
+    // own tests' business (v2.6 folded the image into the detail dialog);
+    // this screen-level test pins the request shape.
     const { calls } = installFetchMock(baseRoutes(validatePartial, assessmentDuplicate));
     renderWizard(stepUrl('intervention'));
 
     await screen.findByRole('heading', { name: messages.wizard.steps.intervention.title });
     await waitFor(() => {
-      expect(document.querySelectorAll('.picker__photo').length).toBeGreaterThan(0);
+      expect(document.querySelectorAll('.picker__details').length).toBeGreaterThan(0);
     });
     // One manifest request — never a per-card lookup over 121 entries.
-    expect(calls.filter((call) => call.url === '/api/images/manifest')).toHaveLength(1);
+    await waitFor(() => {
+      expect(calls.filter((call) => call.url === '/api/images/manifest')).toHaveLength(1);
+    });
   });
 
   it('asks the service which entries this site is offered, computing no rule of its own', async () => {

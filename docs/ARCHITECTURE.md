@@ -94,7 +94,7 @@ backend/
 |---|---|
 | `POST /api/assessments/evaluate` | Validate input, run engine, return full result (stateless) |
 | `POST /api/assessments/validate` | Dry-run validation for inline form feedback: errors + warnings, per-block confidence preview, highest-value missing field hint |
-| `GET  /api/typologies` | Typology library incl. suitability conditions and citations |
+| `GET  /api/typologies` | Typology library incl. suitability conditions, citations, each entry's one-line curation reason (served verbatim from the published curation records in `docs/assets/`, which travel inside the wheel — curation provenance stays out of `config/` so rewording a reason can never force a methodology version bump), and the bibliography: the full reference behind every citation key with its DOI/URL, parsed from the same `BIBLIOGRAPHY.md` the citation check reads, so a key like `jacobs2020` always renders as the work it names |
 | `GET  /api/methodology` | Formulas, weights, factors, version — powers the methodology browser |
 | `GET  /api/meta` | Engine version, methodology version, license |
 | `GET  /api/projects` | Project summaries, most recently updated first |
@@ -119,7 +119,7 @@ Persistence in v1 is **local-first**: one JSON document per project (`schema_ver
 
 React + TypeScript (Vite). Structure mirrors the user journey:
 
-- **Questionnaire wizard** — the 6 input groups as steps (project → site → climate → vulnerability → intervention → cost/energy); inline validation via `/validate`; every field with the qualitative fallback and "unknown" affordances the methodology requires.
+- **Questionnaire wizard** — the 6 input groups as steps (project → site → climate → vulnerability → intervention → cost/energy); inline validation via `/validate`; every field with the qualitative fallback and "unknown" affordances the methodology requires. Every intervention card opens one per-entry detail dialog (a native modal `<dialog>`): identity, the inherited evidence class with every citation inline — the finding, the full reference, and its DOI/URL as a link — the curation reason, each suitability condition compared against the described site with its numbers stated, and — where a verified photograph matches the site's climate zone — the example image, folded in as a section rather than a second dialog. Absent content renders nothing: no placeholder, no "not available".
 - **Results dashboard** — score cards (Heat Priority Index, NbS Cooling Opportunity Score), the six output blocks, branched confidence badges, suitability flags, assumptions list, recommendation.
 - **Comparison view** — same site, interventions A/B/C side by side, with user-editable scenario labels and a PDF/XLSX comparison export (2–4 options, in the on-screen order). Options assessed at different scales are flagged as not like for like — on screen and in the export — rather than silently tabulated; the export highlights the best value per criterion and states the facts in a short narrative, but never ranks the options or names a winner.
 - **Methodology browser** — renders `/api/methodology` + citations; every score in the UI links to its formula and sources.

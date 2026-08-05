@@ -20,8 +20,20 @@ export type PlaceResult = Schemas['PlaceResult'];
 export type PlaceSearchResponse = Schemas['PlaceSearchResponse'];
 export type NbsImage = Schemas['NbsImage'];
 export type NbsImageManifest = Schemas['NbsImageManifest'];
-export type TypologyLibrary = Schemas['TypologyLibrary'];
+/**
+ * `GET /api/typologies` (renamed `TypologyLibraryResponse` on the wire in
+ * v2.6): the library verbatim plus `curation_reasons` — the one-line reason
+ * each shipped entry was kept, keyed by `nbs_id`, served from the published
+ * curation records so the detail dialog states provenance the backend serves.
+ */
+export type TypologyLibrary = Schemas['TypologyLibraryResponse'];
 export type Typology = Schemas['Typology'];
+/** One cited evidence class (D-044): the envelope, its confidence, and the
+ * citations with the finding each supports — what the detail dialog discloses. */
+export type Archetype = Schemas['Archetype'];
+/** One bibliography entry (v2.6): the full citation behind a source key,
+ * with the DOI or URL the bibliography itself carries. */
+export type SourceReference = Schemas['SourceReference'];
 export type TypologySummary = Schemas['TypologySummary'];
 export type ComponentBlock = Schemas['ComponentBlock'];
 export type PackageBlock = Schemas['PackageBlock'];

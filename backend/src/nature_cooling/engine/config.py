@@ -438,6 +438,21 @@ def default_images_dir() -> Path:
     return repo_images if repo_images.is_dir() else bundled_data_dir() / "data" / "images"
 
 
+def default_curation_records_dir() -> Path:
+    """Return the published curation records: the repository's, else the wheel's.
+
+    Holds ``v1.2-curation.json`` and ``v2.5-curation.json``, the machine-readable
+    record of what the catalogue keeps, merges and drops (D-052.3). The v2.6
+    detail dialog serves each kept entry's one-line reason from them, so they
+    are staged into the wheel beside ``config/`` by ``tools/build_wheel.sh``.
+    They stay in ``docs/assets/`` rather than ``config/`` because a curation
+    reason is provenance, not methodology: rewording one must never force a
+    methodology version bump.
+    """
+    repo_assets = repo_root() / "docs" / "assets"
+    return repo_assets if repo_assets.is_dir() else bundled_data_dir() / "docs" / "assets"
+
+
 def default_bibliography_path() -> Path:
     """Return the methodology bibliography: the repository's, else the wheel's."""
     repo_bibliography = repo_root() / "docs" / "methodology" / "BIBLIOGRAPHY.md"

@@ -414,7 +414,12 @@ export interface paths {
      *     ``resolved`` carries each entry merged with its archetype — the flat view
      *     the picker renders and the engine scores — while ``archetypes`` carries the
      *     citations, so the interface can show which evidence class a card's numbers
-     *     came from without inferring anything.
+     *     came from without inferring anything. ``curation_reasons`` carries the
+     *     one-line reason each entry was kept (v2.6), read from the published
+     *     curation records so the detail dialog states provenance the backend serves
+     *     rather than content the frontend originates; ``bibliography`` carries the
+     *     full reference behind every citation key, so a key like ``jacobs2020``
+     *     renders as the work it names rather than as a label.
      */
     get: operations['typologies_api_typologies_get'];
     put?: never;
@@ -1418,6 +1423,23 @@ export interface components {
       key: string;
     };
     /**
+     * SourceReference
+     * @description One bibliography entry, served so a citation key can name its work.
+     *
+     *     ``reference`` is the full citation in plain text; ``doi`` and ``url`` are
+     *     the identifier and link the bibliography itself carries. A link the user
+     *     clicks is not a request the app makes (the D-051.3 reading), so serving
+     *     these leaves the request gates untouched.
+     */
+    SourceReference: {
+      /** Doi */
+      doi: string | null;
+      /** Reference */
+      reference: string;
+      /** Url */
+      url: string | null;
+    };
+    /**
      * Suitability
      * @description Conditions under which a typology is considered unsuitable for a site.
      */
@@ -1610,17 +1632,33 @@ export interface components {
       suitability_overrides?: components['schemas']['SuitabilityOverride'] | null;
     };
     /**
-     * TypologyLibrary
-     * @description The complete typology library, as loaded from ``nbs_typologies.yaml``.
+     * TypologyLibraryResponse
+     * @description ``GET /api/typologies`` — the library, verbatim, plus curation provenance.
      *
-     *     ``archetypes`` and ``typologies`` are the file as written; ``resolved`` is
-     *     the flat scoring view, computed once at load.
+     *     ``archetypes``, ``typologies`` and ``resolved`` are the engine's own loaded
+     *     models, serialised unchanged — the single source of truth the picker
+     *     renders and the engine scores. Two maps ride beside them (v2.6) so the
+     *     detail dialog costs no request the picker was not already making:
+     *     ``curation_reasons``, the one-line reason each shipped entry was kept,
+     *     keyed by ``nbs_id`` and read from the published curation records in
+     *     ``docs/assets/``; and ``bibliography``, the full reference behind every
+     *     citation key, parsed from the bibliography the wheel already carries — a
+     *     key like ``jacobs2020`` says nothing on its own, so the interface renders
+     *     the work it names, with its DOI or URL as a link.
      */
-    TypologyLibrary: {
+    TypologyLibraryResponse: {
       /** Archetypes */
       archetypes: components['schemas']['Archetype'][];
+      /** Bibliography */
+      bibliography: {
+        [key: string]: components['schemas']['SourceReference'];
+      };
+      /** Curation Reasons */
+      curation_reasons: {
+        [key: string]: string;
+      };
       /** Resolved */
-      resolved?: components['schemas']['Typology'][];
+      resolved: components['schemas']['Typology'][];
       /** Typologies */
       typologies: components['schemas']['TypologyEntry'][];
       /** Version */
@@ -2468,7 +2506,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['TypologyLibrary'];
+          'application/json': components['schemas']['TypologyLibraryResponse'];
         };
       };
     };

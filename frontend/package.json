@@ -1,7 +1,7 @@
 {
   "name": "criterra-nature-cooling-frontend",
   "private": true,
-  "version": "2.5.0",
+  "version": "2.6.0",
   "type": "module",
   "description": "Web application for the Nature for Cooling Rapid Assessment Tool",
   "license": "Apache-2.0",
