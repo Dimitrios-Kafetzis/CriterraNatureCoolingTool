@@ -14,6 +14,10 @@ published site:
    the fonts are handled (D-036, D-042).
 4. Corpus links that point outside ``docs/`` (``config/…``, ``tools/…``) are
    rewritten to the GitHub repository so they resolve from the site.
+5. The header's repository version badge is pre-filled at build time from the
+   package version. Material otherwise queries the GitHub API from every
+   visitor's browser for it — a third-party request the site must not make,
+   and one whose per-browser cache goes stale between releases.
 """
 
 from __future__ import annotations
@@ -59,6 +63,35 @@ _BRAND_ASSETS = {
     "assets/criterra-lockup.svg": "brand/criterra-lockup.svg",
     "assets/favicon.ico": "favicon.ico",
 }
+
+
+def _package_version() -> str:
+    init = REPO_ROOT / "backend" / "src" / "nature_cooling" / "__init__.py"
+    match = re.search(r'__version__\s*=\s*"([^"]+)"', init.read_text(encoding="utf-8"))
+    assert match, "package version not found"
+    return match.group(1)
+
+
+_BUNDLE_TAG = re.compile(r'<script src="[^"]*assets/javascripts/bundle[^"]*">')
+
+
+def on_post_page(output: str, page: Page, config: MkDocsConfig) -> str:
+    """Pre-fill Material's repository-facts cache so it never queries GitHub.
+
+    Material's bundle reads ``__source`` from sessionStorage and only falls
+    back to ``api.github.com`` when it is absent — but it mounts the header
+    component synchronously while the bundle executes, so the value must be
+    written *before* the bundle tag; ``extra_javascript`` renders after it
+    and is too late. Writing the version on every page load keeps the badge
+    correct for the build that published it and replaces any stale value a
+    browser cached from an earlier visit. Stars and forks are not shown —
+    they exist only behind the API request this hook exists to avoid.
+    """
+    prefill = (
+        f'<script>__md_set("__source",'
+        f'{{version:"v{_package_version()}"}},sessionStorage)</script>'
+    )
+    return _BUNDLE_TAG.sub(lambda m: prefill + m.group(0), output, count=1)
 
 
 def on_files(files: Files, config: MkDocsConfig) -> Files:
