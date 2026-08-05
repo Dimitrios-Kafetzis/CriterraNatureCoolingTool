@@ -503,9 +503,9 @@ Required inputs must be present; the assessment does not proceed without them. O
 
 The tool's published sensitivity analysis varies each aggregation weight by **±25%** (renormalising the remainder) across the golden-scenario set and reports rank stability, score displacement, category migration, and an influence ranking. It is implemented in [`tools/sensitivity_analysis.py`](../../tools/sensitivity_analysis.py), its full output is committed at [SENSITIVITY-ANALYSIS.md](SENSITIVITY-ANALYSIS.md), and it must be regenerated whenever any aggregation weight changes.
 
-### 7.1 Results at version 2026.08.05
+### 7.1 Results at version 2026.08.06
 
-**Re-confirmed unchanged at `2026.08.05`.** The map release adds one methodology value — the Köppen–Geiger mapping of §3.5 — and moves no aggregation weight, no typology value, no scoring formula and no golden scenario. The analysis was **re-executed rather than assumed**, and every figure below is byte-identical to the one published at `2026.08.04`; only the version stamp on the generated file differs. This is the same treatment `2026.08.03` received, and for the same reason: a release that changes nothing the analysis measures should be able to demonstrate that, not assert it.
+**Re-confirmed unchanged at `2026.08.06`.** The catalogue expansion adds 11 entries, and every one of them inherits an archetype that already existed, so it moves no aggregation weight, no cooling envelope, no scoring formula and no golden scenario — nothing this analysis measures changed. The analysis was **re-executed rather than assumed**, and every figure below is byte-identical to the one published at `2026.08.05`; only the version stamp on the generated file differs. This is the treatment `2026.08.03` and `2026.08.05` received, and for the same reason: a release that changes nothing the analysis measures should be able to demonstrate that, not assert it.
 
 The figures themselves were **regenerated at `2026.08.04`**, when the library changed from 14 typologies to 110 entries over 18 archetypes and the scenario set grew from 20 to 24. The aggregation weights have been **unchanged** throughout — what moved at that version was the population of scenarios they are applied to.
 
@@ -550,7 +550,7 @@ Two further honest qualifications. First, the analysis perturbs one weight at a 
 
 ## 9. Methodology governance
 
-**Versioning.** The methodology version (`2026.08.05`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
+**Versioning.** The methodology version (`2026.08.06`) stamps both this document and the configuration files, and is recorded in every assessment result. A change to any methodology value requires a version bump and a corresponding update to this document in the same change set; continuous integration enforces that performance values carry citations.
 
 **Change process.** Methodology changes are proposed as public pull requests with their evidence. Existing assessments are never silently recomputed: results retain the version that produced them, and the interface indicates when a newer methodology version is available.
 
