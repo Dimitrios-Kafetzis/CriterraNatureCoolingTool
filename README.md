@@ -33,7 +33,7 @@ A user describes a site through a short questionnaire — an optional map step t
 - a **confidence level** reflecting data completeness,
 - an exportable report.
 
-Interventions for the **same site can be compared side by side** (option A / B / C).
+Interventions for the **same site can be compared side by side** (option A / B / C), with user-named scenarios and an exportable **comparison report** (PDF / XLSX) that highlights the best value per criterion without ever ranking the options or naming a winner.
 
 ## What it is not
 
@@ -122,7 +122,7 @@ npm install
 npm run dev                           # http://127.0.0.1:5173
 ```
 
-The API serves scoring (`POST /api/assessments/evaluate`), inline validation with a live confidence preview (`POST /api/assessments/validate`), the typology library and methodology as data, local-first project storage, and report export — `GET /api/projects/{id}/assessments/{aid}/report.pdf` and `…/report.xlsx` render a stored, evaluated assessment as the 2-page PDF report or the XLSX workbook (the results page's **Export** actions download exactly these). See the endpoint table in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#23-api-surface-v1). Projects are stored as JSON under your platform user-data directory; stored results are never silently recomputed when the methodology moves.
+The API serves scoring (`POST /api/assessments/evaluate`), inline validation with a live confidence preview (`POST /api/assessments/validate`), the typology library and methodology as data, local-first project storage, and report export — `GET /api/projects/{id}/assessments/{aid}/report.pdf` and `…/report.xlsx` render a stored, evaluated assessment as the 2-page PDF report or the XLSX workbook (the results page's **Export** actions download exactly these). A comparison of 2–4 evaluated scenarios exports the same way — `GET /api/projects/{id}/report/comparison.pdf` and `…/comparison.xlsx` — rendering the stored results side by side; the engine is never called from a report path. See the endpoint table in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#23-api-surface-v1). Projects are stored as JSON under your platform user-data directory; stored results are never silently recomputed when the methodology moves.
 
 The frontend's API types are generated from the service's OpenAPI schema and committed (`frontend/openapi.json`, `frontend/src/api/schema.ts`); after changing the API, regenerate with `npm run generate` — CI fails on drift.
 

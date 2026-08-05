@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route } from 'react-router';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ProjectScreen } from '../screens/ProjectScreen';
 import { messages } from '../i18n/en';
 import { installFetchMock } from './mockFetch';
@@ -98,5 +98,46 @@ describe('ProjectScreen', () => {
     expect(calls.some((call) => call.method === 'POST' && call.url.endsWith('/duplicate'))).toBe(
       true,
     );
+  });
+
+  it('renames an assessment through the existing PATCH label field (v2.4)', async () => {
+    const first = project.assessments[0]!;
+    const { calls } = installFetchMock([
+      { method: 'GET', path: '/api/meta', response: meta },
+      { method: 'GET', path: `/api/projects/${project.project_id}`, response: project },
+      {
+        method: 'PATCH',
+        path: `/api/projects/${project.project_id}/assessments/${first.assessment_id}`,
+        response: (body: unknown) => ({ ...first, ...(body as object) }),
+      },
+    ]);
+    vi.spyOn(window, 'prompt').mockReturnValue('Pocket park row');
+    renderAt(projectUrl, <Route path="projects/:projectId" element={<ProjectScreen />} />);
+
+    const user = userEvent.setup();
+    const renameButtons = await screen.findAllByRole('button', { name: messages.project.rename });
+    await user.click(renameButtons[0]!);
+
+    const patch = calls.find((call) => call.method === 'PATCH');
+    expect(patch).toBeDefined();
+    expect(patch!.body).toEqual({ label: 'Pocket park row' });
+  });
+
+  it('a cancelled or unchanged rename sends nothing', async () => {
+    const { calls } = installFetchMock([
+      { method: 'GET', path: '/api/meta', response: meta },
+      { method: 'GET', path: `/api/projects/${project.project_id}`, response: project },
+    ]);
+    const prompt = vi.spyOn(window, 'prompt');
+    renderAt(projectUrl, <Route path="projects/:projectId" element={<ProjectScreen />} />);
+
+    const user = userEvent.setup();
+    const renameButtons = await screen.findAllByRole('button', { name: messages.project.rename });
+    prompt.mockReturnValue(null);
+    await user.click(renameButtons[0]!);
+    prompt.mockReturnValue(project.assessments[0]!.label);
+    await user.click(renameButtons[0]!);
+
+    expect(calls.some((call) => call.method === 'PATCH')).toBe(false);
   });
 });

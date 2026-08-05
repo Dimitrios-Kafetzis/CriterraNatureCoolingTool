@@ -5,6 +5,10 @@
  * options differ are highlighted rather than repeating identical values.
  * The winning option is never announced — the tool presents the axes and
  * the decision belongs to the user.
+ *
+ * v2.4 adds the exportable comparison report (2–4 options, in the order
+ * shown here) and the cross-scale disclosure: options assessed at different
+ * scales are never tabulated as like for like without saying so.
  */
 
 import { useEffect, useMemo, useState } from 'react';
@@ -32,9 +36,23 @@ interface Row {
   emphasis?: 'error' | undefined;
 }
 
+function scaleLabel(option: Option): string {
+  // The stored input is an open record; an evaluated assessment always
+  // carries its scale, but the type cannot promise that.
+  const scale = option.assessment.input['assessment_scale'];
+  if (typeof scale !== 'string') return messages.wizard.unansweredOption;
+  return (messages.options.assessment_scale as Record<string, string>)[scale] ?? scale;
+}
+
 function buildRows(options: Option[]): Row[] {
   const results = options.map((option) => option.result);
   return [
+    {
+      // The like-for-like axis (v2.4): stated first, so a cross-scale
+      // comparison is read as such before any figure is.
+      label: t.row.scale,
+      values: options.map(scaleLabel),
+    },
     {
       // A package lists its components; a package of one reads exactly as it
       // always has (D-038).
@@ -145,6 +163,10 @@ export function CompareScreen() {
 
   const options = evaluated.filter((option) => chosen.includes(option.assessment.assessment_id));
   const rows = options.length >= 2 ? buildRows(options) : [];
+  const crossScale = new Set(options.map(scaleLabel)).size > 1;
+  const exportQuery = options
+    .map((option) => `assessments=${option.assessment.assessment_id}`)
+    .join('&');
 
   function toggle(assessmentId: string) {
     const next = chosen.includes(assessmentId)
@@ -187,6 +209,7 @@ export function CompareScreen() {
         <p className="notice">{t.needTwo}</p>
       ) : (
         <>
+          {crossScale ? <p className="notice notice--warn">{t.crossScale}</p> : null}
           <table className="data compare-table">
             <thead>
               <tr>
@@ -220,6 +243,26 @@ export function CompareScreen() {
             </tbody>
           </table>
           <p className="muted small">{t.identicalNote}</p>
+          {options.length <= 4 ? (
+            <div className="actions-row" style={{ marginTop: '1rem' }}>
+              <a
+                className="button"
+                href={`/api/projects/${projectId}/report/comparison.pdf?${exportQuery}`}
+                download
+              >
+                {t.exportPdf}
+              </a>
+              <a
+                className="button button--secondary"
+                href={`/api/projects/${projectId}/report/comparison.xlsx?${exportQuery}`}
+                download
+              >
+                {t.exportXlsx}
+              </a>
+            </div>
+          ) : (
+            <p className="muted small">{t.exportLimit}</p>
+          )}
         </>
       )}
 

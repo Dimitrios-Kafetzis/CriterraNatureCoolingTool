@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import re
 import zipfile
+from collections.abc import Sequence
 from datetime import datetime
 from io import BytesIO
 from typing import Any
@@ -27,7 +28,13 @@ from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
 from nature_cooling.report.catalog import STRINGS
-from nature_cooling.report.content import ReportContent, build_content
+from nature_cooling.report.content import (
+    ComparisonContent,
+    ReportContent,
+    ScenarioSource,
+    build_comparison_content,
+    build_content,
+)
 
 _HEADER = Font(bold=True)
 _STAMP = Font(italic=True, size=9)
@@ -174,6 +181,173 @@ def _assumptions_sheet(sheet: Worksheet, content: ReportContent) -> None:
         sheet.cell(row=row, column=1, value=warning)
         row += 1
     _autosize(sheet, (110,))
+
+
+# --- Comparison workbook (v2.4) ----------------------------------------------
+
+
+def _comparison_stamp(sheet: Worksheet, content: ComparisonContent) -> int:
+    """The comparison banner every sheet carries; returns the next row."""
+    title = (
+        f"{STRINGS['app_title']} — {STRINGS['app_subtitle']} · "
+        f"{content.project_name} · {STRINGS['comparison_title']}"
+    )
+    sheet.cell(row=1, column=1, value=title).font = _HEADER
+    stamp = f"{STRINGS['created']} {content.created_date}"
+    sheet.cell(row=2, column=1, value=stamp).font = _STAMP
+    return 4
+
+
+def _comparison_overview_sheet(sheet: Worksheet, content: ComparisonContent) -> None:
+    row = _comparison_stamp(sheet, content)
+    row = _write_header(
+        sheet,
+        row,
+        (
+            STRINGS["comparison_scenario_column"],
+            STRINGS["typology"],
+            STRINGS["comparison_scenario_scale"],
+            STRINGS["comparison_scenario_created"],
+            STRINGS["comparison_versions_column"],
+        ),
+    )
+    for scenario in content.scenarios:
+        sheet.cell(row=row, column=1, value=scenario.label)
+        sheet.cell(row=row, column=2, value=scenario.typology)
+        sheet.cell(row=row, column=3, value=scenario.scale)
+        sheet.cell(row=row, column=4, value=scenario.created_date)
+        sheet.cell(row=row, column=5, value=scenario.version_line)
+        row += 1
+    row += 1
+    if content.cross_scale_note is not None:
+        sheet.cell(row=row, column=1, value=content.cross_scale_note).font = _HEADER
+        row += 2
+    if content.methodology_note is not None:
+        sheet.cell(row=row, column=1, value=content.methodology_note).font = _STAMP
+        row += 2
+    if content.narrative:
+        sheet.cell(row=row, column=1, value=STRINGS["comparison_narrative_heading"]).font = _HEADER
+        sheet.cell(row=row, column=2, value=content.narrative)
+        row += 2
+    labels = tuple(scenario.label for scenario in content.scenarios)
+    row = _write_header(sheet, row, (STRINGS["comparison_criterion"], *labels))
+    for comparison_row in content.rows:
+        sheet.cell(row=row, column=1, value=comparison_row.label)
+        for column, (value, best) in enumerate(
+            zip(comparison_row.values, comparison_row.best, strict=True), start=2
+        ):
+            shown = f"{STRINGS['comparison_best_marker']}{value}" if best else value
+            cell = sheet.cell(row=row, column=column, value=shown)
+            if best:
+                cell.font = _HEADER
+        row += 1
+    row += 1
+    if content.like_for_like:
+        sheet.cell(row=row, column=1, value=STRINGS["comparison_best_note"]).font = _STAMP
+        row += 1
+    sheet.cell(row=row, column=1, value=STRINGS["comparison_identical_note"]).font = _STAMP
+    # Five columns cover both tables on this sheet: the scenario overview uses
+    # all five, the metric table uses one label column plus 2–4 scenarios.
+    _autosize(sheet, (34, 32, 30, 30, 40))
+
+
+def _comparison_site_sheet(sheet: Worksheet, content: ComparisonContent) -> None:
+    row = _comparison_stamp(sheet, content)
+    sheet.cell(row=row, column=1, value=STRINGS["comparison_site_note"]).font = _STAMP
+    row += 2
+    row = _write_header(
+        sheet, row, (STRINGS["inputs_field"], STRINGS["inputs_value"], STRINGS["inputs_marker"])
+    )
+    for input_row in content.site_rows:
+        sheet.cell(row=row, column=1, value=input_row.label)
+        sheet.cell(row=row, column=2, value=input_row.value)
+        sheet.cell(row=row, column=3, value=input_row.marker)
+        row += 1
+    if content.site_differences:
+        row += 1
+        sheet.cell(
+            row=row, column=1, value=STRINGS["comparison_site_differs_heading"]
+        ).font = _HEADER
+        row += 1
+        sheet.cell(row=row, column=1, value=STRINGS["comparison_site_differs_note"]).font = _STAMP
+        row += 1
+        labels = tuple(scenario.label for scenario in content.scenarios)
+        row = _write_header(sheet, row, (STRINGS["inputs_field"], *labels))
+        for difference in content.site_differences:
+            sheet.cell(row=row, column=1, value=difference.label)
+            for column, value in enumerate(difference.values, start=2):
+                sheet.cell(row=row, column=column, value=value)
+            row += 1
+    _autosize(sheet, (42, 34, 44))
+
+
+def _comparison_detail_sheet(sheet: Worksheet, content: ComparisonContent) -> None:
+    row = _comparison_stamp(sheet, content)
+    row = _write_header(
+        sheet,
+        row,
+        (
+            STRINGS["comparison_scenario_column"],
+            STRINGS["comparison_kind"],
+            STRINGS["comparison_text_column"],
+        ),
+    )
+
+    def write(scenario_label: str, kind: str, text: str) -> None:
+        nonlocal row
+        sheet.cell(row=row, column=1, value=scenario_label)
+        sheet.cell(row=row, column=2, value=kind)
+        sheet.cell(row=row, column=3, value=text)
+        row += 1
+
+    for scenario in content.scenarios:
+        if (
+            not scenario.flags
+            and not scenario.assumptions
+            and not scenario.warnings
+            and scenario.method_note is None
+        ):
+            write(scenario.label, "", STRINGS["comparison_no_scenario_detail"])
+            continue
+        for flag in scenario.flags:
+            write(scenario.label, STRINGS["comparison_kind_flag"], flag)
+        for assumption in scenario.assumptions:
+            write(scenario.label, STRINGS["comparison_kind_assumption"], assumption)
+        for warning in scenario.warnings:
+            write(scenario.label, STRINGS["comparison_kind_warning"], warning)
+        if scenario.method_note is not None:
+            write(scenario.label, STRINGS["method_note_heading"], scenario.method_note)
+    if content.shared_method_note is not None:
+        row += 1
+        write("", STRINGS["method_note_heading"], content.shared_method_note)
+    _autosize(sheet, (24, 26, 110))
+
+
+def build_comparison_xlsx_report(
+    *, project_name: str, scenarios: Sequence[ScenarioSource]
+) -> bytes:
+    """Render 2–4 stored, evaluated assessments as one comparison workbook."""
+    content = build_comparison_content(project_name=project_name, scenarios=scenarios)
+    stamp = datetime.fromisoformat(content.created_at).replace(tzinfo=None)
+
+    workbook = Workbook()
+    workbook.properties.creator = "Criterra"
+    workbook.properties.created = stamp
+    workbook.properties.modified = stamp
+    workbook.properties.title = (
+        f"{STRINGS['app_title']} {STRINGS['comparison_title']} — {project_name}"
+    )
+
+    overview = workbook.active
+    assert overview is not None  # a fresh workbook always has an active sheet
+    overview.title = STRINGS["comparison_sheet_overview"]
+    _comparison_overview_sheet(overview, content)
+    _comparison_site_sheet(workbook.create_sheet(STRINGS["comparison_sheet_site"]), content)
+    _comparison_detail_sheet(workbook.create_sheet(STRINGS["comparison_sheet_scenarios"]), content)
+
+    buffer = BytesIO()
+    workbook.save(buffer)
+    return _deterministic_zip(buffer.getvalue(), stamp)
 
 
 def build_xlsx_report(

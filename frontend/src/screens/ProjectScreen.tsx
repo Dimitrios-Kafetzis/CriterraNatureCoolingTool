@@ -7,7 +7,9 @@ import { stepNumber } from '../wizard/steps';
 
 /**
  * One project: its assessments (drafts and evaluated), with the OQ-15
- * methodology-update surfacing and the D-021 duplicate action.
+ * methodology-update surfacing, the D-021 duplicate action, and user-named
+ * scenario labels (v2.4) — a label stays editable after evaluation, because
+ * it names the scenario without touching the frozen input.
  */
 export function ProjectScreen() {
   const { projectId } = useParams<'projectId'>();
@@ -48,6 +50,15 @@ export function ProjectScreen() {
   async function removeAssessment(assessmentId: string) {
     if (!window.confirm(messages.project.deleteAssessmentConfirm)) return;
     await api.deleteAssessment(projectId ?? '', assessmentId);
+    reload();
+  }
+
+  async function rename(assessment: AssessmentView) {
+    const label = window.prompt(messages.project.renamePrompt, assessment.label);
+    if (label === null) return;
+    const trimmed = label.trim();
+    if (trimmed === '' || trimmed === assessment.label) return;
+    await api.patchAssessment(projectId ?? '', assessment.assessment_id, { label: trimmed });
     reload();
   }
 
@@ -96,6 +107,15 @@ export function ProjectScreen() {
                       {messages.project.continueDraft}
                     </Link>
                   )}
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    className="button button--quiet"
+                    onClick={() => void rename(assessment)}
+                  >
+                    {messages.project.rename}
+                  </button>
                 </td>
                 <td>
                   <button

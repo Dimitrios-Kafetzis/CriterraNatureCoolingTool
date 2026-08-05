@@ -17,6 +17,7 @@ byte-deterministic (D-033).
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -24,7 +25,16 @@ from typing import Any
 from fpdf import FPDF
 
 from nature_cooling.report.catalog import STRINGS
-from nature_cooling.report.content import Block, ReportContent, Row, ScoreCard, build_content
+from nature_cooling.report.content import (
+    Block,
+    ComparisonContent,
+    ReportContent,
+    Row,
+    ScenarioSource,
+    ScoreCard,
+    build_comparison_content,
+    build_content,
+)
 
 _FONT_DIR = Path(__file__).parent / "fonts"
 _BRAND_DIR = Path(__file__).parent / "brand"
@@ -352,6 +362,260 @@ def _page_two(pdf: FPDF, content: ReportContent) -> None:
     _text(pdf, content.method_note, family="Newsreader", size=8.8)
     pdf.ln(1.0)
     _text(pdf, content.version_line, family="Mono", size=7.3, color=_MUTED)
+
+
+# --- Comparison report (v2.4) ------------------------------------------------
+#
+# The comparison has no fixed page count: 2–4 scenarios and their itemised
+# assumptions grow the document, and unlike the single report (D-034) there is
+# no two-page contract to defend. Sections therefore flow with measured
+# page breaks instead of a space budget — nothing is ever truncated.
+
+_TABLE_LABEL_WIDTH = 42.0
+_PAGE_BOTTOM = _PAGE_HEIGHT_MM - _MARGIN
+
+
+def _ensure_space(pdf: FPDF, needed: float) -> None:
+    """Start a fresh page when a block would not fit above the bottom margin.
+
+    Used for blocks drawn with rectangles or two-column positioning, which
+    cannot survive fpdf's automatic mid-cell page break.
+    """
+    if pdf.get_y() + needed > _PAGE_BOTTOM:
+        pdf.add_page()
+
+
+def _measured_lines(pdf: FPDF, width: float, size: float, text: str) -> int:
+    lines = pdf.multi_cell(width, _line_height(size), text, dry_run=True, output="LINES")
+    assert isinstance(lines, list)  # output="LINES" always returns the lines
+    return len(lines)
+
+
+def _comparison_header(pdf: FPDF, content: ComparisonContent) -> None:
+    pdf.add_page()
+    pdf.image(_LOCKUP, x=_MARGIN, y=_MARGIN - 1.0, w=_LOCKUP_WIDTH_MM)
+    pdf.set_y(_MARGIN + 8.0)
+    pdf.set_font("Hanken", "B", 8.5)
+    pdf.set_text_color(*_GREEN)
+    pdf.cell(
+        _CONTENT_WIDTH / 2,
+        _line_height(8.5),
+        f"{STRINGS['app_title']} — {STRINGS['app_subtitle']}".upper(),
+    )
+    pdf.set_font("Mono", "", 7.5)
+    pdf.set_text_color(*_MUTED)
+    pdf.cell(
+        _CONTENT_WIDTH / 2,
+        _line_height(8.5),
+        STRINGS["comparison_title"],
+        align="R",
+        new_x="LMARGIN",
+    )
+    pdf.ln(7)
+    _text(pdf, content.project_name, family="Newsreader", style="B", size=19)
+    pdf.ln(0.6)
+    _text(pdf, " · ".join(scenario.label for scenario in content.scenarios), size=10.0)
+    pdf.ln(0.6)
+    _text(
+        pdf,
+        f"{STRINGS['created']} {content.created_date}",
+        family="Mono",
+        size=7.3,
+        color=_MUTED,
+    )
+    pdf.ln(1.6)
+    pdf.set_draw_color(*_GREEN)
+    pdf.line(_MARGIN, pdf.get_y(), _PAGE_WIDTH - _MARGIN, pdf.get_y())
+    pdf.ln(3.4)
+
+
+def _comparison_overview(pdf: FPDF, content: ComparisonContent) -> None:
+    _heading(pdf, STRINGS["comparison_scenarios_heading"])
+    for scenario in content.scenarios:
+        _ensure_space(pdf, 18.0)
+        _text(pdf, scenario.label, style="B", size=9.5)
+        _text(pdf, scenario.typology, size=8.6)
+        _text(
+            pdf,
+            f"{STRINGS['comparison_scenario_scale']}: {scenario.scale} · "
+            f"{STRINGS['comparison_scenario_created']} {scenario.created_date} · "
+            f"{scenario.version_line}",
+            family="Mono",
+            size=7.3,
+            color=_MUTED,
+        )
+        pdf.ln(1.2)
+
+
+def _comparison_table_row(
+    pdf: FPDF,
+    first: str,
+    values: Sequence[str],
+    *,
+    fonts: Sequence[tuple[str, tuple[int, int, int]]],
+    size: float = 8.0,
+) -> None:
+    """One measured table row: the criterion label, then one cell per scenario.
+
+    Measured before it is drawn so a row never straddles a page break — the
+    two-pass approach the label/value renderer cannot offer once automatic
+    page breaks are in play.
+    """
+    height = _line_height(size)
+    count = len(values)
+    value_width = (_CONTENT_WIDTH - _TABLE_LABEL_WIDTH) / count
+    texts = [first, *values]
+    widths = [_TABLE_LABEL_WIDTH, *([value_width] * count)]
+    all_fonts = [("", _MUTED), *fonts]
+    lines = []
+    for text, width, (style, _) in zip(texts, widths, all_fonts, strict=True):
+        pdf.set_font("Hanken", style, size)
+        lines.append(_measured_lines(pdf, width - 1.5, size, text))
+    row_height = max(lines) * height + 1.8
+    _ensure_space(pdf, row_height)
+    y = pdf.get_y()
+    x = _MARGIN
+    for text, width, (style, color) in zip(texts, widths, all_fonts, strict=True):
+        pdf.set_xy(x, y + 0.9)
+        pdf.set_font("Hanken", style, size)
+        pdf.set_text_color(*color)
+        pdf.multi_cell(width - 1.5, height, text, align="L")
+        x += width
+    pdf.set_y(y + row_height)
+    pdf.set_draw_color(*_RULE)
+    pdf.line(_MARGIN, pdf.get_y(), _PAGE_WIDTH - _MARGIN, pdf.get_y())
+
+
+def _comparison_table(pdf: FPDF, content: ComparisonContent) -> None:
+    _heading(pdf, STRINGS["comparison_table_heading"])
+    labels = [scenario.label for scenario in content.scenarios]
+    _comparison_table_row(
+        pdf,
+        STRINGS["comparison_criterion"],
+        labels,
+        fonts=[("B", _INK)] * len(labels),
+    )
+    for row in content.rows:
+        fonts = []
+        values = []
+        for value, best in zip(row.values, row.best, strict=True):
+            if best:
+                fonts.append(("B", _GREEN))
+                values.append(f"{STRINGS['comparison_best_marker']}{value}")
+            elif row.differs:
+                fonts.append(("B", _INK))
+                values.append(value)
+            else:
+                fonts.append(("", _MUTED))
+                values.append(value)
+        _comparison_table_row(pdf, row.label, values, fonts=fonts)
+    pdf.ln(1.2)
+    if content.like_for_like:
+        _text(pdf, STRINGS["comparison_best_note"], size=7.2, color=_MUTED)
+    _text(pdf, STRINGS["comparison_identical_note"], size=7.2, color=_MUTED)
+
+
+def _comparison_site(pdf: FPDF, content: ComparisonContent) -> None:
+    _ensure_space(pdf, 24.0)
+    _heading(pdf, STRINGS["comparison_site_heading"])
+    _text(pdf, STRINGS["comparison_site_note"], size=7.4, color=_MUTED)
+    pdf.ln(0.8)
+    size = 8.2
+    height = _line_height(size)
+    label_width = 60.0
+    value_width = _CONTENT_WIDTH - label_width
+    for row in content.site_rows:
+        value = row.value if row.marker == "" else f"{row.value} — {row.marker}"
+        pdf.set_font("Hanken", "", size)
+        label_lines = _measured_lines(pdf, label_width, size, row.label)
+        pdf.set_font("Hanken", "B", size)
+        value_lines = _measured_lines(pdf, value_width, size, value)
+        needed = max(label_lines, value_lines) * height + 0.5
+        _ensure_space(pdf, needed)
+        start = pdf.get_y()
+        pdf.set_xy(_MARGIN, start)
+        pdf.set_font("Hanken", "", size)
+        pdf.set_text_color(*_MUTED)
+        pdf.multi_cell(label_width, height, row.label, align="L")
+        pdf.set_xy(_MARGIN + label_width, start)
+        pdf.set_font("Hanken", "B", size)
+        pdf.set_text_color(*_INK)
+        pdf.multi_cell(value_width, height, value, align="L")
+        pdf.set_y(start + needed)
+    if content.site_differences:
+        _ensure_space(pdf, 20.0)
+        _heading(pdf, STRINGS["comparison_site_differs_heading"])
+        _text(pdf, STRINGS["comparison_site_differs_note"], size=7.4, color=_MUTED)
+        pdf.ln(0.6)
+        labels = [scenario.label for scenario in content.scenarios]
+        for difference in content.site_differences:
+            itemised = " · ".join(
+                f"{label}: {value}" for label, value in zip(labels, difference.values, strict=True)
+            )
+            _text(pdf, f"–  {difference.label}: {itemised}", size=7.2)
+
+
+def _comparison_scenario_detail(pdf: FPDF, content: ComparisonContent) -> None:
+    for scenario in content.scenarios:
+        _ensure_space(pdf, 20.0)
+        _heading(pdf, STRINGS["comparison_scenario_detail"].format(label=scenario.label))
+        if (
+            not scenario.flags
+            and not scenario.assumptions
+            and not scenario.warnings
+            and scenario.method_note is None
+        ):
+            _text(pdf, STRINGS["comparison_no_scenario_detail"], size=7.4, color=_MUTED)
+            continue
+        for flag in scenario.flags:
+            _text(pdf, f"–  {flag}", style="B", size=7.4, color=_FLAG_BAR)
+        if scenario.assumptions:
+            _text(pdf, STRINGS["assumptions_intro"], size=7.4, color=_MUTED)
+            for item in scenario.assumptions:
+                _text(pdf, f"–  {item}", size=7.2)
+        if scenario.warnings:
+            _text(pdf, STRINGS["warnings_heading"], style="B", size=7.2, color=_MUTED)
+            for item in scenario.warnings:
+                _text(pdf, f"–  {item}", size=7.2)
+        if scenario.method_note is not None:
+            _text(pdf, scenario.method_note, family="Newsreader", size=8.8)
+
+
+def build_comparison_pdf_report(*, project_name: str, scenarios: Sequence[ScenarioSource]) -> bytes:
+    """Render 2–4 stored, evaluated assessments as one comparison PDF."""
+    content = build_comparison_content(project_name=project_name, scenarios=scenarios)
+    pdf = _ReportPDF()
+    pdf.set_title(f"{STRINGS['app_title']} {STRINGS['comparison_title']} — {project_name}")
+    pdf.set_author("Criterra")
+    pdf.set_creator(f"{STRINGS['app_title']} — {STRINGS['app_subtitle']}")
+    pdf.set_lang("en")
+    pdf.set_creation_date(datetime.fromisoformat(content.created_at))
+
+    _comparison_header(pdf, content)
+    _comparison_overview(pdf, content)
+    if content.cross_scale_note is not None:
+        _ensure_space(pdf, 30.0)
+        _flag_box(pdf, content.cross_scale_note)
+    if content.methodology_note is not None:
+        _text(pdf, content.methodology_note, size=7.4, color=_MUTED)
+        pdf.ln(0.8)
+    if content.narrative:
+        _heading(pdf, STRINGS["comparison_narrative_heading"])
+        _text(pdf, content.narrative, family="Newsreader", size=10.2)
+    _comparison_table(pdf, content)
+    _comparison_site(pdf, content)
+    _comparison_scenario_detail(pdf, content)
+    if content.shared_method_note is not None:
+        _ensure_space(pdf, 24.0)
+        _heading(pdf, STRINGS["method_note_heading"])
+        _text(pdf, content.shared_method_note, family="Newsreader", size=8.8)
+    _ensure_space(pdf, 10.0)
+    pdf.ln(2.0)
+    pdf.set_font("Mono", "", 7.0)
+    pdf.set_text_color(*_MUTED)
+    pdf.cell(_CONTENT_WIDTH / 2, _line_height(7.0), STRINGS["copyright_line"])
+    pdf.cell(_CONTENT_WIDTH / 2, _line_height(7.0), STRINGS["license_line"], align="R")
+    return bytes(pdf.output())
 
 
 def build_pdf_report(

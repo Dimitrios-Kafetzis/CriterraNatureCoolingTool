@@ -18,6 +18,7 @@ import pytest
 from nature_cooling.engine import run_assessment
 from nature_cooling.engine.config import MethodologyConfig
 from nature_cooling.engine.models import AssessmentInput
+from nature_cooling.report import ScenarioSource
 
 SCENARIO_DIR = Path(__file__).parent.parent / "scenarios"
 SCENARIO_NAMES = sorted(path.stem for path in SCENARIO_DIR.glob("*.json"))
@@ -51,6 +52,32 @@ def scenarios(config: MethodologyConfig) -> dict[str, dict[str, Any]]:
         result = run_assessment(AssessmentInput.model_validate(inp), config)
         stored[name] = {"input": inp, "result": result.model_dump(mode="json")}
     return stored
+
+
+@pytest.fixture(scope="session")
+def comparison_source(scenarios: dict[str, dict[str, Any]]) -> Any:
+    """A fresh, independently mutable scenario built from one golden scenario.
+
+    Comparison tests routinely edit the JSON copies (a different score here, a
+    blanked warning list there): the builders' contract is the stored document,
+    so edited copies are legitimate stored documents.
+    """
+
+    def source(
+        name: str,
+        label: str,
+        created_at: str = CREATED_AT,
+        autofilled: dict[str, str] | None = None,
+    ) -> ScenarioSource:
+        return ScenarioSource(
+            label=label,
+            created_at=created_at,
+            inp=dict(scenarios[name]["input"]),
+            result=json.loads(json.dumps(scenarios[name]["result"])),
+            autofilled=autofilled,
+        )
+
+    return source
 
 
 @pytest.fixture(scope="session")

@@ -70,9 +70,9 @@ backend/
 │   │   └── routes/                 # assessments, methodology, meta, projects, reports
 │   └── report/
 │       ├── catalog.py              # module-level English string catalog
-│       ├── content.py              # stored assessment → display rows, verbatim
-│       ├── pdf.py                  # 2-page PDF, brand TTFs embedded
-│       ├── xlsx.py                 # workbook: Inputs / Results / Assumptions & Warnings
+│       ├── content.py              # stored assessments → display rows, verbatim (single + comparison)
+│       ├── pdf.py                  # 2-page PDF + comparison PDF, brand TTFs embedded
+│       ├── xlsx.py                 # workbooks: per-assessment and comparison
 │       └── fonts/                  # static TTF builds + OFL notices
 └── tests/
     ├── scoring/                    # unit tests per module (100% engine coverage target)
@@ -110,6 +110,8 @@ backend/
 | `POST /api/projects/{id}/assessments/{aid}/duplicate` | Comparison draft: carries the site description, blanks intervention + cost/energy groups |
 | `GET  /api/projects/{id}/assessments/{aid}/report.pdf` | The 2-page PDF report of a **stored** result; 404 unknown ids, 409 for a draft |
 | `GET  /api/projects/{id}/assessments/{aid}/report.xlsx` | The XLSX workbook (Inputs, Results, Assumptions & Warnings) of a stored result; same refusals |
+| `GET  /api/projects/{id}/report/comparison.pdf` | Comparison report over 2–4 stored, evaluated assessments (`?assessments=` ids, caller's order = column order); 409 if any is a draft |
+| `GET  /api/projects/{id}/report/comparison.xlsx` | The comparison workbook (Comparison, Site context, Scenario detail); same refusals |
 
 Persistence in v1 is **local-first**: one JSON document per project (`schema_version`, identity, timestamps, site description, `assessments[]` each holding its full input and full versioned result) under the `platformdirs` user-data directory, owned by a thin storage layer behind the API; multi-user storage is v2. Stored results are never recomputed — a newer methodology version is surfaced as available, and re-running is an explicit user action creating a new assessment.
 
@@ -119,7 +121,7 @@ React + TypeScript (Vite). Structure mirrors the user journey:
 
 - **Questionnaire wizard** — the 6 input groups as steps (project → site → climate → vulnerability → intervention → cost/energy); inline validation via `/validate`; every field with the qualitative fallback and "unknown" affordances the methodology requires.
 - **Results dashboard** — score cards (Heat Priority Index, NbS Cooling Opportunity Score), the six output blocks, branched confidence badges, suitability flags, assumptions list, recommendation.
-- **Comparison view** — same site, interventions A/B/C side by side.
+- **Comparison view** — same site, interventions A/B/C side by side, with user-editable scenario labels and a PDF/XLSX comparison export (2–4 options, in the on-screen order). Options assessed at different scales are flagged as not like for like — on screen and in the export — rather than silently tabulated; the export highlights the best value per criterion and states the facts in a short narrative, but never ranks the options or names a winner.
 - **Methodology browser** — renders `/api/methodology` + citations; every score in the UI links to its formula and sources.
 
 Visual identity: the criterra.eu design tokens (paper `#eaebe2`, ink `#16231c`, brand green `#2e6a4e`; Newsreader / Hanken Grotesk / IBM Plex Mono, self-hosted). Design north star: *"a scientific instrument, not a lifestyle app"* — whitespace, one accent colour, score cards, no rainbow dashboards. WCAG AA.

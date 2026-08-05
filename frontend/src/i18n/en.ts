@@ -77,6 +77,7 @@ export const messages = {
     deleteAssessmentConfirm: 'Delete this assessment? This cannot be undone.',
     compare: 'Compare options',
     compareHint: 'Evaluate at least two options of this project to compare them side by side.',
+    rename: 'Rename',
     renamePrompt: 'New label for this assessment:',
     empty: 'No assessments yet.',
     createdAt: 'Created',
@@ -905,7 +906,19 @@ export const messages = {
       'Same site, options side by side. Rows where the options differ are highlighted; the decision is yours — the tool does not pick a winner.',
     pickOptions: 'Options to compare',
     needTwo: 'Select at least two evaluated options.',
+    /**
+     * Cross-scale honesty (v2.4 scope item 5): options assessed at different
+     * scales describe differently sized objects, so tabulating them without
+     * saying so would present them as like for like.
+     */
+    crossScale:
+      'These options were assessed at different scales, so their figures describe differently sized objects and are not like for like. They are shown side by side for reference only, and the exported comparison report states this too.',
+    exportPdf: 'Export comparison (PDF)',
+    exportXlsx: 'Export comparison data (XLSX)',
+    exportLimit:
+      'The comparison report covers two to four options — narrow the selection to export it.',
     row: {
+      scale: 'Assessment scale',
       typology: 'Typology',
       components: 'Components',
       opportunity: 'Opportunity Score',

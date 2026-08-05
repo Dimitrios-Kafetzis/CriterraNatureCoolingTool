@@ -360,6 +360,46 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/projects/{project_id}/report/comparison.pdf': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Comparison Pdf
+     * @description The comparison PDF over 2–4 stored, evaluated assessments (v2.4).
+     */
+    get: operations['comparison_pdf_api_projects__project_id__report_comparison_pdf_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/projects/{project_id}/report/comparison.xlsx': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Comparison Xlsx
+     * @description The comparison workbook over 2–4 stored, evaluated assessments (v2.4).
+     */
+    get: operations['comparison_xlsx_api_projects__project_id__report_comparison_xlsx_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/typologies': {
     parameters: {
       query?: never;
@@ -2315,6 +2355,72 @@ export interface operations {
       path: {
         project_id: string;
         assessment_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/octet-stream': unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  comparison_pdf_api_projects__project_id__report_comparison_pdf_get: {
+    parameters: {
+      query: {
+        assessments: string[];
+      };
+      header?: never;
+      path: {
+        project_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/octet-stream': unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  comparison_xlsx_api_projects__project_id__report_comparison_xlsx_get: {
+    parameters: {
+      query: {
+        assessments: string[];
+      };
+      header?: never;
+      path: {
+        project_id: string;
       };
       cookie?: never;
     };

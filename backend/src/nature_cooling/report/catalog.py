@@ -171,6 +171,72 @@ STRINGS: Final[dict[str, str]] = {
         "Cooling values are inherited from the {archetype} evidence class "
         "({provenance}); see the Methodology Report evidence tables."
     ),
+    # --- Comparison report (v2.4) -------------------------------------------
+    "comparison_title": "Comparison report",
+    "comparison_scenarios_heading": "Scenarios compared",
+    "comparison_scenario_scale": "Assessment scale",
+    "comparison_scenario_created": "Created",
+    "comparison_table_heading": "Side by side",
+    "comparison_criterion": "Criterion",
+    "comparison_cooling_potential": "Cooling Potential Score",
+    "comparison_suitability": "Suitability score",
+    "comparison_co_benefits": "Co-benefit Score",
+    "comparison_confidence": "Overall confidence",
+    "comparison_best_note": (
+        "The best value on a criterion is marked •; ties are marked together. "
+        "A criterion where any scenario reports a status instead of a figure "
+        "is never marked, and nothing ranks the scenarios overall."
+    ),
+    "comparison_identical_note": "Values identical across every scenario carry no emphasis.",
+    "comparison_narrative_heading": "What the table shows",
+    "comparison_best_single": "{scenario} has the {superlative} {criterion} ({value}).",
+    "comparison_best_tied": "{scenarios} share the {superlative} {criterion} ({value}).",
+    "comparison_superlative_highest": "highest",
+    "comparison_superlative_lowest": "lowest",
+    "comparison_narrative_empty": (
+        "The compared scenarios are equal on every criterion where a best value could be marked."
+    ),
+    "comparison_cross_scale": (
+        "These scenarios were assessed at different scales ({scales}), so their "
+        "figures describe differently sized objects and are not like for like. "
+        "They are shown side by side for reference only; no value is marked as "
+        "best and no comparative statement is made."
+    ),
+    "comparison_methodology_differs": (
+        "The scenarios were evaluated under different methodology versions "
+        "({versions}). Each figure is reported exactly as stored under its own "
+        "version; nothing is recomputed for comparability."
+    ),
+    "comparison_site_heading": "Site context, shared by every scenario",
+    "comparison_site_note": (
+        "These answers are identical across the compared scenarios and are "
+        "printed once. An unmarked value was supplied by the user; every "
+        "default the engine applied in place of an answer is itemised per "
+        "scenario below."
+    ),
+    "comparison_site_differs_heading": "Site answers that differ between scenarios",
+    "comparison_site_differs_note": (
+        "The scenarios describe the site differently on the answers below, so "
+        "their results do not compare a change of intervention alone."
+    ),
+    "provenance_differs": "provenance differs between scenarios",
+    "comparison_scenario_detail": "{label} — flags, assumptions and warnings",
+    "comparison_no_scenario_detail": (
+        "No flags were raised, no defaults were applied, and no warnings were "
+        "recorded for this scenario."
+    ),
+    "comparison_flags_heading": "Flags",
+    "comparison_sheet_overview": "Comparison",
+    "comparison_sheet_site": "Site context",
+    "comparison_sheet_scenarios": "Scenario detail",
+    "comparison_best_marker": "• ",
+    "comparison_kind": "Kind",
+    "comparison_kind_flag": "Flag",
+    "comparison_kind_assumption": "Assumption",
+    "comparison_kind_warning": "Warning",
+    "comparison_scenario_column": "Scenario",
+    "comparison_text_column": "Text",
+    "comparison_versions_column": "Evaluated under",
 }
 
 # --- Status texts (mirroring the frontend's ``results.statuses`` catalog) ----
