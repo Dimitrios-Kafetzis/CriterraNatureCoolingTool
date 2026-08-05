@@ -38,3 +38,7 @@ projects/
 # Env
 .env
 .env.*
+
+# Internal development records (briefs, decision log, vision) — local only,
+# deliberately excluded from the public repository and docs site.
+/internal/

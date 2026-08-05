@@ -21,3 +21,6 @@
 # Editor / OS
 *.swp
 .DS_Store
+
+# Intermediate PDF (the tracked artefact is the distribution-named copy)
+main.pdf

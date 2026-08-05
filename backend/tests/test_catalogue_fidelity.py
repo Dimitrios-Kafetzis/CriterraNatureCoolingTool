@@ -14,7 +14,6 @@ build and names the entry — rather than being discovered by a reviewer reading
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 import pytest
 
@@ -225,5 +224,3 @@ def test_the_assets_are_committed_where_the_documentation_says(
     """The approved data must travel with the repository, not with a session."""
     assert (ASSETS / "v1.2-curation.json").is_file()
     assert (ASSETS / "v1.2-availability-matrix.json").is_file()
-    assert Path(repo_root() / "docs" / "V1.2-REVIEW-PACK.md").is_file()
-    assert Path(repo_root() / "docs" / "V1.2-REVIEW-PACK-2.md").is_file()

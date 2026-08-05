@@ -1,5 +1,5 @@
 /**
- * The fetch-boundary mock (PHASE-4-BRIEF rule 5): tests exercise real
+ * The fetch-boundary mock: tests exercise real
  * components against recorded response shapes captured from the live API
  * (src/test/fixtures/), never invented ones. An unmatched request fails the
  * test loudly instead of resolving to something invented.

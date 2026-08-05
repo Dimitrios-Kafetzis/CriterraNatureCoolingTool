@@ -47,7 +47,10 @@ def _index_markdown() -> str:
     text = text.replace("](docs/", "](")
     text = text.replace("](LICENSE)", f"]({_github_url('LICENSE')})")
     text = text.replace("](NOTICE)", f"]({_github_url('NOTICE')})")
-    text = text.replace("](paper/main.pdf)", f"]({_github_url('paper/main.pdf')})")
+    text = text.replace(
+        "](paper/Criterra_NatureCoolingTool_MethodologyReport.pdf)",
+        f"]({_github_url('paper/Criterra_NatureCoolingTool_MethodologyReport.pdf')})",
+    )
     text = text.replace("](paper/)", f"]({_github_url('paper/')})")
     return text
 

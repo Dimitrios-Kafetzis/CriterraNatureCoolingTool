@@ -1,4 +1,4 @@
-# Documentation site toolchain (D-035). Docs-only: installed by CI's docs
+# Documentation site toolchain. Docs-only: installed by CI's docs
 # jobs and by contributors previewing the site; never by the package.
 mkdocs>=1.6,<2
 mkdocs-material>=9.5,<10

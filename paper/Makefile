@@ -1,16 +1,20 @@
 # Nature for Cooling methodology paper
 #
-#   make          build main.pdf
+#   make          build the distributable methodology-report PDF
 #   make watch    rebuild continuously on change
 #   make clean    remove build artefacts, keep the PDF
 #   make distclean remove build artefacts and the PDF
 
 LATEXMK ?= latexmk
 MAIN     = main
+DIST     = Criterra_NatureCoolingTool_MethodologyReport.pdf
 
 .PHONY: all watch clean distclean
 
-all: $(MAIN).pdf
+all: $(DIST)
+
+$(DIST): $(MAIN).pdf
+	cp $(MAIN).pdf $(DIST)
 
 $(MAIN).pdf: $(MAIN).tex references.bib $(wildcard sections/*.tex) $(wildcard figures/*.tex)
 	$(LATEXMK) -pdf $(MAIN).tex

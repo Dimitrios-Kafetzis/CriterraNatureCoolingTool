@@ -22,7 +22,8 @@ def offered(config, scale, land_use=None, **conditions):
     return availability.available_typologies(scale, land_use, SiteConditions(**conditions), config)
 
 
-# The counts published in V1.2-REVIEW-PACK-2.md, part 4.
+# The counts published in the approved v1.2 availability review
+# (docs/assets/v1.2-availability-matrix.json is its machine-readable form).
 #
 # All nine are computed with the productive-governance question UNANSWERED,
 # which is how the published table was produced: an unanswered multi-select

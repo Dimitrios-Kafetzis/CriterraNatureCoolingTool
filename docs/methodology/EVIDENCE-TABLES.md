@@ -4,21 +4,21 @@ For each of the **18 cooling archetypes**: the evidence consulted, the value ado
 
 ## The two-level library, and why it exists
 
-From version `2026.08.04` the library has two levels (D-044). An **archetype** is a cited evidence class carrying every performance value; a **typology** is one of the **110 curated catalogue entries**, each inheriting exactly one archetype and carrying no performance value of its own.
+From version `2026.08.04` the library has two levels. An **archetype** is a cited evidence class carrying every performance value; a **typology** is one of the **110 curated catalogue entries**, each inheriting exactly one archetype and carrying no performance value of its own.
 
 The reason is simple and worth stating plainly: **solution-specific cooling literature does not exist for 110 typologies.** Retrieving a distinct envelope for a felt-pocket living wall, a suspended-pavement tree pit and a green parking lane is not possible, because nobody has measured them. The alternative to archetypes was inventing 110 envelopes, which would have manufactured precision the catalogue does not contain and broken the evidence rules the tool exists to honour.
 
 So an entry inherits a *cited* envelope, and **every result names the evidence class it inherited from**. A Miyawaki forest reports its cooling on the dense-canopy evidence, and says so. That sentence is the whole design.
 
-Twelve archetypes are the v1.1 typologies unchanged — same envelopes, same base scores, same evidence ratings, same citations (D-043.6). They are the only entries in the library with individually retrieved literature behind them, and this release keeps that evidence rather than trading it for catalogue names. Four are newly retrieved. Two are derived, with the bounding argument stated.
+Twelve archetypes are the v1.1 typologies unchanged — same envelopes, same base scores, same evidence ratings, same citations. They are the only entries in the library with individually retrieved literature behind them, and this release keeps that evidence rather than trading it for catalogue names. Four are newly retrieved. Two are derived, with the bounding argument stated.
 
 ## How to read these tables
 
 **All adopted °C values are daytime, pedestrian-level AIR temperature reductions**, relative to an equivalent unimproved site. This is the metric decision-makers assume when they read "cooling", and mixing it with surface temperature or comfort indices is the most common way screening tools mislead. Where a source reports surface temperature or a comfort index (PET/UTCI/globe temperature), that is stated and the value is used only for ranking or caveats — never converted into a °C air-temperature claim. Two of the four new archetypes exist precisely because a source measured both on the same plots and the two diverged by an order of magnitude.
 
-**Adopted ranges are envelopes, not predictions.** The lower bound represents a poorly performing instance of the typology; the upper bound represents a well-executed instance under favourable conditions. Site adjustment moves an assessment *within* this envelope and can never exceed it (decision D-008).
+**Adopted ranges are envelopes, not predictions.** The lower bound represents a poorly performing instance of the typology; the upper bound represents a well-executed instance under favourable conditions. Site adjustment moves an assessment *within* this envelope and can never exceed it.
 
-**Calibration bias is corrected downward.** `keravec2026` synthesises many modelling studies, which systematically report larger effects than field measurement; `bowler2010`, restricted to empirical studies, reports roughly half the park cooling that the modelling-inclusive synthesis does (0.94 °C vs 1.3 °C). Where the two disagree, adopted upper bounds sit at or below the modelling-derived central estimate rather than above it. The same principle decided the `large_water_body` floor at implementation (D-045).
+**Calibration bias is corrected downward.** `keravec2026` synthesises many modelling studies, which systematically report larger effects than field measurement; `bowler2010`, restricted to empirical studies, reports roughly half the park cooling that the modelling-inclusive synthesis does (0.94 °C vs 1.3 °C). Where the two disagree, adopted upper bounds sit at or below the modelling-derived central estimate rather than above it. The same principle decided the `large_water_body` floor at implementation.
 
 **Confidence** is recorded per archetype and propagates into the tool's output: `high` (multiple converging sources including a synthesis), `medium` (a synthesis estimate with limited class-specific corroboration), `low` (sparse, indirect, or inherited evidence — the tool flags these results explicitly).
 
@@ -107,7 +107,7 @@ Represents *added* cooling from increasing canopy and vegetation complexity in a
 
 ### Retired at 2026.08.04 — schoolyard greening
 
-`schoolyard_greening` carried its own cited values in v1.1. It is **retired as a typology** by D-043.1: the source document is explicit that a schoolyard is a *land-use context*, not an intervention, and the tool would otherwise ask "what is the land use here?" and then offer, as an intervention, the land use it had just been told. A school site is now offered the real interventions that suit it — 72 of them — through the availability matrix. The evidence that supported the retired typology (green areas 2.0 °C, street trees 1.5 °C, the `ziter2019` city-block scale finding) is the same evidence supporting `small_green_area_with_trees`, which the canonical green playground entry inherits.
+`schoolyard_greening` carried its own cited values in v1.1. It is **retired as a typology**: the source document is explicit that a schoolyard is a *land-use context*, not an intervention, and the tool would otherwise ask "what is the land use here?" and then offer, as an intervention, the land use it had just been told. A school site is now offered the real interventions that suit it — 72 of them — through the availability matrix. The evidence that supported the retired typology (green areas 2.0 °C, street trees 1.5 °C, the `ziter2019` city-block scale finding) is the same evidence supporting `small_green_area_with_trees`, which the canonical green playground entry inherits.
 
 ## Category: Building
 
@@ -193,7 +193,7 @@ Small, enclosed, and often sheltered from ventilation. Bounded by scale limitati
 
 ### Retired at 2026.08.04 — the mixed NbS package
 
-`mixed_nbs_package` was a single averaged card standing in for "several things at once". It is replaced by real, itemised packages (D-038): the user selects the actual components, each is scored individually and shown individually, and the package's temperature is **capped at the best-evidenced component and never summed**.
+`mixed_nbs_package` was a single averaged card standing in for "several things at once". It is replaced by real, itemised packages: the user selects the actual components, each is scored individually and shown individually, and the package's temperature is **capped at the best-evidenced component and never summed**.
 
 The finding underneath has not changed and is not re-argued here — no retrieved source quantifies super-additive cooling from combining measures, which is why the v1.1 typology was capped at 3.0 °C rather than the draft's 3.5 °C. What changed is that the tool no longer needs an opaque typology to express it. A package's advantage appears where the evidence supports it: co-benefit breadth (unioned across components), not extra degrees. Costs sum; suitability takes the weakest component, because a package is no more deliverable on a site than its least suitable member.
 
@@ -216,7 +216,7 @@ Each exists because the catalogue contains entries that would otherwise have inh
 
 **Adopted: 0.1 – 3.0 °C · base cooling score 75 · confidence medium.**
 
-**The floor is 0.1 °C, not the 0.5 °C the review pack proposed.** The pack attributed a cooling magnitude "near 2 °C" to `yao2023a`; source verification at implementation established that the paper reports no such figure and in fact measures an order of magnitude less by day. Holding the floor at 0.5 °C would have made the tool claim more than its most direct field evidence supports — precisely the inflation D-008 exists to prevent — so the floor was lowered to the measured minimum. This is recorded as D-045.
+**The floor is 0.1 °C, not the 0.5 °C proposed at design time.** The design draft attributed a cooling magnitude "near 2 °C" to `yao2023a`; source verification at implementation established that the paper reports no such figure and in fact measures an order of magnitude less by day. Holding the floor at 0.5 °C would have made the tool claim more than its most direct field evidence supports — precisely the inflation the envelope rule exists to prevent — so the floor was lowered to the measured minimum.
 
 **The width of the envelope is the finding, not a defect.** A remote-sensing-inclusive meta-analysis and direct field measurement of actual urban lakes disagree by an order of magnitude, and `ampatzidis2020` names remote sensing as the overestimating mode. A narrower envelope would have to pick a side, and the evidence does not justify picking one. The tool therefore reports the disagreement, and the output caveat says so in as many words rather than leaving the user to wonder why the range is so wide.
 
@@ -310,7 +310,7 @@ Inherits the `non_canopy_vegetation` envelope, because cultivated ground-level p
 
 ## Suitability: inheritance, and the 21 overrides
 
-Suitability conditions — minimum viable area, soil requirement, irrigation requirement — are inherited from the archetype, with **per-entry overrides only where the catalogue's own description of the entry makes an inherited value plainly wrong** (D-044.3). Inventing a minimum area and a soil requirement for each of 110 entries would manufacture precision the catalogue does not contain.
+Suitability conditions — minimum viable area, soil requirement, irrigation requirement — are inherited from the archetype, with **per-entry overrides only where the catalogue's own description of the entry makes an inherited value plainly wrong**. Inventing a minimum area and a soil requirement for each of 110 entries would manufacture precision the catalogue does not contain.
 
 **No new number enters the methodology through an override.** Every replacement value is one already present in the cited v1.1 library — 20, 50, 200, 500, 1 000, 2 000 m² — borrowed from the typology that established it. The override list is deliberately short, and a test fails if it grows past 25 entries, because a long list would mean the inheritance ruling had quietly been abandoned.
 
@@ -325,17 +325,17 @@ Suitability conditions — minimum viable area, soil requirement, irrigation req
 | Railway green corridor, green mobility network | area → 1 000 m² | Corridor- and district-scale systems inheriting an element archetype. |
 | Urban farm (500 m²), agroforestry system (1 000 m²) | area | The document distinguishes field-scale production from garden scale. |
 
-**Land-use context is not a second list.** The suitability urban-context sub-indicator (D-022) compares the site's land use against the entry's own land-use list, which is the availability matrix's list. An entry is therefore "in context" exactly where it is offered — one list, one meaning, and no opportunity for the two to drift apart.
+**Land-use context is not a second list.** The suitability urban-context sub-indicator compares the site's land use against the entry's own land-use list, which is the availability matrix's list. An entry is therefore "in context" exactly where it is offered — one list, one meaning, and no opportunity for the two to drift apart.
 
 ---
 
 ## Availability: what gates, and what an unanswered question means
 
-Availability decides which entries are *offered*. It feeds no score and enters no formula (D-044.1) — a property the test suite asserts directly, by scoring one site twice, with every availability question answered and with none of them answered, and requiring byte-identical output.
+Availability decides which entries are *offered*. It feeds no score and enters no formula — a property the test suite asserts directly, by scoring one site twice, with every availability question answered and with none of them answered, and requiring byte-identical output.
 
 Three of the four conditions describe a **physical fact** about the site, and gate on positive confirmation: an entry that acts on an existing river is not offered until the user says there is a river, because offering it would be offering an intervention that cannot be built. The fourth describes **who could deliver** the intervention, and subtracts nothing until it is answered.
 
-That asymmetry is deliberate and is the substance of D-043.3. The originally approved question — "is there interest to create productive landscape from individuals or communities", yes or no — would have suppressed the urban farm and the agroforestry system on a "no": the highest-canopy, highest-cooling entries in the group, and the ones a municipality is most likely to deliver. A multi-select over {community, individual, institutional, commercial} gates correctly at no extra cost in user effort, and an *empty* selection is not evidence that no delivery model exists. The tool never asserts a negative from absent information, here as in D-022 and D-026.
+That asymmetry is deliberate. The originally approved question — "is there interest to create productive landscape from individuals or communities", yes or no — would have suppressed the urban farm and the agroforestry system on a "no": the highest-canopy, highest-cooling entries in the group, and the ones a municipality is most likely to deliver. A multi-select over {community, individual, institutional, commercial} gates correctly at no extra cost in user effort, and an *empty* selection is not evidence that no delivery model exists. The tool never asserts a negative from absent information.
 
 | Condition | Gates | Unanswered |
 |---|---|---|
@@ -346,13 +346,13 @@ That asymmetry is deliberate and is the substance of D-043.3. The originally app
 
 Woodland **creation** types — urban woodland, microforest, afforestation, woodland buffer — carry no woodland condition and are offered regardless. The four **constructed** water features — constructed wetland, retention pond, detention basin, water square — carry no waterfront condition, because a constructed feature needs no existing water body.
 
-**A note on the published situation counts.** The nine counts in the v1.2 review pack's part 4 were computed with the governance question unanswered, which is why they are reproduced in the test suite that way. Answering it reduces them: a school site offers 67 entries with the question unanswered and 63 when only *institutional* delivery is selected. Both are correct; they answer different questions.
+**A note on the published situation counts.** The nine counts in the approved v1.2 availability review were computed with the governance question unanswered, which is why they are reproduced in the test suite that way. Answering it reduces them: a school site offers 67 entries with the question unanswered and 63 when only *institutional* delivery is selected. Both are correct; they answer different questions.
 
 ---
 
 ## Climate classification: mapping Köppen–Geiger onto the tool's six zones
 
-Added at version `2026.08.05` (D-047.3, D-048), for the map-based site picker.
+Added at version `2026.08.05`, for the map-based site picker.
 The table lives in [`config/climate_classification.yaml`](../../config/climate_classification.yaml).
 
 **This is a methodology value, and the distinction matters.** The
@@ -392,7 +392,7 @@ problems, and all three sit squarely inside the evidence base behind the
 temperate row. Discarding them would lose real signal in exchange for a tidier
 rule.
 
-**The classes with no urban-heat counterpart map to `other` (D-047.3).**
+**The classes with no urban-heat counterpart map to `other`.**
 `other` is already the tool's neutral climate condition — every family resolves
 to condition `unknown`, which is factor **1.0** — so an unclassifiable location
 receives neither a boost nor a penalty. Forcing `ET`, `EF`, `Dfc` and their
@@ -428,7 +428,7 @@ the coast it sits on within a stated 25 km tolerance.
 
 The 2026.08.04 retrieval **sharpened this limitation into something closer to a warning** for two classes. Water bodies do not merely cool less at night — they *warm*: `yao2023b` measures 1.8 °C of nocturnal warming at an urban pond, `yao2023a` measures a 1.2–1.3 °C nocturnal heat island at urban lakes, and `ampatzidis2020` states that blue space may exacerbate the night-time heat island outright. Irrigated productive landscapes carry the same sign: `cheung2022` predicts an increase in the daily *minimum* temperature as stored heat is released. In both cases the effect is **outside** the daytime estimate rather than netted off against it, and both archetypes carry an output caveat saying so. A daytime-only tool that quietly omitted this would be reporting only the favourable half of what its own sources found.
 
-**A validation, and a deliberate non-adoption.** `kumar2024` is a 2024 typology-resolved review post-dating the v1.1 calibration. It reports street trees at up to **2.8 °C by in-situ monitoring** — inside the tool's 0.5–3.0 °C envelope — so the conservative calibration of D-014 holds against newer and broader evidence. The same review reports figures well *above* the tool's envelopes for other types: green walls 4.1 ± 4.2 °C, vegetated balconies 3.8 ± 2.7 °C, botanical gardens 5.0 ± 3.5 °C. **These are not adopted.** Taking them selectively would break internal consistency — vegetated balconies would outscore street trees — and adopting them wholesale is a full recalibration of the library with its own sensitivity analysis, which is a separate decision. Note also that the green-wall figure's standard deviation exceeds its mean. Recorded as a candidate for a future methodology review (D-044).
+**A validation, and a deliberate non-adoption.** `kumar2024` is a 2024 typology-resolved review post-dating the v1.1 calibration. It reports street trees at up to **2.8 °C by in-situ monitoring** — inside the tool's 0.5–3.0 °C envelope — so the tool’s conservative calibration holds against newer and broader evidence. The same review reports figures well *above* the tool's envelopes for other types: green walls 4.1 ± 4.2 °C, vegetated balconies 3.8 ± 2.7 °C, botanical gardens 5.0 ± 3.5 °C. **These are not adopted.** Taking them selectively would break internal consistency — vegetated balconies would outscore street trees — and adopting them wholesale is a full recalibration of the library with its own sensitivity analysis, which is a separate decision. Note also that the green-wall figure's standard deviation exceeds its mean. Recorded as a candidate for a future methodology review.
 
 **Climate dependence is first-order, not a refinement.** `keravec2026` finds solution type alone explains 12% of variance in effectiveness, rising to 78% once Köppen–Geiger subzone is included. This is the empirical justification for the climate suitability factor, and the reason the tool refuses to present a single global cooling number per typology.
 

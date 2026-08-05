@@ -3,9 +3,7 @@
 How to run this tool for other people, and the one setting a deployment can
 configure: map imagery. Written for the operator of a deployment — a company
 hosting it for its users, an institution running it on its own premises —
-rather than for a developer. The decisions behind everything on this page are
-recorded in [DECISIONS.md](DECISIONS.md) (D-035 for packaging, D-049 for
-imagery).
+rather than for a developer.
 
 ## Running the application
 
@@ -32,7 +30,7 @@ search — all with **no network request to anyone**. This is the default on
 purpose. It is what makes the tool deployable inside restricted networks, and
 it is enforced by CI: an unconfigured installation is driven headlessly through
 a complete assessment on every build and asserted to make zero external
-requests (D-049.8).
+requests.
 
 What the bundled map cannot do is show streets and buildings, because a
 world-scale basemap at street zoom cannot ship inside a Python wheel. That is
@@ -43,7 +41,7 @@ the one thing this page's setting adds.
 An operator supplies two values — a raster tile URL template and the credit
 line that tile source requires. Both, or neither: the application refuses to
 start with a URL and no attribution, because imagery must never render
-uncredited (D-049.2).
+uncredited.
 
 As environment variables (what a container deployment uses — see the commented
 example in `compose.yaml`):
@@ -68,7 +66,7 @@ entire runtime configuration.
 
 With a source configured, every user of that deployment sees imagery by
 default, credited on the map. Each user can still turn it off for their visit,
-or substitute a source of their own; neither choice is saved (D-049.4). If the
+or substitute a source of their own; neither choice is saved. If the
 configured source is unreachable from a user's network, the map falls back to
 the bundled outlines and says so — a restricted-network deployment that was
 configured optimistically still works.
@@ -117,8 +115,7 @@ documentation states the exact line to use; put it in
 `NATURE_COOLING_TILE_ATTRIBUTION` verbatim.
 
 No OpenStreetMap data is bundled in the package itself — tiles are requested
-by each user's browser directly from your provider at runtime (D-049.3,
-D-049.7).
+by each user's browser directly from your provider at runtime.
 
 ### Restricting your API key
 
@@ -131,7 +128,7 @@ HTTP origins", Stadia "domain restriction", Geoapify and Thunderforest offer
 the same in their dashboards. Restrict the key to your domain when you create
 it, and a copied key is useless anywhere else. The alternative — proxying
 tiles through this application's backend to keep the key secret — was
-considered and rejected (D-049.3): it would make the backend an outbound HTTP
+considered and rejected: it would make the backend an outbound HTTP
 client for the first time and spend the operator's bandwidth to solve a
 problem key restriction already solves.
 
@@ -156,4 +153,4 @@ controls.
 |---|---|
 | `--tile-url` | sets `NATURE_COOLING_TILE_URL` |
 | `--tile-attribution` | sets `NATURE_COOLING_TILE_ATTRIBUTION` |
-| `--host`, `--port` | bind address and port (unchanged since D-036) |
+| `--host`, `--port` | bind address and port |

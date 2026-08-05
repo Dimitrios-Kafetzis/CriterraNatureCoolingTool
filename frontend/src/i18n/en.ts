@@ -5,7 +5,7 @@
  * never requires a code change. Strings that *state a result* — scores,
  * categories, confidence levels, recommendation text, warning texts,
  * assumption texts — are NOT here: they arrive from the API and are rendered
- * verbatim (PHASE-4-BRIEF rule 2). This catalog holds interface language
+ * verbatim. This catalog holds interface language
  * only: labels, actions, explanations, and display names for enum values the
  * API returns.
  */

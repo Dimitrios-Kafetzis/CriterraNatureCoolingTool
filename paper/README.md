@@ -53,7 +53,7 @@ Requires a TeX distribution with `latexmk` and `biber` (TeX Live 2023 or later;
 `texlive-full` on Debian/Ubuntu covers everything used here).
 
 ```sh
-make            # build main.pdf
+make            # build Criterra_NatureCoolingTool_MethodologyReport.pdf
 make watch      # rebuild continuously on change
 make clean      # remove build artefacts, keep the PDF
 make distclean  # remove build artefacts and the PDF
@@ -98,7 +98,7 @@ paper/
 │   ├── data-flow.tex
 │   ├── cooling-evidence.tex     Per-measure comparison from keravec2026
 │   ├── climate-dependence.tex   Climate-subzone spread
-│   └── envelope-clipping.tex    The D-008 clipping rule
+│   └── envelope-clipping.tex    The envelope clipping rule
 ├── Makefile
 ├── .latexmkrc
 └── .gitignore

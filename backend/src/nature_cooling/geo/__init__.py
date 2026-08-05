@@ -3,7 +3,7 @@
 Three questions are answered here, and deliberately only three: how large a
 drawn polygon is, which country a point falls in, and which climate zone a
 point classifies to. That is the whole of what a map can fill in without
-inventing anything — see docs/V2.1-BRIEF.md, which names the temptation this
+inventing anything; the v2.1 design record names the temptation this
 boundary exists to refuse. Canopy cover, imperviousness, land-surface
 temperature and land use are NOT derived here; deriving them from imagery is
 the GIS workflow deferred by D-002, and generating the tool's most

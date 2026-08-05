@@ -1,6 +1,6 @@
 # Methodology & Evidence Base
 
-This directory holds the scientific backbone of the tool, produced and maintained in Phase 1 and kept in lock-step with `config/` (matching version stamps).
+This directory holds the scientific backbone of the tool, kept in lock-step with `config/` (matching version stamps).
 
 ## Contents
 
@@ -18,10 +18,10 @@ Structure:
 
 1. **Purpose, scope, and positioning** — screening-level instrument; what it is and is not; intended use and users.
 2. **Conceptual framework** — three-layer structure (baseline → NbS performance → impact & feasibility); relation to published prioritisation frameworks (e.g., Norton et al. 2015) and composite-indicator practice (OECD/JRC Handbook).
-3. **Indicators and scoring** — every input, its normalisation, and every formula: heat exposure (data-rich and data-poor paths), vulnerability, Heat Priority Index, suitability, adjustment factors, cooling potential, energy/GHG, costs and payback, co-benefits, gender & equity, final aggregation. Includes the **effective-weights table** (declaring the deliberate equity-forward weighting, decision D-007).
-4. **The NbS typology library** — the 18 cooling archetypes with their evidence tables (see below) and the 110 catalogue typologies inheriting them; derivation of every cooling range, energy factor, and cost default; the suitability matrix (D-009); the package combination rules.
-5. **Uncertainty and confidence** — ranges-not-points principle; the °C literature-envelope clipping rule (D-008); branched confidence model; treatment of missing data and defaults.
-6. **Sensitivity analysis** — weight variation (±25%) and ranking stability across the golden scenarios (D-013).
+3. **Indicators and scoring** — every input, its normalisation, and every formula: heat exposure (data-rich and data-poor paths), vulnerability, Heat Priority Index, suitability, adjustment factors, cooling potential, energy/GHG, costs and payback, co-benefits, gender & equity, final aggregation. Includes the **effective-weights table** (declaring the deliberate equity-forward weighting).
+4. **The NbS typology library** — the 18 cooling archetypes with their evidence tables (see below) and the 110 catalogue typologies inheriting them; derivation of every cooling range, energy factor, and cost default; the suitability matrix; the package combination rules.
+5. **Uncertainty and confidence** — ranges-not-points principle; the °C literature-envelope clipping rule; branched confidence model; treatment of missing data and defaults.
+6. **Sensitivity analysis** — weight variation (±25%) and ranking stability across the golden scenarios.
 7. **Limitations and responsible use** — explicit boundary with microclimate simulation and detailed design; misuse cases.
 8. **References** — full bibliography with DOIs.
 
@@ -35,5 +35,5 @@ Delivered as a single consolidated document rather than 14 separate files: the t
 
 - Citations are verified against the publisher record, an institutional repository, or an indexing service before inclusion — never cited from memory or second-hand. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md) records the verification level of each entry, and configuration confidence reflects it.
 - Where evidence for a value could not be found, the tool either omits the value (costs) or ships it with an explicit low-confidence flag (green façade, bioswale, courtyard greening). Gaps are stated, not filled.
-- The report is versioned with the methodology: config `version:` and report version move together, enforced by `tests/test_config.py` (D-012).
+- The report is versioned with the methodology: config `version:` and report version move together, enforced by `tests/test_config.py`.
 - Citation integrity is machine-checked: every `sources[].key` in configuration must exist in the bibliography, or the configuration fails to load and CI fails.

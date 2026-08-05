@@ -7,11 +7,9 @@ Developed by [Criterra](https://criterra.eu).
 [![CI](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitrios-Kafetzis/CriterraNatureCoolingTool/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-> **Status: v2.2 — the usable-map release.** The tool is packaged and published: one `pip install` and one command (`nature-cooling serve`) start the whole application — API and web app on a single origin — from a wheel that embeds the production frontend build and the cited methodology configuration. A container image ships to GHCR with a minimal compose file, the full documentation corpus is published at **[dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/)**, and `vX.Y.Z` tags build and publish every artefact automatically.
+> **Status: packaged and published.** One `pip install` and one command (`nature-cooling serve`) start the whole application — API and web app on a single origin — from a wheel that embeds the production frontend build and the cited methodology configuration. A container image ships to GHCR with a minimal compose file, and the full documentation corpus is published at **[dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/)**.
 >
-> **v2.2 makes the map navigable, and introduces the application's first — and only — runtime setting.** The map now runs on Leaflet (drag, inertia, smooth zoom, touch), finds 7,342 cities and towns by name entirely offline, and a **deployment operator can configure real map imagery once for all of that deployment's users** — a raster tile source plus the attribution it requires, both mandatory, rendered on the map ([hosting guide](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/HOSTING/)). The rule that has held since v1 changes by exactly one clause: the package makes **no third-party request until a deployer configures one, or a user opts in** — a plain install still phones out to nobody, which CI now proves by driving the built app headlessly in a real browser through a complete assessment. Autofill is unchanged: exactly three answers (area, country, climate zone), each marked, never overwriting yours.
->
-> **v2.1 added the optional map at the head of the questionnaire, filling in exactly those three answers** — the site's area from the polygon you draw, its country by point-in-polygon, and its climate zone by Köppen–Geiger lookup. Everything else the questionnaire asks about the site needs satellite or census data, and deriving it from imagery would generate the tool's most decision-relevant inputs from an unvalidated pipeline; that stays out of scope. The lookup datasets are bundled, so **the map works with no network at all**. Methodology `2026.08.05`. See [Roadmap](#roadmap).
+> An optional map step at the head of the questionnaire can fill in exactly three answers — the site's area from the polygon you draw, its country by point-in-polygon, and its climate zone by Köppen–Geiger lookup — each marked as autofilled and never overwriting yours. The map runs on Leaflet, finds 7,342 cities and towns by name entirely offline, and a **deployment operator can configure real map imagery once for all of that deployment's users** — a raster tile source plus the attribution it requires ([hosting guide](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/HOSTING/)). By default the package makes **no third-party network request at all** — which CI proves by driving the built app headlessly in a real browser through a complete assessment. Methodology `2026.08.05`.
 
 ---
 
@@ -58,7 +56,7 @@ The tool is explicitly **not** a microclimate simulation (ENVI-met-class), a bui
 ├── config/        Methodology as data — typologies, weights, factors (YAML, cited)
 ├── backend/       Python: calculation engine (pure) + FastAPI API
 ├── frontend/      React + TypeScript web application
-├── docs/          Architecture, decision log, methodology & evidence base, v2 vision
+├── docs/          Architecture, methodology & evidence base, hosting guide
 ├── paper/         The methodology as a LaTeX scientific paper (for external review)
 └── .github/       CI/CD workflows
 ```
@@ -66,13 +64,11 @@ The tool is explicitly **not** a microclimate simulation (ENVI-met-class), a bui
 Key documents:
 
 - **[docs/methodology/METHODOLOGY.md](docs/methodology/METHODOLOGY.md)** — the Methodology Report: the complete scientific basis, written for expert review
-- **[paper/](paper/)** — the same methodology as a full scientific paper ([main.pdf](paper/main.pdf), 79 pages): the document to send to UNEP, scientific reviewers, and public authorities
+- **[paper/](paper/)** — the same methodology as a full scientific paper ([Criterra_NatureCoolingTool_MethodologyReport.pdf](paper/Criterra_NatureCoolingTool_MethodologyReport.pdf)): the document to send to UNEP, scientific reviewers, and public authorities
 - [docs/methodology/EVIDENCE-TABLES.md](docs/methodology/EVIDENCE-TABLES.md) — per-typology derivations from the literature
 - [docs/methodology/BIBLIOGRAPHY.md](docs/methodology/BIBLIOGRAPHY.md) — sources with verification status
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — system design
-- [docs/UX-SPECIFICATION.md](docs/UX-SPECIFICATION.md) — questionnaire and results interaction design
-- [docs/DECISIONS.md](docs/DECISIONS.md) — decision log with rationale
-- [docs/V2-VISION.md](docs/V2-VISION.md) — deferred features and product vision
+- [docs/HOSTING.md](docs/HOSTING.md) — deployment and configuration guide
 
 ## Methodology at a glance
 
@@ -83,23 +79,6 @@ Cooling values are **daytime, pedestrian-level air temperature reductions**, eac
 - **No default costs ship with the tool.** NbS unit costs vary by an order of magnitude between contexts, so cost outputs are reported as *not estimated* unless the user supplies figures.
 
 The methodology also states plainly where it is weak: green façade and bioswale evidence is thin or conflicting, all values are daytime-only, and the aggregation weights are expert judgment. Critique is welcome — see [how to challenge the methodology](docs/methodology/METHODOLOGY.md#9-methodology-governance).
-
-## Roadmap
-
-| Phase | Deliverable | Status |
-|---|---|---|
-| 0 | Repository scaffold, governance docs, CI | ✅ |
-| 1 | Methodology evidence base + expert Methodology Report + cited configuration | ✅ |
-| 2 | Calculation engine (pure Python, 100% test coverage, golden scenarios, sensitivity analysis) | ✅ |
-| 3 | FastAPI service (scoring, validation + confidence preview, local-first project storage) | ✅ |
-| 4 | React/TypeScript web app (questionnaire wizard, dashboard, A/B/C comparison) | ✅ |
-| 5 | Report export (PDF / XLSX) | ✅ |
-| 6 | Documentation site, packaging, hosting | ✅ |
-| 7 | Stabilisation — external methodology review & hardening | ✅ (shipped in v1.1) |
-| 8 | **v1.1** — review round 1: parameter explanations, cooling-refuge split, brand identity | ✅ |
-| 9 | **v2.0** — UNEP NbS catalogue, scale- and condition-based availability, multi-intervention packages | ✅ |
-| 10 | **v2.1** — map-based site selection with parameter autofill | ✅ |
-| 11 | **v2.2** — usable map: deployment-configurable imagery, offline place search, Leaflet | ✅ |
 
 ## Running the tool
 
@@ -120,13 +99,13 @@ docker run -p 8000:8000 ghcr.io/dimitrios-kafetzis/criterranaturecoolingtool:lat
 docker compose up -d
 ```
 
-Both serve the web app at `/` and the API at `/api` from one origin (D-030 — no CORS middleware, by design). Projects are stored as JSON under your platform user-data directory; stored results are never silently recomputed when the methodology moves.
+Both serve the web app at `/` and the API at `/api` from one origin (no CORS middleware, by design). Projects are stored as JSON under your platform user-data directory; stored results are never silently recomputed when the methodology moves.
 
 To build the wheel yourself: `tools/build_wheel.sh` (Node 18+ and the backend `dev` extra) — it builds the frontend, embeds it with the configuration into the package, and produces `backend/dist/*.whl`.
 
 ### Development (two processes)
 
-The FastAPI service and the Vite dev server, which proxies `/api` to it (same-origin integration, D-030).
+The FastAPI service and the Vite dev server, which proxies `/api` to it (same-origin integration).
 
 ```bash
 # Terminal 1 — the API
@@ -166,7 +145,7 @@ print(result.opportunity.score, result.opportunity.category)
 
 ## Documentation site
 
-The full documentation corpus — Methodology Report, evidence tables, bibliography, sensitivity analysis, architecture, decision log, UX specification — is published at [dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/), rendered directly from the Markdown in this repository (no page is authored twice) and redeployed by CI on every push to `main`. Preview locally with `pip install -r docs/requirements.txt && mkdocs serve`.
+The full documentation corpus — Methodology Report, evidence tables, bibliography, sensitivity analysis, architecture, hosting guide — is published at [dimitrios-kafetzis.github.io/CriterraNatureCoolingTool](https://dimitrios-kafetzis.github.io/CriterraNatureCoolingTool/), rendered directly from the Markdown in this repository (no page is authored twice) and redeployed by CI on every push to `main`. Preview locally with `pip install -r docs/requirements.txt && mkdocs serve`.
 
 ## License
 
