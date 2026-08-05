@@ -409,7 +409,7 @@ export interface paths {
     };
     /**
      * Typologies
-     * @description The full library: 18 cited archetypes and the 110 entries inheriting them.
+     * @description The full library: 18 cited archetypes and the 121 entries inheriting them.
      *
      *     ``resolved`` carries each entry merged with its archetype — the flat view
      *     the picker renders and the engine scores — while ``archetypes`` carries the
@@ -486,7 +486,7 @@ export interface components {
      * @description One cited cooling evidence class (D-044).
      *
      *     Every performance value in the library lives here, with the citations that
-     *     support it. The 110 catalogue entries carry no performance value of their
+     *     support it. The 121 catalogue entries carry no performance value of their
      *     own; each inherits exactly one archetype and the report names the evidence
      *     class it inherited from.
      */
@@ -1484,6 +1484,11 @@ export interface components {
      *     inherited value plainly wrong (D-044.3); every replacement value is one
      *     already present in the cited v1.1 library, so no new number enters the
      *     methodology through an override.
+     *
+     *     ``unsuitable_climate_zones`` was added at 2026.08.06 for a single entry,
+     *     mangrove restoration, whose source states "tropical and subtropical
+     *     climates only". It raises a suitability *flag* and contributes to no score,
+     *     so declaring it moves no result for any other entry.
      */
     SuitabilityOverride: {
       /** Minimum Site Area M2 */
@@ -1492,6 +1497,8 @@ export interface components {
       requires_irrigation?: ('none' | 'occasional' | 'reliable') | null;
       /** Requires Soil */
       requires_soil?: ('none' | 'limited' | 'moderate' | 'high') | null;
+      /** Unsuitable Climate Zones */
+      unsuitable_climate_zones?: string[] | null;
     };
     /**
      * TileSource

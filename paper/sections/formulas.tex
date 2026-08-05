@@ -236,7 +236,11 @@ level, and the \emph{more limiting} of the two is taken. The mapping is
 When exactly one of the two is known, the condition is capped at \emph{good}:
 a pair containing an unknown may never exceed the neutral factor, so declaring
 reliable irrigation is never worse --- and with high soil strictly better ---
-than skipping the question (D-026, version 2026.08.02). \\
+than skipping the question. The cap was introduced at version 2026.08.02 to
+remove an incentive defect found during engine implementation: without it, a
+site that declared reliable irrigation but left soil unknown could score below
+one that answered neither, which would have taught users that the honest
+answer costs them. Complete favourable data must strictly dominate silence. \\
 \addlinespace
 Scale &
 From the declared assessment scale:
@@ -517,7 +521,7 @@ already supplied; no new questions are asked.
 \begin{table}[H]
 \centering
 \caption[Suitability sub-indicator rules]{Derivation of the NbS Suitability
-sub-indicators (decision D-022). A score of 25 on space, soil, or water
+sub-indicators. A score of 25 on space, soil, or water
 coincides with the hard ``not suitable'' flag of \Cref{sec:suitability};
 an unknown availability never raises a flag, because a disqualification is
 never asserted from absent information.}
@@ -719,8 +723,13 @@ S_{\mathrm{cost}} \;=\; f\bigl(\text{payback bracket},\;
 \end{equation}
 
 with short payback, low complexity, and low maintenance yielding high
-feasibility. The bracket boundaries and combination rule, fixed at version
-2026.08.01 (decision D-023), are as follows. Because the energy saving is an
+feasibility. The bracket boundaries and combination rule were fixed at version
+2026.08.01, and are declared rather than derived: no source in the
+bibliography establishes a payback threshold at which an urban cooling
+investment becomes attractive, because that judgement belongs to the
+institution spending the money. What the methodology owes is that the
+thresholds be stated, versioned, and adjustable in configuration rather than
+buried in code. They are as follows. Because the energy saving is an
 interval spanning an order of magnitude, the payback bracket is applied to the
 payback computed from the \emph{central} energy estimate --- the midpoint of
 the savings range --- while the reported payback interval still carries both
@@ -864,9 +873,9 @@ result is to record the methodology version under which it was produced.
 \end{keynote}
 
 The double contribution is also not an accident of construction that happened
-to be noticed afterwards. It follows from a deliberate decision, recorded in
-the project's decision log as D-007, that the tool should prioritise who is
-affected slightly above how hot a place is. The alternative designs --- dropping
+to be noticed afterwards. It follows from a deliberate value stance taken when
+the instrument was designed: that the tool should prioritise who is affected
+slightly above how hot a place is. The alternative designs --- dropping
 the direct vulnerability term, or removing vulnerability from the Heat Priority
 Index --- were both available; each would have produced a defensible instrument
 with a different value stance.

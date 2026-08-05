@@ -82,7 +82,7 @@ paper/
 │   ├── related-work.tex     Positioning; how a screening tool should be judged
 │   ├── framework.tex        Three-layer structure
 │   ├── inputs.tex           Inputs, normalisation, the LST proxy caution
-│   ├── typologies.tex       The archetype library: 110 entries over 18 classes
+│   ├── typologies.tex       The archetype library: 121 entries over 18 classes
 │   ├── formulas.tex         Every scoring formula and weight
 │   ├── uncertainty.tex      Ranges, branched confidence, missing data
 │   ├── sensitivity.tex      Design and the results, re-confirmed at 2026.08.05

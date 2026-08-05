@@ -1,6 +1,6 @@
 # Sensitivity analysis of the aggregation weights
 
-Methodology version: `2026.08.05`. Scenario set: 24 golden scenarios
+Methodology version: `2026.08.06`. Scenario set: 24 golden scenarios
 (276 scenario pairs). Each of the six final-aggregation weights was
 varied by +/-25% with the remainder renormalised to a unit sum, and the
 full scenario set re-scored under each of the 12 perturbations.

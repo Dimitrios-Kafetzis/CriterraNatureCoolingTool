@@ -48,7 +48,7 @@ RETIRED_TYPOLOGIES: dict[str, str] = {
     "permeable_shaded_plaza": "permeable_shaded_hardscape",
 }
 
-# These three still name a selectable entry in the 110-entry library: only
+# These three still name a selectable entry in the catalogue: only
 # their evidence class moved, and the draft continues to evaluate unchanged.
 # They are reported for transparency — the numbers behind the entry may differ
 # from the ones the user saw when they saved it — but nothing needs re-doing.

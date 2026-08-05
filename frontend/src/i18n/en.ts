@@ -37,7 +37,7 @@ export const messages = {
 
   entry: {
     heading: 'Evaluate nature-based solutions for urban cooling',
-    what: 'This tool turns a structured description of a site and one or more proposed nature-based interventions — chosen from 110 typologies, from a single tree pit to a district-wide cooling network — into transparent, literature-grounded scores: a Heat Priority Index, a cooling opportunity score with an indicative temperature-reduction range, and energy, cost, equity, and co-benefit estimates.',
+    what: 'This tool turns a structured description of a site and one or more proposed nature-based interventions — chosen from 121 typologies, from a single tree pit to a district-wide cooling network — into transparent, literature-grounded scores: a Heat Priority Index, a cooling opportunity score with an indicative temperature-reduction range, and energy, cost, equity, and co-benefit estimates.',
     whatItAsks:
       'It opens with an optional map that can fill in the site’s area, country and climate zone, then asks about 45 questions across six short steps: the site, its climate and heat exposure, who uses it, the intervention, and (optionally) cost and energy figures. Around 20 are required; a complete pass takes 15–25 minutes.',
     partialAnswers:
@@ -587,7 +587,7 @@ export const messages = {
   },
 
   /**
-   * The catalogue's fourteen families (D-043): five element families — the
+   * The catalogue's fifteen families: five element families — the
    * discrete things you build — then the composite families, each a coherent
    * spatial system made of elements. The order below is the order the picker
    * renders, elements first.
@@ -610,6 +610,7 @@ export const messages = {
       'productive_landscape',
       'building',
       'district',
+      'site_restoration',
     ] as readonly string[],
     labels: {
       tree_based: 'Trees and tree planting',
@@ -626,6 +627,7 @@ export const messages = {
       productive_landscape: 'Productive landscape scale',
       building: 'Building scale',
       district: 'District scale',
+      site_restoration: 'Soil, slope and site restoration',
     } as Record<string, string>,
     kinds: {
       element: 'Element — a discrete thing you build',
@@ -663,7 +665,7 @@ export const messages = {
     sizingHeading: 'Size the intervention',
 
     /**
-     * The catalogue picker (D-043, D-044). 110 entries across fourteen
+     * The catalogue picker. 121 entries across fifteen
      * families is not a flat card list, so the menu groups by family and the
      * copy states what the entries are: catalogue entries inheriting a cited
      * evidence class, not solution-specific measurements.

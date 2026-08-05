@@ -18,7 +18,7 @@ export default defineConfig({
     include: ['src/**/*.test.{ts,tsx}'],
     globals: false,
     // Raised from the 5s default at v2.0.1. These tests render the served
-    // library, which grew from 14 typologies to 110 in v2.0, and the wizard
+    // library, which grew from 14 typologies to 110 in v2.0 and 121 in v2.5, and the wizard
     // tests drive real user events through a debounced auto-save. The slowest
     // is ~1.3s on a development machine but over 3x that on a CI runner, which
     // put it close enough to the default to flake. 15s still fails a genuine

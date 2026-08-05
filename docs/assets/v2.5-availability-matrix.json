@@ -1,0 +1,288 @@
+[
+ {
+  "id": "SA16",
+  "source_ref": "A16",
+  "name": "Depaving",
+  "kind": "element",
+  "bucket": "site_restoration",
+  "scales": [
+   "neighbourhood",
+   "site",
+   "building"
+  ],
+  "conditional_at_neighbourhood": false,
+  "land_uses": "all",
+  "requires_waterfront": null,
+  "requires_railway": false,
+  "requires_existing_woodland": null,
+  "governance": null,
+  "archetype": "non_canopy_vegetation",
+  "temp_min_c": 0.0,
+  "temp_max_c": 1.5,
+  "evidence": "medium"
+ },
+ {
+  "id": "S11B.16",
+  "source_ref": "11B.16",
+  "name": "Vegetated Terracing",
+  "kind": "composite",
+  "bucket": "site_restoration",
+  "scales": [
+   "neighbourhood",
+   "site"
+  ],
+  "conditional_at_neighbourhood": false,
+  "land_uses": "all",
+  "requires_waterfront": null,
+  "requires_railway": false,
+  "requires_existing_woodland": null,
+  "governance": null,
+  "archetype": "non_canopy_vegetation",
+  "temp_min_c": 0.0,
+  "temp_max_c": 1.5,
+  "evidence": "medium"
+ },
+ {
+  "id": "S11B.17",
+  "source_ref": "11B.17",
+  "name": "Natural Slope Restoration",
+  "kind": "composite",
+  "bucket": "site_restoration",
+  "scales": [
+   "neighbourhood",
+   "site"
+  ],
+  "conditional_at_neighbourhood": false,
+  "land_uses": "all",
+  "requires_waterfront": null,
+  "requires_railway": false,
+  "requires_existing_woodland": null,
+  "governance": null,
+  "archetype": "non_canopy_vegetation",
+  "temp_min_c": 0.0,
+  "temp_max_c": 1.5,
+  "evidence": "medium"
+ },
+ {
+  "id": "S12A.1",
+  "source_ref": "12A.1",
+  "name": "Subsurface-flow treatment wetland",
+  "kind": "composite",
+  "bucket": "water_landscape",
+  "scales": [
+   "neighbourhood",
+   "site",
+   "building"
+  ],
+  "conditional_at_neighbourhood": false,
+  "land_uses": [
+   "residential",
+   "mixed_use",
+   "commercial",
+   "public_space",
+   "park",
+   "school",
+   "campus",
+   "healthcare",
+   "industrial",
+   "other"
+  ],
+  "requires_waterfront": null,
+  "requires_railway": false,
+  "requires_existing_woodland": null,
+  "governance": null,
+  "archetype": "non_canopy_vegetation",
+  "temp_min_c": 0.0,
+  "temp_max_c": 1.5,
+  "evidence": "medium"
+ },
+ {
+  "id": "S17.4",
+  "source_ref": "17.4",
+  "name": "Mangrove Restoration",
+  "kind": "composite",
+  "bucket": "water_landscape",
+  "scales": [
+   "neighbourhood",
+   "site"
+  ],
+  "conditional_at_neighbourhood": false,
+  "land_uses": [
+   "public_space",
+   "park",
+   "industrial",
+   "other"
+  ],
+  "requires_waterfront": [
+   "sea"
+  ],
+  "requires_railway": false,
+  "requires_existing_woodland": null,
+  "governance": null,
+  "archetype": "riparian_restoration",
+  "temp_min_c": 1.0,
+  "temp_max_c": 3.0,
+  "evidence": "medium"
+ },
+ {
+  "id": "S17.6",
+  "source_ref": "17.6",
+  "name": "Dune Restoration",
+  "kind": "composite",
+  "bucket": "water_landscape",
+  "scales": [
+   "neighbourhood",
+   "site"
+  ],
+  "conditional_at_neighbourhood": false,
+  "land_uses": [
+   "public_space",
+   "park",
+   "other"
+  ],
+  "requires_waterfront": [
+   "sea"
+  ],
+  "requires_railway": false,
+  "requires_existing_woodland": null,
+  "governance": null,
+  "archetype": "non_canopy_vegetation",
+  "temp_min_c": 0.0,
+  "temp_max_c": 1.5,
+  "evidence": "medium"
+ },
+ {
+  "id": "S17.7",
+  "source_ref": "17.7",
+  "name": "Coastal Wetland Restoration",
+  "kind": "composite",
+  "bucket": "water_landscape",
+  "scales": [
+   "neighbourhood",
+   "site"
+  ],
+  "conditional_at_neighbourhood": false,
+  "land_uses": [
+   "park",
+   "industrial",
+   "other"
+  ],
+  "requires_waterfront": [
+   "sea"
+  ],
+  "requires_railway": false,
+  "requires_existing_woodland": null,
+  "governance": null,
+  "archetype": "non_canopy_vegetation",
+  "temp_min_c": 0.0,
+  "temp_max_c": 1.5,
+  "evidence": "medium"
+ },
+ {
+  "id": "S9.19",
+  "source_ref": "9.19",
+  "name": "Green Loggia",
+  "kind": "element",
+  "bucket": "building",
+  "scales": [
+   "building"
+  ],
+  "conditional_at_neighbourhood": false,
+  "land_uses": [
+   "residential",
+   "mixed_use",
+   "commercial",
+   "school",
+   "campus",
+   "healthcare",
+   "other"
+  ],
+  "requires_waterfront": null,
+  "requires_railway": false,
+  "requires_existing_woodland": null,
+  "governance": null,
+  "archetype": "enclosed_courtyard",
+  "temp_min_c": 0.3,
+  "temp_max_c": 1.5,
+  "evidence": "low"
+ },
+ {
+  "id": "S9.22",
+  "source_ref": "9.22",
+  "name": "Vertical Forest Building",
+  "kind": "composite",
+  "bucket": "building",
+  "scales": [
+   "building"
+  ],
+  "conditional_at_neighbourhood": false,
+  "land_uses": [
+   "residential",
+   "mixed_use",
+   "commercial",
+   "other"
+  ],
+  "requires_waterfront": null,
+  "requires_railway": false,
+  "requires_existing_woodland": null,
+  "governance": null,
+  "archetype": "green_facade_living_wall",
+  "temp_min_c": 0.3,
+  "temp_max_c": 2.0,
+  "evidence": "low"
+ },
+ {
+  "id": "S19.4",
+  "source_ref": "19.4",
+  "name": "Phytoremediation",
+  "kind": "composite",
+  "bucket": "site_restoration",
+  "scales": [
+   "neighbourhood",
+   "site"
+  ],
+  "conditional_at_neighbourhood": false,
+  "land_uses": [
+   "industrial",
+   "public_space",
+   "park",
+   "mixed_use",
+   "other"
+  ],
+  "requires_waterfront": null,
+  "requires_railway": false,
+  "requires_existing_woodland": null,
+  "governance": null,
+  "archetype": "non_canopy_vegetation",
+  "temp_min_c": 0.0,
+  "temp_max_c": 1.5,
+  "evidence": "medium"
+ },
+ {
+  "id": "S21.8",
+  "source_ref": "21.8",
+  "name": "Brownfield Ecological Succession",
+  "kind": "composite",
+  "bucket": "site_restoration",
+  "scales": [
+   "neighbourhood",
+   "site"
+  ],
+  "conditional_at_neighbourhood": false,
+  "land_uses": [
+   "industrial",
+   "public_space",
+   "park",
+   "mixed_use",
+   "other"
+  ],
+  "requires_waterfront": null,
+  "requires_railway": false,
+  "requires_existing_woodland": null,
+  "governance": null,
+  "archetype": "non_canopy_vegetation",
+  "temp_min_c": 0.0,
+  "temp_max_c": 1.5,
+  "evidence": "medium"
+ }
+]

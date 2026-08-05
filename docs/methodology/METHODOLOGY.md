@@ -1,7 +1,9 @@
 # Nature for Cooling Rapid Assessment Tool — Methodology Report
 
-**Version:** 2026.08.05 (methodology configuration version `2026.08.05`)
+**Version:** 2026.08.06 (methodology configuration version `2026.08.06`)
 **Status:** Version 2 methodology, released for expert review; calculation engine implemented
+
+**Version `2026.08.06` expands the catalogue from 110 entries to 121 and adds no evidence class.** A supplementary UNEP proposal of 143 further entries was curated on the discipline used for the original catalogue — keep, merge or drop, every decision recorded with a reason (§4.3) — and 11 were accepted, 58 merged onto entries the catalogue already had, and 74 dropped. **Every accepted entry inherits one of the 18 archetypes that already existed**, so no cooling envelope, aggregation weight, scoring formula or confidence rule moved at this version, and no new citation entered the methodology; what an entry could not inherit honestly it was not given. The catalogue gains a fifteenth family, *soil, slope and site restoration*, for interventions that restore a degraded ground surface to vegetated function — the one domain the 110 did not cover. Because the typology library is methodology configuration, the version bumps; because no measured value moved, the sensitivity analysis of §7 is **re-confirmed unchanged rather than regenerated**, on the pattern of `2026.08.03` and `2026.08.05`. Stored results are untouched and keep the version that produced them.
 
 **Version `2026.08.05` adds one methodology value and moves nothing else.** The map-based site picker (§3.5) needs to turn a location into a climate zone, and the mapping from the thirty Köppen–Geiger classes onto this tool's six zones is a judgement that selects a row of the climate adjustment matrix — so it is declared as a methodology value with its own citation, derivation and version, rather than buried in the picker's code. **No cooling envelope, aggregation weight, typology value or scoring formula changed at this version**, and the sensitivity analysis of §7 is therefore **re-confirmed unchanged rather than regenerated**, on the pattern of `2026.08.03`. An assessment filled in without ever opening the map is unaffected by this version in every respect.
 
@@ -170,13 +172,23 @@ In practice none of the three fields appears in any confidence block, so the que
 
 ### 4.1 Structure: archetypes and entries
 
-From version `2026.08.04` the library has **two levels**. An **archetype** is a cited cooling evidence class carrying every performance value — base cooling score, temperature envelope, evidence confidence, suitability conditions, co-benefit defaults, and the citations behind them. A **typology** is one of the **110 curated entries** of the UNEP *Nature for Cooling* catalogue: it carries identity, family, availability, and the one archetype it inherits, and **no performance value of its own**.
+From version `2026.08.04` the library has **two levels**. An **archetype** is a cited cooling evidence class carrying every performance value — base cooling score, temperature envelope, evidence confidence, suitability conditions, co-benefit defaults, and the citations behind them. A **typology** is one of the **121 curated entries** of the UNEP *Nature for Cooling* catalogue and its supplement: it carries identity, family, availability, and the one archetype it inherits, and **no performance value of its own**.
 
-The reason is worth stating without euphemism: **solution-specific cooling literature does not exist for 110 typologies.** Nobody has separately measured a felt-pocket living wall, a suspended-pavement tree pit and a green parking lane. The alternative to archetypes was inventing 110 envelopes, which would have manufactured precision the catalogue does not contain and would have broken the evidence rule the tool exists to honour — that no performance value ships without a citation.
+The reason is worth stating without euphemism: **solution-specific cooling literature does not exist for 121 typologies.** Nobody has separately measured a felt-pocket living wall, a suspended-pavement tree pit and a green parking lane. The alternative to archetypes was inventing 121 envelopes, which would have manufactured precision the catalogue does not contain and would have broken the evidence rule the tool exists to honour — that no performance value ships without a citation.
 
 Under the archetype model an entry inherits a **cited** envelope, and every result **names the evidence class it inherited from**. A Miyawaki forest reports its cooling on the dense-canopy evidence, and says so, rather than implying a measurement of Miyawaki forests that does not exist.
 
 The 243 catalogue entries were curated to 110 — 88 merged, 45 dropped — on the source document's own classification notes. Nearly every drop is an entry the document itself disqualifies as not an intervention: a land-use context, a management objective, an umbrella category, a planning model. Nothing is lost by dropping them. A land-use context is already carried by the `land_use` input; a strategy is a *package* of kept entries, which §4.5 makes expressible for the first time.
+
+At `2026.08.06` a supplementary proposal of **143 further entries** was curated on the same discipline: **11 kept, 58 merged, 74 dropped**, taking the library to **121 entries**. The keep rate is 8% against the first curation's 45%, and the difference is what the supplement contains rather than a harsher standard. It extends the catalogue sideways — into bank and slope engineering, wastewater treatment, marine ecology, habitat furniture, soil science, maintenance regimes and buried drainage — and **six of its groups state in their own classification notes that they are supporting or enabling layers rather than interventions**: habitat microstructures whose "primary contribution is biodiversity enhancement rather than direct heat mitigation", soil restoration that "acts as an enabling layer", management practices forming "the operational layer", buried drainage that "should not be regarded as Nature-based Solutions in their own right", and wildlife-crossing structures that are "supporting ecological infrastructure". Thirteen of the fourteen habitat-microstructure entries state no cooling mechanism at all, and three are thermally counter-directional by design — a stone pile creating "warm crevices", a frost-free hibernaculum, a sun-heated basking rock.
+
+Most of the rest are the catalogue restated. Thirty bank- and slope-bioengineering techniques are construction methods for two systems, one of which — soft bank protection — the catalogue already carried as the living shoreline. Twenty-seven circular-water entries resolve to the constructed wetland, the floating wetland, the bioretention basin and the water square, all four already present; what separates them from one another is influent, objective or harvesting regime, which are attributes.
+
+**Every one of the 11 accepted entries inherits an archetype that already existed**, so the expansion added no envelope, no citation and no new evidence class. Two of the eleven are worth naming because they *correct* rather than extend. A **subsurface-flow treatment wetland** carries its flow beneath a gravel bed, so it has no exposed water surface: it inherits `non_canopy_vegetation` rather than `small_constructed_water`, because attributing evaporative cooling to water that is under stone would repeat, one level down, the error §4.2 avoids by keeping the two water archetypes apart. A **vertical forest building** inherits `green_facade_living_wall` rather than a canopy class, which holds the deliberate non-adoption recorded in §4.4 of the vegetated-balcony figures that would rate a balcony above measured street trees.
+
+The catalogue also gains a **fifteenth family, soil, slope and site restoration**, holding five entries — depaving, vegetated terracing, natural slope restoration, phytoremediation and brownfield ecological succession. They are one act described five ways, restoring a degraded ground surface to vegetated function, and none fitted an existing family without distortion: a landscape-scale slope restoration is not a ground-level element, and a colonising brownfield is not a park. All five inherit `non_canopy_vegetation`, and that concentration is the finding rather than a shortcut — what this domain adds to a cooling catalogue is ground-level vegetated surface, which is one evidence class, and it is the class with a genuine zero floor for planting that is dry, dormant or not yet established.
+
+The machine-readable record of both curations is published: [`v1.2-curation.json`](../assets/v1.2-curation.json) and [`v2.5-curation.json`](../assets/v2.5-curation.json), with the availability matrices beside them. The supplementary document renumbers from scratch and collides with the original catalogue on seventeen identifiers — most consequentially `7.14`, which names a shipped entry in one and a dropped one in the other — so supplementary identifiers carry an `S` prefix and each entry's number as printed in its source is preserved in the record.
 
 ### 4.2 The 18 archetypes
 
@@ -189,25 +201,25 @@ All values are **daytime, pedestrian-level air temperature reductions**. Derivat
 | `small_green_area_with_trees` | Green | 65 | 0.3 – 1.5 | High | v1.1 | 6 |
 | `dense_tree_canopy` | Green | 90 | 1.0 – 3.0 | High | v1.1 | 10 |
 | `established_park` | Green | 70 | 0.5 – 2.0 | High | v1.1 | 10 |
-| `non_canopy_vegetation` | Green | 50 | 0.0 – 1.5 | Medium | **new** | 7 |
+| `non_canopy_vegetation` | Green | 50 | 0.0 – 1.5 | Medium | **new** | 15 |
 | `productive_canopy` | Green | 60 | 0.5 – 2.0 | Low | **derived** | 3 |
 | `productive_non_canopy` | Green | 45 | 0.0 – 1.5 | Low | **derived** | 6 |
 | `extensive_green_roof` | Building | 45 | 0.1 – 1.0 | Medium | v1.1 | 7 |
-| `green_facade_living_wall` | Building | 50 | 0.3 – 2.0 | Low | v1.1 | 11 |
+| `green_facade_living_wall` | Building | 50 | 0.3 – 2.0 | Low | v1.1 | 12 |
 | `bioretention` | Blue-Green | 55 | 0.1 – 0.8 | Low | v1.1 | 8 |
 | `blue_green_corridor` | Blue-Green | 85 | 1.0 – 3.0 | Medium | v1.1 | 5 |
-| `riparian_restoration` | Blue-Green | 85 | 1.0 – 3.0 | Medium | v1.1 | 6 |
+| `riparian_restoration` | Blue-Green | 85 | 1.0 – 3.0 | Medium | v1.1 | 7 |
 | `large_water_body` | Blue-Green | 75 | 0.1 – 3.0 | Medium | **new** | 3 |
 | `small_constructed_water` | Blue-Green | 40 | 0.0 – 1.0 | Medium | **new** | 6 |
 | `permeable_shaded_hardscape` | Hybrid | 70 | 0.5 – 2.5 | Medium | v1.1 | 2 |
-| `enclosed_courtyard` | Hybrid | 60 | 0.3 – 1.5 | Low | v1.1 | 1 |
+| `enclosed_courtyard` | Hybrid | 60 | 0.3 – 1.5 | Low | v1.1 | 2 |
 | `vegetated_shade_structure` | Hybrid | 55 | 0.0 – 2.5 | Low | **new** | 2 |
 
 **Twelve archetypes are the v1.1 typologies unchanged** — same envelopes, same base scores, same evidence ratings, same citations. They are the only entries in the library with individually retrieved literature behind them, and this release keeps that evidence rather than trading it for catalogue names.
 
 ### 4.3 Two retirements
 
-**`schoolyard_greening` is retired as a typology**. The source document is explicit that a schoolyard is a *land-use context*, not an intervention. Keeping it would have meant asking "what is the land use here?" and then offering, as an intervention, the land use just described. A school site is instead offered the 72 real interventions that suit it, through the availability matrix of §3.4. This is a methodology change, not a rename: the typology carried cited values and appeared in a golden scenario.
+**`schoolyard_greening` is retired as a typology**. The source document is explicit that a schoolyard is a *land-use context*, not an intervention. Keeping it would have meant asking "what is the land use here?" and then offering, as an intervention, the land use just described. A school site is instead offered the 77 real interventions that suit it, through the availability matrix of §3.4. This is a methodology change, not a rename: the typology carried cited values and appeared in a golden scenario.
 
 **`mixed_nbs_package` is retired** in favour of real packages (§4.5). The finding it encoded — that no source quantifies super-additive cooling — has not changed and is not re-argued; what changed is that the tool no longer needs an opaque averaged card to express it.
 
@@ -248,7 +260,7 @@ The resulting envelope is wide, and the width is the finding rather than a defec
 
 ### 4.7 Suitability conditions
 
-Each entry declares conditions under which it is unsuitable — minimum viable site area, soil requirement, irrigation requirement, and unsuitable climate zones. These are **inherited from the archetype**, with per-entry overrides only where the catalogue's own description makes an inherited value plainly wrong — 21 entries of 110, each listed with its reason in the evidence tables, and every replacement value drawn from the cited v1.1 library so that no new number enters the methodology through an override.
+Each entry declares conditions under which it is unsuitable — minimum viable site area, soil requirement, irrigation requirement, and unsuitable climate zones. These are **inherited from the archetype**, with per-entry overrides only where the catalogue's own description makes an inherited value plainly wrong — 24 entries of 121, each listed with its reason in the evidence tables, and every replacement value drawn from the cited v1.1 library so that no new number enters the methodology through an override.
 
 When a disqualifying condition is met, the tool computes the assessment transparently but attaches a prominent **"not suitable for this site"** flag naming the reason, and the recommendation text states it. Silently returning a merely lower score for a physically implausible intervention would misrepresent the finding.
 

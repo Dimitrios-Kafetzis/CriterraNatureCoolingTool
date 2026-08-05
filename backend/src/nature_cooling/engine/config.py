@@ -8,7 +8,7 @@ Since version ``2026.08.04`` the typology library has two levels (D-044). An
 **archetype** is a cited evidence class: it carries every performance value —
 the temperature envelope, the base cooling score, the evidence rating, the
 suitability conditions, the co-benefit defaults — and the citations behind
-them. A **typology** is one of the 110 catalogue entries: it carries identity,
+them. A **typology** is one of the 121 catalogue entries: it carries identity,
 family, availability, and the archetype it inherits from, plus per-entry
 suitability overrides where the source text states a constraint (D-044.3).
 Loading resolves the two into the flat ``Typology`` the scoring modules have
@@ -81,6 +81,11 @@ class SuitabilityOverride(BaseModel):
     inherited value plainly wrong (D-044.3); every replacement value is one
     already present in the cited v1.1 library, so no new number enters the
     methodology through an override.
+
+    ``unsuitable_climate_zones`` was added at 2026.08.06 for a single entry,
+    mangrove restoration, whose source states "tropical and subtropical
+    climates only". It raises a suitability *flag* and contributes to no score,
+    so declaring it moves no result for any other entry.
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -88,6 +93,7 @@ class SuitabilityOverride(BaseModel):
     minimum_site_area_m2: float | None = Field(default=None, gt=0)
     requires_soil: Literal["none", "limited", "moderate", "high"] | None = None
     requires_irrigation: Literal["none", "occasional", "reliable"] | None = None
+    unsuitable_climate_zones: list[str] | None = None
 
 
 class Availability(BaseModel):
@@ -113,7 +119,7 @@ class Archetype(BaseModel):
     """One cited cooling evidence class (D-044).
 
     Every performance value in the library lives here, with the citations that
-    support it. The 110 catalogue entries carry no performance value of their
+    support it. The 121 catalogue entries carry no performance value of their
     own; each inherits exactly one archetype and the report names the evidence
     class it inherited from.
     """
@@ -230,7 +236,11 @@ def _resolve(entry: TypologyEntry, archetype: Archetype) -> Typology:
             ),
             requires_soil=override.requires_soil or conditions.requires_soil,
             requires_irrigation=override.requires_irrigation or conditions.requires_irrigation,
-            unsuitable_climate_zones=list(conditions.unsuitable_climate_zones),
+            unsuitable_climate_zones=list(
+                override.unsuitable_climate_zones
+                if override.unsuitable_climate_zones is not None
+                else conditions.unsuitable_climate_zones
+            ),
         )
     land_uses = entry.availability.land_uses
     return Typology(

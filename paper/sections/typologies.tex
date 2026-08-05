@@ -12,18 +12,19 @@ performance value --- base cooling score, temperature reduction envelope,
 evidence confidence rating, suitability conditions, default co-benefit levels
 --- together with the citations behind them. There are \num{18}.
 
-A \textbf{typology} is one of the \num{110} curated entries of the UNEP
-\emph{Nature for Cooling} catalogue. It carries identity, family, availability,
-the primary cooling mechanism the catalogue ascribes to it, and the one
-archetype it inherits. It carries \textbf{no performance value of its own}.
+A \textbf{typology} is one of the \num{121} curated entries of the UNEP
+\emph{Nature for Cooling} catalogue and its supplement. It carries identity,
+family, availability, the primary cooling mechanism the catalogue ascribes to
+it, and the one archetype it inherits. It carries \textbf{no performance value
+of its own}.
 
 \begin{keynote}
 \noindent\textbf{The reason is worth stating without euphemism: solution-specific
-cooling literature does not exist for \num{110} typologies.} Nobody has
+cooling literature does not exist for \num{121} typologies.} Nobody has
 separately measured a felt-pocket living wall, a suspended-pavement tree pit,
 and a green parking lane.
 
-The alternative to archetypes was inventing \num{110} envelopes. That would have
+The alternative to archetypes was inventing \num{121} envelopes. That would have
 manufactured precision the source catalogue does not contain, and it would have
 broken the evidence rule the tool exists to honour --- that no performance value
 ships without a citation (\Cref{sec:evidence-rules}).
@@ -42,14 +43,100 @@ model. Nothing is lost by dropping them. A land-use context is already carried
 by the \fieldname{land_use} input, and a strategy is a \emph{package} of kept
 entries, which \Cref{sec:packages} makes expressible for the first time.
 
-The \num{110} entries fall into fourteen catalogue families --- tree-based,
+The \num{121} entries fall into fifteen catalogue families --- tree-based,
 street, park, public space, woodland and forest, ground level, water landscape,
 ecological network, district, green roof, vertical greening, building,
-vegetated shelter, and productive landscape --- and are classified by the source
-document as \num{53} \emph{elements} (a discrete thing that is built) and
-\num{57} \emph{composites} (a coherent spatial system made of elements). Neither
-classification enters a formula; both are reported, because a reader comparing
-the tool's menu with the catalogue needs to see which is which.
+vegetated shelter, productive landscape, and soil, slope and site restoration
+--- and are classified by the source documents as \num{55} \emph{elements} (a
+discrete thing that is built) and \num{66} \emph{composites} (a coherent
+spatial system made of elements). Neither classification enters a formula; both
+are reported, because a reader comparing the tool's menu with the catalogue
+needs to see which is which.
+
+\subsection{The second curation, and why it kept so little}
+\label{sec:supplement}
+
+At version \methver{} a supplementary proposal of \num{143} further entries was
+curated on the same discipline: \textbf{\num{11} kept, \num{58} merged,
+\num{74} dropped}, taking the library to \num{121}. The keep rate is
+\SI{8}{\percent} against the first curation's \SI{45}{\percent}, and the
+difference is what the supplement contains rather than a harsher standard
+applied to it.
+
+The supplement extends the catalogue \emph{sideways} --- into bank and slope
+bioengineering, wastewater treatment, marine ecology, habitat furniture, soil
+science, maintenance regimes and buried drainage --- and six of its groups state
+in their own classification notes that they are supporting or enabling layers
+rather than interventions: habitat microstructures whose ``primary contribution
+is biodiversity enhancement rather than direct heat mitigation''; soil
+restoration that ``acts as an enabling layer \ldots rather than functioning as
+an isolated solution''; management practices forming ``the operational layer'',
+where ``the preceding chapters describe physical interventions'' and this one
+``addresses how those interventions are managed''; buried drainage that
+``should not be regarded as Nature-based Solutions in their own right''; and
+wildlife-crossing structures that are ``supporting ecological infrastructure''
+whose ``direct influence on urban cooling is limited''.
+
+The evidence beneath those words is stronger than the words. Thirteen of the
+fourteen habitat-microstructure entries state no cooling mechanism at all, and
+the fourteenth states ``None.''; three are thermally counter-directional by
+design --- a stone pile ``creating warm crevices'' that ``requires sun
+exposure'', a hibernaculum providing ``frost-free'' overwintering habitat, and a
+reptile basking habitat whose purpose is thermoregulation on sun-heated rock. In
+the soil chapter no entry claims direct cooling: three state ``Indirect'' and
+the remaining nine route it through vegetation the entry does not itself
+contain.
+
+Most of the remainder is the catalogue restated. Thirty bank- and
+slope-bioengineering techniques are construction methods for two systems, one of
+which --- soft bank protection --- the catalogue already carried as the living
+shoreline; the same rule that keeps street typologies from redefining their
+component elements applies unchanged. Twenty-seven circular-water entries
+resolve to the constructed wetland, the floating wetland, the bioretention basin
+and the water square, all four already present, because what separates them from
+one another is influent, objective or harvesting regime, and those are
+attributes rather than forms.
+
+\begin{keynote}
+\noindent\textbf{Every one of the \num{11} accepted entries inherits an
+archetype that already existed.} The expansion added no envelope, no citation
+and no new evidence class; an entry that could not inherit honestly was dropped
+rather than given a class invented for it.
+\end{keynote}
+
+Two of the eleven \emph{correct} rather than extend, and both are applications
+of rules stated elsewhere in this document. A \textbf{subsurface-flow treatment
+wetland} carries its flow beneath a gravel bed and so has no exposed water
+surface: it inherits the \emph{non-canopy vegetation} class rather than
+\emph{small constructed water}, because attributing evaporative cooling to
+water that is under stone would repeat, one level down, the error
+\Cref{sec:small-water} avoids by refusing to let constructed water features
+inherit the corridor envelope on family resemblance. A \textbf{vertical forest
+building} inherits \emph{green facade or living wall} rather than a canopy
+class, which holds the deliberate non-adoption of the vegetated-balcony figures
+that would otherwise rate a balcony above measured street trees.
+
+The fifteenth family, \emph{soil, slope and site restoration}, holds five
+entries: depaving, vegetated terracing, natural slope restoration,
+phytoremediation, and brownfield ecological succession. They are one act
+described five ways --- restoring a degraded ground surface to vegetated
+function --- and none fitted an existing family without distortion, a
+landscape-scale slope restoration being no more a ground-level element than a
+colonising brownfield is a park. All five inherit the
+\emph{non-canopy vegetation} class, and that concentration is the finding
+rather than a shortcut: what this domain adds to a \emph{cooling} catalogue is
+ground-level vegetated surface, which is one evidence class, and it is the class
+carrying a genuine zero floor for planting that is dry, dormant or not yet
+established.
+
+Both curations are published in machine-readable form beside the methodology, so
+the decision on any individual entry can be looked up rather than inferred. The
+supplementary document renumbers from scratch and collides with the original
+catalogue on seventeen identifiers --- most consequentially \texttt{7.14}, which
+names a shipped entry in one document and a dropped one in the other --- so
+supplementary identifiers carry an \texttt{S} prefix in the library and in the
+record, and each entry's number as printed in its source is preserved
+alongside.
 
 \subsection{The metric, stated once and enforced throughout}
 \label{sec:metric}
@@ -113,7 +200,7 @@ means the value is the previously published typology value, unchanged;
 \emph{new} means the evidence was retrieved for this version; \emph{derived}
 means no class-specific evidence exists and the envelope is bounded from an
 adjacent class with the bounding argument stated. \emph{Entries} is the number
-of the \num{110} catalogue entries inheriting that archetype.}
+of the \num{121} catalogue entries inheriting that archetype.}
 \label{tab:typologies}
 \small
 \begin{tabular}{@{}llrclr@{}}
@@ -128,24 +215,24 @@ Continuous shaded corridor    & v1.1    & 80 & 0.5\,--\,3.0 & Medium &  2 \\
 Small green area with trees   & v1.1    & 65 & 0.3\,--\,1.5 & High   &  6 \\
 Dense tree canopy             & v1.1    & 90 & 1.0\,--\,3.0 & High   & 10 \\
 Established park              & v1.1    & 70 & 0.5\,--\,2.0 & High   & 10 \\
-Non-canopy vegetation         & new     & 50 & 0.0\,--\,1.5 & Medium &  7 \\
+Non-canopy vegetation         & new     & 50 & 0.0\,--\,1.5 & Medium & 15 \\
 Productive tree canopy        & derived & 60 & 0.5\,--\,2.0 & Low    &  3 \\
 Productive ground planting    & derived & 45 & 0.0\,--\,1.5 & Low    &  6 \\
 \addlinespace
 \multicolumn{6}{@{}l}{\textit{Building}}\\
 Extensive green roof          & v1.1    & 45 & 0.1\,--\,1.0 & Medium &  7 \\
-Green fa\c{c}ade / living wall & v1.1   & 50 & 0.3\,--\,2.0 & Low    & 11 \\
+Green fa\c{c}ade / living wall & v1.1   & 50 & 0.3\,--\,2.0 & Low    & 12 \\
 \addlinespace
 \multicolumn{6}{@{}l}{\textit{Blue-green}}\\
 Bioretention                  & v1.1    & 55 & 0.1\,--\,0.8 & Low    &  8 \\
 Blue-green corridor           & v1.1    & 85 & 1.0\,--\,3.0 & Medium &  5 \\
-Riparian restoration          & v1.1    & 85 & 1.0\,--\,3.0 & Medium &  6 \\
+Riparian restoration          & v1.1    & 85 & 1.0\,--\,3.0 & Medium &  7 \\
 Large open water body         & new     & 75 & 0.1\,--\,3.0 & Medium &  3 \\
 Small constructed water       & new     & 40 & 0.0\,--\,1.0 & Medium &  6 \\
 \addlinespace
 \multicolumn{6}{@{}l}{\textit{Hybrid}}\\
 Permeable shaded hardscape    & v1.1    & 70 & 0.5\,--\,2.5 & Medium &  2 \\
-Enclosed courtyard greening   & v1.1    & 60 & 0.3\,--\,1.5 & Low    &  1 \\
+Enclosed courtyard greening   & v1.1    & 60 & 0.3\,--\,1.5 & Low    &  2 \\
 Vegetated shade structure     & new     & 55 & 0.0\,--\,2.5 & Low    &  2 \\
 \midrule
 \multicolumn{5}{@{}l}{\textbf{Total entries}} & \textbf{110} \\
@@ -191,8 +278,8 @@ cited values and each appeared in a golden scenario.
 that a schoolyard is a \emph{land-use context}, not an intervention. Keeping it
 would have meant asking the user ``what is the land use here?'' and then
 offering, as an intervention, the land use they had just described. A school
-site is instead offered the real interventions that suit it --- \num{72} of the
-\num{110} entries name a school among their land uses --- through the
+site is instead offered the real interventions that suit it --- \num{77} of the
+\num{121} entries name a school among their land uses --- through the
 availability matrix of \Cref{sec:availability}. The evidence that supported
 the retired typology is the same evidence supporting the small green area with
 trees, which the catalogue's green playground entry inherits; nothing was
@@ -629,9 +716,9 @@ requirement, and any unsuitable climate zones. Catalogue entries
 \textbf{inherit} these, with per-entry overrides only where the catalogue's own
 description of the entry makes an inherited value plainly wrong.
 
-Inventing a minimum area and a soil requirement for each of \num{110} entries
+Inventing a minimum area and a soil requirement for each of \num{121} entries
 would have manufactured exactly the precision the archetype model exists to
-avoid. There are \num{21} overrides in total, each listed with its reason in
+avoid. There are \num{24} overrides in total, each listed with its reason in
 \Cref{app:typologies}, and \textbf{no new number enters the methodology through
 an override}: every replacement value --- \qtylist{20;50;200;500;1000;2000}
 {\metre\squared} --- is one already present in the cited library, borrowed from

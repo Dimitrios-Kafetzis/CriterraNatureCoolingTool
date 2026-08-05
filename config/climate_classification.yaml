@@ -16,7 +16,7 @@
 # Rulings: D-047.3, D-048
 # Dataset: data/geo/koppen_geiger.json (Beck et al. 2023, CC BY 4.0, 1991-2020)
 
-version: "2026.08.05"
+version: "2026.08.06"
 
 koppen_to_zone:
   source_dataset: beck2023

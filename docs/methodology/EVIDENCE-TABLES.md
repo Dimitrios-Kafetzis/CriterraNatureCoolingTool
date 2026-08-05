@@ -4,9 +4,9 @@ For each of the **18 cooling archetypes**: the evidence consulted, the value ado
 
 ## The two-level library, and why it exists
 
-From version `2026.08.04` the library has two levels. An **archetype** is a cited evidence class carrying every performance value; a **typology** is one of the **110 curated catalogue entries**, each inheriting exactly one archetype and carrying no performance value of its own.
+From version `2026.08.04` the library has two levels. An **archetype** is a cited evidence class carrying every performance value; a **typology** is one of the **121 curated catalogue entries**, each inheriting exactly one archetype and carrying no performance value of its own.
 
-The reason is simple and worth stating plainly: **solution-specific cooling literature does not exist for 110 typologies.** Retrieving a distinct envelope for a felt-pocket living wall, a suspended-pavement tree pit and a green parking lane is not possible, because nobody has measured them. The alternative to archetypes was inventing 110 envelopes, which would have manufactured precision the catalogue does not contain and broken the evidence rules the tool exists to honour.
+The reason is simple and worth stating plainly: **solution-specific cooling literature does not exist for 121 typologies.** Retrieving a distinct envelope for a felt-pocket living wall, a suspended-pavement tree pit and a green parking lane is not possible, because nobody has measured them. The alternative to archetypes was inventing 121 envelopes, which would have manufactured precision the catalogue does not contain and broken the evidence rules the tool exists to honour.
 
 So an entry inherits a *cited* envelope, and **every result names the evidence class it inherited from**. A Miyawaki forest reports its cooling on the dense-canopy evidence, and says so. That sentence is the whole design.
 
@@ -310,7 +310,7 @@ Inherits the `non_canopy_vegetation` envelope, because cultivated ground-level p
 
 ## Suitability: inheritance, and the 21 overrides
 
-Suitability conditions — minimum viable area, soil requirement, irrigation requirement — are inherited from the archetype, with **per-entry overrides only where the catalogue's own description of the entry makes an inherited value plainly wrong**. Inventing a minimum area and a soil requirement for each of 110 entries would manufacture precision the catalogue does not contain.
+Suitability conditions — minimum viable area, soil requirement, irrigation requirement — are inherited from the archetype, with **per-entry overrides only where the catalogue's own description of the entry makes an inherited value plainly wrong**. Inventing a minimum area and a soil requirement for each of 121 entries would manufacture precision the catalogue does not contain.
 
 **No new number enters the methodology through an override.** Every replacement value is one already present in the cited v1.1 library — 20, 50, 200, 500, 1 000, 2 000 m² — borrowed from the typology that established it. The override list is deliberately short, and a test fails if it grows past 25 entries, because a long list would mean the inheritance ruling had quietly been abandoned.
 

@@ -9,7 +9,7 @@ reductions in degrees Celsius, relative to an equivalent unimproved site.
 The library has two levels (\Cref{sec:archetypes}). \Cref{tab:app-archetypes,%
 tab:app-cobenefits,tab:app-citations,tab:app-notes} give the \num{18} cooling
 archetypes, which carry every performance value and every citation.
-\Cref{tab:app-entries} lists the \num{110} catalogue entries and the archetype
+\Cref{tab:app-entries} lists the \num{121} catalogue entries and the archetype
 each one inherits; an entry carries no performance value of its own.
 \Cref{tab:app-overrides} lists the \num{21} per-entry suitability overrides.
 
@@ -319,7 +319,7 @@ Extensive green roof &
 Benefits are concentrated at roof level and inside the building beneath. The tool states in its output that green-roof benefits are principally building-level rather than street-level. \\
 \addlinespace
 Green facade or living wall &
-Sources conflict outright: the synthesis ranks green walls near the top on air temperature while the micro-scale comparison ranks them below trees on comfort, plausibly explained by near-wall measurement position. Low confidence, conservative envelope, explicit caveat in tool output. \texttt{kumar2024} reports green walls at 4.1 $\pm$ 4.2\,\si{\degreeCelsius}, which is deliberately not adopted (D-044): its own standard deviation exceeds its mean, and adopting it selectively would rate a wall above measured tree canopy. \\
+Sources conflict outright: the synthesis ranks green walls near the top on air temperature while the micro-scale comparison ranks them below trees on comfort, plausibly explained by near-wall measurement position. Low confidence, conservative envelope, explicit caveat in tool output. \texttt{kumar2024} reports green walls at 4.1 $\pm$ 4.2\,\si{\degreeCelsius}, which is deliberately not adopted: its own standard deviation exceeds its mean, and adopting it selectively would rate a wall above measured tree canopy. The same review's vegetated-balcony figure of 3.8 $\pm$ 2.7\,\si{\degreeCelsius} is declined on the same grounds, which is why the vertical-forest building added at \methver{} inherits this class rather than a canopy class. Adopting the review wholesale would be a full library recalibration with its own sensitivity analysis, and is recorded as a candidate for a future methodology review rather than done piecemeal here. \\
 \addlinespace
 Bioretention and drainage planting &
 No source quantifies air-temperature cooling for rain gardens or bioswales specifically. Value is a reasoned lower bound from adjacent evidence. Primary benefits are stormwater and biodiversity, not cooling. \\
@@ -337,7 +337,7 @@ Enclosed courtyard greening &
 Small, enclosed, often sheltered from ventilation. Bounded by scale limitation; no courtyard-specific synthesis exists. \\
 \addlinespace
 Large open water body &
-The envelope floor is 0.1\,\si{\degreeCelsius}, not the 0.5\,\si{\degreeCelsius} proposed in the v1.2 review pack. The pack attributed a cooling magnitude near 2\,\si{\degreeCelsius} to \texttt{yao2023a}; retrieval at implementation established that the paper reports no such figure and instead measures 0.1--0.6\,\si{\degreeCelsius} by day. Holding the floor at 0.5 would have made the tool claim more than its most direct field evidence supports, which is exactly the inflation D-008 exists to prevent. The ceiling stays at 3.0\,\si{\degreeCelsius} on \texttt{keravec2026} and the \texttt{volker2013} confidence interval. The width of the envelope is real and is the finding: the remote-sensing-inclusive meta-analysis and the direct field measurements disagree by an order of magnitude, and \texttt{ampatzidis2020} names remote sensing as the overestimating mode. See D-045. \\
+The envelope floor is 0.1\,\si{\degreeCelsius}, not the 0.5\,\si{\degreeCelsius} proposed in the v1.2 review pack. The pack attributed a cooling magnitude near 2\,\si{\degreeCelsius} to \texttt{yao2023a}; retrieval at implementation established that the paper reports no such figure and instead measures 0.1--0.6\,\si{\degreeCelsius} by day. Holding the floor at 0.5 would have made the tool claim more than its most direct field evidence supports, which is exactly the inflation the conservative-calibration rule exists to prevent: where sources conflict, the tool adopts the range its weakest-claiming direct measurement supports and states the conflict rather than smoothing it. The ceiling stays at 3.0\,\si{\degreeCelsius} on \texttt{keravec2026} and the \texttt{volker2013} confidence interval. The width of the envelope is real and is the finding: the remote-sensing-inclusive meta-analysis and the direct field measurements disagree by an order of magnitude, and \texttt{ampatzidis2020} names remote sensing as the overestimating mode. The archetype therefore carries an output caveat stating the disagreement, rather than narrowing the envelope by picking a side the evidence does not support picking. \\
 \addlinespace
 Small constructed water feature &
 THIS ARCHETYPE MUST NEVER BE INTERPOLATED WITH \texttt{large\_water\_body} BY AREA. The two are separate bodies of study, not two points on a dose--response curve: the size-threshold literature is land-surface-temperature only, and no published curve connects them on air temperature. Without this split, constructed wetlands, retention ponds, detention basins and water squares would have inherited \texttt{blue\_green\_corridor} at 1.0--3.0\,\si{\degreeCelsius} on family resemblance and been overstated roughly threefold. The floor is a genuine zero because \texttt{jacobs2020} concludes the daytime effect is negligible in design practice. \\
@@ -356,18 +356,21 @@ Derived: inherits the \texttt{non\_canopy\_vegetation} envelope, because cultiva
 \addlinespace
 \end{longtable}
 
-\subsection{The \texorpdfstring{\num{110}}{110} catalogue entries and the
+\subsection{The \texorpdfstring{\num{121}}{121} catalogue entries and the
 archetype each inherits}
 
 Entries are grouped by the source catalogue's own families, with its
 element/composite classification reproduced. Neither the family nor the
 classification enters a formula. The identifier is the entry's identifier in
-the source catalogue.
+the source catalogue; identifiers prefixed \texttt{S} come from the
+supplementary proposal curated at version \methver{}
+(\Cref{sec:supplement}), which renumbers from scratch and would otherwise
+collide with the original catalogue on seventeen identifiers.
 
 {\small
 \begin{longtable}{@{}l>{\raggedright\arraybackslash}p{52mm}
                     >{\raggedright\arraybackslash}p{42mm}l@{}}
-\caption[The 110 catalogue entries]{The \num{110} curated catalogue entries,
+\caption[The 121 catalogue entries]{The \num{121} curated catalogue entries,
 the cooling archetype each inherits, and the source catalogue's
 element/composite classification. An entry carries identity, family,
 availability, and its primary cooling mechanism; every performance value comes
@@ -451,7 +454,7 @@ B10 & Depressed bioretention bed & Bioretention and drainage planting & element 
 B11 & Vegetated planter with stormwater function & Bioretention and drainage planting & element \\
 B12 & Large-volume connected planters & Bioretention and drainage planting & element \\
 \addlinespace
-\multicolumn{4}{@{}l}{\textit{Water landscape} (12)}\\
+\multicolumn{4}{@{}l}{\textit{Water landscape} (16)}\\
 6.1 & Constructed Wetland & Small constructed water feature & composite \\
 6.2 & Retention Pond & Small constructed water feature & composite \\
 6.3 & Detention Basin & Small constructed water feature & composite \\
@@ -464,6 +467,10 @@ B12 & Large-volume connected planters & Bioretention and drainage planting & ele
 6.12 & Living Shoreline & Large open water body & composite \\
 6.13 & Floating Wetland & Small constructed water feature & element \\
 6.14 & Riparian Buffer & Riparian restoration & element \\
+S12A.1 & Subsurface-flow treatment wetland & Non-canopy vegetation & composite \\
+S17.4 & Mangrove Restoration & Riparian restoration & composite \\
+S17.6 & Dune Restoration & Non-canopy vegetation & composite \\
+S17.7 & Coastal Wetland Restoration & Non-canopy vegetation & composite \\
 \addlinespace
 \multicolumn{4}{@{}l}{\textit{Ecological network} (6)}\\
 7.1 & Green Corridor & Blue-green corridor & composite \\
@@ -506,10 +513,12 @@ D11 & Vegetated screen & Green facade or living wall & element \\
 D12 & Green noise barrier & Green facade or living wall & element \\
 D13 & Vegetated retaining wall & Green facade or living wall & element \\
 \addlinespace
-\multicolumn{4}{@{}l}{\textit{Building} (3)}\\
+\multicolumn{4}{@{}l}{\textit{Building} (5)}\\
 9.29 & Green Balcony & Green facade or living wall & element \\
 9.30 & Green Terrace & Extensive green roof & element \\
 9.33 & Green Podium & Small green area with trees & composite \\
+S9.19 & Green Loggia & Enclosed courtyard greening & element \\
+S9.22 & Vertical Forest Building & Green facade or living wall & composite \\
 \addlinespace
 \multicolumn{4}{@{}l}{\textit{Vegetated shelter} (3)}\\
 E1 & Green pergola & Vegetated shade structure & element \\
@@ -524,6 +533,13 @@ E6 & Green waiting shelter & Vegetated shade structure & element \\
 8.5 & Urban Farm & Productive ground-level planting & composite \\
 8.9 & School Garden & Productive ground-level planting & composite \\
 8.15 & Agroforestry System & Productive tree canopy & composite \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Soil, slope and site restoration} (5)}\\
+SA16 & Depaving & Non-canopy vegetation & element \\
+S11B.16 & Vegetated Terracing & Non-canopy vegetation & composite \\
+S11B.17 & Natural Slope Restoration & Non-canopy vegetation & composite \\
+S19.4 & Phytoremediation & Non-canopy vegetation & composite \\
+S21.8 & Brownfield Ecological Succession & Non-canopy vegetation & composite \\
 \addlinespace
 \end{longtable}
 }
@@ -899,7 +915,7 @@ Canopy condition and shade potential. \\
 Time-to-benefit class (immediate / short / medium / long term). No maturity
 discount is applied to cooling values. \\
 \fieldname{intervention_area_m2} & Optional &
-Validation warning when exceeding the site area (OQ-04); enters no score. \\
+Validation warning when exceeding the site area; enters no score. \\
 \fieldname{implementation_complexity} & Optional &
 Inverted levels; cost feasibility (\Cref{eq:cost-feasibility-rule}) and
 investment readiness. \\
@@ -950,7 +966,7 @@ given site, decided by scale, land use, and the four gating questions of
 relative expected cooling performance before site adjustment. Not a
 temperature.
 
-\item[Catalogue entry (typology)] One of the \num{110} curated entries of the
+\item[Catalogue entry (typology)] One of the \num{121} curated entries of the
 source catalogue. It carries identity, family, availability, and the one
 archetype it inherits, and no performance value of its own.
 

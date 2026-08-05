@@ -371,7 +371,7 @@ export function MethodologyScreen() {
         <section id="typologies" aria-label={t.sections.typologies}>
           <h2>{t.sections.typologies}</h2>
           {/* `resolved` is the flat scoring view the engine consumes and the
-              only one carrying performance values; 110 entries are grouped by
+              only one carrying performance values; 121 entries are grouped by
               family so the page stays navigable (D-043). */}
           {familyGroups(library.resolved ?? []).map(([family, entries]) => (
             <details className="collapsible" key={family}>

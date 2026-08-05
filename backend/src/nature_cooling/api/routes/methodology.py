@@ -42,7 +42,7 @@ def _config(request: Request) -> MethodologyConfig:
 
 @router.get("/typologies")
 def typologies(request: Request) -> TypologyLibrary:
-    """The full library: 18 cited archetypes and the 110 entries inheriting them.
+    """The full library: 18 cited archetypes and the 121 entries inheriting them.
 
     ``resolved`` carries each entry merged with its archetype — the flat view
     the picker renders and the engine scores — while ``archetypes`` carries the

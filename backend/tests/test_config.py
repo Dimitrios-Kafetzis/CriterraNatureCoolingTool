@@ -23,7 +23,7 @@ from nature_cooling.engine.config import (
 )
 
 EXPECTED_ARCHETYPE_COUNT = 18
-EXPECTED_TYPOLOGY_COUNT = 110
+EXPECTED_TYPOLOGY_COUNT = 121
 
 
 @pytest.fixture(scope="module")

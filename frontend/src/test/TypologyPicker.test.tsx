@@ -299,7 +299,7 @@ describe('TypologyPicker', () => {
 const temperateSite: DraftInput = { site_area_m2: 6000, climate_zone: 'temperate' };
 
 /** Affordance buttons are queried by class in one pass — never by role+name
- * per entry, which is quadratic over 110 cards and has timed out CI before. */
+ * per entry, which is quadratic over 121 cards and has timed out CI before. */
 function affordances(): HTMLElement[] {
   return [...document.querySelectorAll<HTMLElement>('.picker__photo')];
 }

@@ -15,7 +15,7 @@
 # Derivation: docs/methodology/EVIDENCE-TABLES.md (availability section)
 # Rulings: D-043.1, D-043.2, D-043.3, D-044.1
 
-version: "2026.08.05"
+version: "2026.08.06"
 
 conditions:
   # Three of the four conditions describe a PHYSICAL FACT about the site, and
@@ -132,10 +132,10 @@ land_use_mapping:
   # below are properties of that mapping and are asserted by the test suite, so
   # a land use silently losing its interventions fails the build.
   applicable_entry_counts:
-    campus: 93
-    healthcare: 76
-    school: 72
-    memorial: 41
+    campus: 98
+    healthcare: 81
+    school: 77
+    memorial: 44
   rationale: >
     Memorial is deliberately the sparsest: tree groves, meadows, woodland and
     quiet permeable planting are in; plazas, playgrounds, tram corridors, living

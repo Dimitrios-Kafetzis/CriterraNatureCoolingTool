@@ -1,8 +1,8 @@
 /**
  * The guided typology picker (UX §5, D-019, D-009, D-043, D-044).
  *
- * The catalogue holds 110 entries across fourteen families, and a school site
- * is offered 67 of them, so the picker groups by family, filters by name, and
+ * The catalogue holds 121 entries across fifteen families, and a school site
+ * is offered 71 of them, so the picker groups by family, filters by name, and
  * supports selecting several entries as a package (D-038). Every card keeps
  * the fit annotation it has always carried: a comparison of the user's answers
  * against each entry's suitability conditions served by GET /api/typologies,

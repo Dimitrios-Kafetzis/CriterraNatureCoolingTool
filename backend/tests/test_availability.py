@@ -1,9 +1,10 @@
 """Availability gating: the published matrix, asserted as a contract.
 
-The v1.2 review pack's part 4 published nine situation counts and four
-land-use totals. Those numbers are what the author approved, so they are
-asserted here directly: if a configuration edit changes what a school site is
-offered, this file fails and names the number that moved.
+The availability review published nine situation counts and four land-use
+totals. Those numbers are a property of the catalogue, so they are asserted
+here directly: if a configuration edit changes what a school site is offered,
+this file fails and names the number that moved. They were recomputed at
+methodology 2026.08.06, when the catalogue grew from 110 entries to 121.
 
 Availability feeds no score (D-044.1). The last test in this module is the one
 that keeps that true.
@@ -22,7 +23,8 @@ def offered(config, scale, land_use=None, **conditions):
     return availability.available_typologies(scale, land_use, SiteConditions(**conditions), config)
 
 
-# The counts published in the approved v1.2 availability review
+# The counts published in the approved availability review, recomputed at
+# methodology 2026.08.06 when the catalogue grew from 110 entries to 121.
 # (docs/assets/v1.2-availability-matrix.json is its machine-readable form).
 #
 # All nine are computed with the productive-governance question UNANSWERED,
@@ -30,18 +32,18 @@ def offered(config, scale, land_use=None, **conditions):
 # suppresses nothing (D-043.3), so the productive entries are present in every
 # row. The governance filter itself is exercised separately below.
 PUBLISHED_SITUATIONS = [
-    ("school site", 67, {"scale": "site", "land_use": "school"}),
-    ("healthcare site", 68, {"scale": "site", "land_use": "healthcare"}),
-    ("industrial site", 56, {"scale": "site", "land_use": "industrial"}),
-    ("memorial site", 39, {"scale": "site", "land_use": "memorial"}),
+    ("school site", 71, {"scale": "site", "land_use": "school"}),
+    ("healthcare site", 72, {"scale": "site", "land_use": "healthcare"}),
+    ("industrial site", 62, {"scale": "site", "land_use": "industrial"}),
+    ("memorial site", 42, {"scale": "site", "land_use": "memorial"}),
     (
         "residential neighbourhood, no conditions met",
-        28,
+        32,
         {"scale": "neighbourhood", "land_use": "residential"},
     ),
     (
         "mixed-use riverfront neighbourhood with a railway",
-        26,
+        32,
         {
             "scale": "neighbourhood",
             "land_use": "mixed_use",
@@ -49,7 +51,7 @@ PUBLISHED_SITUATIONS = [
             "includes_railway": "yes",
         },
     ),
-    ("residential building", 52, {"scale": "building", "land_use": "residential"}),
+    ("residential building", 56, {"scale": "building", "land_use": "residential"}),
     ("city scale, no conditions met", 3, {"scale": "city"}),
     ("district scale", 5, {"scale": "district"}),
 ]
@@ -68,7 +70,7 @@ def test_published_situation_counts(config, label, expected, query) -> None:
 
 @pytest.mark.parametrize(
     ("land_use", "expected"),
-    [("campus", 93), ("healthcare", 76), ("school", 72), ("memorial", 41)],
+    [("campus", 98), ("healthcare", 81), ("school", 77), ("memorial", 44)],
 )
 def test_published_land_use_totals(config, land_use, expected) -> None:
     """D-043.1: a land use maps to real interventions, and this is how many.

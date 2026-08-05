@@ -1,14 +1,19 @@
 """The shipped library must match the approved curation, entry for entry.
 
-`docs/assets/v1.2-curation.json` and `docs/assets/v1.2-availability-matrix.json`
-are the machine-readable form of what the author approved in D-043 and D-044:
-which of the 243 catalogue entries survive, which archetype each inherits, and
-where each is offered. The library in `config/` was generated from them.
+Two curation records govern the library, and the shipped catalogue is exactly
+their union:
 
-Generated data drifts. These tests compare the two directly, so a hand edit to
-the configuration that quietly disagrees with the approved curation fails the
-build and names the entry — rather than being discovered by a reviewer reading
-243 rows, or not at all.
+* `v1.2-curation.json` / `v1.2-availability-matrix.json` — which of the 243
+  entries of the UNEP catalogue survive, which archetype each inherits, and
+  where each is offered.
+* `v2.5-curation.json` / `v2.5-availability-matrix.json` — the same three
+  questions for the 143 entries of the supplementary proposal, of which 11 were
+  accepted, 58 merged onto entries the catalogue already had, and 74 dropped.
+
+Generated data drifts. These tests compare records and configuration directly,
+so a hand edit that quietly disagrees with an approved curation fails the build
+and names the entry — rather than being discovered by a reviewer reading 386
+rows, or not at all.
 """
 
 from __future__ import annotations
@@ -33,25 +38,89 @@ RULING_OVERRIDES = {
 }
 
 
-@pytest.fixture(scope="module")
-def curation() -> dict[str, dict]:
-    entries = json.loads((ASSETS / "v1.2-curation.json").read_text(encoding="utf-8"))
+def _load(name: str) -> dict[str, dict]:
+    entries = json.loads((ASSETS / name).read_text(encoding="utf-8"))
     return {entry["id"]: entry for entry in entries}
+
+
+@pytest.fixture(scope="module")
+def curation_v12() -> dict[str, dict]:
+    return _load("v1.2-curation.json")
+
+
+@pytest.fixture(scope="module")
+def curation_v25() -> dict[str, dict]:
+    return _load("v2.5-curation.json")
+
+
+@pytest.fixture(scope="module")
+def curation(curation_v12: dict[str, dict], curation_v25: dict[str, dict]) -> dict[str, dict]:
+    """Both records as one lookup. Safe only because the ids are disjoint."""
+    return {**curation_v12, **curation_v25}
 
 
 @pytest.fixture(scope="module")
 def matrix() -> dict[str, dict]:
-    entries = json.loads((ASSETS / "v1.2-availability-matrix.json").read_text(encoding="utf-8"))
-    return {entry["id"]: entry for entry in entries}
+    return {**_load("v1.2-availability-matrix.json"), **_load("v2.5-availability-matrix.json")}
 
 
-def test_the_curation_still_reduces_243_entries_to_110(curation: dict[str, dict]) -> None:
+def test_the_two_record_id_namespaces_do_not_overlap(
+    curation_v12: dict[str, dict], curation_v25: dict[str, dict]
+) -> None:
+    """The reason the supplementary ids carry an `S` prefix.
+
+    The supplementary document renumbers from scratch and collides with the
+    243-entry catalogue on seventeen ids. The one that makes this a correctness
+    problem rather than a tidiness one is 7.14: it names a *shipped* entry in
+    the first document (coastal ecological corridor) and a *dropped* one in the
+    second (bat flyway). Merging the records on raw source numbers would make a
+    dropped entry appear to ship. This test is what keeps the two apart.
+    """
+    assert not (set(curation_v12) & set(curation_v25))
+    assert all(entry["id"] == "S" + entry["source_ref"] for entry in curation_v25.values())
+    collisions = {entry["source_ref"] for entry in curation_v25.values()} & set(curation_v12)
+    assert "7.14" in collisions, "the motivating collision must still be one"
+
+
+def test_the_curation_still_reduces_243_entries_to_110(curation_v12: dict[str, dict]) -> None:
     """The headline of D-043: 110 kept, 88 merged, 45 dropped."""
-    assert len(curation) == 243
-    decisions = [entry["decision"] for entry in curation.values()]
+    assert len(curation_v12) == 243
+    decisions = [entry["decision"] for entry in curation_v12.values()]
     assert decisions.count("keep") == 110
     assert decisions.count("merge") == 88
     assert decisions.count("drop") == 45
+
+
+def test_the_supplement_reduces_143_entries_to_11(curation_v25: dict[str, dict]) -> None:
+    """The headline of the v2.5 curation: 11 kept, 58 merged, 74 dropped.
+
+    The keep rate is 8% against v1.2's 45%, and that is the finding rather than
+    a defect: the supplementary document extends the catalogue sideways into
+    bank and slope engineering, wastewater treatment, marine ecology, habitat
+    furniture, soil science, maintenance regimes and buried drainage, and six
+    of its groups state in their own classification notes that they are
+    supporting or enabling layers rather than interventions.
+    """
+    assert len(curation_v25) == 143
+    decisions = [entry["decision"] for entry in curation_v25.values()]
+    assert decisions.count("keep") == 11
+    assert decisions.count("merge") == 58
+    assert decisions.count("drop") == 74
+
+
+def test_the_expansion_introduced_no_new_archetype(config) -> None:
+    """The load-bearing claim of the v2.5 curation.
+
+    Every accepted entry inherits one of the eighteen evidence classes that
+    already existed, so the expansion added no envelope, no citation and no new
+    literature. An entry that could not inherit honestly was dropped rather
+    than given a class invented for it.
+    """
+    assert len(config.typologies.archetypes) == 18
+    supplementary = [t for t in config.typologies.resolved if t.nbs_id.startswith("S")]
+    assert len(supplementary) == 11
+    existing = {a.archetype for a in config.typologies.archetypes}
+    assert {t.archetype for t in supplementary} <= existing
 
 
 def test_the_two_ruling_overrides_are_exactly_the_ones_documented(
@@ -218,9 +287,9 @@ def test_the_retired_land_use_contexts_were_all_dropped(curation: dict[str, dict
     assert curation["3.15"]["name"] == "Green Playground"
 
 
-def test_the_assets_are_committed_where_the_documentation_says(
-    curation: dict[str, dict],
-) -> None:
+def test_the_assets_are_committed_where_the_documentation_says() -> None:
     """The approved data must travel with the repository, not with a session."""
     assert (ASSETS / "v1.2-curation.json").is_file()
     assert (ASSETS / "v1.2-availability-matrix.json").is_file()
+    assert (ASSETS / "v2.5-curation.json").is_file()
+    assert (ASSETS / "v2.5-availability-matrix.json").is_file()

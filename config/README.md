@@ -4,7 +4,7 @@ This directory is the tool's methodology expressed **as data**. Every scoring ru
 
 **Populated in Phase 1** (literature-grounding phase), in lock-step with the [Methodology Report](../docs/methodology/README.md).
 
-Since `2026.08.04` the typology library has **two levels** (D-044). An **archetype** is a cited evidence class carrying every performance value and the citations behind it; a **typology** is one of the 110 curated catalogue entries, carrying identity, family, availability and the one archetype it inherits — and no performance value of its own. Rule 2 below is therefore enforced on the *resolved* library: an entry's numbers must be cited wherever they actually come from.
+Since `2026.08.04` the typology library has **two levels** (D-044). An **archetype** is a cited evidence class carrying every performance value and the citations behind it; a **typology** is one of the 121 curated catalogue entries, carrying identity, family, availability and the one archetype it inherits — and no performance value of its own. Rule 2 below is therefore enforced on the *resolved* library: an entry's numbers must be cited wherever they actually come from.
 
 Since `2026.08.05` one further file is a methodology value in its own right: [`climate_classification.yaml`](climate_classification.yaml) maps the thirty Köppen–Geiger classes onto the tool's six climate zones (D-047.3). The classification it reads is cited (`beck2023`); the mapping is this methodology's own judgement, it selects a row of the climate adjustment matrix, and it is therefore derived in the evidence tables and version-stamped like everything else here.
 

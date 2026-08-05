@@ -44,8 +44,8 @@ def test_typologies_returns_the_full_library(client: TestClient, config: Methodo
     body = response.json()
     assert body["version"] == config.version
     assert len(body["archetypes"]) == len(config.typologies.archetypes) == 18
-    assert len(body["typologies"]) == len(config.typologies.typologies) == 110
-    assert len(body["resolved"]) == len(config.typologies.resolved) == 110
+    assert len(body["typologies"]) == len(config.typologies.typologies) == 121
+    assert len(body["resolved"]) == len(config.typologies.resolved) == 121
 
     # The citations live on the archetype, which carries the cited envelope.
     first_archetype = body["archetypes"][0]

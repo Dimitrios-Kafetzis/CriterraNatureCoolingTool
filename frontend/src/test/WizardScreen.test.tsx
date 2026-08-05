@@ -162,7 +162,7 @@ describe('WizardScreen', () => {
     await waitFor(() => {
       expect(document.querySelectorAll('.picker__photo').length).toBeGreaterThan(0);
     });
-    // One manifest request — never a per-card lookup over 110 entries.
+    // One manifest request — never a per-card lookup over 121 entries.
     expect(calls.filter((call) => call.url === '/api/images/manifest')).toHaveLength(1);
   });
 

@@ -72,7 +72,7 @@
       },
       "Archetype": {
         "additionalProperties": false,
-        "description": "One cited cooling evidence class (D-044).\n\nEvery performance value in the library lives here, with the citations that\nsupport it. The 110 catalogue entries carry no performance value of their\nown; each inherits exactly one archetype and the report names the evidence\nclass it inherited from.",
+        "description": "One cited cooling evidence class (D-044).\n\nEvery performance value in the library lives here, with the citations that\nsupport it. The 121 catalogue entries carry no performance value of their\nown; each inherits exactly one archetype and the report names the evidence\nclass it inherited from.",
         "properties": {
           "archetype": {
             "title": "Archetype",
@@ -2857,7 +2857,7 @@
       },
       "SuitabilityOverride": {
         "additionalProperties": false,
-        "description": "A per-entry departure from the archetype's suitability conditions.\n\nPermitted only where the catalogue's own description of the entry makes an\ninherited value plainly wrong (D-044.3); every replacement value is one\nalready present in the cited v1.1 library, so no new number enters the\nmethodology through an override.",
+        "description": "A per-entry departure from the archetype's suitability conditions.\n\nPermitted only where the catalogue's own description of the entry makes an\ninherited value plainly wrong (D-044.3); every replacement value is one\nalready present in the cited v1.1 library, so no new number enters the\nmethodology through an override.\n\n``unsuitable_climate_zones`` was added at 2026.08.06 for a single entry,\nmangrove restoration, whose source states \"tropical and subtropical\nclimates only\". It raises a suitability *flag* and contributes to no score,\nso declaring it moves no result for any other entry.",
         "properties": {
           "minimum_site_area_m2": {
             "anyOf": [
@@ -2903,6 +2903,20 @@
               }
             ],
             "title": "Requires Soil"
+          },
+          "unsuitable_climate_zones": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unsuitable Climate Zones"
           }
         },
         "title": "SuitabilityOverride",
@@ -3410,7 +3424,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0"
     },
     "title": "Nature for Cooling Rapid Assessment Tool",
-    "version": "2.4.0"
+    "version": "2.5.0"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -4471,7 +4485,7 @@
     },
     "/api/typologies": {
       "get": {
-        "description": "The full library: 18 cited archetypes and the 110 entries inheriting them.\n\n``resolved`` carries each entry merged with its archetype — the flat view\nthe picker renders and the engine scores — while ``archetypes`` carries the\ncitations, so the interface can show which evidence class a card's numbers\ncame from without inferring anything.",
+        "description": "The full library: 18 cited archetypes and the 121 entries inheriting them.\n\n``resolved`` carries each entry merged with its archetype — the flat view\nthe picker renders and the engine scores — while ``archetypes`` carries the\ncitations, so the interface can show which evidence class a card's numbers\ncame from without inferring anything.",
         "operationId": "typologies_api_typologies_get",
         "responses": {
           "200": {

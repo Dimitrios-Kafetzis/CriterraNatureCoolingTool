@@ -69,7 +69,7 @@ describe('MethodologyScreen', () => {
     // Querying `getByRole('heading', { name })` per typology re-computes the
     // accessible name of every heading in the section on each call, which is
     // quadratic — tolerable at the 14 typologies this test was written for,
-    // and 1.6s at 110. The assertion is unchanged: every typology in the
+    // and 1.6s at 121. The assertion is unchanged: every typology in the
     // served library must have a heading in the typologies section.
     const rendered = new Set(
       within(section)

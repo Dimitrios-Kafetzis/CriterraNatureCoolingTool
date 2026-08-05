@@ -130,7 +130,7 @@ Visual identity: the criterra.eu design tokens (paper `#eaebe2`, ink `#16231c`, 
 
 | File | Content |
 |---|---|
-| `nbs_typologies.yaml` | 18 cooling archetypes and the 110 typologies inheriting them: an archetype carries every performance value and suitability condition, and **every archetype carries a `sources:` array (DOI + finding)**; a typology carries identity, family and availability, and no performance value of its own |
+| `nbs_typologies.yaml` | 18 cooling archetypes and the 121 typologies inheriting them: an archetype carries every performance value and suitability condition, and **every archetype carries a `sources:` array (DOI + finding)**; a typology carries identity, family and availability, and no performance value of its own |
 | `availability.yaml` | Which entries are offered for a given scale, land use and site conditions — gating is configuration, never code, and feeds no score |
 | `weights.yaml` | All aggregation weights (single global set) |
 | `adjustment_factors.yaml` | Condition → factor tables + derivation rules |
